@@ -7,13 +7,17 @@
     <x>0</x>
     <y>0</y>
     <width>1298</width>
-    <height>727</height>
+    <height>961</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Widget</string>
+   <string>Hybrid Engine Ground System UI</string>
   </property>
-  <widget class="PlotWidget" name="plot1">
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>logos/better_logo.png</normaloff>logos/better_logo.png</iconset>
+  </property>
+  <widget class="PlotWidget" name="temperaturePlot">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -31,8 +35,17 @@
      </color>
     </brush>
    </property>
+   <property name="foregroundBrush">
+    <brush brushstyle="NoBrush">
+     <color alpha="255">
+      <red>255</red>
+      <green>0</green>
+      <blue>0</blue>
+     </color>
+    </brush>
+   </property>
   </widget>
-  <widget class="PlotWidget" name="plot1_2">
+  <widget class="PlotWidget" name="pressurePlot">
    <property name="geometry">
     <rect>
      <x>440</x>
@@ -42,7 +55,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="PlotWidget" name="plot1_3">
+  <widget class="PlotWidget" name="massPlot">
    <property name="geometry">
     <rect>
      <x>870</x>
@@ -52,14 +65,36 @@
     </rect>
    </property>
   </widget>
-  <widget class="QGraphicsView" name="graphicsView">
+  <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>10</y>
-     <width>411</width>
-     <height>91</height>
+     <x>0</x>
+     <y>0</y>
+     <width>191</width>
+     <height>111</height>
     </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap>logos/logoandtexttransparentsmol.png</pixmap>
+   </property>
+   <property name="scaledContents">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="simButton">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>50</y>
+     <width>101</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Start/Stop sim</string>
    </property>
   </widget>
  </widget>

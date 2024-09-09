@@ -15,7 +15,8 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QGraphicsView, QSizePolicy, QWidget)
+from PySide6.QtWidgets import (QApplication, QLabel, QPushButton, QSizePolicy,
+    QWidget)
 
 from pyqtgraph import PlotWidget
 
@@ -23,22 +24,33 @@ class Ui_Widget(object):
     def setupUi(self, Widget):
         if not Widget.objectName():
             Widget.setObjectName(u"Widget")
-        Widget.resize(1298, 727)
-        self.plot1 = PlotWidget(Widget)
-        self.plot1.setObjectName(u"plot1")
-        self.plot1.setGeometry(QRect(10, 110, 411, 271))
+        Widget.resize(1298, 961)
+        icon = QIcon()
+        icon.addFile(u"logos/better_logo.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        Widget.setWindowIcon(icon)
+        self.temperaturePlot = PlotWidget(Widget)
+        self.temperaturePlot.setObjectName(u"temperaturePlot")
+        self.temperaturePlot.setGeometry(QRect(10, 110, 411, 271))
         brush = QBrush(QColor(73, 38, 177, 255))
         brush.setStyle(Qt.SolidPattern)
-        self.plot1.setBackgroundBrush(brush)
-        self.plot1_2 = PlotWidget(Widget)
-        self.plot1_2.setObjectName(u"plot1_2")
-        self.plot1_2.setGeometry(QRect(440, 110, 411, 271))
-        self.plot1_3 = PlotWidget(Widget)
-        self.plot1_3.setObjectName(u"plot1_3")
-        self.plot1_3.setGeometry(QRect(870, 110, 411, 271))
-        self.graphicsView = QGraphicsView(Widget)
-        self.graphicsView.setObjectName(u"graphicsView")
-        self.graphicsView.setGeometry(QRect(10, 10, 411, 91))
+        self.temperaturePlot.setBackgroundBrush(brush)
+        brush1 = QBrush(QColor(255, 0, 0, 255))
+        brush1.setStyle(Qt.NoBrush)
+        self.temperaturePlot.setForegroundBrush(brush1)
+        self.pressurePlot = PlotWidget(Widget)
+        self.pressurePlot.setObjectName(u"pressurePlot")
+        self.pressurePlot.setGeometry(QRect(440, 110, 411, 271))
+        self.massPlot = PlotWidget(Widget)
+        self.massPlot.setObjectName(u"massPlot")
+        self.massPlot.setGeometry(QRect(870, 110, 411, 271))
+        self.label = QLabel(Widget)
+        self.label.setObjectName(u"label")
+        self.label.setGeometry(QRect(0, 0, 191, 111))
+        self.label.setPixmap(QPixmap(u"logos/logoandtexttransparentsmol.png"))
+        self.label.setScaledContents(True)
+        self.simButton = QPushButton(Widget)
+        self.simButton.setObjectName(u"simButton")
+        self.simButton.setGeometry(QRect(230, 50, 101, 24))
 
         self.retranslateUi(Widget)
 
@@ -46,6 +58,8 @@ class Ui_Widget(object):
     # setupUi
 
     def retranslateUi(self, Widget):
-        Widget.setWindowTitle(QCoreApplication.translate("Widget", u"Widget", None))
+        Widget.setWindowTitle(QCoreApplication.translate("Widget", u"Hybrid Engine Ground System UI", None))
+        self.label.setText("")
+        self.simButton.setText(QCoreApplication.translate("Widget", u"Start/Stop sim", None))
     # retranslateUi
 
