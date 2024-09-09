@@ -17,17 +17,26 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>10</y>
+     <y>110</y>
      <width>411</width>
      <height>271</height>
     </rect>
+   </property>
+   <property name="backgroundBrush">
+    <brush brushstyle="SolidPattern">
+     <color alpha="255">
+      <red>73</red>
+      <green>38</green>
+      <blue>177</blue>
+     </color>
+    </brush>
    </property>
   </widget>
   <widget class="PlotWidget" name="plot1_2">
    <property name="geometry">
     <rect>
      <x>440</x>
-     <y>10</y>
+     <y>110</y>
      <width>411</width>
      <height>271</height>
     </rect>
@@ -37,9 +46,19 @@
    <property name="geometry">
     <rect>
      <x>870</x>
-     <y>10</y>
+     <y>110</y>
      <width>411</width>
      <height>271</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QGraphicsView" name="graphicsView">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>411</width>
+     <height>91</height>
     </rect>
    </property>
   </widget>

@@ -15,7 +15,7 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QSizePolicy, QWidget)
+from PySide6.QtWidgets import (QApplication, QGraphicsView, QSizePolicy, QWidget)
 
 from pyqtgraph import PlotWidget
 
@@ -26,13 +26,19 @@ class Ui_Widget(object):
         Widget.resize(1298, 727)
         self.plot1 = PlotWidget(Widget)
         self.plot1.setObjectName(u"plot1")
-        self.plot1.setGeometry(QRect(10, 10, 411, 271))
+        self.plot1.setGeometry(QRect(10, 110, 411, 271))
+        brush = QBrush(QColor(73, 38, 177, 255))
+        brush.setStyle(Qt.SolidPattern)
+        self.plot1.setBackgroundBrush(brush)
         self.plot1_2 = PlotWidget(Widget)
         self.plot1_2.setObjectName(u"plot1_2")
-        self.plot1_2.setGeometry(QRect(440, 10, 411, 271))
+        self.plot1_2.setGeometry(QRect(440, 110, 411, 271))
         self.plot1_3 = PlotWidget(Widget)
         self.plot1_3.setObjectName(u"plot1_3")
-        self.plot1_3.setGeometry(QRect(870, 10, 411, 271))
+        self.plot1_3.setGeometry(QRect(870, 110, 411, 271))
+        self.graphicsView = QGraphicsView(Widget)
+        self.graphicsView.setObjectName(u"graphicsView")
+        self.graphicsView.setGeometry(QRect(10, 10, 411, 91))
 
         self.retranslateUi(Widget)
 
