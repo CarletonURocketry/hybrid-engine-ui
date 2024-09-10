@@ -39,7 +39,7 @@ class Widget(QWidget):
         global points
         if sim_is_running:
             points = np.append(points, np.array([[i, random.randrange(1, 20)]]), axis=0)
-            if points.size > 30:
+            if points.size > 1200:
                 points = np.delete(points, 0, 0)
             plot.clear()
             plot.plot(points)

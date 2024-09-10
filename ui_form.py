@@ -19,6 +19,7 @@ from PySide6.QtWidgets import (QApplication, QLabel, QPushButton, QSizePolicy,
     QWidget)
 
 from pyqtgraph import PlotWidget
+import rc_resources
 
 class Ui_Widget(object):
     def setupUi(self, Widget):
@@ -46,7 +47,7 @@ class Ui_Widget(object):
         self.label = QLabel(Widget)
         self.label.setObjectName(u"label")
         self.label.setGeometry(QRect(0, 0, 191, 111))
-        self.label.setPixmap(QPixmap(u"logos/logoandtexttransparentsmol.png"))
+        self.label.setPixmap(QPixmap(u":/images/logo"))
         self.label.setScaledContents(True)
         self.simButton = QPushButton(Widget)
         self.simButton.setObjectName(u"simButton")
