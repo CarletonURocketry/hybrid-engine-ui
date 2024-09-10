@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1298</width>
-    <height>961</height>
+    <width>1291</width>
+    <height>787</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,10 +20,10 @@
   <widget class="PlotWidget" name="temperaturePlot">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>110</y>
-     <width>411</width>
-     <height>271</height>
+     <x>660</x>
+     <y>130</y>
+     <width>611</width>
+     <height>311</height>
     </rect>
    </property>
    <property name="backgroundBrush">
@@ -48,20 +48,26 @@
   <widget class="PlotWidget" name="pressurePlot">
    <property name="geometry">
     <rect>
-     <x>440</x>
-     <y>110</y>
-     <width>411</width>
-     <height>271</height>
+     <x>20</x>
+     <y>130</y>
+     <width>611</width>
+     <height>311</height>
     </rect>
    </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
   </widget>
-  <widget class="PlotWidget" name="massPlot">
+  <widget class="PlotWidget" name="tankMassPlot">
    <property name="geometry">
     <rect>
-     <x>870</x>
-     <y>110</y>
-     <width>411</width>
-     <height>271</height>
+     <x>20</x>
+     <y>460</y>
+     <width>611</width>
+     <height>311</height>
     </rect>
    </property>
   </widget>
@@ -97,8 +103,36 @@
     <string>Start/Stop sim</string>
    </property>
   </widget>
+  <widget class="PlotWidget" name="engineThrustPlot">
+   <property name="geometry">
+    <rect>
+     <x>660</x>
+     <y>460</y>
+     <width>611</width>
+     <height>311</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QQuickWidget" name="quickWidget">
+   <property name="geometry">
+    <rect>
+     <x>460</x>
+     <y>50</y>
+     <width>300</width>
+     <height>200</height>
+    </rect>
+   </property>
+   <property name="resizeMode">
+    <enum>QQuickWidget::ResizeMode::SizeRootObjectToView</enum>
+   </property>
+  </widget>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>QQuickWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">QtQuickWidgets/QQuickWidget</header>
+  </customwidget>
   <customwidget>
    <class>PlotWidget</class>
    <extends>QGraphicsView</extends>

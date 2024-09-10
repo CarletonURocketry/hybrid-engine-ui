@@ -15,6 +15,7 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
+from PySide6.QtQuickWidgets import QQuickWidget
 from PySide6.QtWidgets import (QApplication, QLabel, QPushButton, QSizePolicy,
     QWidget)
 
@@ -25,13 +26,13 @@ class Ui_Widget(object):
     def setupUi(self, Widget):
         if not Widget.objectName():
             Widget.setObjectName(u"Widget")
-        Widget.resize(1298, 961)
+        Widget.resize(1291, 787)
         icon = QIcon()
         icon.addFile(u"logos/better_logo.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         Widget.setWindowIcon(icon)
         self.temperaturePlot = PlotWidget(Widget)
         self.temperaturePlot.setObjectName(u"temperaturePlot")
-        self.temperaturePlot.setGeometry(QRect(10, 110, 411, 271))
+        self.temperaturePlot.setGeometry(QRect(660, 130, 611, 311))
         brush = QBrush(QColor(73, 38, 177, 255))
         brush.setStyle(Qt.SolidPattern)
         self.temperaturePlot.setBackgroundBrush(brush)
@@ -40,10 +41,15 @@ class Ui_Widget(object):
         self.temperaturePlot.setForegroundBrush(brush1)
         self.pressurePlot = PlotWidget(Widget)
         self.pressurePlot.setObjectName(u"pressurePlot")
-        self.pressurePlot.setGeometry(QRect(440, 110, 411, 271))
-        self.massPlot = PlotWidget(Widget)
-        self.massPlot.setObjectName(u"massPlot")
-        self.massPlot.setGeometry(QRect(870, 110, 411, 271))
+        self.pressurePlot.setGeometry(QRect(20, 130, 611, 311))
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.pressurePlot.sizePolicy().hasHeightForWidth())
+        self.pressurePlot.setSizePolicy(sizePolicy)
+        self.tankMassPlot = PlotWidget(Widget)
+        self.tankMassPlot.setObjectName(u"tankMassPlot")
+        self.tankMassPlot.setGeometry(QRect(20, 460, 611, 311))
         self.label = QLabel(Widget)
         self.label.setObjectName(u"label")
         self.label.setGeometry(QRect(0, 0, 191, 111))
@@ -52,6 +58,13 @@ class Ui_Widget(object):
         self.simButton = QPushButton(Widget)
         self.simButton.setObjectName(u"simButton")
         self.simButton.setGeometry(QRect(230, 50, 101, 24))
+        self.engineThrustPlot = PlotWidget(Widget)
+        self.engineThrustPlot.setObjectName(u"engineThrustPlot")
+        self.engineThrustPlot.setGeometry(QRect(660, 460, 611, 311))
+        self.quickWidget = QQuickWidget(Widget)
+        self.quickWidget.setObjectName(u"quickWidget")
+        self.quickWidget.setGeometry(QRect(460, 50, 300, 200))
+        self.quickWidget.setResizeMode(QQuickWidget.ResizeMode.SizeRootObjectToView)
 
         self.retranslateUi(Widget)
 
