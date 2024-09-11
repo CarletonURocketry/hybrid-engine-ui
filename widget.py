@@ -31,6 +31,10 @@ class Widget(QWidget):
         # self.padTCPSocket = None
         # TCP socket
         self.padTCPSocket = QTcpSocket(self)
+        self.padTCPSocket.connected.connect(self.on_connected)
+        self.padTCPSocket.readyRead.connect(self.receive_socket_data)
+        self.padTCPSocket.errorOccurred.connect(self.on_error)
+        self.padTCPSocket.disconnected.connect(self.on_disconnected)
 
         # Set labels for graphs
         self.ui.pressurePlot.setTitle("Pressure")
@@ -84,9 +88,10 @@ class Widget(QWidget):
     def tcp_connection_button_handler(self):
         if self.padTCPSocket.state() == QAbstractSocket.SocketState.ConnectedState:
         # if self.padTCPSocket:
-            self.socket_timer.stop()
-            self.padTCPSocket.close()
-            self.padTCPSocket = None
+            # self.socket_timer.stop()
+            # self.padTCPSocket.close()
+            # self.padTCPSocket = None
+            self.padTCPSocket.disconnectFromHost()
 
             self.ui.logOutput.append("Closed socket connection")
             self.ui.tcpConnectButton.setText("Create TCP connection")
@@ -130,9 +135,23 @@ class Widget(QWidget):
             # self.ui.ipAddressInput.setReadOnly(True)
             # self.ui.portInput.setReadOnly(True)
 
+    def on_connected(self):
+        print("Connected to server!")
+
     def receive_socket_data(self):
-        data = self.padTCPSocket.recv(1024)
+        data = self.padTCPSocket.readAll().data().decode()
         print(data)
+
+    def on_error(self, error):
+        # Handle errors
+        print(f"Error: {self.padTCPSocket.errorString()}")
+
+    def on_disconnected(self):
+        # Handle disconnection
+        #TODO: ADD LOGIC TO CHANGE BUTTON LABELS
+        print("Disconnected from server.")
+
+
 
 
 # and this <3
