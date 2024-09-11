@@ -10,7 +10,6 @@ from pyqtgraph import mkPen
 import numpy as np
 from functools import partial
 
-import socket_utils
 
 # Important:
 # You need to run the following command to generate the ui_form.py file
@@ -67,7 +66,7 @@ class Widget(QWidget):
 
         # Button handlers
         self.ui.tcpConnectButton.clicked.connect(self.tcp_connection_button_handler)
-        
+
 
     # Remove this too
     def generate_points(self, plot):
@@ -87,10 +86,6 @@ class Widget(QWidget):
 
     def tcp_connection_button_handler(self):
         if self.padTCPSocket.state() == QAbstractSocket.SocketState.ConnectedState:
-        # if self.padTCPSocket:
-            # self.socket_timer.stop()
-            # self.padTCPSocket.close()
-            # self.padTCPSocket = None
             self.padTCPSocket.disconnectFromHost()
 
             self.ui.logOutput.append("Closed socket connection")
@@ -115,36 +110,25 @@ class Widget(QWidget):
                 return
 
             self.padTCPSocket.connectToHost(ip_addr, port)
-            if self.padTCPSocket.waitForConnected(30000):
-                self.ui.logOutput.append(f"Successfully connected to {ip_addr}:{port}")
-                self.ui.tcpConnectButton.setText("Close TCP connection")
-                self.ui.ipAddressInput.setReadOnly(True)
-                self.ui.portInput.setReadOnly(True)
-            else:
-                self.ui.logOutput.append(f"Connection to {ip_addr}:{port} failed - {self.padTCPSocket.error()}: {self.padTCPSocket.errorString()}")
-                return
-
-            # try:
-            #     self.padTCPSocket = socket_utils.create_tcp_socket_connection(ip_addr, port)
-            # except Exception as e:
-            #     self.ui.logOutput.append(f"Connection to {ip_addr}:{port} failed: {e}")
-            #     return
-
-            # self.ui.logOutput.append(f"Successfully connected to {ip_addr}:{port}")
-            # self.ui.tcpConnectButton.setText("Close TCP connection")
-            # self.ui.ipAddressInput.setReadOnly(True)
-            # self.ui.portInput.setReadOnly(True)
 
     def on_connected(self):
-        print("Connected to server!")
+        ip_addr: str = self.padTCPSocket.peerAddress()
+        port: str = self.padTCPSocket.peerPort()
+        self.ui.logOutput.append(f"Successfully connected to {ip_addr}:{port}")
+        self.ui.tcpConnectButton.setText("Close TCP connection")
+        self.ui.ipAddressInput.setReadOnly(True)
+        self.ui.portInput.setReadOnly(True)
 
     def receive_socket_data(self):
         data = self.padTCPSocket.readAll().data().decode()
         print(data)
 
     def on_error(self, error):
-        # Handle errors
-        print(f"Error: {self.padTCPSocket.errorString()}")
+        if self.padTCPSocket.errorString() == "The address is not available":
+            self.ui.logOutput.append(f"Connection failed - {self.padTCPSocket.error()}: {self.padTCPSocket.errorString()}")
+        else:
+            self.ui.logOutput.append(f"{self.padTCPSocket.error()}: {self.padTCPSocket.errorString()}")
+        # print(f"Error: {self.padTCPSocket.errorString()}")
 
     def on_disconnected(self):
         # Handle disconnection
