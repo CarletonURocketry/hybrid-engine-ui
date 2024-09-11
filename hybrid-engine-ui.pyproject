@@ -3,6 +3,6 @@
         "widget.py",
         "form.ui",
         "resources.qrc",
-        "socket_utils.py"
+        "socket_handlers.py"
     ]
 }
