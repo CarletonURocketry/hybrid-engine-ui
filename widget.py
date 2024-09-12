@@ -85,15 +85,7 @@ class Widget(QWidget):
             i += 1
 
     def tcp_connection_button_handler(self):
-        if self.padTCPSocket.state() == QAbstractSocket.SocketState.ConnectedState:
-            self.padTCPSocket.disconnectFromHost()
-
-            self.ui.logOutput.append("Closed socket connection")
-            self.ui.tcpConnectButton.setText("Create TCP connection")
-            self.ui.ipAddressInput.setReadOnly(False)
-            self.ui.portInput.setReadOnly(False)
-
-        else:
+        if self.padTCPSocket.state() == QAbstractSocket.SocketState.UnconnectedState:
             ip_addr = self.ui.ipAddressInput.text()
             port = self.ui.portInput.text()
 
@@ -110,7 +102,10 @@ class Widget(QWidget):
                 return
 
             self.padTCPSocket.connectToHost(ip_addr, port)
+        else:
+            self.padTCPSocket.disconnectFromHost()
 
+    # Any connection event should be handled here
     def on_connected(self):
         ip_addr: str = self.padTCPSocket.peerAddress()
         port: str = self.padTCPSocket.peerPort()
@@ -123,6 +118,7 @@ class Widget(QWidget):
         data = self.padTCPSocket.readAll().data().decode()
         print(data)
 
+    # Any errors with the socket should be handled here and logged
     def on_error(self, error):
         if self.padTCPSocket.errorString() == "The address is not available":
             self.ui.logOutput.append(f"Connection failed - {self.padTCPSocket.error()}: {self.padTCPSocket.errorString()}")
@@ -130,13 +126,13 @@ class Widget(QWidget):
             self.ui.logOutput.append(f"{self.padTCPSocket.error()}: {self.padTCPSocket.errorString()}")
         # print(f"Error: {self.padTCPSocket.errorString()}")
 
+    # Any disconnection event should be handled here and logged
     def on_disconnected(self):
-        # Handle disconnection
-        #TODO: ADD LOGIC TO CHANGE BUTTON LABELS
-        print("Disconnected from server.")
-
-
-
+        self.ui.logOutput.append("Socket connection was closed")
+        self.ui.tcpConnectButton.setText("Create TCP connection")
+        self.ui.ipAddressInput.setReadOnly(False)
+        self.ui.portInput.setReadOnly(False)
+        # print("Disconnected from server.")
 
 # and this <3
 def toggle_sim():
