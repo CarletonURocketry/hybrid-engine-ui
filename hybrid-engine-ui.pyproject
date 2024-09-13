@@ -2,7 +2,6 @@
     "files": [
         "widget.py",
         "form.ui",
-        "resources.qrc",
-        "socket_handlers.py"
+        "resources.qrc"
     ]
 }
