@@ -15,9 +15,8 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtQuickWidgets import QQuickWidget
-from PySide6.QtWidgets import (QApplication, QLabel, QPushButton, QSizePolicy,
-    QWidget)
+from PySide6.QtWidgets import (QApplication, QLabel, QLineEdit, QPushButton,
+    QSizePolicy, QTextBrowser, QWidget)
 
 from pyqtgraph import PlotWidget
 import rc_resources
@@ -50,21 +49,35 @@ class Ui_Widget(object):
         self.tankMassPlot = PlotWidget(Widget)
         self.tankMassPlot.setObjectName(u"tankMassPlot")
         self.tankMassPlot.setGeometry(QRect(20, 460, 611, 311))
-        self.label = QLabel(Widget)
-        self.label.setObjectName(u"label")
-        self.label.setGeometry(QRect(0, 0, 191, 111))
-        self.label.setPixmap(QPixmap(u":/images/logo"))
-        self.label.setScaledContents(True)
+        self.logoLabel = QLabel(Widget)
+        self.logoLabel.setObjectName(u"logoLabel")
+        self.logoLabel.setGeometry(QRect(0, 0, 191, 111))
+        self.logoLabel.setPixmap(QPixmap(u":/images/logo"))
+        self.logoLabel.setScaledContents(True)
         self.simButton = QPushButton(Widget)
         self.simButton.setObjectName(u"simButton")
-        self.simButton.setGeometry(QRect(230, 50, 101, 24))
+        self.simButton.setGeometry(QRect(1150, 20, 121, 24))
         self.engineThrustPlot = PlotWidget(Widget)
         self.engineThrustPlot.setObjectName(u"engineThrustPlot")
         self.engineThrustPlot.setGeometry(QRect(660, 460, 611, 311))
-        self.quickWidget = QQuickWidget(Widget)
-        self.quickWidget.setObjectName(u"quickWidget")
-        self.quickWidget.setGeometry(QRect(460, 50, 300, 200))
-        self.quickWidget.setResizeMode(QQuickWidget.ResizeMode.SizeRootObjectToView)
+        self.ipAddressInput = QLineEdit(Widget)
+        self.ipAddressInput.setObjectName(u"ipAddressInput")
+        self.ipAddressInput.setGeometry(QRect(306, 50, 131, 24))
+        self.tcpConnectButton = QPushButton(Widget)
+        self.tcpConnectButton.setObjectName(u"tcpConnectButton")
+        self.tcpConnectButton.setGeometry(QRect(210, 20, 227, 24))
+        self.ipAddressLabel = QLabel(Widget)
+        self.ipAddressLabel.setObjectName(u"ipAddressLabel")
+        self.ipAddressLabel.setGeometry(QRect(210, 55, 101, 16))
+        self.portInput = QLineEdit(Widget)
+        self.portInput.setObjectName(u"portInput")
+        self.portInput.setGeometry(QRect(306, 85, 131, 24))
+        self.portLabel = QLabel(Widget)
+        self.portLabel.setObjectName(u"portLabel")
+        self.portLabel.setGeometry(QRect(210, 90, 101, 16))
+        self.logOutput = QTextBrowser(Widget)
+        self.logOutput.setObjectName(u"logOutput")
+        self.logOutput.setGeometry(QRect(460, 20, 671, 91))
 
         self.retranslateUi(Widget)
 
@@ -73,7 +86,10 @@ class Ui_Widget(object):
 
     def retranslateUi(self, Widget):
         Widget.setWindowTitle(QCoreApplication.translate("Widget", u"Hybrid Engine Ground System UI", None))
-        self.label.setText("")
+        self.logoLabel.setText("")
         self.simButton.setText(QCoreApplication.translate("Widget", u"Start/Stop sim", None))
+        self.tcpConnectButton.setText(QCoreApplication.translate("Widget", u"Create TCP connection", None))
+        self.ipAddressLabel.setText(QCoreApplication.translate("Widget", u"Pad IPv4 address: ", None))
+        self.portLabel.setText(QCoreApplication.translate("Widget", u"Pad port: ", None))
     # retranslateUi
 

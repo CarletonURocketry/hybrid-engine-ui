@@ -71,7 +71,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QLabel" name="label">
+  <widget class="QLabel" name="logoLabel">
    <property name="geometry">
     <rect>
      <x>0</x>
@@ -93,9 +93,9 @@
   <widget class="QPushButton" name="simButton">
    <property name="geometry">
     <rect>
-     <x>230</x>
-     <y>50</y>
-     <width>101</width>
+     <x>1150</x>
+     <y>20</y>
+     <width>121</width>
      <height>24</height>
     </rect>
    </property>
@@ -113,26 +113,77 @@
     </rect>
    </property>
   </widget>
-  <widget class="QQuickWidget" name="quickWidget">
+  <widget class="QLineEdit" name="ipAddressInput">
+   <property name="geometry">
+    <rect>
+     <x>306</x>
+     <y>50</y>
+     <width>131</width>
+     <height>24</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="tcpConnectButton">
+   <property name="geometry">
+    <rect>
+     <x>210</x>
+     <y>20</y>
+     <width>227</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Create TCP connection</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="ipAddressLabel">
+   <property name="geometry">
+    <rect>
+     <x>210</x>
+     <y>55</y>
+     <width>101</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Pad IPv4 address: </string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="portInput">
+   <property name="geometry">
+    <rect>
+     <x>306</x>
+     <y>85</y>
+     <width>131</width>
+     <height>24</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="portLabel">
+   <property name="geometry">
+    <rect>
+     <x>210</x>
+     <y>90</y>
+     <width>101</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Pad port: </string>
+   </property>
+  </widget>
+  <widget class="QTextBrowser" name="logOutput">
    <property name="geometry">
     <rect>
      <x>460</x>
-     <y>50</y>
-     <width>300</width>
-     <height>200</height>
+     <y>20</y>
+     <width>671</width>
+     <height>91</height>
     </rect>
-   </property>
-   <property name="resizeMode">
-    <enum>QQuickWidget::ResizeMode::SizeRootObjectToView</enum>
    </property>
   </widget>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>QQuickWidget</class>
-   <extends>QWidget</extends>
-   <header location="global">QtQuickWidgets/QQuickWidget</header>
-  </customwidget>
   <customwidget>
    <class>PlotWidget</class>
    <extends>QGraphicsView</extends>
