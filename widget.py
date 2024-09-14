@@ -120,6 +120,8 @@ class Widget(QWidget):
         # print(data)
         header = data[:2]
         print(header)
+        packet_type: int
+        packet_sub_type: int
         packet_type, packet_sub_type = struct.unpack("<BB", header)
         print(f"packet_type: {packet_type}, packet_sub_type: {packet_sub_type}")
         # if packet_type == 1:
@@ -142,6 +144,7 @@ class Widget(QWidget):
         self.ui.portInput.setReadOnly(False)
         # print("Disconnected from server.")
 
+    # Handles when the window is closed, have to make sure to disconnect the TCP socket
     def closeEvent(self, event):
         if self.padTCPSocket.state() == QAbstractSocket.SocketState.ConnectedState:
             self.padTCPSocket.disconnectFromHost()
