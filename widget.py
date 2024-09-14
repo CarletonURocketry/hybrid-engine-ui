@@ -9,6 +9,7 @@ from PySide6.QtNetwork import QTcpSocket, QAbstractSocket
 from pyqtgraph import mkPen
 import numpy as np
 from functools import partial
+import struct
 
 
 # Important:
@@ -115,8 +116,15 @@ class Widget(QWidget):
         self.ui.portInput.setReadOnly(True)
 
     def receive_socket_data(self):
-        data = self.padTCPSocket.readAll().data().decode()
-        print(data)
+        data = self.padTCPSocket.readAll().data()
+        # print(data)
+        header = data[:2]
+        print(header)
+        packet_type, packet_sub_type = struct.unpack("<BB", header)
+        print(f"packet_type: {packet_type}, packet_sub_type: {packet_sub_type}")
+        # if packet_type == 1:
+
+        # print(data)
 
     # Any errors with the socket should be handled here and logged
     def on_error(self, error):
@@ -133,6 +141,12 @@ class Widget(QWidget):
         self.ui.ipAddressInput.setReadOnly(False)
         self.ui.portInput.setReadOnly(False)
         # print("Disconnected from server.")
+
+    def closeEvent(self, event):
+        if self.padTCPSocket.state() == QAbstractSocket.SocketState.ConnectedState:
+            self.padTCPSocket.disconnectFromHost()
+            self.padTCPSocket.waitForDisconnected()
+        event.accept()
 
 # and this <3
 def toggle_sim():

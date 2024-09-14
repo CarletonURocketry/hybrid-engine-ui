@@ -2,6 +2,7 @@
     "files": [
         "widget.py",
         "form.ui",
-        "resources.qrc"
+        "resources.qrc",
+        "packet_spec.py"
     ]
 }
