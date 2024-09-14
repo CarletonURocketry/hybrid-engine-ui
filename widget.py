@@ -7,10 +7,10 @@ from PySide6.QtWidgets import QApplication, QWidget
 from PySide6.QtCore import QTimer
 from PySide6.QtNetwork import QTcpSocket, QAbstractSocket
 from pyqtgraph import mkPen
-import numpy as np
 from functools import partial
-import struct
+import numpy as np
 
+import packet_spec
 
 # Important:
 # You need to run the following command to generate the ui_form.py file
@@ -115,18 +115,15 @@ class Widget(QWidget):
         self.ui.ipAddressInput.setReadOnly(True)
         self.ui.portInput.setReadOnly(True)
 
+    # Any data received should be handled here
     def receive_socket_data(self):
         data = self.padTCPSocket.readAll().data()
-        # print(data)
-        header = data[:2]
+        header_bytes = data[:2]
+        message_bytes = data[2:]
+        header = packet_spec.parse_packet_header(header_bytes)
+        message = packet_spec.parse_packet_message(header, message_bytes)
         print(header)
-        packet_type: int
-        packet_sub_type: int
-        packet_type, packet_sub_type = struct.unpack("<BB", header)
-        print(f"packet_type: {packet_type}, packet_sub_type: {packet_sub_type}")
-        # if packet_type == 1:
 
-        # print(data)
 
     # Any errors with the socket should be handled here and logged
     def on_error(self, error):
@@ -144,12 +141,18 @@ class Widget(QWidget):
         self.ui.portInput.setReadOnly(False)
         # print("Disconnected from server.")
 
+
+    def update_ui(self):
+        pass
+
     # Handles when the window is closed, have to make sure to disconnect the TCP socket
     def closeEvent(self, event):
         if self.padTCPSocket.state() == QAbstractSocket.SocketState.ConnectedState:
             self.padTCPSocket.disconnectFromHost()
             self.padTCPSocket.waitForDisconnected()
         event.accept()
+
+
 
 # and this <3
 def toggle_sim():
