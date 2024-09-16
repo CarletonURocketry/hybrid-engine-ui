@@ -2,12 +2,13 @@
 import sys
 import random
 import ipaddress
+from collections import namedtuple
+from dataclasses import dataclass
 
 from PySide6.QtWidgets import QApplication, QWidget
 from PySide6.QtCore import QTimer
 from PySide6.QtNetwork import QTcpSocket, QAbstractSocket
-from pyqtgraph import mkPen
-from functools import partial
+from pyqtgraph import mkPen, PlotDataItem
 import numpy as np
 
 import packet_spec
@@ -22,13 +23,32 @@ sim_is_running = False
 i = 0
 points = np.empty((0,2))
 
+@dataclass
+class PlotInfo:
+    points: np.array
+    data_line: PlotDataItem
+
 class Widget(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.ui = Ui_Widget()
         self.ui.setupUi(self)
 
-        # self.padTCPSocket = None
+        # Point numpy arrays for temperature, pressure and mass
+        self.p1_points = np.empty((0,2))
+        self.p2_points = np.empty((0,2))
+        self.p3_points = np.empty((0,2))
+        self.p4_points = np.empty((0,2))
+        self.t1_points = np.empty((0,2))
+        self.t2_points = np.empty((0,2))
+        self.t3_points = np.empty((0,2))
+        self.t4_points = np.empty((0,2))
+        self.tank_mass_points = np.empty((0,2))
+        self.engine_thrust_points = np.empty((0,2))
+
+        # Plot data
+        self.plots = {}
+
         # TCP socket
         self.padTCPSocket = QTcpSocket(self)
         self.padTCPSocket.connected.connect(self.on_connected)
@@ -36,53 +56,67 @@ class Widget(QWidget):
         self.padTCPSocket.errorOccurred.connect(self.on_error)
         self.padTCPSocket.disconnected.connect(self.on_disconnected)
 
-        # Set labels for graphs
+        # Graphing pens
+        red_pen = mkPen("r")
+        blue_pen = mkPen("g")
+        green_pen = mkPen("b")
+        pink_pen = mkPen("pink")
+
+        # Set labels and create plot data for each graph
+        # each entry in plots contains a PlotInfo dataclass consisting of points and data_line
+        # points refers to the np array containing the data
+        # data_line refers to the PlotDataItem object used to show data on the plots
+        self.ui.pressurePlot.addLegend(offset=(0,0), colCount=4)
         self.ui.pressurePlot.setTitle("Pressure")
         self.ui.pressurePlot.setLabel("left", "Pressure (PSI)")
         self.ui.pressurePlot.setLabel("bottom", "Time")
+        self.plots["p1"] = PlotInfo(self.p1_points, self.ui.pressurePlot.plot(self.p1_points, pen=red_pen, name="p1"))
+        self.plots["p2"] = PlotInfo(self.p2_points, self.ui.pressurePlot.plot(self.p2_points, pen=blue_pen, name="p2"))
+        self.plots["p3"] = PlotInfo(self.p3_points, self.ui.pressurePlot.plot(self.p3_points, pen=green_pen, name="p3"))
+        self.plots["p4"] = PlotInfo(self.p4_points, self.ui.pressurePlot.plot(self.p4_points, pen=pink_pen, name="p4"))
+
+        self.ui.temperaturePlot.addLegend(offset=(0,0), colCount=4)
         self.ui.temperaturePlot.setTitle("Temperature")
         self.ui.temperaturePlot.setLabel("left", "Temperature (°C)")
         self.ui.temperaturePlot.setLabel("bottom", "Time")
+        self.plots["t1"] = PlotInfo(self.t1_points, self.ui.temperaturePlot.plot(self.t1_points, pen=red_pen, name="t1"))
+        self.plots["t2"] = PlotInfo(self.t2_points, self.ui.temperaturePlot.plot(self.t2_points, pen=blue_pen, name="t2"))
+        self.plots["t3"] = PlotInfo(self.t3_points, self.ui.temperaturePlot.plot(self.t3_points, pen=green_pen, name="t3"))
+        self.plots["t4"] = PlotInfo(self.t4_points, self.ui.temperaturePlot.plot(self.t4_points, pen=pink_pen, name="t4"))
+
+        self.ui.tankMassPlot.addLegend()
         self.ui.tankMassPlot.setTitle("Tank Mass")
         self.ui.tankMassPlot.setLabel("left", "Mass (Kg)")
         self.ui.tankMassPlot.setLabel("bottom", "Time")
+        self.plots["tank_mass"] = PlotInfo(self.tank_mass_points, self.ui.tankMassPlot.plot(self.tank_mass_points, pen=red_pen))
+
+        self.ui.engineThrustPlot.addLegend()
         self.ui.engineThrustPlot.setTitle("Engine Thrust")
         self.ui.engineThrustPlot.setLabel("left", "Thrust (KN)")
         self.ui.engineThrustPlot.setLabel("bottom", "Time")
+        self.plots["engine_thrust"] = PlotInfo(self.engine_thrust_points, self.ui.engineThrustPlot.plot(self.engine_thrust_points, pen=red_pen))
 
-        # Temporary, remove once emulation is possible
-        self.ui.simButton.clicked.connect(toggle_sim)
-        self.temp_timer = QTimer(self)
-        self.temp_timer.timeout.connect(partial(self.generate_points, self.ui.temperaturePlot))
-        self.temp_timer.start(25)
-        self.pres_timer = QTimer(self)
-        self.pres_timer.timeout.connect(partial(self.generate_points, self.ui.pressurePlot))
-        self.pres_timer.start(25)
-        self.mass_timer = QTimer(self)
-        self.mass_timer.timeout.connect(partial(self.generate_points, self.ui.tankMassPlot))
-        self.mass_timer.start(25)
-
-        self.socket_timer = QTimer(self)
-        self.socket_timer.timeout.connect(self.receive_socket_data)
+        # QTimer for simulation, won't be needed once we can emulate
+        self.sim_timer = QTimer(self)
+        self.sim_timer.timeout.connect(self.generate_points)
+        self.sim_timer.start(25)
 
         # Button handlers
+        self.ui.simButton.clicked.connect(toggle_sim)
         self.ui.tcpConnectButton.clicked.connect(self.tcp_connection_button_handler)
 
 
     # Remove this too
-    def generate_points(self, plot):
+    def generate_points(self):
         global i
         global sim_is_running
-        global points
         if sim_is_running:
-            points = np.append(points, np.array([[i, random.randrange(1, 20)]]), axis=0)
-            if points.size > 1200:
-                points = np.delete(points, 0, 0)
-            # plot.clear()
-            # plot.setPen("r")
-            pen = mkPen("r") # Use this to change color
-            plot.addLegend(offset=(1,1))
-            plot.plot(points, clear=True, pen=pen, name="wut")
+            if i >= 250:
+                for key in self.plots:
+                    self.plots[key].points = np.delete(self.plots[key].points, 0, 0)
+            for key in self.plots:
+                self.plots[key].points = np.append(self.plots[key].points, np.array([[i, random.randrange(1, 20)]]), axis=0)
+                self.plots[key].data_line.setData(self.plots[key].points)
             i += 1
 
     def tcp_connection_button_handler(self):
@@ -151,8 +185,6 @@ class Widget(QWidget):
             self.padTCPSocket.disconnectFromHost()
             self.padTCPSocket.waitForDisconnected()
         event.accept()
-
-
 
 # and this <3
 def toggle_sim():

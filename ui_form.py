@@ -32,7 +32,7 @@ class Ui_Widget(object):
         self.temperaturePlot = PlotWidget(Widget)
         self.temperaturePlot.setObjectName(u"temperaturePlot")
         self.temperaturePlot.setGeometry(QRect(660, 130, 611, 311))
-        brush = QBrush(QColor(73, 38, 177, 255))
+        brush = QBrush(QColor(0, 0, 0, 255))
         brush.setStyle(Qt.SolidPattern)
         self.temperaturePlot.setBackgroundBrush(brush)
         brush1 = QBrush(QColor(255, 0, 0, 255))

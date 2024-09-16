@@ -29,9 +29,9 @@
    <property name="backgroundBrush">
     <brush brushstyle="SolidPattern">
      <color alpha="255">
-      <red>73</red>
-      <green>38</green>
-      <blue>177</blue>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
      </color>
     </brush>
    </property>
