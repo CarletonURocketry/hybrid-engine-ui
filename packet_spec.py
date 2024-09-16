@@ -1,7 +1,8 @@
 """
-This file contains dataclass definitions of all packets from the packet specification.
+packet_spec.py
 
-Each dataclass contains a from_bytes method that will create an instance of the class from a byte stream
+This file contains dataclass definitions of the packet header and packets from the packet specification, and methods to parse
+byte streams into their respective classes
 """
 
 from dataclasses import dataclass
