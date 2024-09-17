@@ -6,6 +6,7 @@ byte streams into their respective classes
 """
 
 from dataclasses import dataclass
+from abc import ABC
 from enum import Enum
 import struct
 
@@ -27,20 +28,21 @@ class PacketHeader:
     sub_type: TelemetryPacketSubType
 
 @dataclass
-class TemperaturePacket:
+class PacketMessage(ABC):
     time_since_power: int
+
+@dataclass
+class TemperaturePacket(PacketMessage):
     temperature: int
     id: int
 
 @dataclass
-class PressurePacket:
-    time_since_power: int
+class PressurePacket(PacketMessage):
     pressure: int
     id: int
 
 @dataclass
-class MassPacket:
-    time_since_power: int
+class MassPacket(PacketMessage):
     mass: int
     id: int
 
@@ -52,8 +54,7 @@ class ArmingState(Enum):
     ARMED_LAUNCH = 4
 
 @dataclass
-class ArmingStatePacket:
-    time_since_power: int
+class ArmingStatePacket(PacketMessage):
     state: ArmingState
 
 class ActuatorState(Enum):
@@ -61,8 +62,7 @@ class ActuatorState(Enum):
     ON = 1
 
 @dataclass
-class ActuatorStatePacket:
-    time_since_power: int
+class ActuatorStatePacket(PacketMessage):
     id: int
     state: ActuatorState
 
@@ -71,8 +71,7 @@ class Warning(Enum):
     HIGH_TEMP = 1
 
 @dataclass
-class WarningPacket:
-    time_since_power: int
+class WarningPacket(PacketMessage):
     type: Warning
 
 def parse_packet_header(header_bytes: bytes) -> PacketHeader:
@@ -81,7 +80,7 @@ def parse_packet_header(header_bytes: bytes) -> PacketHeader:
     packet_type, packet_sub_type = struct.unpack("<BB", header_bytes)
     return PacketHeader(PacketType(packet_type), TelemetryPacketSubType(packet_sub_type))
 
-def parse_packet_message(header: PacketHeader, message_bytes: bytes):
+def parse_packet_message(header: PacketHeader, message_bytes: bytes) -> PacketMessage:
     match header.type:
         case PacketType.CONTROL:
             pass
