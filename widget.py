@@ -7,7 +7,7 @@ from dataclasses import dataclass
 
 from PySide6.QtWidgets import QApplication, QWidget
 from PySide6.QtCore import QTimer
-from PySide6.QtNetwork import QTcpSocket, QAbstractSocket
+from PySide6.QtNetwork import QUdpSocket, QAbstractSocket, QHostAddress
 from pyqtgraph import mkPen, PlotDataItem
 import numpy as np
 
@@ -49,12 +49,11 @@ class Widget(QWidget):
         # Plot data
         self.plots = {}
 
-        # TCP socket
-        self.padTCPSocket = QTcpSocket(self)
-        self.padTCPSocket.connected.connect(self.on_connected)
-        self.padTCPSocket.readyRead.connect(self.receive_socket_data)
-        self.padTCPSocket.errorOccurred.connect(self.on_error)
-        self.padTCPSocket.disconnected.connect(self.on_disconnected)
+        # UDP socket
+        self.padUDPSocket = QUdpSocket(self)
+        self.padUDPSocket.readyRead.connect(self.udp_receive_socket_data)
+        self.padUDPSocket.errorOccurred.connect(self.udp_on_error)
+        self.padUDPSocket.disconnected.connect(self.udp_on_disconnected)
 
         # Graphing pens
         red_pen = mkPen("r")
@@ -103,8 +102,7 @@ class Widget(QWidget):
 
         # Button handlers
         self.ui.simButton.clicked.connect(toggle_sim)
-        self.ui.tcpConnectButton.clicked.connect(self.tcp_connection_button_handler)
-
+        self.ui.udpConnectButton.clicked.connect(self.udp_connection_button_handler)
 
     # Remove this too
     def generate_points(self):
@@ -119,10 +117,23 @@ class Widget(QWidget):
                 self.plots[key].data_line.setData(self.plots[key].points)
             i += 1
 
-    def tcp_connection_button_handler(self):
-        if self.padTCPSocket.state() == QAbstractSocket.SocketState.UnconnectedState:
-            ip_addr = self.ui.ipAddressInput.text()
-            port = self.ui.portInput.text()
+    def join_multicast_group(self, ip_addr, port):
+        multicastGroup = QHostAddress(ip_addr)
+        
+        if self.padUDPSocket.bind(QHostAddress.AnyIPv4, port) and self.padUDPSocket.joinMulticastGroup(multicastGroup):
+            self.ui.logOutput.append(f"Successfully connected to {ip_addr}:{port}")
+            self.ui.udpConnectButton.setText("Close UDP connection")
+            self.ui.udpIpAddressInput.setReadOnly(True)
+            self.ui.udpPortInput.setReadOnly(True)
+            return True
+        else:
+            self.ui.logOutput.append(f"Unable to join multicast group at IP address: {ip_addr}, port: {port}")
+            return False
+
+    def udp_connection_button_handler(self):
+        if self.padUDPSocket.state() == QAbstractSocket.SocketState.UnconnectedState:
+            ip_addr = self.ui.udpIpAddressInput.text()
+            port = self.ui.udpPortInput.text()
 
             try:
                 ipaddress.ip_address(ip_addr)
@@ -136,54 +147,46 @@ class Widget(QWidget):
                 self.ui.logOutput.append(f"Port '{port}' is invalid")
                 return
 
-            self.padTCPSocket.connectToHost(ip_addr, port)
+            self.join_multicast_group(ip_addr, port)
         else:
-            self.padTCPSocket.disconnectFromHost()
-
-    # Any connection event should be handled here
-    def on_connected(self):
-        ip_addr: str = self.padTCPSocket.peerAddress()
-        port: str = self.padTCPSocket.peerPort()
-        self.ui.logOutput.append(f"Successfully connected to {ip_addr}:{port}")
-        self.ui.tcpConnectButton.setText("Close TCP connection")
-        self.ui.ipAddressInput.setReadOnly(True)
-        self.ui.portInput.setReadOnly(True)
-
+            self.padUDPSocket.disconnectFromHost()
+         
     # Any data received should be handled here
-    def receive_socket_data(self):
-        data = self.padTCPSocket.readAll().data()
-        header_bytes = data[:2]
-        message_bytes = data[2:]
-        header = packet_spec.parse_packet_header(header_bytes)
-        message = packet_spec.parse_packet_message(header, message_bytes)
-        print(header)
-
+    def udp_receive_socket_data(self):
+        while self.padUDPSocket.hasPendingDatagrams():
+            datagram, host, port = self.padUDPSocket.readDatagram(self.padUDPSocket.pendingDatagramSize())
+            data = datagram.data()
+            header_bytes = data[:2]
+            message_bytes = data[2:]
+            header = packet_spec.parse_packet_header(header_bytes)
+            message = packet_spec.parse_packet_message(header, message_bytes)
+            print(header)
 
     # Any errors with the socket should be handled here and logged
-    def on_error(self, error):
-        if self.padTCPSocket.errorString() == "The address is not available":
-            self.ui.logOutput.append(f"Connection failed - {self.padTCPSocket.error()}: {self.padTCPSocket.errorString()}")
+    def udp_on_error(self, error):
+        if self.padUDPSocket.errorString() == "The address is not available":
+            self.ui.logOutput.append(f"Connection failed - {self.padUDPSocket.error()}: {self.padUDPSocket.errorString()}")
         else:
-            self.ui.logOutput.append(f"{self.padTCPSocket.error()}: {self.padTCPSocket.errorString()}")
+            self.ui.logOutput.append(f"{self.padUDPSocket.error()}: {self.padUDPSocket.errorString()}")
         # print(f"Error: {self.padTCPSocket.errorString()}")
 
     # Any disconnection event should be handled here and logged
-    def on_disconnected(self):
+    def udp_on_disconnected(self):
         self.ui.logOutput.append("Socket connection was closed")
-        self.ui.tcpConnectButton.setText("Create TCP connection")
-        self.ui.ipAddressInput.setReadOnly(False)
-        self.ui.portInput.setReadOnly(False)
+        self.ui.udpConnectButton.setText("Create UDP connection")
+        self.ui.udpIpAddressInput.setReadOnly(False)
+        self.ui.udpPortInput.setReadOnly(False)
         # print("Disconnected from server.")
-
 
     def update_ui(self):
         pass
 
     # Handles when the window is closed, have to make sure to disconnect the TCP socket
     def closeEvent(self, event):
-        if self.padTCPSocket.state() == QAbstractSocket.SocketState.ConnectedState:
-            self.padTCPSocket.disconnectFromHost()
-            self.padTCPSocket.waitForDisconnected()
+        if self.padUDPSocket.state() == QAbstractSocket.SocketState.ConnectedState:
+            self.padUDPSocket.disconnectFromHost()
+            self.padUDPSocket.waitForDisconnected()
+
         event.accept()
 
 # and this <3
