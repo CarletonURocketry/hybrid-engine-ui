@@ -175,11 +175,70 @@
   <widget class="QTextBrowser" name="logOutput">
    <property name="geometry">
     <rect>
-     <x>460</x>
+     <x>690</x>
      <y>20</y>
-     <width>671</width>
+     <width>441</width>
      <height>91</height>
     </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="portLabel_UDP">
+   <property name="geometry">
+    <rect>
+     <x>450</x>
+     <y>90</y>
+     <width>101</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>MG port: </string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="portInput_UDP">
+   <property name="geometry">
+    <rect>
+     <x>546</x>
+     <y>85</y>
+     <width>131</width>
+     <height>24</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="ipAddressInput_UDP">
+   <property name="geometry">
+    <rect>
+     <x>546</x>
+     <y>50</y>
+     <width>131</width>
+     <height>24</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="udpConnectButton">
+   <property name="geometry">
+    <rect>
+     <x>450</x>
+     <y>20</y>
+     <width>227</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Create UDP connection</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="ipAddressLabel_UDP">
+   <property name="geometry">
+    <rect>
+     <x>450</x>
+     <y>55</y>
+     <width>101</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>MG IPv4 address: </string>
    </property>
   </widget>
  </widget>

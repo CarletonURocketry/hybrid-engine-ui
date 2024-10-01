@@ -77,7 +77,22 @@ class Ui_Widget(object):
         self.portLabel.setGeometry(QRect(210, 90, 101, 16))
         self.logOutput = QTextBrowser(Widget)
         self.logOutput.setObjectName(u"logOutput")
-        self.logOutput.setGeometry(QRect(460, 20, 671, 91))
+        self.logOutput.setGeometry(QRect(690, 20, 441, 91))
+        self.portLabel_UDP = QLabel(Widget)
+        self.portLabel_UDP.setObjectName(u"portLabel_UDP")
+        self.portLabel_UDP.setGeometry(QRect(450, 90, 101, 16))
+        self.portInput_UDP = QLineEdit(Widget)
+        self.portInput_UDP.setObjectName(u"portInput_UDP")
+        self.portInput_UDP.setGeometry(QRect(546, 85, 131, 24))
+        self.ipAddressInput_UDP = QLineEdit(Widget)
+        self.ipAddressInput_UDP.setObjectName(u"ipAddressInput_UDP")
+        self.ipAddressInput_UDP.setGeometry(QRect(546, 50, 131, 24))
+        self.udpConnectButton = QPushButton(Widget)
+        self.udpConnectButton.setObjectName(u"udpConnectButton")
+        self.udpConnectButton.setGeometry(QRect(450, 20, 227, 24))
+        self.ipAddressLabel_UDP = QLabel(Widget)
+        self.ipAddressLabel_UDP.setObjectName(u"ipAddressLabel_UDP")
+        self.ipAddressLabel_UDP.setGeometry(QRect(450, 55, 101, 16))
 
         self.retranslateUi(Widget)
 
@@ -91,5 +106,8 @@ class Ui_Widget(object):
         self.tcpConnectButton.setText(QCoreApplication.translate("Widget", u"Create TCP connection", None))
         self.ipAddressLabel.setText(QCoreApplication.translate("Widget", u"Pad IPv4 address: ", None))
         self.portLabel.setText(QCoreApplication.translate("Widget", u"Pad port: ", None))
+        self.portLabel_UDP.setText(QCoreApplication.translate("Widget", u"MG port: ", None))
+        self.udpConnectButton.setText(QCoreApplication.translate("Widget", u"Create UDP connection", None))
+        self.ipAddressLabel_UDP.setText(QCoreApplication.translate("Widget", u"MG IPv4 address: ", None))
     # retranslateUi
 
