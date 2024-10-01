@@ -221,7 +221,6 @@ class Widget(QWidget):
          
     # Any data received should be handled here
     def udp_receive_socket_data(self):
-        print("Ready to receive datagrams")
         while self.padUDPSocket.hasPendingDatagrams():
             datagram, host, port = self.padUDPSocket.readDatagram(self.padUDPSocket.pendingDatagramSize())
             data = datagram.data()
@@ -259,7 +258,7 @@ class Widget(QWidget):
         if self.padUDPSocket.state() == QAbstractSocket.SocketState.ConnectedState:
             self.padUDPSocket.disconnectFromHost()
             self.padUDPSocket.waitForDisconnected()
-            
+
         event.accept()
 
 # and this <3
