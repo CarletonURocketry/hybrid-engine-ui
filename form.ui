@@ -113,12 +113,71 @@
     </rect>
    </property>
   </widget>
+  <widget class="QLineEdit" name="tcpIpAddressInput">
+   <property name="geometry">
+    <rect>
+     <x>306</x>
+     <y>50</y>
+     <width>131</width>
+     <height>24</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="tcpConnectButton">
+   <property name="geometry">
+    <rect>
+     <x>210</x>
+     <y>20</y>
+     <width>227</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Create TCP connection</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="tcpIpAddressLabel">
+   <property name="geometry">
+    <rect>
+     <x>210</x>
+     <y>55</y>
+     <width>101</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Pad IPv4 address: </string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="tcpPortInput">
+   <property name="geometry">
+    <rect>
+     <x>306</x>
+     <y>85</y>
+     <width>131</width>
+     <height>24</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="tcpPortLabel">
+   <property name="geometry">
+    <rect>
+     <x>210</x>
+     <y>90</y>
+     <width>101</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Pad port: </string>
+   </property>
+  </widget>
   <widget class="QTextBrowser" name="logOutput">
    <property name="geometry">
     <rect>
-     <x>460</x>
+     <x>690</x>
      <y>20</y>
-     <width>671</width>
+     <width>441</width>
      <height>91</height>
     </rect>
    </property>
@@ -126,7 +185,7 @@
   <widget class="QLabel" name="udpPortLabel">
    <property name="geometry">
     <rect>
-     <x>210</x>
+     <x>450</x>
      <y>90</y>
      <width>101</width>
      <height>16</height>
@@ -139,7 +198,7 @@
   <widget class="QLineEdit" name="udpPortInput">
    <property name="geometry">
     <rect>
-     <x>306</x>
+     <x>546</x>
      <y>85</y>
      <width>131</width>
      <height>24</height>
@@ -149,7 +208,7 @@
   <widget class="QLineEdit" name="udpIpAddressInput">
    <property name="geometry">
     <rect>
-     <x>306</x>
+     <x>546</x>
      <y>50</y>
      <width>131</width>
      <height>24</height>
@@ -159,7 +218,7 @@
   <widget class="QPushButton" name="udpConnectButton">
    <property name="geometry">
     <rect>
-     <x>210</x>
+     <x>450</x>
      <y>20</y>
      <width>227</width>
      <height>24</height>
@@ -172,7 +231,7 @@
   <widget class="QLabel" name="udpIpAddressLabel">
    <property name="geometry">
     <rect>
-     <x>210</x>
+     <x>450</x>
      <y>55</y>
      <width>101</width>
      <height>16</height>
