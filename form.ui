@@ -113,7 +113,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QLineEdit" name="ipAddressInput">
+  <widget class="QLineEdit" name="tcpIpAddressInput">
    <property name="geometry">
     <rect>
      <x>306</x>
@@ -136,7 +136,7 @@
     <string>Create TCP connection</string>
    </property>
   </widget>
-  <widget class="QLabel" name="ipAddressLabel">
+  <widget class="QLabel" name="tcpIpAddressLabel">
    <property name="geometry">
     <rect>
      <x>210</x>
@@ -149,7 +149,7 @@
     <string>Pad IPv4 address: </string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="portInput">
+  <widget class="QLineEdit" name="tcpPortInput">
    <property name="geometry">
     <rect>
      <x>306</x>
@@ -159,7 +159,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QLabel" name="portLabel">
+  <widget class="QLabel" name="tcpPortLabel">
    <property name="geometry">
     <rect>
      <x>210</x>
@@ -182,7 +182,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QLabel" name="portLabel_UDP">
+  <widget class="QLabel" name="udpPortLabel">
    <property name="geometry">
     <rect>
      <x>450</x>
@@ -195,7 +195,7 @@
     <string>MG port: </string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="portInput_UDP">
+  <widget class="QLineEdit" name="udpPortInput">
    <property name="geometry">
     <rect>
      <x>546</x>
@@ -205,7 +205,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QLineEdit" name="ipAddressInput_UDP">
+  <widget class="QLineEdit" name="udpIpAddressInput">
    <property name="geometry">
     <rect>
      <x>546</x>
@@ -228,7 +228,7 @@
     <string>Create UDP connection</string>
    </property>
   </widget>
-  <widget class="QLabel" name="ipAddressLabel_UDP">
+  <widget class="QLabel" name="udpIpAddressLabel">
    <property name="geometry">
     <rect>
      <x>450</x>

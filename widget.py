@@ -127,8 +127,8 @@ class Widget(QWidget):
 
     def tcp_connection_button_handler(self):
         if self.padTCPSocket.state() == QAbstractSocket.SocketState.UnconnectedState:
-            ip_addr = self.ui.ipAddressInput.text()
-            port = self.ui.portInput.text()
+            ip_addr = self.ui.tcpIpAddressInput.text()
+            port = self.ui.tcpPortInput.text()
 
             try:
                 ipaddress.ip_address(ip_addr)
@@ -154,8 +154,8 @@ class Widget(QWidget):
         port: str = self.padTCPSocket.peerPort()
         self.ui.logOutput.append(f"Successfully connected to {ip_addr}:{port}")
         self.ui.tcpConnectButton.setText("Close TCP connection")
-        self.ui.ipAddressInput.setReadOnly(True)
-        self.ui.portInput.setReadOnly(True)
+        self.ui.tcpIpAddressInput.setReadOnly(True)
+        self.ui.tcpPortInput.setReadOnly(True)
 
     # Any data received should be handled here
     def receive_socket_data(self):
@@ -178,8 +178,8 @@ class Widget(QWidget):
     def on_disconnected(self):
         self.ui.logOutput.append("Socket connection was closed")
         self.ui.tcpConnectButton.setText("Create TCP connection")
-        self.ui.ipAddressInput.setReadOnly(False)
-        self.ui.portInput.setReadOnly(False)
+        self.ui.tcpIpAddressInput.setReadOnly(False)
+        self.ui.tcpPortInput.setReadOnly(False)
         # print("Disconnected from server.")
 
     def join_multicast_group(self, ip_addr, port):
@@ -188,8 +188,8 @@ class Widget(QWidget):
         if self.padUDPSocket.bind(QHostAddress.AnyIPv4, port) and self.padUDPSocket.joinMulticastGroup(multicastGroup):
             self.ui.logOutput.append(f"Successfully connected to {ip_addr}:{port}")
             self.ui.udpConnectButton.setText("Close UDP connection")
-            self.ui.ipAddressInput_UDP.setReadOnly(True)
-            self.ui.portInput_UDP.setReadOnly(True)
+            self.ui.udpIpAddressInput.setReadOnly(True)
+            self.ui.udpPortInput.setReadOnly(True)
             return True
         else:
             self.ui.logOutput.append(f"Unable to join multicast group at IP address: {ip_addr}, port: {port}")
@@ -197,8 +197,8 @@ class Widget(QWidget):
 
     def udp_connection_button_handler(self):
         if self.padUDPSocket.state() == QAbstractSocket.SocketState.UnconnectedState:
-            ip_addr = self.ui.ipAddressInput_UDP.text()
-            port = self.ui.portInput_UDP.text()
+            ip_addr = self.ui.udpIpAddressInput.text()
+            port = self.ui.udpPortInput.text()
 
             try:
                 ipaddress.ip_address(ip_addr)
@@ -243,8 +243,8 @@ class Widget(QWidget):
     def udp_on_disconnected(self):
         self.ui.logOutput.append("Socket connection was closed")
         self.ui.udpConnectButton.setText("Create UDP connection")
-        self.ui.ipAddressInput_UDP.setReadOnly(False)
-        self.ui.portInput_UDP.setReadOnly(False)
+        self.ui.udpIpAddressInput.setReadOnly(False)
+        self.ui.udpPortInput.setReadOnly(False)
         # print("Disconnected from server.")
 
     def update_ui(self):
@@ -255,6 +255,11 @@ class Widget(QWidget):
         if self.padTCPSocket.state() == QAbstractSocket.SocketState.ConnectedState:
             self.padTCPSocket.disconnectFromHost()
             self.padTCPSocket.waitForDisconnected()
+
+        if self.padUDPSocket.state() == QAbstractSocket.SocketState.ConnectedState:
+            self.padUDPSocket.disconnectFromHost()
+            self.padUDPSocket.waitForDisconnected()
+            
         event.accept()
 
 # and this <3
