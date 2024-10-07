@@ -123,8 +123,7 @@ def parse_packet_message(header: PacketHeader, message_bytes: bytes) -> PacketMe
                     time, type = struct.unpack("<II", message_bytes)
                     return WarningPacket(type=Warning(type), time_since_power=time)
 
-
-#Implementing plot points
+#Demultiplexing the data and plotting
 def plot_point(plots,header, message):
     match header.type:
         case PacketType.CONTROL:
@@ -132,18 +131,18 @@ def plot_point(plots,header, message):
         case PacketType.TELEMETRY:
             match header.sub_type:
                 case TelemetryPacketSubType.TEMPERATURE:
+                    temperatureId:str = "t" + str(message.id)
+                    plots[temperatureId].points = np.append(plots[temperatureId].points, np.array([[message.time_since_power, message.temperature]]), axis=0)
+                    plots[temperatureId].data_line.setData(plots[temperatureId].points)
                     pass
                 case TelemetryPacketSubType.PRESSURE:
-                    match message.id:
-                        case 0:
-                            #add new point
-                            if message.time_since_power == 0:
-                                plots["p1"].points = np.delete(plots["p1"].points, 0, 0)
-                            else:
-                                plots["p1"].points = np.append(plots["p1"].points, np.array([[message.time_since_power, message.pressure]]), axis=0)
-                                plots["p1"].data_line.setData(plots["p1"].points)
+                    pressureId:str = "p" + str(message.id)
+                    plots[pressureId].points = np.append(plots[pressureId].points, np.array([[message.time_since_power, message.pressure]]), axis=0)
+                    plots[pressureId].data_line.setData(plots[pressureId].points)
                 case TelemetryPacketSubType.MASS:
-                    pass
+                    tankMass:str = "tank_mass"
+                    plots[tankMass].points = np.append(plots[tankMass].points, np.array([[message.time_since_power, message.mass]]), axis=0)
+                    plots[tankMass].data_line.setData(plots[tankMass].points)
                 case TelemetryPacketSubType.ARMING_STATE:
                     pass
                 case TelemetryPacketSubType.ACT_STATE:
