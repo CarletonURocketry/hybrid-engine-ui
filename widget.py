@@ -115,6 +115,11 @@ class Widget(QWidget):
                 self.plots[key].points = np.append(self.plots[key].points, np.array([[i, random.randrange(1, 20)]]), axis=0)
                 self.plots[key].data_line.setData(self.plots[key].points)
             i += 1
+    #reset graph
+    def reset_graph(self):
+        for key in self.plots:
+            self.plots[key].points = np.delete(self.plots[key].points, 0, 0)
+            self.plots[key].data_line.setData(self.plots[key].points)
 
     def join_multicast_group(self, ip_addr, port):
         multicastGroup = QHostAddress(ip_addr)
@@ -149,7 +154,8 @@ class Widget(QWidget):
             self.join_multicast_group(ip_addr, port)
         else:
             self.padUDPSocket.disconnectFromHost()
-         
+    def plot_point(self, header, message):
+        packet_spec.plot_point(self.plots, header, message);
     # Any data received should be handled here
     def udp_receive_socket_data(self):
         while self.padUDPSocket.hasPendingDatagrams():
@@ -159,7 +165,9 @@ class Widget(QWidget):
             message_bytes = data[2:]
             header = packet_spec.parse_packet_header(header_bytes)
             message = packet_spec.parse_packet_message(header, message_bytes)
+            self.plot_point(header,message)
             print(header)
+            print(message)
 
     # Any errors with the socket should be handled here and logged
     def udp_on_error(self, error):
@@ -175,6 +183,8 @@ class Widget(QWidget):
         self.ui.udpConnectButton.setText("Create UDP connection")
         self.ui.udpIpAddressInput.setReadOnly(False)
         self.ui.udpPortInput.setReadOnly(False)
+        #Reset the plot back to initial state
+        self.reset_graph()
         # print("Disconnected from server.")
 
     def update_ui(self):

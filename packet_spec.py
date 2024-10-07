@@ -8,6 +8,8 @@ byte streams into their respective classes
 from dataclasses import dataclass
 from abc import ABC
 from enum import Enum
+import numpy as np
+
 import struct
 
 class PacketType(Enum):
@@ -87,9 +89,59 @@ def parse_packet_message(header: PacketHeader, message_bytes: bytes) -> PacketMe
         case PacketType.TELEMETRY:
             match header.sub_type:
                 case TelemetryPacketSubType.TEMPERATURE:
+                    temperature: int
+                    id: int
+                    time: int
+                    time, temperature, id = struct.unpack("<III", message_bytes)
+                    return TemperaturePacket(temperature=temperature, id=id, time_since_power=time)
+                case TelemetryPacketSubType.PRESSURE:
+                    pressure: int
+                    id: int
+                    time: int
+                    time, pressure, id = struct.unpack("<III", message_bytes)
+                    return PressurePacket(pressure=pressure, id=id, time_since_power=time)
+                case TelemetryPacketSubType.MASS:
+                    time: int
+                    mass: int
+                    id: int
+                    time, mass, id = struct.unpack("<III", message_bytes)
+                    return MassPacket(mass=mass, id=id, time_since_power=time)
+                case TelemetryPacketSubType.ARMING_STATE:
+                    time:int
+                    state:int
+                    time, state = struct.unpack("<II", message_bytes)
+                    return ArmingStatePacket(state=ArmingState(state), time_since_power=time)
+                case TelemetryPacketSubType.ACT_STATE:
+                    time:int
+                    state:int
+                    id:int
+                    time, id, state = struct.unpack("<III", message_bytes)
+                    return ActuatorStatePacket(time_since_power=time, id=id, state=ActuatorState(state))
+                case TelemetryPacketSubType.WARNING:
+                    time:int
+                    type:int
+                    time, type = struct.unpack("<II", message_bytes)
+                    return WarningPacket(type=Warning(type), time_since_power=time)
+
+
+#Implementing plot points
+def plot_point(plots,header, message):
+    match header.type:
+        case PacketType.CONTROL:
+            pass
+        case PacketType.TELEMETRY:
+            match header.sub_type:
+                case TelemetryPacketSubType.TEMPERATURE:
                     pass
                 case TelemetryPacketSubType.PRESSURE:
-                    pass
+                    match message.id:
+                        case 0:
+                            #add new point
+                            if message.time_since_power == 0:
+                                plots["p1"].points = np.delete(plots["p1"].points, 0, 0)
+                            else:
+                                plots["p1"].points = np.append(plots["p1"].points, np.array([[message.time_since_power, message.pressure]]), axis=0)
+                                plots["p1"].data_line.setData(plots["p1"].points)
                 case TelemetryPacketSubType.MASS:
                     pass
                 case TelemetryPacketSubType.ARMING_STATE:
@@ -98,6 +150,5 @@ def parse_packet_message(header: PacketHeader, message_bytes: bytes) -> PacketMe
                     pass
                 case TelemetryPacketSubType.WARNING:
                     pass
-
 
 
