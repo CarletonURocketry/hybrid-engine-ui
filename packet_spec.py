@@ -92,35 +92,35 @@ def parse_packet_message(header: PacketHeader, message_bytes: bytes) -> PacketMe
                     temperature: int
                     id: int
                     time: int
-                    time, temperature, id = struct.unpack("<III", message_bytes)
+                    time, temperature, id = struct.unpack("<IIB", message_bytes)
                     return TemperaturePacket(temperature=temperature, id=id, time_since_power=time)
                 case TelemetryPacketSubType.PRESSURE:
                     pressure: int
                     id: int
                     time: int
-                    time, pressure, id = struct.unpack("<III", message_bytes)
+                    time, pressure, id = struct.unpack("<IIB", message_bytes)
                     return PressurePacket(pressure=pressure, id=id, time_since_power=time)
                 case TelemetryPacketSubType.MASS:
                     time: int
                     mass: int
                     id: int
-                    time, mass, id = struct.unpack("<III", message_bytes)
+                    time, mass, id = struct.unpack("<IIB", message_bytes)
                     return MassPacket(mass=mass, id=id, time_since_power=time)
                 case TelemetryPacketSubType.ARMING_STATE:
                     time:int
                     state:int
-                    time, state = struct.unpack("<II", message_bytes)
+                    time, state = struct.unpack("<IB", message_bytes)
                     return ArmingStatePacket(state=ArmingState(state), time_since_power=time)
                 case TelemetryPacketSubType.ACT_STATE:
                     time:int
                     state:int
                     id:int
-                    time, id, state = struct.unpack("<III", message_bytes)
+                    time, id, state = struct.unpack("<IBB", message_bytes)
                     return ActuatorStatePacket(time_since_power=time, id=id, state=ActuatorState(state))
                 case TelemetryPacketSubType.WARNING:
                     time:int
                     type:int
-                    time, type = struct.unpack("<II", message_bytes)
+                    time, type = struct.unpack("<IB", message_bytes)
                     return WarningPacket(type=Warning(type), time_since_power=time)
 
 #Demultiplexing the data and plotting
