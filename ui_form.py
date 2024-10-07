@@ -15,69 +15,124 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QLabel, QLineEdit, QPushButton,
-    QSizePolicy, QTextBrowser, QWidget)
+from PySide6.QtWidgets import (QApplication, QGridLayout, QHBoxLayout, QLabel,
+    QLayout, QLineEdit, QPushButton, QSizePolicy,
+    QTextBrowser, QVBoxLayout, QWidget)
 
 from pyqtgraph import PlotWidget
-import rc_resources
 
 class Ui_Widget(object):
     def setupUi(self, Widget):
         if not Widget.objectName():
             Widget.setObjectName(u"Widget")
-        Widget.resize(1291, 787)
+        Widget.resize(1288, 757)
         icon = QIcon()
         icon.addFile(u"logos/better_logo.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         Widget.setWindowIcon(icon)
+        self.verticalLayout = QVBoxLayout(Widget)
+        self.verticalLayout.setSpacing(10)
+        self.verticalLayout.setObjectName(u"verticalLayout")
+        self.verticalLayout.setContentsMargins(20, 15, 20, 20)
+        self.controlLayout = QGridLayout()
+        self.controlLayout.setObjectName(u"controlLayout")
+        self.simButton = QPushButton(Widget)
+        self.simButton.setObjectName(u"simButton")
+
+        self.controlLayout.addWidget(self.simButton, 0, 2, 1, 1)
+
+        self.connectionLayout = QVBoxLayout()
+        self.connectionLayout.setObjectName(u"connectionLayout")
+        self.udpConnectButton = QPushButton(Widget)
+        self.udpConnectButton.setObjectName(u"udpConnectButton")
+
+        self.connectionLayout.addWidget(self.udpConnectButton)
+
+        self.addressLayout = QHBoxLayout()
+        self.addressLayout.setSpacing(1)
+        self.addressLayout.setObjectName(u"addressLayout")
+        self.udpIpAddressLabel = QLabel(Widget)
+        self.udpIpAddressLabel.setObjectName(u"udpIpAddressLabel")
+
+        self.addressLayout.addWidget(self.udpIpAddressLabel)
+
+        self.udpIpAddressInput = QLineEdit(Widget)
+        self.udpIpAddressInput.setObjectName(u"udpIpAddressInput")
+
+        self.addressLayout.addWidget(self.udpIpAddressInput)
+
+
+        self.connectionLayout.addLayout(self.addressLayout)
+
+        self.portLayout = QHBoxLayout()
+        self.portLayout.setSpacing(6)
+        self.portLayout.setObjectName(u"portLayout")
+        self.portLayout.setSizeConstraint(QLayout.SizeConstraint.SetFixedSize)
+        self.udpPortLabel = QLabel(Widget)
+        self.udpPortLabel.setObjectName(u"udpPortLabel")
+
+        self.portLayout.addWidget(self.udpPortLabel)
+
+        self.udpPortInput = QLineEdit(Widget)
+        self.udpPortInput.setObjectName(u"udpPortInput")
+
+        self.portLayout.addWidget(self.udpPortInput)
+
+
+        self.connectionLayout.addLayout(self.portLayout)
+
+
+        self.controlLayout.addLayout(self.connectionLayout, 0, 0, 1, 1)
+
+        self.logOutput = QTextBrowser(Widget)
+        self.logOutput.setObjectName(u"logOutput")
+
+        self.controlLayout.addWidget(self.logOutput, 0, 1, 1, 1)
+
+        self.controlLayout.setColumnStretch(0, 3)
+        self.controlLayout.setColumnStretch(1, 10)
+        self.controlLayout.setColumnStretch(2, 2)
+
+        self.verticalLayout.addLayout(self.controlLayout)
+
+        self.plotLayout = QGridLayout()
+        self.plotLayout.setSpacing(20)
+        self.plotLayout.setObjectName(u"plotLayout")
         self.temperaturePlot = PlotWidget(Widget)
         self.temperaturePlot.setObjectName(u"temperaturePlot")
-        self.temperaturePlot.setGeometry(QRect(660, 130, 611, 311))
         brush = QBrush(QColor(0, 0, 0, 255))
         brush.setStyle(Qt.SolidPattern)
         self.temperaturePlot.setBackgroundBrush(brush)
         brush1 = QBrush(QColor(255, 0, 0, 255))
         brush1.setStyle(Qt.NoBrush)
         self.temperaturePlot.setForegroundBrush(brush1)
+
+        self.plotLayout.addWidget(self.temperaturePlot, 0, 1, 1, 1)
+
+        self.engineThrustPlot = PlotWidget(Widget)
+        self.engineThrustPlot.setObjectName(u"engineThrustPlot")
+
+        self.plotLayout.addWidget(self.engineThrustPlot, 1, 1, 1, 1)
+
         self.pressurePlot = PlotWidget(Widget)
         self.pressurePlot.setObjectName(u"pressurePlot")
-        self.pressurePlot.setGeometry(QRect(20, 130, 611, 311))
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.pressurePlot.sizePolicy().hasHeightForWidth())
         self.pressurePlot.setSizePolicy(sizePolicy)
+
+        self.plotLayout.addWidget(self.pressurePlot, 0, 0, 1, 1)
+
         self.tankMassPlot = PlotWidget(Widget)
         self.tankMassPlot.setObjectName(u"tankMassPlot")
-        self.tankMassPlot.setGeometry(QRect(20, 460, 611, 311))
-        self.logoLabel = QLabel(Widget)
-        self.logoLabel.setObjectName(u"logoLabel")
-        self.logoLabel.setGeometry(QRect(0, 0, 191, 111))
-        self.logoLabel.setPixmap(QPixmap(u":/images/logo"))
-        self.logoLabel.setScaledContents(True)
-        self.simButton = QPushButton(Widget)
-        self.simButton.setObjectName(u"simButton")
-        self.simButton.setGeometry(QRect(1150, 20, 121, 24))
-        self.engineThrustPlot = PlotWidget(Widget)
-        self.engineThrustPlot.setObjectName(u"engineThrustPlot")
-        self.engineThrustPlot.setGeometry(QRect(660, 460, 611, 311))
-        self.logOutput = QTextBrowser(Widget)
-        self.logOutput.setObjectName(u"logOutput")
-        self.logOutput.setGeometry(QRect(460, 20, 671, 91))
-        self.udpPortLabel = QLabel(Widget)
-        self.udpPortLabel.setObjectName(u"udpPortLabel")
-        self.udpPortLabel.setGeometry(QRect(210, 90, 101, 16))
-        self.udpPortInput = QLineEdit(Widget)
-        self.udpPortInput.setObjectName(u"udpPortInput")
-        self.udpPortInput.setGeometry(QRect(306, 85, 131, 24))
-        self.udpIpAddressInput = QLineEdit(Widget)
-        self.udpIpAddressInput.setObjectName(u"udpIpAddressInput")
-        self.udpIpAddressInput.setGeometry(QRect(306, 50, 131, 24))
-        self.udpConnectButton = QPushButton(Widget)
-        self.udpConnectButton.setObjectName(u"udpConnectButton")
-        self.udpConnectButton.setGeometry(QRect(210, 20, 227, 24))
-        self.udpIpAddressLabel = QLabel(Widget)
-        self.udpIpAddressLabel.setObjectName(u"udpIpAddressLabel")
-        self.udpIpAddressLabel.setGeometry(QRect(210, 55, 101, 16))
+
+        self.plotLayout.addWidget(self.tankMassPlot, 1, 0, 1, 1)
+
+
+        self.verticalLayout.addLayout(self.plotLayout)
+
+        self.verticalLayout.setStretch(0, 2)
+        self.verticalLayout.setStretch(1, 14)
 
         self.retranslateUi(Widget)
 
@@ -86,10 +141,9 @@ class Ui_Widget(object):
 
     def retranslateUi(self, Widget):
         Widget.setWindowTitle(QCoreApplication.translate("Widget", u"Hybrid Engine Ground System UI", None))
-        self.logoLabel.setText("")
         self.simButton.setText(QCoreApplication.translate("Widget", u"Start/Stop sim", None))
-        self.udpPortLabel.setText(QCoreApplication.translate("Widget", u"MG port: ", None))
         self.udpConnectButton.setText(QCoreApplication.translate("Widget", u"Create UDP connection", None))
         self.udpIpAddressLabel.setText(QCoreApplication.translate("Widget", u"MG IPv4 address: ", None))
+        self.udpPortLabel.setText(QCoreApplication.translate("Widget", u"MG port: ", None))
     # retranslateUi
 
