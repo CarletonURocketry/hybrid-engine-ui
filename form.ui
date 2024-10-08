@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1291</width>
-    <height>787</height>
+    <width>1288</width>
+    <height>757</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,171 +17,161 @@
    <iconset>
     <normaloff>logos/better_logo.png</normaloff>logos/better_logo.png</iconset>
   </property>
-  <widget class="PlotWidget" name="temperaturePlot">
-   <property name="geometry">
-    <rect>
-     <x>660</x>
-     <y>130</y>
-     <width>611</width>
-     <height>311</height>
-    </rect>
+  <layout class="QVBoxLayout" name="verticalLayout" stretch="2,14">
+   <property name="spacing">
+    <number>10</number>
    </property>
-   <property name="backgroundBrush">
-    <brush brushstyle="SolidPattern">
-     <color alpha="255">
-      <red>0</red>
-      <green>0</green>
-      <blue>0</blue>
-     </color>
-    </brush>
+   <property name="leftMargin">
+    <number>20</number>
    </property>
-   <property name="foregroundBrush">
-    <brush brushstyle="NoBrush">
-     <color alpha="255">
-      <red>255</red>
-      <green>0</green>
-      <blue>0</blue>
-     </color>
-    </brush>
+   <property name="topMargin">
+    <number>15</number>
    </property>
-  </widget>
-  <widget class="PlotWidget" name="pressurePlot">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>130</y>
-     <width>611</width>
-     <height>311</height>
-    </rect>
+   <property name="rightMargin">
+    <number>20</number>
    </property>
-   <property name="sizePolicy">
-    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-     <horstretch>0</horstretch>
-     <verstretch>0</verstretch>
-    </sizepolicy>
+   <property name="bottomMargin">
+    <number>20</number>
    </property>
-  </widget>
-  <widget class="PlotWidget" name="tankMassPlot">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>460</y>
-     <width>611</width>
-     <height>311</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="logoLabel">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>191</width>
-     <height>111</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="pixmap">
-    <pixmap resource="resources.qrc">:/images/logo</pixmap>
-   </property>
-   <property name="scaledContents">
-    <bool>true</bool>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="simButton">
-   <property name="geometry">
-    <rect>
-     <x>1150</x>
-     <y>20</y>
-     <width>121</width>
-     <height>24</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Start/Stop sim</string>
-   </property>
-  </widget>
-  <widget class="PlotWidget" name="engineThrustPlot">
-   <property name="geometry">
-    <rect>
-     <x>660</x>
-     <y>460</y>
-     <width>611</width>
-     <height>311</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QTextBrowser" name="logOutput">
-   <property name="geometry">
-    <rect>
-     <x>460</x>
-     <y>20</y>
-     <width>671</width>
-     <height>91</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="udpPortLabel">
-   <property name="geometry">
-    <rect>
-     <x>210</x>
-     <y>90</y>
-     <width>101</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>MG port: </string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="udpPortInput">
-   <property name="geometry">
-    <rect>
-     <x>306</x>
-     <y>85</y>
-     <width>131</width>
-     <height>24</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="udpIpAddressInput">
-   <property name="geometry">
-    <rect>
-     <x>306</x>
-     <y>50</y>
-     <width>131</width>
-     <height>24</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="udpConnectButton">
-   <property name="geometry">
-    <rect>
-     <x>210</x>
-     <y>20</y>
-     <width>227</width>
-     <height>24</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Create UDP connection</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="udpIpAddressLabel">
-   <property name="geometry">
-    <rect>
-     <x>210</x>
-     <y>55</y>
-     <width>101</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>MG IPv4 address: </string>
-   </property>
-  </widget>
+   <item>
+    <layout class="QGridLayout" name="controlLayout" columnstretch="3,3,11,2">
+     <item row="0" column="3">
+      <widget class="QPushButton" name="simButton">
+       <property name="text">
+        <string>Start/Stop sim</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <layout class="QVBoxLayout" name="connectionLayout">
+       <item>
+        <widget class="QPushButton" name="udpConnectButton">
+         <property name="text">
+          <string>Create UDP connection</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="addressLayout">
+         <property name="spacing">
+          <number>1</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="udpIpAddressLabel">
+           <property name="text">
+            <string>MG IPv4 address: </string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="udpIpAddressInput"/>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="portLayout" stretch="0,0">
+         <property name="spacing">
+          <number>6</number>
+         </property>
+         <property name="sizeConstraint">
+          <enum>QLayout::SizeConstraint::SetFixedSize</enum>
+         </property>
+         <item>
+          <widget class="QLabel" name="udpPortLabel">
+           <property name="text">
+            <string>MG port: </string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="udpPortInput"/>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+     <item row="0" column="2">
+      <widget class="QTextBrowser" name="logOutput"/>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>1</horstretch>
+         <verstretch>1</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>127</width>
+         <height>90</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>127</width>
+         <height>90</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="pixmap">
+        <pixmap resource="resources.qrc">:/images/logo</pixmap>
+       </property>
+       <property name="scaledContents">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QGridLayout" name="plotLayout">
+     <property name="spacing">
+      <number>20</number>
+     </property>
+     <item row="0" column="1">
+      <widget class="PlotWidget" name="temperaturePlot">
+       <property name="backgroundBrush">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>0</red>
+          <green>0</green>
+          <blue>0</blue>
+         </color>
+        </brush>
+       </property>
+       <property name="foregroundBrush">
+        <brush brushstyle="NoBrush">
+         <color alpha="255">
+          <red>255</red>
+          <green>0</green>
+          <blue>0</blue>
+         </color>
+        </brush>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="PlotWidget" name="engineThrustPlot"/>
+     </item>
+     <item row="0" column="0">
+      <widget class="PlotWidget" name="pressurePlot">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="PlotWidget" name="tankMassPlot"/>
+     </item>
+    </layout>
+   </item>
+  </layout>
  </widget>
  <customwidgets>
   <customwidget>

@@ -2,7 +2,6 @@
 import sys
 import random
 import ipaddress
-from collections import namedtuple
 from dataclasses import dataclass
 
 from PySide6.QtWidgets import QApplication, QWidget
