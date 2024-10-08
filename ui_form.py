@@ -15,11 +15,12 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QGraphicsView, QGridLayout, QHBoxLayout,
-    QLabel, QLayout, QLineEdit, QPushButton,
-    QSizePolicy, QTextBrowser, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QGridLayout, QHBoxLayout, QLabel,
+    QLayout, QLineEdit, QPushButton, QSizePolicy,
+    QTextBrowser, QVBoxLayout, QWidget)
 
 from pyqtgraph import PlotWidget
+import rc_resources
 
 class Ui_Widget(object):
     def setupUi(self, Widget):
@@ -35,6 +36,11 @@ class Ui_Widget(object):
         self.verticalLayout.setContentsMargins(20, 15, 20, 20)
         self.controlLayout = QGridLayout()
         self.controlLayout.setObjectName(u"controlLayout")
+        self.simButton = QPushButton(Widget)
+        self.simButton.setObjectName(u"simButton")
+
+        self.controlLayout.addWidget(self.simButton, 0, 3, 1, 1)
+
         self.connectionLayout = QVBoxLayout()
         self.connectionLayout.setObjectName(u"connectionLayout")
         self.udpConnectButton = QPushButton(Widget)
@@ -83,22 +89,23 @@ class Ui_Widget(object):
 
         self.controlLayout.addWidget(self.logOutput, 0, 2, 1, 1)
 
-        self.simButton = QPushButton(Widget)
-        self.simButton.setObjectName(u"simButton")
+        self.label = QLabel(Widget)
+        self.label.setObjectName(u"label")
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        sizePolicy.setHorizontalStretch(1)
+        sizePolicy.setVerticalStretch(1)
+        sizePolicy.setHeightForWidth(self.label.sizePolicy().hasHeightForWidth())
+        self.label.setSizePolicy(sizePolicy)
+        self.label.setMinimumSize(QSize(127, 90))
+        self.label.setMaximumSize(QSize(127, 90))
+        self.label.setPixmap(QPixmap(u":/images/logo"))
+        self.label.setScaledContents(True)
 
-        self.controlLayout.addWidget(self.simButton, 0, 3, 1, 1)
-
-        self.graphicsView = QGraphicsView(Widget)
-        self.graphicsView.setObjectName(u"graphicsView")
-        self.graphicsView.setEnabled(True)
-        self.graphicsView.setRenderHints(QPainter.RenderHint.SmoothPixmapTransform)
-        self.graphicsView.setResizeAnchor(QGraphicsView.ViewportAnchor.AnchorViewCenter)
-
-        self.controlLayout.addWidget(self.graphicsView, 0, 0, 1, 1)
+        self.controlLayout.addWidget(self.label, 0, 0, 1, 1)
 
         self.controlLayout.setColumnStretch(0, 3)
-        self.controlLayout.setColumnStretch(1, 4)
-        self.controlLayout.setColumnStretch(2, 14)
+        self.controlLayout.setColumnStretch(1, 3)
+        self.controlLayout.setColumnStretch(2, 11)
         self.controlLayout.setColumnStretch(3, 2)
 
         self.verticalLayout.addLayout(self.controlLayout)
@@ -124,11 +131,11 @@ class Ui_Widget(object):
 
         self.pressurePlot = PlotWidget(Widget)
         self.pressurePlot.setObjectName(u"pressurePlot")
-        sizePolicy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.pressurePlot.sizePolicy().hasHeightForWidth())
-        self.pressurePlot.setSizePolicy(sizePolicy)
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.pressurePlot.sizePolicy().hasHeightForWidth())
+        self.pressurePlot.setSizePolicy(sizePolicy1)
 
         self.plotLayout.addWidget(self.pressurePlot, 0, 0, 1, 1)
 
@@ -150,9 +157,10 @@ class Ui_Widget(object):
 
     def retranslateUi(self, Widget):
         Widget.setWindowTitle(QCoreApplication.translate("Widget", u"Hybrid Engine Ground System UI", None))
+        self.simButton.setText(QCoreApplication.translate("Widget", u"Start/Stop sim", None))
         self.udpConnectButton.setText(QCoreApplication.translate("Widget", u"Create UDP connection", None))
         self.udpIpAddressLabel.setText(QCoreApplication.translate("Widget", u"MG IPv4 address: ", None))
         self.udpPortLabel.setText(QCoreApplication.translate("Widget", u"MG port: ", None))
-        self.simButton.setText(QCoreApplication.translate("Widget", u"Start/Stop sim", None))
+        self.label.setText("")
     # retranslateUi
 

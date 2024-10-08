@@ -35,14 +35,6 @@ class Widget(QWidget):
         self.ui = Ui_Widget()
         self.ui.setupUi(self)
 
-        # Add the logo
-        self.logoScene = QGraphicsScene()
-        self.logoPixmap = QPixmap("logos/logoandtexttransparentsmol.png")
-        self.logoPixmapItem = QGraphicsPixmapItem(self.logoPixmap)
-        self.logoScene.addItem(self.logoPixmapItem)
-        self.ui.graphicsView.setScene(self.logoScene)
-        self.ui.graphicsView.fitInView(self.logoPixmapItem, Qt.AspectRatioMode.KeepAspectRatioByExpanding)
-
         # Point numpy arrays for temperature, pressure and mass
         self.p1_points = np.empty((0,2))
         self.p2_points = np.empty((0,2))
