@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/images">
         <file alias="logo">logos/logoandtexttransparent.png</file>
-        <file alias="name">logos/avionics.png</file>
     </qresource>
 </RCC>
