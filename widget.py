@@ -2,12 +2,10 @@
 import sys
 import random
 import ipaddress
-from collections import namedtuple
 from dataclasses import dataclass
 
-from PySide6.QtWidgets import QApplication, QWidget, QGraphicsScene, QGraphicsPixmapItem
-from PySide6.QtGui import QPixmap
-from PySide6.QtCore import QTimer, Qt
+from PySide6.QtWidgets import QApplication, QWidget
+from PySide6.QtCore import QTimer
 from PySide6.QtNetwork import QUdpSocket, QAbstractSocket, QHostAddress
 from pyqtgraph import mkPen, PlotDataItem
 import numpy as np
