@@ -23,6 +23,38 @@ class TelemetryPacketSubType(Enum):
     ARMING_STATE = 3
     ACT_STATE = 4
     WARNING = 5
+    ACT_REQ = 6
+    ACT_ACK = 7
+    ARM_REQ = 8
+    ARM_ACK = 9
+
+class ActuationRequestStatus(Enum):
+    ACT_OK = 0
+    ACT_DENIED = 1
+    ACT_DNE = 2
+    ACT_INV = 3
+
+
+class ArmingState(Enum):
+    ARMED_PAD = 0
+    ARMED_VALVES = 1
+    ARMED_IGNITION = 2
+    ARMED_DISCONNECTED = 3
+    ARMED_LAUNCH = 4
+
+class Warning(Enum):
+    HIGH_PRESSURE = 0
+    HIGH_TEMP = 1
+
+
+class ActuatorState(Enum):
+    OFF = 0
+    ON = 1
+
+class AcknowledgementStatus(Enum):
+    ARM_OK = 0
+    ARM_DENIED = 1
+    ARM_INV = 2
 
 @dataclass
 class PacketHeader:
@@ -32,6 +64,24 @@ class PacketHeader:
 @dataclass
 class PacketMessage(ABC):
     time_since_power: int
+
+@dataclass
+class ActuationRequest():
+    id: int
+    state: ActuatorState
+
+@dataclass
+class ActuationAcknowledgement():
+    id: int
+    status: ActuationRequestStatus
+
+@dataclass
+class ArmingRequest():
+    level: ArmingState
+
+@dataclass
+class ArmingAcknowledgement():
+    status: AcknowledgementStatus
 
 @dataclass
 class TemperaturePacket(PacketMessage):
@@ -48,29 +98,14 @@ class MassPacket(PacketMessage):
     mass: int
     id: int
 
-class ArmingState(Enum):
-    ARMED_PAD = 0
-    ARMED_VALVES = 1
-    ARMED_IGNITION = 2
-    ARMED_DISCONNECTED = 3
-    ARMED_LAUNCH = 4
-
 @dataclass
 class ArmingStatePacket(PacketMessage):
     state: ArmingState
-
-class ActuatorState(Enum):
-    OFF = 0
-    ON = 1
 
 @dataclass
 class ActuatorStatePacket(PacketMessage):
     id: int
     state: ActuatorState
-
-class Warning(Enum):
-    HIGH_PRESSURE = 0
-    HIGH_TEMP = 1
 
 @dataclass
 class WarningPacket(PacketMessage):
@@ -85,7 +120,26 @@ def parse_packet_header(header_bytes: bytes) -> PacketHeader:
 def parse_packet_message(header: PacketHeader, message_bytes: bytes) -> PacketMessage:
     match header.type:
         case PacketType.CONTROL:
-            pass
+            match header.sub_type:
+                case TelemetryPacketSubType.ACT_REQ:
+                    id: int
+                    state: int
+                    id, state = struct.unpack("<BB". message_bytes)
+                    return ActuationRequest(id=id, state=state)
+                case TelemetryPacketSubType.ACT_ACK:
+                    id: int
+                    status: int
+                    id, status = struct.unpack("<BB", message_bytes)
+                    return ActuationAcknowledgement(id=id, status=status)
+                case TelemetryPacketSubType.ARM_REQ:
+                    level:int
+                    level = struct.unpack("<B", message_bytes)
+                    return ArmingRequest(level=level)
+                case TelemetryPacketSubType.ARM_ACK:
+                    status:int
+                    status = struct.unpack("<B", message_bytes)
+                    return ArmingAcknowledgement(status=status)
+
         case PacketType.TELEMETRY:
             match header.sub_type:
                 case TelemetryPacketSubType.TEMPERATURE:
@@ -124,7 +178,7 @@ def parse_packet_message(header: PacketHeader, message_bytes: bytes) -> PacketMe
                     return WarningPacket(type=Warning(type), time_since_power=time)
 
 #Demultiplexing the data and plotting
-def plot_point(plots,header, message):
+def plot_point(plots, header, message):
     match header.type:
         case PacketType.CONTROL:
             pass
@@ -134,7 +188,6 @@ def plot_point(plots,header, message):
                     temperatureId:str = "t" + str(message.id)
                     plots[temperatureId].points = np.append(plots[temperatureId].points, np.array([[message.time_since_power, message.temperature]]), axis=0)
                     plots[temperatureId].data_line.setData(plots[temperatureId].points)
-                    pass
                 case TelemetryPacketSubType.PRESSURE:
                     pressureId:str = "p" + str(message.id)
                     plots[pressureId].points = np.append(plots[pressureId].points, np.array([[message.time_since_power, message.pressure]]), axis=0)
