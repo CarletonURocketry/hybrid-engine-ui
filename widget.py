@@ -99,6 +99,12 @@ class Widget(QWidget):
         self.sim_timer.timeout.connect(self.generate_points)
         self.sim_timer.start(25)
 
+        #QTimer to help us only keep the recent 30s data
+        self.time_range = 30000
+        self.data_filter_timer = QTimer(self)
+        self.data_filter_timer.timeout.connect(self.filter_data)
+        self.data_filter_timer.start(self.time_range)
+
         # Button handlers
         self.ui.simButton.clicked.connect(toggle_sim)
         self.ui.udpConnectButton.clicked.connect(self.udp_connection_button_handler)
@@ -115,7 +121,6 @@ class Widget(QWidget):
                 self.plots[key].points = np.append(self.plots[key].points, np.array([[i, random.randrange(1, 20)]]), axis=0)
                 self.plots[key].data_line.setData(self.plots[key].points)
             i += 1
-
     def join_multicast_group(self, ip_addr, port):
         multicastGroup = QHostAddress(ip_addr)
         
@@ -149,7 +154,27 @@ class Widget(QWidget):
             self.join_multicast_group(ip_addr, port)
         else:
             self.padUDPSocket.disconnectFromHost()
-         
+    def filter_data(self):
+        for key in self.plots:
+            if self.plots[key].points.size == 0:
+                continue
+            min_time:int = self.plots[key].points[:,0].max() - self.time_range
+            self.plots[key].points = self.plots[key].points[self.plots[key].points[:,0] >= min_time]
+            self.plots[key].data_line.setData(self.plots[key].points)
+    def update_time_range(self):
+        #Time range is in ms
+        timeRange = 1000
+        #Get the time data from p1 as reference
+        if self.plots["p1"].points.size == 0:
+            return
+        pressureData = self.plots["p1"].points
+        #Take the first element which is time, and get the max
+        maxTime = pressureData[:,0].max()
+        self.ui.pressurePlot.setXRange(max(0, maxTime - timeRange), maxTime)
+        self.ui.temperaturePlot.setXRange(max(0, maxTime - timeRange), maxTime)
+        self.ui.tankMassPlot.setXRange(max(0, maxTime - timeRange), maxTime)
+        self.ui.engineThrustPlot.setXRange(max(0, maxTime - timeRange), maxTime)
+
     # Any data received should be handled here
     def udp_receive_socket_data(self):
         while self.padUDPSocket.hasPendingDatagrams():
@@ -159,7 +184,8 @@ class Widget(QWidget):
             message_bytes = data[2:]
             header = packet_spec.parse_packet_header(header_bytes)
             message = packet_spec.parse_packet_message(header, message_bytes)
-            print(header)
+            packet_spec.plot_point(self.plots, header, message);
+            self.update_time_range()
 
     # Any errors with the socket should be handled here and logged
     def udp_on_error(self, error):
