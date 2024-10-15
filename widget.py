@@ -99,6 +99,14 @@ class Widget(QWidget):
         self.sim_timer.timeout.connect(self.generate_points)
         self.sim_timer.start(25)
 
+        #QTimer to help us to filter the data
+        self.timer_time = 5
+        #The time range in the graph
+        self.time_range = 30000
+        self.data_filter_timer = QTimer(self)
+        self.data_filter_timer.timeout.connect(self.filter_data)
+        self.data_filter_timer.start(self.timer_time)
+
         # Button handlers
         self.ui.simButton.clicked.connect(toggle_sim)
         self.ui.udpConnectButton.clicked.connect(self.udp_connection_button_handler)
@@ -115,6 +123,32 @@ class Widget(QWidget):
                 self.plots[key].points = np.append(self.plots[key].points, np.array([[i, random.randrange(1, 20)]]), axis=0)
                 self.plots[key].data_line.setData(self.plots[key].points)
             i += 1
+    def plot_point(self, header, message):
+        plots = self.plots
+        match header.type:
+            case packet_spec.PacketType.CONTROL:
+                # Cannot reach since the we only receive telemetry data
+                pass
+            case packet_spec.PacketType.TELEMETRY:
+                match header.sub_type:
+                    case packet_spec.TelemetryPacketSubType.TEMPERATURE:
+                        temperatureId:str = "t" + str(message.id)
+                        plots[temperatureId].points = np.append(plots[temperatureId].points, np.array([[message.time_since_power, message.temperature]]), axis=0)
+                        plots[temperatureId].data_line.setData(plots[temperatureId].points)
+                    case packet_spec.TelemetryPacketSubType.PRESSURE:
+                        pressureId:str = "p" + str(message.id)
+                        plots[pressureId].points = np.append(plots[pressureId].points, np.array([[message.time_since_power, message.pressure]]), axis=0)
+                        plots[pressureId].data_line.setData(plots[pressureId].points)
+                    case packet_spec.TelemetryPacketSubType.MASS:
+                        tankMass:str = "tank_mass"
+                        plots[tankMass].points = np.append(plots[tankMass].points, np.array([[message.time_since_power, message.mass]]), axis=0)
+                        plots[tankMass].data_line.setData(plots[tankMass].points)
+                    case packet_spec.packet_spec.TelemetryPacketSubType.ARMING_STATE:
+                        pass
+                    case packet_spec.TelemetryPacketSubType.ACT_STATE:
+                        pass
+                    case packet_spec.TelemetryPacketSubType.WARNING:
+                        pass
 
     def join_multicast_group(self, ip_addr, port):
         multicastGroup = QHostAddress(ip_addr)
@@ -149,7 +183,13 @@ class Widget(QWidget):
             self.join_multicast_group(ip_addr, port)
         else:
             self.padUDPSocket.disconnectFromHost()
-         
+    def filter_data(self):
+        for key in self.plots:
+            if self.plots[key].points.size == 0:
+                continue
+            min_time:int = self.plots[key].points[:,0].max() - self.time_range
+            self.plots[key].points = self.plots[key].points[self.plots[key].points[:,0] >= min_time]
+            self.plots[key].data_line.setData(self.plots[key].points)
     # Any data received should be handled here
     def udp_receive_socket_data(self):
         while self.padUDPSocket.hasPendingDatagrams():
@@ -159,7 +199,8 @@ class Widget(QWidget):
             message_bytes = data[2:]
             header = packet_spec.parse_packet_header(header_bytes)
             message = packet_spec.parse_packet_message(header, message_bytes)
-            print(header)
+            self.plot_point(header, message);
+            self.filter_data
 
     # Any errors with the socket should be handled here and logged
     def udp_on_error(self, error):
