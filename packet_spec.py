@@ -177,30 +177,3 @@ def parse_packet_message(header: PacketHeader, message_bytes: bytes) -> PacketMe
                     time, type = struct.unpack("<IB", message_bytes)
                     return WarningPacket(type=Warning(type), time_since_power=time)
 
-#Demultiplexing the data and plotting
-def plot_point(plots, header, message):
-    match header.type:
-        case PacketType.CONTROL:
-            pass
-        case PacketType.TELEMETRY:
-            match header.sub_type:
-                case TelemetryPacketSubType.TEMPERATURE:
-                    temperatureId:str = "t" + str(message.id)
-                    plots[temperatureId].points = np.append(plots[temperatureId].points, np.array([[message.time_since_power, message.temperature]]), axis=0)
-                    plots[temperatureId].data_line.setData(plots[temperatureId].points)
-                case TelemetryPacketSubType.PRESSURE:
-                    pressureId:str = "p" + str(message.id)
-                    plots[pressureId].points = np.append(plots[pressureId].points, np.array([[message.time_since_power, message.pressure]]), axis=0)
-                    plots[pressureId].data_line.setData(plots[pressureId].points)
-                case TelemetryPacketSubType.MASS:
-                    tankMass:str = "tank_mass"
-                    plots[tankMass].points = np.append(plots[tankMass].points, np.array([[message.time_since_power, message.mass]]), axis=0)
-                    plots[tankMass].data_line.setData(plots[tankMass].points)
-                case TelemetryPacketSubType.ARMING_STATE:
-                    pass
-                case TelemetryPacketSubType.ACT_STATE:
-                    pass
-                case TelemetryPacketSubType.WARNING:
-                    pass
-
-
