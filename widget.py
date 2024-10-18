@@ -101,9 +101,9 @@ class Widget(QWidget):
         self.sim_timer.start(25)
 
         #QTimer to help us to filter the data
-        self.timer_time = 5
+        self.timer_time = 25
         #The time range in the graph
-        self.time_range = 30000
+        self.time_range = 2500
         self.data_filter_timer = QTimer(self)
         self.data_filter_timer.timeout.connect(self.filter_data)
         self.data_filter_timer.start(self.timer_time)
@@ -124,6 +124,7 @@ class Widget(QWidget):
                 self.plots[key].points = np.append(self.plots[key].points, np.array([[i, random.randrange(1, 20)]]), axis=0)
                 self.plots[key].data_line.setData(self.plots[key].points)
             i += 1
+
     def plot_point(self, header, message):
         plots = self.plots
         match header.type:
@@ -184,13 +185,15 @@ class Widget(QWidget):
             self.join_multicast_group(ip_addr, port)
         else:
             self.padUDPSocket.disconnectFromHost()
+
     def filter_data(self):
         for key in self.plots:
             if self.plots[key].points.size == 0:
                 continue
-            min_time:int = self.plots[key].points[:,0].max() - self.time_range
+            min_time: int = self.plots[key].points[:,0].max() - self.time_range
             self.plots[key].points = self.plots[key].points[self.plots[key].points[:,0] >= min_time]
             self.plots[key].data_line.setData(self.plots[key].points)
+
     # Any data received should be handled here
     def udp_receive_socket_data(self):
         while self.padUDPSocket.hasPendingDatagrams():
@@ -200,16 +203,14 @@ class Widget(QWidget):
             message_bytes = data[2:]
             header = packet_spec.parse_packet_header(header_bytes)
             message = packet_spec.parse_packet_message(header, message_bytes)
-            self.plot_point(header, message);
-            self.filter_data
+            self.plot_point(header, message)
 
     # Any errors with the socket should be handled here and logged
-    def udp_on_error(self, error):
+    def udp_on_error(self):
         if self.padUDPSocket.errorString() == "The address is not available":
             self.ui.logOutput.append(f"Connection failed - {self.padUDPSocket.error()}: {self.padUDPSocket.errorString()}")
         else:
             self.ui.logOutput.append(f"{self.padUDPSocket.error()}: {self.padUDPSocket.errorString()}")
-        # print(f"Error: {self.padTCPSocket.errorString()}")
 
     # Any disconnection event should be handled here and logged
     def udp_on_disconnected(self):
@@ -217,10 +218,6 @@ class Widget(QWidget):
         self.ui.udpConnectButton.setText("Create UDP connection")
         self.ui.udpIpAddressInput.setReadOnly(False)
         self.ui.udpPortInput.setReadOnly(False)
-        # print("Disconnected from server.")
-
-    def update_ui(self):
-        pass
 
     # Handles when the window is closed, have to make sure to disconnect the TCP socket
     def closeEvent(self, event):
