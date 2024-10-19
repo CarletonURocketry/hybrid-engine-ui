@@ -17,7 +17,7 @@
    <iconset>
     <normaloff>logos/better_logo.png</normaloff>logos/better_logo.png</iconset>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout" stretch="2,14">
+  <layout class="QVBoxLayout" name="verticalLayout" stretch="0,14">
    <property name="spacing">
     <number>10</number>
    </property>
@@ -34,23 +34,9 @@
     <number>20</number>
    </property>
    <item>
-    <layout class="QGridLayout" name="controlLayout" columnstretch="3,3,11,2">
-     <item row="0" column="3">
-      <widget class="QPushButton" name="simButton">
-       <property name="text">
-        <string>Start/Stop sim</string>
-       </property>
-      </widget>
-     </item>
+    <layout class="QGridLayout" name="controlLayout" columnstretch="3,0,0,0,0,0,0">
      <item row="0" column="1">
       <layout class="QVBoxLayout" name="connectionLayout">
-       <item>
-        <widget class="QPushButton" name="udpConnectButton">
-         <property name="text">
-          <string>Create UDP connection</string>
-         </property>
-        </widget>
-       </item>
        <item>
         <layout class="QHBoxLayout" name="addressLayout">
          <property name="spacing">
@@ -78,6 +64,12 @@
          </property>
          <item>
           <widget class="QLabel" name="udpPortLabel">
+           <property name="minimumSize">
+            <size>
+             <width>89</width>
+             <height>0</height>
+            </size>
+           </property>
            <property name="text">
             <string>MG port: </string>
            </property>
@@ -88,10 +80,304 @@
          </item>
         </layout>
        </item>
+       <item>
+        <widget class="QPushButton" name="udpConnectButton">
+         <property name="maximumSize">
+          <size>
+           <width>1000</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Create UDP connection</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </item>
-     <item row="0" column="2">
-      <widget class="QTextBrowser" name="logOutput"/>
+     <item row="0" column="4">
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <item>
+        <layout class="QFormLayout" name="formLayout_2">
+         <item row="0" column="0">
+          <layout class="QGridLayout" name="gridLayout_2">
+           <item row="1" column="2">
+            <widget class="QLabel" name="xv2">
+             <property name="minimumSize">
+              <size>
+               <width>80</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>XV-2</string>
+             </property>
+             <property name="indent">
+              <number>10</number>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="xv1">
+             <property name="minimumSize">
+              <size>
+               <width>80</width>
+               <height>23</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>XV-1</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLabel" name="xv3State">
+             <property name="minimumSize">
+              <size>
+               <width>50</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>OFF</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignmentFlag::AlignCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3">
+            <widget class="QLabel" name="cv1State">
+             <property name="minimumSize">
+              <size>
+               <width>50</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>OFF</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignmentFlag::AlignCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QLabel" name="cv1">
+             <property name="minimumSize">
+              <size>
+               <width>80</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Fire Valve</string>
+             </property>
+             <property name="indent">
+              <number>10</number>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="quickDisconect">
+             <property name="minimumSize">
+              <size>
+               <width>80</width>
+               <height>23</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Quick Disconect&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="3">
+            <widget class="QLabel" name="xv2State">
+             <property name="minimumSize">
+              <size>
+               <width>50</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>OFF</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignmentFlag::AlignCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="3">
+            <widget class="QLabel" name="xv4State">
+             <property name="minimumSize">
+              <size>
+               <width>50</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>OFF</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignmentFlag::AlignCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="xv3">
+             <property name="minimumSize">
+              <size>
+               <width>80</width>
+               <height>23</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>XV-3</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLabel" name="quickDisconectState">
+             <property name="minimumSize">
+              <size>
+               <width>50</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>OFF</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignmentFlag::AlignCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLabel" name="xv1State">
+             <property name="minimumSize">
+              <size>
+               <width>50</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>OFF</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignmentFlag::AlignCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2">
+            <widget class="QLabel" name="xv4">
+             <property name="minimumSize">
+              <size>
+               <width>80</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>XV-4</string>
+             </property>
+             <property name="indent">
+              <number>10</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+     <item row="0" column="3">
+      <widget class="QTextBrowser" name="logOutput">
+       <property name="maximumSize">
+        <size>
+         <width>350</width>
+         <height>87</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="6">
+      <widget class="QPushButton" name="simButton">
+       <property name="text">
+        <string>Start/Stop sim</string>
+       </property>
+      </widget>
      </item>
      <item row="0" column="0">
       <widget class="QLabel" name="label">
@@ -131,6 +417,9 @@
      <property name="spacing">
       <number>20</number>
      </property>
+     <item row="1" column="0">
+      <widget class="PlotWidget" name="tankMassPlot"/>
+     </item>
      <item row="0" column="1">
       <widget class="PlotWidget" name="temperaturePlot">
        <property name="backgroundBrush">
@@ -153,9 +442,6 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
-      <widget class="PlotWidget" name="engineThrustPlot"/>
-     </item>
      <item row="0" column="0">
       <widget class="PlotWidget" name="pressurePlot">
        <property name="sizePolicy">
@@ -166,8 +452,8 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
-      <widget class="PlotWidget" name="tankMassPlot"/>
+     <item row="1" column="1">
+      <widget class="PlotWidget" name="engineThrustPlot"/>
      </item>
     </layout>
    </item>
