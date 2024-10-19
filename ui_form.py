@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'form.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.7.2
+## Created by: Qt User Interface Compiler version 6.8.0
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -378,7 +378,7 @@ class Ui_Widget(object):
         self.tankMassPlot = PlotWidget(self.telemetryTab)
         self.tankMassPlot.setObjectName(u"tankMassPlot")
 
-        self.plotLayout.addWidget(self.tankMassPlot, 1, 0, 1, 1)
+        self.plotLayout.addWidget(self.engineThrustPlot, 1, 1, 1, 1)
 
 
         self.verticalLayout.addLayout(self.plotLayout)
