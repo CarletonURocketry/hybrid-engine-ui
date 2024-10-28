@@ -230,6 +230,8 @@ class Widget(QWidget):
             message_bytes = data[2:]
             header = packet_spec.parse_packet_header(header_bytes)
             message = packet_spec.parse_packet_message(header, message_bytes)
+            if(isinstance(message, packet_spec.ActuatorStatePacket)):
+                self.updateActState(message)
             self.plot_point(header, message)
 
     # Any errors with the socket should be handled here and logged
@@ -253,6 +255,19 @@ class Widget(QWidget):
             self.padUDPSocket.waitForDisconnected()
 
         event.accept()
+
+    def updateActState(self, message):
+        if(message.id == 0):
+            if(message.state == packet_spec.ActuatorState.OFF):
+                self.ui.cv1State.setText("OFF")
+            elif(message.state == packet_spec.ActuatorState.ON):
+                self.ui.cv1State.setText("ON")
+        elif(message.id == 13):
+            if(message.state == packet_spec.ActuatorState.OFF):
+                self.ui.quickDisconnectState.setText("OFF")
+            elif(message.state == packet_spec.ActuatorState.ON):
+                self.ui.quickDisconnectState.setText("ON")
+
 
 # and this <3
 def toggle_sim():
