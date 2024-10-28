@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'form.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.8.0
+## Created by: Qt User Interface Compiler version 6.7.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -287,7 +287,40 @@ class Ui_Widget(object):
         self.xv2State.setFont(font1)
         self.xv2State.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.gridLayout_2.addWidget(self.xv2State, 1, 3, 1, 1)
+        self.gridLayout_2.addWidget(self.xv6State, 2, 5, 1, 1)
+
+        self.xv3 = QLabel(Widget)
+        self.xv3.setObjectName(u"xv3")
+        self.xv3.setFont(font)
+
+        self.gridLayout_2.addWidget(self.xv3, 1, 4, 1, 1)
+
+        self.xv11 = QLabel(Widget)
+        self.xv11.setObjectName(u"xv11")
+        self.xv11.setFont(font)
+
+        self.gridLayout_2.addWidget(self.xv11, 4, 2, 1, 1)
+
+        self.xv7State = QLabel(Widget)
+        self.xv7State.setObjectName(u"xv7State")
+        self.xv7State.setMinimumSize(QSize(50, 0))
+        self.xv7State.setFont(font1)
+        self.xv7State.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.gridLayout_2.addWidget(self.xv7State, 3, 1, 1, 1)
+
+        self.xv1State = QLabel(Widget)
+        self.xv1State.setObjectName(u"xv1State")
+        self.xv1State.setFont(font1)
+
+        self.gridLayout_2.addWidget(self.xv1State, 1, 1, 1, 1)
+
+        self.xv1 = QLabel(Widget)
+        self.xv1.setObjectName(u"xv1")
+        self.xv1.setMinimumSize(QSize(80, 23))
+        self.xv1.setFont(font2)
+
+        self.gridLayout_2.addWidget(self.xv1, 1, 0, 1, 1)
 
         self.cv1State = QLabel(self.telemetryTab)
         self.cv1State.setObjectName(u"cv1State")
