@@ -4,10 +4,11 @@ import random
 import ipaddress
 from dataclasses import dataclass
 
-from PySide6.QtWidgets import QApplication, QWidget
+from PySide6.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel
 from PySide6.QtCore import QTimer
 from PySide6.QtNetwork import QUdpSocket, QAbstractSocket, QHostAddress
 from pyqtgraph import mkPen, PlotDataItem
+from PySide6.QtGui import QPixmap
 import numpy as np
 
 import packet_spec
@@ -26,6 +27,23 @@ points = np.empty((0,2))
 class PlotInfo:
     points: np.array
     data_line: PlotDataItem
+
+class pid_window(QWidget):
+    def __init__(self):
+        super().__init__()
+        layout = QVBoxLayout()
+        self.scaledPic = QPixmap(":/images/logo")
+        self.scaledPic = self.scaledPic.scaled(1100,700)
+        self.pic = QLabel("Another Window")
+        self.pic.setPixmap(self.scaledPic)
+        self.pic.setMaximumWidth(1100)
+        self.pic.setMaximumHeight(700)
+        #self.pic.resize(100,100)
+        self.pic.show()
+        layout.addWidget(self.pic)
+        self.setLayout(layout)
+        #print("new window open") tester
+
 
 class Widget(QWidget):
     def __init__(self, parent=None):
@@ -126,6 +144,7 @@ class Widget(QWidget):
         self.data_filter_timer.start(self.timer_time)
 
         # Button handlers
+        self.ui.pid_button.clicked.connect(self.show_new_window)
         self.ui.udpConnectButton.clicked.connect(self.udp_connection_button_handler)
 
     def plot_point(self, header, message):
@@ -312,6 +331,9 @@ class Widget(QWidget):
                     self.ui.igniterState.setText("CLOSED")
                 elif(message.state == packet_spec.ActuatorState.ON):
                     self.ui.igniterState.setText("OPEN")
+    def show_new_window(self, checked):
+        self.w = pid_window()
+        self.w.show()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

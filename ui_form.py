@@ -223,7 +223,7 @@ class Ui_Widget(object):
         self.cv1.setObjectName(u"cv1")
         self.cv1.setMinimumSize(QSize(80, 0))
         self.cv1.setFont(font2)
-        self.cv1.setIndent(10)
+        self.cv1.setIndent(0)
 
         self.gridLayout_2.addWidget(self.cv1, 0, 2, 1, 1)
 
@@ -324,10 +324,10 @@ class Ui_Widget(object):
 
         self.verticalLayout_2.addWidget(self.logOutput)
 
-        self.pushButton = QPushButton(Widget)
-        self.pushButton.setObjectName(u"pushButton")
+        self.pid_button = QPushButton(Widget)
+        self.pid_button.setObjectName(u"pid_button")
 
-        self.verticalLayout_2.addWidget(self.pushButton)
+        self.verticalLayout_2.addWidget(self.pid_button)
 
 
         self.controlLayout.addLayout(self.verticalLayout_2, 0, 2, 1, 1)
@@ -416,6 +416,6 @@ class Ui_Widget(object):
         self.xv12State.setText(QCoreApplication.translate("Widget", u"CLOSED", None))
         self.xv9.setText(QCoreApplication.translate("Widget", u"XV-9", None))
         self.xv8.setText(QCoreApplication.translate("Widget", u"XV-8", None))
-        self.pushButton.setText(QCoreApplication.translate("Widget", u"PushButton", None))
+        self.pid_button.setText(QCoreApplication.translate("Widget", u"PID Diagram", None))
     # retranslateUi
 

@@ -411,7 +411,7 @@
             <string>Fire Valve</string>
            </property>
            <property name="indent">
-            <number>10</number>
+            <number>0</number>
            </property>
           </widget>
          </item>
@@ -633,9 +633,9 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton">
+        <widget class="QPushButton" name="pid_button">
          <property name="text">
-          <string>PushButton</string>
+          <string>PID Diagram</string>
          </property>
         </widget>
        </item>
