@@ -46,18 +46,7 @@ class Widget(QWidget):
         self.engine_thrust_points = np.empty((0,2))
 
         # Also need to connect to data to change accordingly
-        self.ui.quickDisconectState.setStyleSheet("background-color: rgb(255, 80, 80)") #edited
-        self.ui.quickDisconectState.setText("OFF")
-        self.ui.cv1State.setStyleSheet("background-color: rgb(255, 80, 80)")
-        self.ui.cv1State.setText("OFF")
-        self.ui.xv1State.setStyleSheet("background-color: rgb(255, 80, 80)")
-        self.ui.xv1State.setText("OFF")
-        self.ui.xv2State.setStyleSheet("background-color: rgb(255, 80, 80)")
-        self.ui.xv2State.setText("OFF")
-        self.ui.xv3State.setStyleSheet("background-color: rgb(255, 80, 80)")
-        self.ui.xv3State.setText("OFF")
-        self.ui.xv4State.setStyleSheet("background-color: rgb(255, 80, 80)")
-        self.ui.xv4State.setText("OFF")
+
 
         """ connect them with the data
         self.ui.quickDisconectState.setStyleSheet("background-color: rgb(80, 255, 80)") #edited
@@ -122,11 +111,6 @@ class Widget(QWidget):
         self.ui.engineThrustPlot.setLabel("bottom", "Time")
         self.plots["engine_thrust"] = PlotInfo(self.engine_thrust_points, self.ui.engineThrustPlot.plot(self.engine_thrust_points, pen=red_pen))
 
-        # QTimer for simulation, won't be needed once we can emulate
-        self.sim_timer = QTimer(self)
-        self.sim_timer.timeout.connect(self.generate_points)
-        self.sim_timer.start(25)
-
         #QTimer to help us to filter the data
         self.timer_time = 25
         #The time range in the graph
@@ -136,21 +120,7 @@ class Widget(QWidget):
         self.data_filter_timer.start(self.timer_time)
 
         # Button handlers
-        self.ui.simButton.clicked.connect(toggle_sim)
         self.ui.udpConnectButton.clicked.connect(self.udp_connection_button_handler)
-
-    # Remove this too
-    def generate_points(self):
-        global i
-        global sim_is_running
-        if sim_is_running:
-            if i >= 250:
-                for key in self.plots:
-                    self.plots[key].points = np.delete(self.plots[key].points, 0, 0)
-            for key in self.plots:
-                self.plots[key].points = np.append(self.plots[key].points, np.array([[i, random.randrange(1, 20)]]), axis=0)
-                self.plots[key].data_line.setData(self.plots[key].points)
-            i += 1
 
     def plot_point(self, header, message):
         plots = self.plots
@@ -259,20 +229,15 @@ class Widget(QWidget):
     def updateActState(self, message):
         if(message.id == 0):
             if(message.state == packet_spec.ActuatorState.OFF):
-                self.ui.cv1State.setText("OFF")
+                self.ui.cv1State.setText("CLOSED")
             elif(message.state == packet_spec.ActuatorState.ON):
-                self.ui.cv1State.setText("ON")
+                self.ui.cv1State.setText("OPEN")
         elif(message.id == 13):
             if(message.state == packet_spec.ActuatorState.OFF):
-                self.ui.quickDisconnectState.setText("OFF")
+                self.ui.quickDisconnectState.setText("CLOSED")
             elif(message.state == packet_spec.ActuatorState.ON):
-                self.ui.quickDisconnectState.setText("ON")
+                self.ui.quickDisconnectState.setText("OPEN")
 
-
-# and this <3
-def toggle_sim():
-    global sim_is_running
-    sim_is_running = not sim_is_running
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
