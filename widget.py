@@ -206,6 +206,7 @@ class Widget(QWidget):
             message_bytes = data[2:]
             header = packet_spec.parse_packet_header(header_bytes)
             message = packet_spec.parse_packet_message(header, message_bytes)
+            #Actuator state handling
             if(header.TelemetryPacketSubType == packet_spec.TelemetryPacketSubType.ACT_STATE):
                 self.updateActState(message)
             self.plot_point(header, message)
@@ -232,7 +233,9 @@ class Widget(QWidget):
 
         event.accept()
 
+    #UI updater, when actuator state messages are sent they will be updated with this function
     def updateActState(self, message):
+        # Huge match case to match each valve id to a label in the UI
         match message.id:
             case 0:
                 if(message.state == packet_spec.ActuatorState.OFF):
