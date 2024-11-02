@@ -50,17 +50,6 @@ class Ui_Widget(object):
 
         self.controlLayout.addWidget(self.label, 0, 0, 1, 1)
 
-        self.logOutput = QTextBrowser(Widget)
-        self.logOutput.setObjectName(u"logOutput")
-        self.logOutput.setMaximumSize(QSize(350, 87))
-
-        self.controlLayout.addWidget(self.logOutput, 0, 3, 1, 1)
-
-        self.horizontalLayout_3 = QHBoxLayout()
-        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
-
-        self.controlLayout.addLayout(self.horizontalLayout_3, 0, 5, 1, 1)
-
         self.connectionLayout = QVBoxLayout()
         self.connectionLayout.setObjectName(u"connectionLayout")
         self.addressLayout = QHBoxLayout()
@@ -129,15 +118,15 @@ class Ui_Widget(object):
 
         self.gridLayout_2.addWidget(self.xv8State, 3, 3, 1, 1)
 
-        self.quickDisconect = QLabel(Widget)
-        self.quickDisconect.setObjectName(u"quickDisconect")
-        self.quickDisconect.setMinimumSize(QSize(80, 23))
+        self.quickDisconnect = QLabel(Widget)
+        self.quickDisconnect.setObjectName(u"quickDisconnect")
+        self.quickDisconnect.setMinimumSize(QSize(80, 23))
         font2 = QFont()
         font2.setPointSize(12)
         font2.setBold(False)
-        self.quickDisconect.setFont(font2)
+        self.quickDisconnect.setFont(font2)
 
-        self.gridLayout_2.addWidget(self.quickDisconect, 0, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.quickDisconnect, 0, 0, 1, 1)
 
         self.xv6State = QLabel(Widget)
         self.xv6State.setObjectName(u"xv6State")
@@ -222,13 +211,13 @@ class Ui_Widget(object):
 
         self.gridLayout_2.addWidget(self.xv12, 4, 4, 1, 1)
 
-        self.quickDisconectState = QLabel(Widget)
-        self.quickDisconectState.setObjectName(u"quickDisconectState")
-        self.quickDisconectState.setMinimumSize(QSize(50, 0))
-        self.quickDisconectState.setFont(font1)
-        self.quickDisconectState.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.quickDisconnectState = QLabel(Widget)
+        self.quickDisconnectState.setObjectName(u"quickDisconnectState")
+        self.quickDisconnectState.setMinimumSize(QSize(50, 0))
+        self.quickDisconnectState.setFont(font1)
+        self.quickDisconnectState.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.gridLayout_2.addWidget(self.quickDisconectState, 0, 1, 1, 1)
+        self.gridLayout_2.addWidget(self.quickDisconnectState, 0, 1, 1, 1)
 
         self.cv1 = QLabel(Widget)
         self.cv1.setObjectName(u"cv1")
@@ -288,6 +277,7 @@ class Ui_Widget(object):
         self.xv2.setObjectName(u"xv2")
         self.xv2.setMinimumSize(QSize(80, 0))
         self.xv2.setFont(font2)
+        self.xv2.setAlignment(Qt.AlignmentFlag.AlignJustify|Qt.AlignmentFlag.AlignVCenter)
         self.xv2.setIndent(10)
 
         self.gridLayout_2.addWidget(self.xv2, 1, 2, 1, 1)
@@ -315,6 +305,7 @@ class Ui_Widget(object):
         self.xv8.setObjectName(u"xv8")
         self.xv8.setMinimumSize(QSize(80, 0))
         self.xv8.setFont(font2)
+        self.xv8.setAlignment(Qt.AlignmentFlag.AlignJustify|Qt.AlignmentFlag.AlignVCenter)
         self.xv8.setIndent(10)
 
         self.gridLayout_2.addWidget(self.xv8, 3, 2, 1, 1)
@@ -325,13 +316,34 @@ class Ui_Widget(object):
 
         self.controlLayout.addLayout(self.formLayout_2, 0, 4, 1, 1)
 
-        self.controlLayout.setColumnStretch(0, 3)
+        self.logOutput = QTextBrowser(Widget)
+        self.logOutput.setObjectName(u"logOutput")
+        self.logOutput.setMaximumSize(QSize(400, 87))
+
+        self.controlLayout.addWidget(self.logOutput, 0, 2, 1, 2)
+
+        self.controlLayout.setColumnStretch(2, 50)
 
         self.verticalLayout.addLayout(self.controlLayout)
 
         self.plotLayout = QGridLayout()
         self.plotLayout.setSpacing(20)
         self.plotLayout.setObjectName(u"plotLayout")
+        self.engineThrustPlot = PlotWidget(Widget)
+        self.engineThrustPlot.setObjectName(u"engineThrustPlot")
+
+        self.plotLayout.addWidget(self.engineThrustPlot, 1, 1, 1, 1)
+
+        self.pressurePlot = PlotWidget(Widget)
+        self.pressurePlot.setObjectName(u"pressurePlot")
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.pressurePlot.sizePolicy().hasHeightForWidth())
+        self.pressurePlot.setSizePolicy(sizePolicy1)
+
+        self.plotLayout.addWidget(self.pressurePlot, 0, 0, 1, 1)
+
         self.tankMassPlot = PlotWidget(Widget)
         self.tankMassPlot.setObjectName(u"tankMassPlot")
 
@@ -347,21 +359,6 @@ class Ui_Widget(object):
         self.temperaturePlot.setForegroundBrush(brush1)
 
         self.plotLayout.addWidget(self.temperaturePlot, 0, 1, 1, 1)
-
-        self.pressurePlot = PlotWidget(Widget)
-        self.pressurePlot.setObjectName(u"pressurePlot")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        sizePolicy1.setHorizontalStretch(0)
-        sizePolicy1.setVerticalStretch(0)
-        sizePolicy1.setHeightForWidth(self.pressurePlot.sizePolicy().hasHeightForWidth())
-        self.pressurePlot.setSizePolicy(sizePolicy1)
-
-        self.plotLayout.addWidget(self.pressurePlot, 0, 0, 1, 1)
-
-        self.engineThrustPlot = PlotWidget(Widget)
-        self.engineThrustPlot.setObjectName(u"engineThrustPlot")
-
-        self.plotLayout.addWidget(self.engineThrustPlot, 1, 1, 1, 1)
 
 
         self.verticalLayout.addLayout(self.plotLayout)
@@ -381,7 +378,7 @@ class Ui_Widget(object):
         self.udpConnectButton.setText(QCoreApplication.translate("Widget", u"Create UDP connection", None))
         self.xv5.setText(QCoreApplication.translate("Widget", u"XV-5", None))
         self.xv8State.setText(QCoreApplication.translate("Widget", u"CLOSED", None))
-        self.quickDisconect.setText(QCoreApplication.translate("Widget", u"<html><head/><body><p><span style=\" font-size:12pt;\">Quick Disconect</span></p></body></html>", None))
+        self.quickDisconnect.setText(QCoreApplication.translate("Widget", u"<html><head/><body><p>Quick Disconnect</p></body></html>", None))
         self.xv6State.setText(QCoreApplication.translate("Widget", u"CLOSED", None))
         self.xv3.setText(QCoreApplication.translate("Widget", u"XV-3", None))
         self.xv11.setText(QCoreApplication.translate("Widget", u"XV-11", None))
@@ -395,7 +392,7 @@ class Ui_Widget(object):
         self.igniterState.setText(QCoreApplication.translate("Widget", u"CLOSED", None))
         self.xv6.setText(QCoreApplication.translate("Widget", u"XV-6", None))
         self.xv12.setText(QCoreApplication.translate("Widget", u"XV-12", None))
-        self.quickDisconectState.setText(QCoreApplication.translate("Widget", u"CLOSED", None))
+        self.quickDisconnectState.setText(QCoreApplication.translate("Widget", u"CLOSED", None))
         self.cv1.setText(QCoreApplication.translate("Widget", u"Fire Valve", None))
         self.xv4.setText(QCoreApplication.translate("Widget", u"XV-4", None))
         self.xv10State.setText(QCoreApplication.translate("Widget", u"CLOSED", None))

@@ -34,7 +34,7 @@
     <number>20</number>
    </property>
    <item>
-    <layout class="QGridLayout" name="controlLayout" columnstretch="3,0,0,0,0,0">
+    <layout class="QGridLayout" name="controlLayout" columnstretch="0,0,50,0,0">
      <item row="0" column="0">
       <widget class="QLabel" name="label">
        <property name="sizePolicy">
@@ -65,19 +65,6 @@
         <bool>true</bool>
        </property>
       </widget>
-     </item>
-     <item row="0" column="3">
-      <widget class="QTextBrowser" name="logOutput">
-       <property name="maximumSize">
-        <size>
-         <width>350</width>
-         <height>87</height>
-        </size>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="5">
-      <layout class="QHBoxLayout" name="horizontalLayout_3"/>
      </item>
      <item row="0" column="1">
       <layout class="QVBoxLayout" name="connectionLayout">
@@ -178,7 +165,7 @@
           </widget>
          </item>
          <item row="0" column="0">
-          <widget class="QLabel" name="quickDisconect">
+          <widget class="QLabel" name="quickDisconnect">
            <property name="minimumSize">
             <size>
              <width>80</width>
@@ -192,7 +179,7 @@
             </font>
            </property>
            <property name="text">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Quick Disconect&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Quick Disconnect&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
           </widget>
          </item>
@@ -385,7 +372,7 @@
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QLabel" name="quickDisconectState">
+          <widget class="QLabel" name="quickDisconnectState">
            <property name="minimumSize">
             <size>
              <width>50</width>
@@ -552,6 +539,9 @@
            <property name="text">
             <string>XV-2</string>
            </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignJustify|Qt::AlignmentFlag::AlignVCenter</set>
+           </property>
            <property name="indent">
             <number>10</number>
            </property>
@@ -618,6 +608,9 @@
            <property name="text">
             <string>XV-8</string>
            </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignJustify|Qt::AlignmentFlag::AlignVCenter</set>
+           </property>
            <property name="indent">
             <number>10</number>
            </property>
@@ -627,6 +620,16 @@
        </item>
       </layout>
      </item>
+     <item row="0" column="2" colspan="2">
+      <widget class="QTextBrowser" name="logOutput">
+       <property name="maximumSize">
+        <size>
+         <width>400</width>
+         <height>87</height>
+        </size>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>
@@ -634,6 +637,19 @@
      <property name="spacing">
       <number>20</number>
      </property>
+     <item row="1" column="1">
+      <widget class="PlotWidget" name="engineThrustPlot"/>
+     </item>
+     <item row="0" column="0">
+      <widget class="PlotWidget" name="pressurePlot">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
      <item row="1" column="0">
       <widget class="PlotWidget" name="tankMassPlot"/>
      </item>
@@ -658,19 +674,6 @@
         </brush>
        </property>
       </widget>
-     </item>
-     <item row="0" column="0">
-      <widget class="PlotWidget" name="pressurePlot">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="PlotWidget" name="engineThrustPlot"/>
      </item>
     </layout>
    </item>
