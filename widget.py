@@ -47,6 +47,12 @@ class Widget(QWidget):
         self.engine_thrust_points = np.empty((0,2))
 
         # Also need to connect to data to change accordingly
+        self.ui.quickDisconnectState.setStyleSheet("background-color: rgb(255, 80, 80)") #edited
+        self.ui.cv1State.setStyleSheet("background-color: rgb(255, 80, 80)")
+        self.ui.xv1State.setStyleSheet("background-color: rgb(255, 80, 80)")
+        self.ui.xv2State.setStyleSheet("background-color: rgb(255, 80, 80)")
+        self.ui.xv3State.setStyleSheet("background-color: rgb(255, 80, 80)")
+        self.ui.xv4State.setStyleSheet("background-color: rgb(255, 80, 80)")
 
 
         """ connect them with the data
