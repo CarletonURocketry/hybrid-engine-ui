@@ -206,7 +206,7 @@ class Widget(QWidget):
             message_bytes = data[2:]
             header = packet_spec.parse_packet_header(header_bytes)
             message = packet_spec.parse_packet_message(header, message_bytes)
-            if(isinstance(message, packet_spec.ActuatorStatePacket)):
+            if(header.TelemetryPacketSubType == packet_spec.TelemetryPacketSubType.ACT_STATE):
                 self.updateActState(message)
             self.plot_point(header, message)
 
