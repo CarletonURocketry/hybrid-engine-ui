@@ -438,6 +438,7 @@ class Ui_Widget(object):
         self.udpIpAddressLabel.setText(QCoreApplication.translate("Widget", u"MG IPv4 address: ", None))
         self.udpPortLabel.setText(QCoreApplication.translate("Widget", u"MG port: ", None))
         self.udpConnectButton.setText(QCoreApplication.translate("Widget", u"Create UDP connection", None))
+        self.label.setText("")
         self.xv5.setText(QCoreApplication.translate("Widget", u"XV-5", None))
         self.xv8State.setText(QCoreApplication.translate("Widget", u"CLOSED", None))
         self.quickDisconnect.setText(QCoreApplication.translate("Widget", u"<html><head/><body><p>Quick Disconnect</p></body></html>", None))
