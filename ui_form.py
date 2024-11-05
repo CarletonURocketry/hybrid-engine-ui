@@ -34,8 +34,23 @@ class Ui_Widget(object):
         self.verticalLayout.setSpacing(10)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.verticalLayout.setContentsMargins(20, 15, 20, 20)
-        self.controlLayout = QGridLayout()
+        self.controlLayout = QHBoxLayout()
         self.controlLayout.setObjectName(u"controlLayout")
+        self.controlLayout.setSizeConstraint(QLayout.SizeConstraint.SetDefaultConstraint)
+        self.logoLabel = QLabel(Widget)
+        self.logoLabel.setObjectName(u"logoLabel")
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        sizePolicy.setHorizontalStretch(1)
+        sizePolicy.setVerticalStretch(1)
+        sizePolicy.setHeightForWidth(self.logoLabel.sizePolicy().hasHeightForWidth())
+        self.logoLabel.setSizePolicy(sizePolicy)
+        self.logoLabel.setMinimumSize(QSize(127, 90))
+        self.logoLabel.setMaximumSize(QSize(127, 90))
+        self.logoLabel.setPixmap(QPixmap(u":/images/logo"))
+        self.logoLabel.setScaledContents(True)
+
+        self.controlLayout.addWidget(self.logoLabel)
+
         self.connectionLayout = QVBoxLayout()
         self.connectionLayout.setObjectName(u"connectionLayout")
         self.addressLayout = QHBoxLayout()
@@ -60,7 +75,7 @@ class Ui_Widget(object):
         self.portLayout.setSizeConstraint(QLayout.SizeConstraint.SetFixedSize)
         self.udpPortLabel = QLabel(Widget)
         self.udpPortLabel.setObjectName(u"udpPortLabel")
-        self.udpPortLabel.setMinimumSize(QSize(89, 0))
+        self.udpPortLabel.setMinimumSize(QSize(85, 0))
 
         self.portLayout.addWidget(self.udpPortLabel)
 
@@ -79,24 +94,26 @@ class Ui_Widget(object):
         self.connectionLayout.addWidget(self.udpConnectButton)
 
 
-        self.controlLayout.addLayout(self.connectionLayout, 0, 1, 1, 1)
+        self.controlLayout.addLayout(self.connectionLayout)
 
-        self.label = QLabel(Widget)
-        self.label.setObjectName(u"label")
-        sizePolicy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        sizePolicy.setHorizontalStretch(1)
-        sizePolicy.setVerticalStretch(1)
-        sizePolicy.setHeightForWidth(self.label.sizePolicy().hasHeightForWidth())
-        self.label.setSizePolicy(sizePolicy)
-        self.label.setMinimumSize(QSize(127, 90))
-        self.label.setMaximumSize(QSize(127, 90))
-        self.label.setPixmap(QPixmap(u":/images/logo"))
-        self.label.setScaledContents(True)
+        self.logLayout = QVBoxLayout()
+        self.logLayout.setObjectName(u"logLayout")
+        self.logOutput = QTextBrowser(Widget)
+        self.logOutput.setObjectName(u"logOutput")
+        self.logOutput.setMaximumSize(QSize(16777215, 87))
 
-        self.controlLayout.addWidget(self.label, 0, 0, 1, 1)
+        self.logLayout.addWidget(self.logOutput)
 
-        self.formLayout_2 = QFormLayout()
-        self.formLayout_2.setObjectName(u"formLayout_2")
+        self.pushButton = QPushButton(Widget)
+        self.pushButton.setObjectName(u"pushButton")
+
+        self.logLayout.addWidget(self.pushButton)
+
+
+        self.controlLayout.addLayout(self.logLayout)
+
+        self.valveStatusLayout = QFormLayout()
+        self.valveStatusLayout.setObjectName(u"valveStatusLayout")
         self.gridLayout_2 = QGridLayout()
         self.gridLayout_2.setObjectName(u"gridLayout_2")
         self.xv5 = QLabel(Widget)
@@ -311,28 +328,14 @@ class Ui_Widget(object):
         self.gridLayout_2.addWidget(self.xv8, 3, 2, 1, 1)
 
 
-        self.formLayout_2.setLayout(0, QFormLayout.LabelRole, self.gridLayout_2)
+        self.valveStatusLayout.setLayout(0, QFormLayout.LabelRole, self.gridLayout_2)
 
 
-        self.controlLayout.addLayout(self.formLayout_2, 0, 4, 1, 1)
+        self.controlLayout.addLayout(self.valveStatusLayout)
 
-        self.verticalLayout_2 = QVBoxLayout()
-        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
-        self.logOutput = QTextBrowser(Widget)
-        self.logOutput.setObjectName(u"logOutput")
-        self.logOutput.setMaximumSize(QSize(400, 87))
-
-        self.verticalLayout_2.addWidget(self.logOutput)
-
-        self.pushButton = QPushButton(Widget)
-        self.pushButton.setObjectName(u"pushButton")
-
-        self.verticalLayout_2.addWidget(self.pushButton)
-
-
-        self.controlLayout.addLayout(self.verticalLayout_2, 0, 2, 1, 1)
-
-        self.controlLayout.setColumnStretch(2, 50)
+        self.controlLayout.setStretch(0, 3)
+        self.controlLayout.setStretch(1, 2)
+        self.controlLayout.setStretch(2, 4)
 
         self.verticalLayout.addLayout(self.controlLayout)
 
@@ -343,6 +346,17 @@ class Ui_Widget(object):
         self.engineThrustPlot.setObjectName(u"engineThrustPlot")
 
         self.plotLayout.addWidget(self.engineThrustPlot, 1, 1, 1, 1)
+
+        self.temperaturePlot = PlotWidget(Widget)
+        self.temperaturePlot.setObjectName(u"temperaturePlot")
+        brush = QBrush(QColor(0, 0, 0, 255))
+        brush.setStyle(Qt.SolidPattern)
+        self.temperaturePlot.setBackgroundBrush(brush)
+        brush1 = QBrush(QColor(255, 0, 0, 255))
+        brush1.setStyle(Qt.NoBrush)
+        self.temperaturePlot.setForegroundBrush(brush1)
+
+        self.plotLayout.addWidget(self.temperaturePlot, 0, 1, 1, 1)
 
         self.pressurePlot = PlotWidget(Widget)
         self.pressurePlot.setObjectName(u"pressurePlot")
@@ -359,17 +373,6 @@ class Ui_Widget(object):
 
         self.plotLayout.addWidget(self.tankMassPlot, 1, 0, 1, 1)
 
-        self.temperaturePlot = PlotWidget(Widget)
-        self.temperaturePlot.setObjectName(u"temperaturePlot")
-        brush = QBrush(QColor(0, 0, 0, 255))
-        brush.setStyle(Qt.SolidPattern)
-        self.temperaturePlot.setBackgroundBrush(brush)
-        brush1 = QBrush(QColor(255, 0, 0, 255))
-        brush1.setStyle(Qt.NoBrush)
-        self.temperaturePlot.setForegroundBrush(brush1)
-
-        self.plotLayout.addWidget(self.temperaturePlot, 0, 1, 1, 1)
-
 
         self.verticalLayout.addLayout(self.plotLayout)
 
@@ -382,10 +385,11 @@ class Ui_Widget(object):
 
     def retranslateUi(self, Widget):
         Widget.setWindowTitle(QCoreApplication.translate("Widget", u"Hybrid Engine Ground System UI", None))
+        self.logoLabel.setText("")
         self.udpIpAddressLabel.setText(QCoreApplication.translate("Widget", u"MG IPv4 address: ", None))
         self.udpPortLabel.setText(QCoreApplication.translate("Widget", u"MG port: ", None))
         self.udpConnectButton.setText(QCoreApplication.translate("Widget", u"Create UDP connection", None))
-        self.label.setText("")
+        self.pushButton.setText(QCoreApplication.translate("Widget", u"PushButton", None))
         self.xv5.setText(QCoreApplication.translate("Widget", u"XV-5", None))
         self.xv8State.setText(QCoreApplication.translate("Widget", u"CLOSED", None))
         self.quickDisconnect.setText(QCoreApplication.translate("Widget", u"<html><head/><body><p>Quick Disconnect</p></body></html>", None))
@@ -416,6 +420,5 @@ class Ui_Widget(object):
         self.xv12State.setText(QCoreApplication.translate("Widget", u"CLOSED", None))
         self.xv9.setText(QCoreApplication.translate("Widget", u"XV-9", None))
         self.xv8.setText(QCoreApplication.translate("Widget", u"XV-8", None))
-        self.pushButton.setText(QCoreApplication.translate("Widget", u"PushButton", None))
     # retranslateUi
 

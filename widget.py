@@ -207,9 +207,10 @@ class Widget(QWidget):
             header = packet_spec.parse_packet_header(header_bytes)
             message = packet_spec.parse_packet_message(header, message_bytes)
             #Actuator state handling
-            if(header.TelemetryPacketSubType == packet_spec.TelemetryPacketSubType.ACT_STATE):
+            if(header.sub_type == packet_spec.TelemetryPacketSubType.ACT_STATE):
                 self.updateActState(message)
-            self.plot_point(header, message)
+            else:
+                self.plot_point(header, message)
 
     # Any errors with the socket should be handled here and logged
     def udp_on_error(self):

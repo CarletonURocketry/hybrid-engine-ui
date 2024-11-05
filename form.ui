@@ -34,8 +34,42 @@
     <number>20</number>
    </property>
    <item>
-    <layout class="QGridLayout" name="controlLayout" columnstretch="0,0,50,0,0">
-     <item row="0" column="1">
+    <layout class="QHBoxLayout" name="controlLayout" stretch="3,2,4,0">
+     <property name="sizeConstraint">
+      <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
+     </property>
+     <item>
+      <widget class="QLabel" name="logoLabel">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>1</horstretch>
+         <verstretch>1</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>127</width>
+         <height>90</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>127</width>
+         <height>90</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="pixmap">
+        <pixmap resource="resources.qrc">:/images/logo</pixmap>
+       </property>
+       <property name="scaledContents">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
       <layout class="QVBoxLayout" name="connectionLayout">
        <item>
         <layout class="QHBoxLayout" name="addressLayout">
@@ -66,7 +100,7 @@
           <widget class="QLabel" name="udpPortLabel">
            <property name="minimumSize">
             <size>
-             <width>89</width>
+             <width>85</width>
              <height>0</height>
             </size>
            </property>
@@ -95,39 +129,29 @@
        </item>
       </layout>
      </item>
-     <item row="0" column="0">
-      <widget class="QLabel" name="label">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-         <horstretch>1</horstretch>
-         <verstretch>1</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>127</width>
-         <height>90</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>127</width>
-         <height>90</height>
-        </size>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="pixmap">
-        <pixmap resource="resources.qrc">:/images/logo</pixmap>
-       </property>
-       <property name="scaledContents">
-        <bool>true</bool>
-       </property>
-      </widget>
+     <item>
+      <layout class="QVBoxLayout" name="logLayout">
+       <item>
+        <widget class="QTextBrowser" name="logOutput">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>87</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton">
+         <property name="text">
+          <string>PushButton</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
-     <item row="0" column="4">
-      <layout class="QFormLayout" name="formLayout_2">
+     <item>
+      <layout class="QFormLayout" name="valveStatusLayout">
        <item row="0" column="0">
         <layout class="QGridLayout" name="gridLayout_2">
          <item row="2" column="2">
@@ -620,27 +644,6 @@
        </item>
       </layout>
      </item>
-     <item row="0" column="2">
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <item>
-        <widget class="QTextBrowser" name="logOutput">
-         <property name="maximumSize">
-          <size>
-           <width>400</width>
-           <height>87</height>
-          </size>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pushButton">
-         <property name="text">
-          <string>PushButton</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
     </layout>
    </item>
    <item>
@@ -650,19 +653,6 @@
      </property>
      <item row="1" column="1">
       <widget class="PlotWidget" name="engineThrustPlot"/>
-     </item>
-     <item row="0" column="0">
-      <widget class="PlotWidget" name="pressurePlot">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="PlotWidget" name="tankMassPlot"/>
      </item>
      <item row="0" column="1">
       <widget class="PlotWidget" name="temperaturePlot">
@@ -685,6 +675,19 @@
         </brush>
        </property>
       </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="PlotWidget" name="pressurePlot">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="PlotWidget" name="tankMassPlot"/>
      </item>
     </layout>
    </item>
