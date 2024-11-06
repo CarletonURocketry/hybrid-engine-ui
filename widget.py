@@ -152,14 +152,15 @@ class Widget(QWidget):
             port = self.ui.udpPortInput.text()
 
             if ip_addr == "funi":
-                print("haha")
                 self.web_view = QWebEngineView()
                 self.web_view.setUrl("https://www.youtube.com/watch?app=desktop&v=vPDvMVEwKzM")
                 self.ui.plotLayout.addWidget(self.web_view, 0, 2, 2, 1)
+                self.ui.udpIpAddressInput.clear()
                 return
             if ip_addr == "close":
                 self.web_view.deleteLater()
                 self.ui.plotLayout.removeWidget(self.web_view)
+                self.ui.udpIpAddressInput.clear()
                 return
 
             try:
