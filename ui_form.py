@@ -349,10 +349,15 @@ class Ui_Widget(object):
         self.plotLayout = QGridLayout()
         self.plotLayout.setSpacing(20)
         self.plotLayout.setObjectName(u"plotLayout")
-        self.engineThrustPlot = PlotWidget(self.telemetryTab)
-        self.engineThrustPlot.setObjectName(u"engineThrustPlot")
+        self.pressurePlot = PlotWidget(self.telemetryTab)
+        self.pressurePlot.setObjectName(u"pressurePlot")
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.pressurePlot.sizePolicy().hasHeightForWidth())
+        self.pressurePlot.setSizePolicy(sizePolicy1)
 
-        self.plotLayout.addWidget(self.engineThrustPlot, 1, 1, 1, 1)
+        self.plotLayout.addWidget(self.pressurePlot, 0, 0, 1, 1)
 
         self.temperaturePlot = PlotWidget(self.telemetryTab)
         self.temperaturePlot.setObjectName(u"temperaturePlot")
@@ -365,15 +370,10 @@ class Ui_Widget(object):
 
         self.plotLayout.addWidget(self.temperaturePlot, 0, 1, 1, 1)
 
-        self.pressurePlot = PlotWidget(self.telemetryTab)
-        self.pressurePlot.setObjectName(u"pressurePlot")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        sizePolicy1.setHorizontalStretch(0)
-        sizePolicy1.setVerticalStretch(0)
-        sizePolicy1.setHeightForWidth(self.pressurePlot.sizePolicy().hasHeightForWidth())
-        self.pressurePlot.setSizePolicy(sizePolicy1)
+        self.engineThrustPlot = PlotWidget(self.telemetryTab)
+        self.engineThrustPlot.setObjectName(u"engineThrustPlot")
 
-        self.plotLayout.addWidget(self.pressurePlot, 0, 0, 1, 1)
+        self.plotLayout.addWidget(self.engineThrustPlot, 1, 1, 1, 1)
 
         self.tankMassPlot = PlotWidget(self.telemetryTab)
         self.tankMassPlot.setObjectName(u"tankMassPlot")

@@ -5,6 +5,7 @@ import ipaddress
 from dataclasses import dataclass
 
 from PySide6.QtWidgets import QApplication, QWidget
+from PySide6.QtWebEngineWidgets import QWebEngineView
 from PySide6.QtCore import QTimer
 from PySide6.QtNetwork import QUdpSocket, QAbstractSocket, QHostAddress
 from pyqtgraph import mkPen, PlotDataItem
@@ -149,6 +150,18 @@ class Widget(QWidget):
         if self.padUDPSocket.state() == QAbstractSocket.SocketState.UnconnectedState:
             ip_addr = self.ui.udpIpAddressInput.text()
             port = self.ui.udpPortInput.text()
+
+            if ip_addr == "funi":
+                self.web_view = QWebEngineView()
+                self.web_view.setUrl("https://www.youtube.com/watch?app=desktop&v=vPDvMVEwKzM")
+                self.ui.plotLayout.addWidget(self.web_view, 0, 2, 2, 1)
+                self.ui.udpIpAddressInput.clear()
+                return
+            if ip_addr == "close":
+                self.web_view.deleteLater()
+                self.ui.plotLayout.removeWidget(self.web_view)
+                self.ui.udpIpAddressInput.clear()
+                return
 
             try:
                 ipaddress.ip_address(ip_addr)
