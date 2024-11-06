@@ -94,11 +94,6 @@ class Widget(QWidget):
         self.ui.engineThrustPlot.setLabel("bottom", "Time")
         self.plots["engine_thrust"] = PlotInfo(self.engine_thrust_points, self.ui.engineThrustPlot.plot(self.engine_thrust_points, pen=red_pen))
 
-        # QTimer for simulation, won't be needed once we can emulate
-        self.sim_timer = QTimer(self)
-        self.sim_timer.timeout.connect(self.generate_points)
-        self.sim_timer.start(25)
-
         #QTimer to help us to filter the data
         self.timer_time = 25
         #The time range in the graph
@@ -108,21 +103,7 @@ class Widget(QWidget):
         self.data_filter_timer.start(self.timer_time)
 
         # Button handlers
-        self.ui.simButton.clicked.connect(toggle_sim)
         self.ui.udpConnectButton.clicked.connect(self.udp_connection_button_handler)
-
-    # Remove this too
-    def generate_points(self):
-        global i
-        global sim_is_running
-        if sim_is_running:
-            if i >= 250:
-                for key in self.plots:
-                    self.plots[key].points = np.delete(self.plots[key].points, 0, 0)
-            for key in self.plots:
-                self.plots[key].points = np.append(self.plots[key].points, np.array([[i, random.randrange(1, 20)]]), axis=0)
-                self.plots[key].data_line.setData(self.plots[key].points)
-            i += 1
 
     def plot_point(self, header, message):
         plots = self.plots
@@ -202,7 +183,11 @@ class Widget(QWidget):
             message_bytes = data[2:]
             header = packet_spec.parse_packet_header(header_bytes)
             message = packet_spec.parse_packet_message(header, message_bytes)
-            self.plot_point(header, message)
+            #Actuator state handling
+            if(header.sub_type == packet_spec.TelemetryPacketSubType.ACT_STATE):
+                self.updateActState(message)
+            else:
+                self.plot_point(header, message)
 
     # Any errors with the socket should be handled here and logged
     def udp_on_error(self):
@@ -226,10 +211,85 @@ class Widget(QWidget):
 
         event.accept()
 
-# and this <3
-def toggle_sim():
-    global sim_is_running
-    sim_is_running = not sim_is_running
+    #UI updater, when actuator state messages are sent they will be updated with this function
+    def updateActState(self, message):
+        # Huge match case to match each valve id to a label in the UI
+        match message.id:
+            case 0:
+                if(message.state == packet_spec.ActuatorState.OFF):
+                    self.ui.cv1State.setText("CLOSED")
+                elif(message.state == packet_spec.ActuatorState.ON):
+                    self.ui.cv1State.setText("OPEN")
+            case 1:
+                if(message.state == packet_spec.ActuatorState.OFF):
+                    self.ui.xv1State.setText("CLOSED")
+                elif(message.state == packet_spec.ActuatorState.ON):
+                    self.ui.xv1State.setText("OPEN")
+            case 2:
+                if(message.state == packet_spec.ActuatorState.OFF):
+                    self.ui.xv2State.setText("CLOSED")
+                elif(message.state == packet_spec.ActuatorState.ON):
+                    self.ui.xv2State.setText("OPEN")
+            case 3:
+                if(message.state == packet_spec.ActuatorState.OFF):
+                    self.ui.xv3State.setText("CLOSED")
+                elif(message.state == packet_spec.ActuatorState.ON):
+                    self.ui.xv3State.setText("OPEN")
+            case 4:
+                if(message.state == packet_spec.ActuatorState.OFF):
+                    self.ui.xv4State.setText("CLOSED")
+                elif(message.state == packet_spec.ActuatorState.ON):
+                    self.ui.xv4State.setText("OPEN")
+            case 5:
+                if(message.state == packet_spec.ActuatorState.OFF):
+                    self.ui.xv5State.setText("CLOSED")
+                elif(message.state == packet_spec.ActuatorState.ON):
+                    self.ui.xv5State.setText("OPEN")
+            case 6:
+                if(message.state == packet_spec.ActuatorState.OFF):
+                    self.ui.xv6State.setText("CLOSED")
+                elif(message.state == packet_spec.ActuatorState.ON):
+                    self.ui.xv6State.setText("OPEN")
+            case 7:
+                if(message.state == packet_spec.ActuatorState.OFF):
+                    self.ui.xv7State.setText("CLOSED")
+                elif(message.state == packet_spec.ActuatorState.ON):
+                    self.ui.xv7State.setText("OPEN")
+            case 8:
+                if(message.state == packet_spec.ActuatorState.OFF):
+                    self.ui.xv8State.setText("CLOSED")
+                elif(message.state == packet_spec.ActuatorState.ON):
+                    self.ui.xv8State.setText("OPEN")
+            case 9:
+                if(message.state == packet_spec.ActuatorState.OFF):
+                    self.ui.xv9State.setText("CLOSED")
+                elif(message.state == packet_spec.ActuatorState.ON):
+                    self.ui.xv9State.setText("OPEN")
+            case 10:
+                if(message.state == packet_spec.ActuatorState.OFF):
+                    self.ui.xv10State.setText("CLOSED")
+                elif(message.state == packet_spec.ActuatorState.ON):
+                    self.ui.xv10State.setText("OPEN")
+            case 11:
+                if(message.state == packet_spec.ActuatorState.OFF):
+                    self.ui.xv11State.setText("CLOSED")
+                elif(message.state == packet_spec.ActuatorState.ON):
+                    self.ui.xv11State.setText("OPEN")
+            case 12:
+                if(message.state == packet_spec.ActuatorState.OFF):
+                    self.ui.xv12State.setText("CLOSED")
+                elif(message.state == packet_spec.ActuatorState.ON):
+                    self.ui.xv12State.setText("OPEN")
+            case 13:
+                if(message.state == packet_spec.ActuatorState.OFF):
+                    self.ui.quickDisconnectState.setText("CLOSED")
+                elif(message.state == packet_spec.ActuatorState.ON):
+                    self.ui.quickDisconnectState.setText("OPEN")
+            case 14:
+                if(message.state == packet_spec.ActuatorState.OFF):
+                    self.ui.igniterState.setText("CLOSED")
+                elif(message.state == packet_spec.ActuatorState.ON):
+                    self.ui.igniterState.setText("OPEN")
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
