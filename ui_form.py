@@ -104,6 +104,11 @@ class Ui_Widget(object):
 
         self.connectionLayout.addWidget(self.udpConnectButton)
 
+        self.openFileButton = QPushButton(self.telemetryTab)
+        self.openFileButton.setObjectName(u"openFileButton")
+
+        self.connectionLayout.addWidget(self.openFileButton)
+
 
         self.controlLayout.addLayout(self.connectionLayout)
 
@@ -405,6 +410,7 @@ class Ui_Widget(object):
         self.udpIpAddressLabel.setText(QCoreApplication.translate("Widget", u"MG IPv4 address: ", None))
         self.udpPortLabel.setText(QCoreApplication.translate("Widget", u"MG port: ", None))
         self.udpConnectButton.setText(QCoreApplication.translate("Widget", u"Create UDP connection", None))
+        self.openFileButton.setText(QCoreApplication.translate("Widget", u"Open previous data", None))
         self.xv5.setText(QCoreApplication.translate("Widget", u"XV-5", None))
         self.xv8State.setText(QCoreApplication.translate("Widget", u"CLOSED", None))
         self.quickDisconnect.setText(QCoreApplication.translate("Widget", u"<html><head/><body><p>Quick Disconnect</p></body></html>", None))

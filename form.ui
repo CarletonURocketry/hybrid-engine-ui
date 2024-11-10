@@ -151,6 +151,13 @@
              </property>
             </widget>
            </item>
+           <item>
+            <widget class="QPushButton" name="openFileButton">
+             <property name="text">
+              <string>Open previous data</string>
+             </property>
+            </widget>
+           </item>
           </layout>
          </item>
          <item>

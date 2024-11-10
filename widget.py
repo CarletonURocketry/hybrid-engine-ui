@@ -4,9 +4,9 @@ import random
 import ipaddress
 from dataclasses import dataclass
 
-from PySide6.QtWidgets import QApplication, QWidget
+from PySide6.QtWidgets import QApplication, QWidget, QFileDialog
 from PySide6.QtWebEngineWidgets import QWebEngineView
-from PySide6.QtCore import QTimer
+from PySide6.QtCore import QTimer, QDateTime
 from PySide6.QtNetwork import QUdpSocket, QAbstractSocket, QHostAddress
 from pyqtgraph import mkPen, PlotDataItem
 import numpy as np
@@ -106,6 +106,9 @@ class Widget(QWidget):
         # Button handlers
         self.ui.udpConnectButton.clicked.connect(self.udp_connection_button_handler)
 
+        #Open new file heandler
+        self.ui.openFileButton.clicked.connect(self.open_file_button_handler)
+
     def plot_point(self, header, message):
         plots = self.plots
         match header.type:
@@ -141,6 +144,9 @@ class Widget(QWidget):
             self.ui.udpConnectButton.setText("Close UDP connection")
             self.ui.udpIpAddressInput.setReadOnly(True)
             self.ui.udpPortInput.setReadOnly(True)
+            file_name = QDateTime.currentDateTime().toString("yyyy-MM-dd_HH-mm")
+            file_name += '.dump'
+            self.file_out = open(file_name, "a+b")
             return True
         else:
             self.ui.logOutput.append(f"Unable to join multicast group at IP address: {ip_addr}, port: {port}")
@@ -178,7 +184,29 @@ class Widget(QWidget):
             self.join_multicast_group(ip_addr, port)
         else:
             self.padUDPSocket.disconnectFromHost()
+    def display_previous_data(self,data):
+            ptr = 0
+            data_len = len(data)
+            while(ptr < data_len):
+                datagram_size = data[ptr]
+                header = data[ptr:ptr + 2]
+                ptr += 2
+                data_header = packet_spec.parse_packet_header(header)
+                message_bytes_length = packet_spec.packet_message_bytes_length(data_header)
+                message = data[ptr:ptr + message_bytes_length]
+                data_message = packet_spec.parse_packet_message(data_header, message)
+                ptr += message_bytes_length
+                self.plot_point(data_header, data_message)
 
+    def open_file_button_handler(self):
+            # options = QFileDialog.Options()
+            file_path, _ = QFileDialog.getOpenFileName(self, "Open Previous File", "", "Dump file(*.dump);;All files (*)")
+
+            # If a file is selected, read its contents
+            if file_path:
+                with open(file_path, 'rb') as file:
+                    data = file.read()
+                    self.display_previous_data(data)
     def filter_data(self):
         for key in self.plots:
             if self.plots[key].points.size == 0:
@@ -186,7 +214,6 @@ class Widget(QWidget):
             min_time: int = self.plots[key].points[:,0].max() - self.time_range
             self.plots[key].points = self.plots[key].points[self.plots[key].points[:,0] >= min_time]
             self.plots[key].data_line.setData(self.plots[key].points)
-
     # Any data received should be handled here
     def udp_receive_socket_data(self):
         while self.padUDPSocket.hasPendingDatagrams():
@@ -201,6 +228,7 @@ class Widget(QWidget):
                 self.updateActState(message)
             else:
                 self.plot_point(header, message)
+            self.file_out.write(datagram)
 
     # Any errors with the socket should be handled here and logged
     def udp_on_error(self):
