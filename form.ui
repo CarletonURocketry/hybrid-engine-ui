@@ -154,7 +154,14 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="interfaceAddressInput"/>
+              <widget class="QComboBox" name="interfaceAddressDropdown">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+              </widget>
              </item>
             </layout>
            </item>

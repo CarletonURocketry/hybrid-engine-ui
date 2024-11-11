@@ -58,9 +58,11 @@ class Widget(QWidget):
         # Dictionary that maps IP addresses to network interfaces, these used when
         # selecting the network interface to join the multicast group on
         self.interfaces = {}
+        self.ui.interfaceAddressDropdown.addItem("Select interface IP address")
         for interface in QNetworkInterface.allInterfaces():
                 for entry in interface.addressEntries():
                     self.interfaces[entry.ip().toString()] = interface
+                    self.ui.interfaceAddressDropdown.addItem(entry.ip().toString())
         
         # Graphing pens
         red_pen = mkPen("r")
@@ -144,7 +146,7 @@ class Widget(QWidget):
         if self.padUDPSocket.state() == QAbstractSocket.SocketState.UnconnectedState:
             mcast_addr = self.ui.udpIpAddressInput.text()
             mcast_port = self.ui.udpPortInput.text()
-            interface_addr = self.ui.interfaceAddressInput.text()
+            interface_addr = self.ui.interfaceAddressDropdown.currentText() if self.ui.interfaceAddressDropdown.currentIndex() > 1 else None
 
             if mcast_addr == "funi":
                 self.web_view = QWebEngineView()
