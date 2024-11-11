@@ -168,6 +168,20 @@
              </property>
             </widget>
            </item>
+           <item>
+            <widget class="QPushButton" name="exporter">
+             <property name="text">
+              <string>Export to File</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="randomButton">
+             <property name="text">
+              <string>Log random numbers</string>
+             </property>
+            </widget>
+           </item>
           </layout>
          </item>
          <item>

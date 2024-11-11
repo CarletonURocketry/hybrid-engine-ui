@@ -116,6 +116,16 @@ class Ui_Widget(object):
 
         self.logLayout.addWidget(self.logOutput)
 
+        self.exporter = QPushButton(self.telemetryTab)
+        self.exporter.setObjectName(u"exporter")
+
+        self.logLayout.addWidget(self.exporter)
+
+        self.randomButton = QPushButton(self.telemetryTab)
+        self.randomButton.setObjectName(u"randomButton")
+
+        self.logLayout.addWidget(self.randomButton)
+
 
         self.controlLayout.addLayout(self.logLayout)
 
@@ -405,6 +415,8 @@ class Ui_Widget(object):
         self.udpIpAddressLabel.setText(QCoreApplication.translate("Widget", u"MG IPv4 address: ", None))
         self.udpPortLabel.setText(QCoreApplication.translate("Widget", u"MG port: ", None))
         self.udpConnectButton.setText(QCoreApplication.translate("Widget", u"Create UDP connection", None))
+        self.exporter.setText(QCoreApplication.translate("Widget", u"Export to File", None))
+        self.randomButton.setText(QCoreApplication.translate("Widget", u"Log random numbers", None))
         self.xv5.setText(QCoreApplication.translate("Widget", u"XV-5", None))
         self.xv8State.setText(QCoreApplication.translate("Widget", u"CLOSED", None))
         self.quickDisconnect.setText(QCoreApplication.translate("Widget", u"<html><head/><body><p>Quick Disconnect</p></body></html>", None))

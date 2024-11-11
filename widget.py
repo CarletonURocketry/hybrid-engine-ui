@@ -55,6 +55,9 @@ class Widget(QWidget):
         self.padUDPSocket.errorOccurred.connect(self.udp_on_error)
         self.padUDPSocket.disconnected.connect(self.udp_on_disconnected)
 
+
+        self.ui.exporter.clicked.connect(self.save_to_file)
+
         # Graphing pens
         red_pen = mkPen("r")
         blue_pen = mkPen("g")
@@ -303,6 +306,10 @@ class Widget(QWidget):
                     self.ui.igniterState.setText("CLOSED")
                 elif(message.state == packet_spec.ActuatorState.ON):
                     self.ui.igniterState.setText("OPEN")
+    def save_to_file(self):
+        f = open("log_data.txt", "w")
+        f.write(self.ui.logOutput.toPlainText())
+        f.close();
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
