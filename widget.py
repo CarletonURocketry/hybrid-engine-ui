@@ -55,7 +55,7 @@ class Widget(QWidget):
         self.padUDPSocket.errorOccurred.connect(self.udp_on_error)
         self.padUDPSocket.disconnected.connect(self.udp_on_disconnected)
 
-
+        # Export to File button
         self.ui.exporter.clicked.connect(self.save_to_file)
 
         # Graphing pens
@@ -306,6 +306,8 @@ class Widget(QWidget):
                     self.ui.igniterState.setText("CLOSED")
                 elif(message.state == packet_spec.ActuatorState.ON):
                     self.ui.igniterState.setText("OPEN")
+
+    #Creates a file or overwrites existing one, and writes the text in the logOutput into the file
     def save_to_file(self):
         f = open("log_data.txt", "w")
         f.write(self.ui.logOutput.toPlainText())
