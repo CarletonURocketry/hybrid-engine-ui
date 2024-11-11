@@ -1,6 +1,6 @@
 # This Python file uses the following encoding: utf-8
 import sys
-import random
+import pathlib
 import ipaddress
 from dataclasses import dataclass
 
@@ -187,19 +187,19 @@ class Widget(QWidget):
             self.padUDPSocket.disconnectFromHost()
 
     def recording_toggle_button_handler(self):
+        pathlib.Path('recording').mkdir(parents=True, exist_ok=True)
         if self.ui.recordingToggleButton.isChecked() == True:
             file_name = './recording/'
             file_name += QDateTime.currentDateTime().toString("yyyy-MM-dd_HH-mm")
             file_name += '.dump'
             self.file_out = open(file_name, "a+b")
-        elif self.file_out:
+        else:
             self.file_out.close()
 
     def display_previous_data(self,data):
             ptr = 0
             data_len = len(data)
             while(ptr < data_len):
-                datagram_size = data[ptr]
                 header = data[ptr:ptr + 2]
                 ptr += 2
                 data_header = packet_spec.parse_packet_header(header)
@@ -210,13 +210,14 @@ class Widget(QWidget):
                 self.plot_point(data_header, data_message)
 
     def open_file_button_handler(self):
-            file_path, _ = QFileDialog.getOpenFileName(self, "Open Previous File", "", "Dump file(*.dump);;All files (*)")
+            file_path, _ = QFileDialog.getOpenFileName(self, "Open Previous File", "recording", "Dump file(*.dump);;All files (*)")
 
             # If a file is selected, read its contents
             if file_path:
                 with open(file_path, 'rb') as file:
                     data = file.read()
                     self.display_previous_data(data)
+
     def filter_data(self):
         for key in self.plots:
             if self.plots[key].points.size == 0:
@@ -224,6 +225,7 @@ class Widget(QWidget):
             min_time: int = self.plots[key].points[:,0].max() - self.time_range
             self.plots[key].points = self.plots[key].points[self.plots[key].points[:,0] >= min_time]
             self.plots[key].data_line.setData(self.plots[key].points)
+
     # Any data received should be handled here
     def udp_receive_socket_data(self):
         while self.padUDPSocket.hasPendingDatagrams():
