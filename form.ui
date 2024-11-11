@@ -161,7 +161,10 @@
           </layout>
          </item>
          <item>
-          <layout class="QVBoxLayout" name="logLayout">
+          <layout class="QVBoxLayout" name="logLayout" stretch="1,0">
+           <property name="spacing">
+            <number>6</number>
+           </property>
            <item>
             <widget class="QTextBrowser" name="logOutput">
              <property name="maximumSize">
@@ -174,6 +177,17 @@
               <string notr="true"/>
              </property>
             </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_2">
+             <item>
+              <widget class="QRadioButton" name="recordingToggleButton">
+               <property name="text">
+                <string>Recording</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
           </layout>
          </item>

@@ -79,4 +79,4 @@ __pycache__
 venv
 .venv
 
-*.dump
+/recording/*

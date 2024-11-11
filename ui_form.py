@@ -17,8 +17,8 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QFormLayout, QGridLayout, QHBoxLayout,
     QLabel, QLayout, QLineEdit, QPushButton,
-    QSizePolicy, QTabWidget, QTextBrowser, QVBoxLayout,
-    QWidget)
+    QRadioButton, QSizePolicy, QTabWidget, QTextBrowser,
+    QVBoxLayout, QWidget)
 
 from pyqtgraph import PlotWidget
 import rc_resources
@@ -113,6 +113,7 @@ class Ui_Widget(object):
         self.controlLayout.addLayout(self.connectionLayout)
 
         self.logLayout = QVBoxLayout()
+        self.logLayout.setSpacing(6)
         self.logLayout.setObjectName(u"logLayout")
         self.logOutput = QTextBrowser(self.telemetryTab)
         self.logOutput.setObjectName(u"logOutput")
@@ -121,6 +122,17 @@ class Ui_Widget(object):
 
         self.logLayout.addWidget(self.logOutput)
 
+        self.horizontalLayout_2 = QHBoxLayout()
+        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.recordingToggleButton = QRadioButton(self.telemetryTab)
+        self.recordingToggleButton.setObjectName(u"recordingToggleButton")
+
+        self.horizontalLayout_2.addWidget(self.recordingToggleButton)
+
+
+        self.logLayout.addLayout(self.horizontalLayout_2)
+
+        self.logLayout.setStretch(0, 1)
 
         self.controlLayout.addLayout(self.logLayout)
 
@@ -411,6 +423,7 @@ class Ui_Widget(object):
         self.udpPortLabel.setText(QCoreApplication.translate("Widget", u"MG port: ", None))
         self.udpConnectButton.setText(QCoreApplication.translate("Widget", u"Create UDP connection", None))
         self.openFileButton.setText(QCoreApplication.translate("Widget", u"Open previous data", None))
+        self.recordingToggleButton.setText(QCoreApplication.translate("Widget", u"Recording", None))
         self.xv5.setText(QCoreApplication.translate("Widget", u"XV-5", None))
         self.xv8State.setText(QCoreApplication.translate("Widget", u"CLOSED", None))
         self.quickDisconnect.setText(QCoreApplication.translate("Widget", u"<html><head/><body><p>Quick Disconnect</p></body></html>", None))

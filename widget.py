@@ -109,6 +109,9 @@ class Widget(QWidget):
         #Open new file heandler
         self.ui.openFileButton.clicked.connect(self.open_file_button_handler)
 
+        #Connect toggle button for recording data
+        self.ui.recordingToggleButton.toggled.connect(self.recording_toggle_button_handler)
+
     def plot_point(self, header, message):
         plots = self.plots
         match header.type:
@@ -132,7 +135,8 @@ class Widget(QWidget):
                     case packet_spec.TelemetryPacketSubType.ARMING_STATE:
                         pass
                     case packet_spec.TelemetryPacketSubType.ACT_STATE:
-                        pass
+                        #Actuator state handling
+                        self.updateActState(message)
                     case packet_spec.TelemetryPacketSubType.WARNING:
                         pass
 
@@ -144,9 +148,6 @@ class Widget(QWidget):
             self.ui.udpConnectButton.setText("Close UDP connection")
             self.ui.udpIpAddressInput.setReadOnly(True)
             self.ui.udpPortInput.setReadOnly(True)
-            file_name = QDateTime.currentDateTime().toString("yyyy-MM-dd_HH-mm")
-            file_name += '.dump'
-            self.file_out = open(file_name, "a+b")
             return True
         else:
             self.ui.logOutput.append(f"Unable to join multicast group at IP address: {ip_addr}, port: {port}")
@@ -184,6 +185,16 @@ class Widget(QWidget):
             self.join_multicast_group(ip_addr, port)
         else:
             self.padUDPSocket.disconnectFromHost()
+
+    def recording_toggle_button_handler(self):
+        if self.ui.recordingToggleButton.isChecked() == True:
+            file_name = './recording/'
+            file_name += QDateTime.currentDateTime().toString("yyyy-MM-dd_HH-mm")
+            file_name += '.dump'
+            self.file_out = open(file_name, "a+b")
+        elif self.file_out:
+            self.file_out.close()
+
     def display_previous_data(self,data):
             ptr = 0
             data_len = len(data)
@@ -199,7 +210,6 @@ class Widget(QWidget):
                 self.plot_point(data_header, data_message)
 
     def open_file_button_handler(self):
-            # options = QFileDialog.Options()
             file_path, _ = QFileDialog.getOpenFileName(self, "Open Previous File", "", "Dump file(*.dump);;All files (*)")
 
             # If a file is selected, read its contents
@@ -223,12 +233,11 @@ class Widget(QWidget):
             message_bytes = data[2:]
             header = packet_spec.parse_packet_header(header_bytes)
             message = packet_spec.parse_packet_message(header, message_bytes)
-            #Actuator state handling
-            if(header.sub_type == packet_spec.TelemetryPacketSubType.ACT_STATE):
-                self.updateActState(message)
-            else:
-                self.plot_point(header, message)
-            self.file_out.write(datagram)
+            self.plot_point(header, message)
+
+            #If we want to recording data
+            if self.ui.recordingToggleButton.isChecked():
+                self.file_out.write(datagram)
 
     # Any errors with the socket should be handled here and logged
     def udp_on_error(self):
@@ -243,6 +252,8 @@ class Widget(QWidget):
         self.ui.udpConnectButton.setText("Create UDP connection")
         self.ui.udpIpAddressInput.setReadOnly(False)
         self.ui.udpPortInput.setReadOnly(False)
+        if self.file_out:
+            self.file_out.close()
 
     # Handles when the window is closed, have to make sure to disconnect the TCP socket
     def closeEvent(self, event):
