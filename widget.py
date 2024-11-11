@@ -105,7 +105,11 @@ class Widget(QWidget):
 
         # Button handlers
         self.ui.udpConnectButton.clicked.connect(self.udp_connection_button_handler)
-
+        self.ui.clearLogButton.clicked.connect(self.clear_log)
+    
+    def clear_log(self):
+        """Clears the log output."""
+        self.ui.logOutput.clear()
     def plot_point(self, header, message):
         plots = self.plots
         match header.type:

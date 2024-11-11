@@ -119,6 +119,13 @@ class Ui_Widget(object):
 
         self.controlLayout.addLayout(self.logLayout)
 
+        self.clearLogButton = QPushButton(self.telemetryTab)
+        self.clearLogButton.setObjectName(u"clearLogButton")
+        self.clearLogButton.setMaximumSize(QSize(300, 16777215))
+        self.udpConnectButton.setStyleSheet(u"")
+
+        self.controlLayout.addWidget(self.clearLogButton)
+
         self.valveStatusLayout = QFormLayout()
         self.valveStatusLayout.setObjectName(u"valveStatusLayout")
         self.gridLayout_2 = QGridLayout()
@@ -405,6 +412,7 @@ class Ui_Widget(object):
         self.udpIpAddressLabel.setText(QCoreApplication.translate("Widget", u"MG IPv4 address: ", None))
         self.udpPortLabel.setText(QCoreApplication.translate("Widget", u"MG port: ", None))
         self.udpConnectButton.setText(QCoreApplication.translate("Widget", u"Create UDP connection", None))
+        self.clearLogButton.setText(QCoreApplication.translate("Widget", u"Clear", None))
         self.xv5.setText(QCoreApplication.translate("Widget", u"XV-5", None))
         self.xv8State.setText(QCoreApplication.translate("Widget", u"CLOSED", None))
         self.quickDisconnect.setText(QCoreApplication.translate("Widget", u"<html><head/><body><p>Quick Disconnect</p></body></html>", None))
