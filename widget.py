@@ -6,7 +6,7 @@ from dataclasses import dataclass
 
 from PySide6.QtWidgets import QApplication, QWidget
 from PySide6.QtWebEngineWidgets import QWebEngineView
-from PySide6.QtCore import QTimer
+from PySide6.QtCore import QTimer, QDateTime
 from PySide6.QtNetwork import QUdpSocket, QAbstractSocket, QHostAddress
 from pyqtgraph import mkPen, PlotDataItem
 import numpy as np
@@ -27,6 +27,9 @@ points = np.empty((0,2))
 class PlotInfo:
     points: np.array
     data_line: PlotDataItem
+
+def get_timestamp():
+    return QDateTime.currentDateTime().toString("yyyy-MM-dd HH:mm:ss")
 
 class Widget(QWidget):
     def __init__(self, parent=None):
@@ -137,13 +140,13 @@ class Widget(QWidget):
         multicastGroup = QHostAddress(ip_addr)
         
         if self.padUDPSocket.bind(QHostAddress.AnyIPv4, port) and self.padUDPSocket.joinMulticastGroup(multicastGroup):
-            self.ui.logOutput.append(f"Successfully connected to {ip_addr}:{port}")
+            self.ui.logOutput.append(f"{get_timestamp()} - Successfully connected to {ip_addr}:{port}")
             self.ui.udpConnectButton.setText("Close UDP connection")
             self.ui.udpIpAddressInput.setReadOnly(True)
             self.ui.udpPortInput.setReadOnly(True)
             return True
         else:
-            self.ui.logOutput.append(f"Unable to join multicast group at IP address: {ip_addr}, port: {port}")
+            self.ui.logOutput.append(f"{get_timestamp()} - Unable to join multicast group at IP address: {ip_addr}, port: {port}")
             return False
 
     def udp_connection_button_handler(self):
@@ -166,13 +169,13 @@ class Widget(QWidget):
             try:
                 ipaddress.ip_address(ip_addr)
             except ValueError:
-                self.ui.logOutput.append(f"IP address '{ip_addr}' is invalid")
+                self.ui.logOutput.append(f"{get_timestamp()} - IP address '{ip_addr}' is invalid")
                 return
 
             try:
                 port = int(port)
             except ValueError:
-                self.ui.logOutput.append(f"Port '{port}' is invalid")
+                self.ui.logOutput.append(f"{get_timestamp()} - Port '{port}' is invalid")
                 return
 
             self.join_multicast_group(ip_addr, port)
@@ -205,13 +208,13 @@ class Widget(QWidget):
     # Any errors with the socket should be handled here and logged
     def udp_on_error(self):
         if self.padUDPSocket.errorString() == "The address is not available":
-            self.ui.logOutput.append(f"Connection failed - {self.padUDPSocket.error()}: {self.padUDPSocket.errorString()}")
+            self.ui.logOutput.append(f"{get_timestamp()} - Connection failed - {self.padUDPSocket.error()}: {self.padUDPSocket.errorString()}")
         else:
-            self.ui.logOutput.append(f"{self.padUDPSocket.error()}: {self.padUDPSocket.errorString()}")
+            self.ui.logOutput.append(f"{get_timestamp()} - {self.padUDPSocket.error()}: {self.padUDPSocket.errorString()}")
 
     # Any disconnection event should be handled here and logged
     def udp_on_disconnected(self):
-        self.ui.logOutput.append("Socket connection was closed")
+        self.ui.logOutput.append(f"{get_timestamp()} - Socket connection was closed")
         self.ui.udpConnectButton.setText("Create UDP connection")
         self.ui.udpIpAddressInput.setReadOnly(False)
         self.ui.udpPortInput.setReadOnly(False)
