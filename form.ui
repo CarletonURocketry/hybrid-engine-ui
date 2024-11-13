@@ -91,8 +91,11 @@
              </property>
              <item>
               <widget class="QLabel" name="udpIpAddressLabel">
+               <property name="toolTip">
+                <string>Address of multicast group</string>
+               </property>
                <property name="text">
-                <string>MG IPv4 address: </string>
+                <string>MCast IPv4 address*: </string>
                </property>
               </widget>
              </item>
@@ -121,8 +124,11 @@
                  <height>0</height>
                 </size>
                </property>
+               <property name="toolTip">
+                <string>Port of multicast group</string>
+               </property>
                <property name="text">
-                <string>MG port: </string>
+                <string>MCast port*: </string>
                </property>
               </widget>
              </item>
@@ -130,6 +136,30 @@
               <widget class="QLineEdit" name="udpPortInput">
                <property name="styleSheet">
                 <string notr="true"/>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="interfaceLayout">
+             <item>
+              <widget class="QLabel" name="interfaceAddressLabel">
+               <property name="toolTip">
+                <string>Enter ipconfig in terminal to see interfaces</string>
+               </property>
+               <property name="text">
+                <string>Interface address:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="interfaceAddressDropdown">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
                </property>
               </widget>
              </item>
