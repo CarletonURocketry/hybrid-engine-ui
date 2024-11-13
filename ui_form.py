@@ -15,9 +15,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QFormLayout, QGridLayout, QHBoxLayout,
-    QLabel, QLayout, QLineEdit, QPushButton,
-    QRadioButton, QSizePolicy, QTabWidget, QTextBrowser,
+from PySide6.QtWidgets import (QApplication, QComboBox, QFormLayout, QGridLayout,
+    QHBoxLayout, QLabel, QLayout, QLineEdit,
+    QPushButton, QRadioButton, QSizePolicy, QTabWidget, QTextBrowser,
+
     QVBoxLayout, QWidget)
 
 from pyqtgraph import PlotWidget
@@ -96,6 +97,26 @@ class Ui_Widget(object):
 
 
         self.connectionLayout.addLayout(self.portLayout)
+
+        self.interfaceLayout = QHBoxLayout()
+        self.interfaceLayout.setObjectName(u"interfaceLayout")
+        self.interfaceAddressLabel = QLabel(self.telemetryTab)
+        self.interfaceAddressLabel.setObjectName(u"interfaceAddressLabel")
+
+        self.interfaceLayout.addWidget(self.interfaceAddressLabel)
+
+        self.interfaceAddressDropdown = QComboBox(self.telemetryTab)
+        self.interfaceAddressDropdown.setObjectName(u"interfaceAddressDropdown")
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.interfaceAddressDropdown.sizePolicy().hasHeightForWidth())
+        self.interfaceAddressDropdown.setSizePolicy(sizePolicy1)
+
+        self.interfaceLayout.addWidget(self.interfaceAddressDropdown)
+
+
+        self.connectionLayout.addLayout(self.interfaceLayout)
 
         self.udpConnectButton = QPushButton(self.telemetryTab)
         self.udpConnectButton.setObjectName(u"udpConnectButton")
@@ -368,11 +389,11 @@ class Ui_Widget(object):
         self.plotLayout.setObjectName(u"plotLayout")
         self.pressurePlot = PlotWidget(self.telemetryTab)
         self.pressurePlot.setObjectName(u"pressurePlot")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        sizePolicy1.setHorizontalStretch(0)
-        sizePolicy1.setVerticalStretch(0)
-        sizePolicy1.setHeightForWidth(self.pressurePlot.sizePolicy().hasHeightForWidth())
-        self.pressurePlot.setSizePolicy(sizePolicy1)
+        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        sizePolicy2.setHorizontalStretch(0)
+        sizePolicy2.setVerticalStretch(0)
+        sizePolicy2.setHeightForWidth(self.pressurePlot.sizePolicy().hasHeightForWidth())
+        self.pressurePlot.setSizePolicy(sizePolicy2)
 
         self.plotLayout.addWidget(self.pressurePlot, 0, 0, 1, 1)
 
@@ -419,8 +440,18 @@ class Ui_Widget(object):
     def retranslateUi(self, Widget):
         Widget.setWindowTitle(QCoreApplication.translate("Widget", u"Hybrid Engine Ground System UI", None))
         self.logoLabel.setText("")
-        self.udpIpAddressLabel.setText(QCoreApplication.translate("Widget", u"MG IPv4 address: ", None))
-        self.udpPortLabel.setText(QCoreApplication.translate("Widget", u"MG port: ", None))
+#if QT_CONFIG(tooltip)
+        self.udpIpAddressLabel.setToolTip(QCoreApplication.translate("Widget", u"Address of multicast group", None))
+#endif // QT_CONFIG(tooltip)
+        self.udpIpAddressLabel.setText(QCoreApplication.translate("Widget", u"MCast IPv4 address*: ", None))
+#if QT_CONFIG(tooltip)
+        self.udpPortLabel.setToolTip(QCoreApplication.translate("Widget", u"Port of multicast group", None))
+#endif // QT_CONFIG(tooltip)
+        self.udpPortLabel.setText(QCoreApplication.translate("Widget", u"MCast port*: ", None))
+#if QT_CONFIG(tooltip)
+        self.interfaceAddressLabel.setToolTip(QCoreApplication.translate("Widget", u"Enter ipconfig in terminal to see interfaces", None))
+#endif // QT_CONFIG(tooltip)
+        self.interfaceAddressLabel.setText(QCoreApplication.translate("Widget", u"Interface address:", None))
         self.udpConnectButton.setText(QCoreApplication.translate("Widget", u"Create UDP connection", None))
         self.openFileButton.setText(QCoreApplication.translate("Widget", u"Open previous data", None))
         self.recordingToggleButton.setText(QCoreApplication.translate("Widget", u"Recording", None))

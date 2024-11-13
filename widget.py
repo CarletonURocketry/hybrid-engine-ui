@@ -7,7 +7,8 @@ from dataclasses import dataclass
 from PySide6.QtWidgets import QApplication, QWidget, QFileDialog
 from PySide6.QtWebEngineWidgets import QWebEngineView
 from PySide6.QtCore import QTimer, QDateTime
-from PySide6.QtNetwork import QUdpSocket, QAbstractSocket, QHostAddress
+from PySide6.QtNetwork import QUdpSocket, QAbstractSocket, QHostAddress, QNetworkInterface
+
 from pyqtgraph import mkPen, PlotDataItem
 import numpy as np
 
@@ -55,6 +56,15 @@ class Widget(QWidget):
         self.padUDPSocket.errorOccurred.connect(self.udp_on_error)
         self.padUDPSocket.disconnected.connect(self.udp_on_disconnected)
 
+        # Dictionary that maps IP addresses to network interfaces, these used when
+        # selecting the network interface to join the multicast group on
+        self.interfaces = {}
+        self.ui.interfaceAddressDropdown.addItem("Select interface IP address")
+        for interface in QNetworkInterface.allInterfaces():
+                for entry in interface.addressEntries():
+                    self.interfaces[entry.ip().toString()] = interface
+                    self.ui.interfaceAddressDropdown.addItem(entry.ip().toString())
+        
         # Graphing pens
         red_pen = mkPen("r")
         blue_pen = mkPen("g")
@@ -139,49 +149,44 @@ class Widget(QWidget):
                     case packet_spec.TelemetryPacketSubType.WARNING:
                         pass
 
-    def join_multicast_group(self, ip_addr, port):
-        multicastGroup = QHostAddress(ip_addr)
-        
-        if self.padUDPSocket.bind(QHostAddress.AnyIPv4, port) and self.padUDPSocket.joinMulticastGroup(multicastGroup):
-            self.ui.logOutput.append(f"Successfully connected to {ip_addr}:{port}")
-            self.ui.udpConnectButton.setText("Close UDP connection")
-            self.ui.udpIpAddressInput.setReadOnly(True)
-            self.ui.udpPortInput.setReadOnly(True)
-            return True
-        else:
-            self.ui.logOutput.append(f"Unable to join multicast group at IP address: {ip_addr}, port: {port}")
-            return False
-
     def udp_connection_button_handler(self):
         if self.padUDPSocket.state() == QAbstractSocket.SocketState.UnconnectedState:
-            ip_addr = self.ui.udpIpAddressInput.text()
-            port = self.ui.udpPortInput.text()
+            mcast_addr = self.ui.udpIpAddressInput.text()
+            mcast_port = self.ui.udpPortInput.text()
+            interface_addr = self.ui.interfaceAddressDropdown.currentText() if self.ui.interfaceAddressDropdown.currentIndex() > 1 else None
 
-            if ip_addr == "funi":
+            if mcast_addr == "funi":
                 self.web_view = QWebEngineView()
                 self.web_view.setUrl("https://www.youtube.com/watch?app=desktop&v=vPDvMVEwKzM")
                 self.ui.plotLayout.addWidget(self.web_view, 0, 2, 2, 1)
                 self.ui.udpIpAddressInput.clear()
                 return
-            if ip_addr == "close":
+            if mcast_addr == "close":
                 self.web_view.deleteLater()
                 self.ui.plotLayout.removeWidget(self.web_view)
                 self.ui.udpIpAddressInput.clear()
                 return
 
             try:
-                ipaddress.ip_address(ip_addr)
+                ipaddress.ip_address(mcast_addr)
             except ValueError:
-                self.ui.logOutput.append(f"IP address '{ip_addr}' is invalid")
+                self.ui.logOutput.append(f"IP address '{mcast_addr}' is invalid")
                 return
 
             try:
-                port = int(port)
+                mcast_port = int(mcast_port)
             except ValueError:
-                self.ui.logOutput.append(f"Port '{port}' is invalid")
+                self.ui.logOutput.append(f"Port '{mcast_port}' is invalid")
                 return
 
-            self.join_multicast_group(ip_addr, port)
+            if interface_addr:
+                try:
+                    ipaddress.ip_address(interface_addr)
+                except ValueError:
+                    self.ui.logOutput.append(f"Interface IP address '{interface_addr}' is invalid")
+                    return
+
+            self.join_multicast_group(mcast_addr, mcast_port, interface_addr)
         else:
             self.padUDPSocket.disconnectFromHost()
 
@@ -216,6 +221,29 @@ class Widget(QWidget):
                 with open(file_path, 'rb') as file:
                     data = file.read()
                     self.display_previous_data(data)
+                    
+    def join_multicast_group(self, mcast_addr, mcast_port, interface_addr=""):
+        interface_address = QHostAddress(interface_addr) if interface_addr else QHostAddress.AnyIPv4
+        multicast_group = QHostAddress(mcast_addr)
+        net_interface = QNetworkInterface(self.interfaces[interface_addr]) if interface_addr else None
+
+        # Always bind UDP socket to port but change interface address based on args
+        bound_to_port = self.padUDPSocket.bind(interface_address, mcast_port)
+        # Use different func for joining multicast group depending if interface addr is specified
+        if net_interface:
+            joined_mcast_group = self.padUDPSocket.joinMulticastGroup(multicast_group, net_interface)
+        else:
+            joined_mcast_group = self.padUDPSocket.joinMulticastGroup(multicast_group)
+
+        if bound_to_port and joined_mcast_group:
+            self.ui.logOutput.append(f"Successfully connected to {mcast_addr}:{mcast_port}")
+            self.ui.udpConnectButton.setText("Close UDP connection")
+            self.ui.udpIpAddressInput.setReadOnly(True)
+            self.ui.udpPortInput.setReadOnly(True)
+            return True
+        else:
+            self.ui.logOutput.append(f"Unable to join multicast group at IP address: {mcast_addr}, port: {mcast_port}")
+            return False
 
     def filter_data(self):
         for key in self.plots:
