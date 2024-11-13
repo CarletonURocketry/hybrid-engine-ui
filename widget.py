@@ -218,9 +218,11 @@ class Widget(QWidget):
 
             # If a file is selected, read its contents
             if file_path:
+                self.ui.logOutput.append(f"Reading data from {file_path}")
                 with open(file_path, 'rb') as file:
                     data = file.read()
                     self.display_previous_data(data)
+                self.ui.logOutput.append("Data loaded")
                     
     def join_multicast_group(self, mcast_addr, mcast_port, interface_addr=""):
         interface_address = QHostAddress(interface_addr) if interface_addr else QHostAddress.AnyIPv4
