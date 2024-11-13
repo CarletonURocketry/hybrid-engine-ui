@@ -1,13 +1,14 @@
 # This Python file uses the following encoding: utf-8
 import sys
-import random
+import pathlib
 import ipaddress
 from dataclasses import dataclass
 
-from PySide6.QtWidgets import QApplication, QWidget
+from PySide6.QtWidgets import QApplication, QWidget, QFileDialog
 from PySide6.QtWebEngineWidgets import QWebEngineView
-from PySide6.QtCore import QTimer
+from PySide6.QtCore import QTimer, QDateTime
 from PySide6.QtNetwork import QUdpSocket, QAbstractSocket, QHostAddress, QNetworkInterface
+
 from pyqtgraph import mkPen, PlotDataItem
 import numpy as np
 
@@ -115,6 +116,12 @@ class Widget(QWidget):
         # Button handlers
         self.ui.udpConnectButton.clicked.connect(self.udp_connection_button_handler)
 
+        #Open new file heandler
+        self.ui.openFileButton.clicked.connect(self.open_file_button_handler)
+
+        #Connect toggle button for recording data
+        self.ui.recordingToggleButton.toggled.connect(self.recording_toggle_button_handler)
+
     def plot_point(self, header, message):
         plots = self.plots
         match header.type:
@@ -183,6 +190,40 @@ class Widget(QWidget):
         else:
             self.padUDPSocket.disconnectFromHost()
 
+    def recording_toggle_button_handler(self):
+        pathlib.Path('recording').mkdir(parents=True, exist_ok=True)
+        if self.ui.recordingToggleButton.isChecked() == True:
+            file_name = './recording/'
+            file_name += QDateTime.currentDateTime().toString("yyyy-MM-dd_HH-mm")
+            file_name += '.dump'
+            self.file_out = open(file_name, "a+b")
+        else:
+            self.file_out.close()
+
+    def display_previous_data(self,data):
+            ptr = 0
+            data_len = len(data)
+            while(ptr < data_len):
+                header = data[ptr:ptr + 2]
+                ptr += 2
+                data_header = packet_spec.parse_packet_header(header)
+                message_bytes_length = packet_spec.packet_message_bytes_length(data_header)
+                message = data[ptr:ptr + message_bytes_length]
+                data_message = packet_spec.parse_packet_message(data_header, message)
+                ptr += message_bytes_length
+                self.plot_point(data_header, data_message)
+
+    def open_file_button_handler(self):
+            file_path, _ = QFileDialog.getOpenFileName(self, "Open Previous File", "recording", "Dump file(*.dump);;All files (*)")
+
+            # If a file is selected, read its contents
+            if file_path:
+                self.ui.logOutput.append(f"Reading data from {file_path}")
+                with open(file_path, 'rb') as file:
+                    data = file.read()
+                    self.display_previous_data(data)
+                self.ui.logOutput.append("Data loaded")
+                    
     def join_multicast_group(self, mcast_addr, mcast_port, interface_addr=""):
         interface_address = QHostAddress(interface_addr) if interface_addr else QHostAddress.AnyIPv4
         multicast_group = QHostAddress(mcast_addr)
@@ -223,11 +264,15 @@ class Widget(QWidget):
             message_bytes = data[2:]
             header = packet_spec.parse_packet_header(header_bytes)
             message = packet_spec.parse_packet_message(header, message_bytes)
-            #Actuator state handling
-            if(header.sub_type == packet_spec.TelemetryPacketSubType.ACT_STATE):
+            if header.sub_type == packet_spec.TelemetryPacketSubType.ACT_STATE:
+                #Actuator state handling
                 self.updateActState(message)
             else:
                 self.plot_point(header, message)
+
+            #If we want to recording data
+            if self.ui.recordingToggleButton.isChecked():
+                self.file_out.write(datagram)
 
     # Any errors with the socket should be handled here and logged
     def udp_on_error(self):
@@ -242,6 +287,8 @@ class Widget(QWidget):
         self.ui.udpConnectButton.setText("Create UDP connection")
         self.ui.udpIpAddressInput.setReadOnly(False)
         self.ui.udpPortInput.setReadOnly(False)
+        if self.file_out:
+            self.file_out.close()
 
     # Handles when the window is closed, have to make sure to disconnect the TCP socket
     def closeEvent(self, event):
