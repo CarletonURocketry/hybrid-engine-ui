@@ -396,19 +396,14 @@ class Ui_Widget(object):
 
         self.plotLayout.addWidget(self.tankMassPlot, 1, 0, 1, 1)
 
-        self.temperaturePlot = PlotWidget(Widget)
-        self.temperaturePlot.setObjectName(u"temperaturePlot")
-        brush = QBrush(QColor(0, 0, 0, 255))
-        brush.setStyle(Qt.SolidPattern)
-        self.temperaturePlot.setBackgroundBrush(brush)
-        brush1 = QBrush(QColor(255, 0, 0, 255))
-        brush1.setStyle(Qt.NoBrush)
-        self.temperaturePlot.setForegroundBrush(brush1)
-
-        self.plotLayout.addWidget(self.temperaturePlot, 0, 1, 1, 1)
-
 
         self.verticalLayout.addLayout(self.plotLayout)
+
+        self.udpConnectButton1 = QPushButton(self.telemetryTab)
+        self.udpConnectButton1.setObjectName(u"udpConnectButton1")
+        self.udpConnectButton1.setMaximumSize(QSize(1000, 16777215))
+
+        self.verticalLayout.addWidget(self.udpConnectButton1)
 
         self.tabWidget.addTab(self.telemetryTab, "")
         self.pAndIdTab = QWidget()
@@ -416,7 +411,7 @@ class Ui_Widget(object):
         self.pid_image = QLabel(self.pAndIdTab)
         self.pid_image.setObjectName(u"pid_image")
         self.pid_image.setGeometry(QRect(0, 10, 1261, 691))
-        self.pid_image.setPixmap(QPixmap(u"C:/Users/brian/Downloads/PID hybrid.jpg"))
+        self.pid_image.setPixmap(QPixmap(u":/images/P&I diagram"))
         self.pid_image.setScaledContents(True)
         self.cv1State_tabpid = QLabel(self.pAndIdTab)
         self.cv1State_tabpid.setObjectName(u"cv1State_tabpid")
@@ -458,7 +453,7 @@ class Ui_Widget(object):
 
         self.retranslateUi(Widget)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(Widget)
@@ -500,6 +495,7 @@ class Ui_Widget(object):
         self.xv12State.setText(QCoreApplication.translate("Widget", u"CLOSED", None))
         self.xv9.setText(QCoreApplication.translate("Widget", u"XV-9", None))
         self.xv8.setText(QCoreApplication.translate("Widget", u"XV-8", None))
+        self.udpConnectButton1.setText(QCoreApplication.translate("Widget", u"Create UDP connection", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.telemetryTab), QCoreApplication.translate("Widget", u"Telemetry", None))
         self.pid_image.setText("")
         self.cv1State_tabpid.setText(QCoreApplication.translate("Widget", u"CLOSED", None))
