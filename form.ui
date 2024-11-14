@@ -200,6 +200,9 @@
                  <bold>true</bold>
                 </font>
                </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(255, 80, 80);</string>
+               </property>
                <property name="text">
                 <string>CLOSED</string>
                </property>
@@ -234,6 +237,9 @@
                  <pointsize>12</pointsize>
                  <bold>true</bold>
                 </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(255, 80, 80);</string>
                </property>
                <property name="text">
                 <string>CLOSED</string>
@@ -278,6 +284,9 @@
                  <bold>true</bold>
                 </font>
                </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(255, 80, 80);</string>
+               </property>
                <property name="text">
                 <string>CLOSED</string>
                </property>
@@ -293,6 +302,9 @@
                  <pointsize>12</pointsize>
                  <bold>true</bold>
                 </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(255, 80, 80);</string>
                </property>
                <property name="text">
                 <string>CLOSED</string>
@@ -332,6 +344,9 @@
                  <bold>true</bold>
                 </font>
                </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(255, 80, 80);</string>
+               </property>
                <property name="text">
                 <string>CLOSED</string>
                </property>
@@ -347,6 +362,9 @@
                  <pointsize>12</pointsize>
                  <bold>true</bold>
                 </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(255, 80, 80);</string>
                </property>
                <property name="text">
                 <string>CLOSED</string>
@@ -373,6 +391,9 @@
                  <bold>true</bold>
                 </font>
                </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(255, 80, 80);</string>
+               </property>
                <property name="text">
                 <string>CLOSED</string>
                </property>
@@ -385,6 +406,9 @@
                  <pointsize>12</pointsize>
                  <bold>true</bold>
                 </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(255, 80, 80);</string>
                </property>
                <property name="text">
                 <string>CLOSED</string>
@@ -429,6 +453,12 @@
                  <bold>true</bold>
                 </font>
                </property>
+               <property name="autoFillBackground">
+                <bool>false</bool>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(255, 80, 80);</string>
+               </property>
                <property name="text">
                 <string>CLOSED</string>
                </property>
@@ -455,7 +485,7 @@
                 <string>Fire Valve</string>
                </property>
                <property name="indent">
-                <number>10</number>
+                <number>-1</number>
                </property>
               </widget>
              </item>
@@ -479,6 +509,9 @@
                  <bold>true</bold>
                 </font>
                </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(255, 80, 80);</string>
+               </property>
                <property name="text">
                 <string>CLOSED</string>
                </property>
@@ -492,6 +525,9 @@
                  <bold>true</bold>
                 </font>
                </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(255, 80, 80);</string>
+               </property>
                <property name="text">
                 <string>CLOSED</string>
                </property>
@@ -504,6 +540,9 @@
                  <pointsize>12</pointsize>
                  <bold>true</bold>
                 </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(255, 80, 80);</string>
                </property>
                <property name="text">
                 <string>CLOSED</string>
@@ -536,6 +575,9 @@
                  <bold>true</bold>
                 </font>
                </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(255, 80, 80);</string>
+               </property>
                <property name="text">
                 <string>CLOSED</string>
                </property>
@@ -557,6 +599,9 @@
                  <pointsize>12</pointsize>
                  <bold>true</bold>
                 </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(255, 80, 80);</string>
                </property>
                <property name="text">
                 <string>CLOSED</string>
@@ -617,6 +662,9 @@
                  <pointsize>12</pointsize>
                  <bold>true</bold>
                 </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(255, 80, 80);</string>
                </property>
                <property name="text">
                 <string>CLOSED</string>
@@ -711,25 +759,174 @@
          </item>
         </layout>
        </item>
-       <item>
-        <widget class="QPushButton" name="udpConnectButton">
-         <property name="maximumSize">
-          <size>
-           <width>1000</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Create UDP connection</string>
-         </property>
-        </widget>
-       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="pAndIdTab">
       <attribute name="title">
        <string>P&amp;&amp;ID</string>
       </attribute>
+      <widget class="QLabel" name="pid_image">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>10</y>
+         <width>1261</width>
+         <height>691</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="pixmap">
+        <pixmap>C:/Users/brian/Downloads/PID hybrid.jpg</pixmap>
+       </property>
+       <property name="scaledContents">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QLabel" name="cv1State_tabpid">
+       <property name="geometry">
+        <rect>
+         <x>940</x>
+         <y>390</y>
+         <width>74</width>
+         <height>37</height>
+        </rect>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>50</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 80, 80);</string>
+       </property>
+       <property name="text">
+        <string>CLOSED</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignCenter</set>
+       </property>
+      </widget>
+      <widget class="QLabel" name="xv1State_tabpid">
+       <property name="geometry">
+        <rect>
+         <x>280</x>
+         <y>420</y>
+         <width>74</width>
+         <height>37</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 80, 80);</string>
+       </property>
+       <property name="text">
+        <string>CLOSED</string>
+       </property>
+       <property name="indent">
+        <number>8</number>
+       </property>
+      </widget>
+      <widget class="QLabel" name="xv2State_tabpid">
+       <property name="geometry">
+        <rect>
+         <x>400</x>
+         <y>290</y>
+         <width>74</width>
+         <height>37</height>
+        </rect>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>50</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 80, 80);</string>
+       </property>
+       <property name="text">
+        <string>CLOSED</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignCenter</set>
+       </property>
+      </widget>
+      <widget class="QLabel" name="xv3State_tabpid">
+       <property name="geometry">
+        <rect>
+         <x>500</x>
+         <y>510</y>
+         <width>74</width>
+         <height>37</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 80, 80);</string>
+       </property>
+       <property name="text">
+        <string>CLOSED</string>
+       </property>
+       <property name="indent">
+        <number>8</number>
+       </property>
+      </widget>
+      <widget class="QLabel" name="xv4State_tabpid">
+       <property name="geometry">
+        <rect>
+         <x>730</x>
+         <y>130</y>
+         <width>74</width>
+         <height>36</height>
+        </rect>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>50</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 80, 80);</string>
+       </property>
+       <property name="text">
+        <string>CLOSED</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignCenter</set>
+       </property>
+      </widget>
      </widget>
     </widget>
    </item>

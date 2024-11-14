@@ -145,7 +145,7 @@ class Widget(QWidget):
         self.data_filter_timer.start(self.timer_time)
 
         # Button handlers
-        self.ui.pid_button.clicked.connect(self.show_new_window)
+        #self.ui.pid_button.clicked.connect(self.show_new_window)
         self.ui.udpConnectButton.clicked.connect(self.udp_connection_button_handler)
 
     def plot_point(self, header, message):
@@ -273,28 +273,58 @@ class Widget(QWidget):
             case 0:
                 if(message.state == packet_spec.ActuatorState.OFF):
                     self.ui.cv1State.setText("CLOSED")
+                    self.ui.cv1State.setStyleSheet("background-color: rgb(255, 80, 80)")
+                    self.ui.cv1State_tabpid.setStyleSheet("background-color: rgb(255, 80, 80)")
+                    self.ui.cv1State_tabpid.setText("CLOSED")
                 elif(message.state == packet_spec.ActuatorState.ON):
                     self.ui.cv1State.setText("OPEN")
+                    self.ui.cv1State.setStyleSheet("background-color: rgb(80, 255, 80)")
+                    self.ui.cv1State_tabpid.setStyleSheet("background-color: rgb(80, 255, 80)")
+                    self.ui.cv1State_tabpid.setText("OPEN")
             case 1:
                 if(message.state == packet_spec.ActuatorState.OFF):
                     self.ui.xv1State.setText("CLOSED")
+                    self.ui.xv1State.setStyleSheet("background-color: rgb(255, 80, 80)")
+                    self.ui.xv1State_tabpid.setStyleSheet("background-color: rgb(255, 80, 80)")
+                    self.ui.xv1State_tabpid.setText("CLOSED")
                 elif(message.state == packet_spec.ActuatorState.ON):
                     self.ui.xv1State.setText("OPEN")
+                    self.ui.xv1State.setStyleSheet("background-color: rgb(80, 255, 80)")
+                    self.ui.xv1State_tabpid.setStyleSheet("background-color: rgb(80, 255, 80)")
+                    self.ui.xv1State_tabpid.setText("OPEN")
             case 2:
                 if(message.state == packet_spec.ActuatorState.OFF):
                     self.ui.xv2State.setText("CLOSED")
+                    self.ui.xv2State.setStyleSheet("background-color: rgb(255, 80, 80)")
+                    self.ui.xv2State_tabpid.setStyleSheet("background-color: rgb(255, 80, 80)")
+                    self.ui.xv2State_tabpid.setText("CLOSED")
                 elif(message.state == packet_spec.ActuatorState.ON):
                     self.ui.xv2State.setText("OPEN")
+                    self.ui.xv2State.setStyleSheet("background-color: rgb(80, 255, 80)")
+                    self.ui.xv2State_tabpid.setStyleSheet("background-color: rgb(80, 255, 80)")
+                    self.ui.xv2State_tabpid.setText("OPEN")
             case 3:
                 if(message.state == packet_spec.ActuatorState.OFF):
                     self.ui.xv3State.setText("CLOSED")
+                    self.ui.xv3State.setStyleSheet("background-color: rgb(255, 80, 80)")
+                    self.ui.xv3State_tabpid.setStyleSheet("background-color: rgb(255, 80, 80)")
+                    self.ui.xv3State_tabpid.setText("CLOSED")
                 elif(message.state == packet_spec.ActuatorState.ON):
                     self.ui.xv3State.setText("OPEN")
+                    self.ui.xv3State.setStyleSheet("background-color: rgb(80, 255, 80)")
+                    self.ui.xv3State_tabpid.setStyleSheet("background-color: rgb(80, 255, 80)")
+                    self.ui.xv3State_tabpid.setText("OPEN")
             case 4:
                 if(message.state == packet_spec.ActuatorState.OFF):
                     self.ui.xv4State.setText("CLOSED")
+                    self.ui.xv4State.setStyleSheet("background-color: rgb(255, 80, 80)")
+                    self.ui.xv4State_tabpid.setStyleSheet("background-color: rgb(255, 80, 80)")
+                    self.ui.xv4State_tabpid.setText("CLOSED")
                 elif(message.state == packet_spec.ActuatorState.ON):
                     self.ui.xv4State.setText("OPEN")
+                    self.ui.xv4State.setStyleSheet("background-color: rgb(80, 255, 80)")
+                    self.ui.xv4State_tabpid.setStyleSheet("background-color: rgb(80, 255, 80)")
+                    self.ui.xv4State_tabpid.setText("OPEN")
             case 5:
                 if(message.state == packet_spec.ActuatorState.OFF):
                     self.ui.xv5State.setText("CLOSED")
