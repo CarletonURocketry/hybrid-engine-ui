@@ -399,12 +399,6 @@ class Ui_Widget(object):
 
         self.verticalLayout.addLayout(self.plotLayout)
 
-        self.udpConnectButton1 = QPushButton(self.telemetryTab)
-        self.udpConnectButton1.setObjectName(u"udpConnectButton1")
-        self.udpConnectButton1.setMaximumSize(QSize(1000, 16777215))
-
-        self.verticalLayout.addWidget(self.udpConnectButton1)
-
         self.tabWidget.addTab(self.telemetryTab, "")
         self.pAndIdTab = QWidget()
         self.pAndIdTab.setObjectName(u"pAndIdTab")
@@ -453,7 +447,7 @@ class Ui_Widget(object):
 
         self.retranslateUi(Widget)
 
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(Widget)
@@ -495,7 +489,6 @@ class Ui_Widget(object):
         self.xv12State.setText(QCoreApplication.translate("Widget", u"CLOSED", None))
         self.xv9.setText(QCoreApplication.translate("Widget", u"XV-9", None))
         self.xv8.setText(QCoreApplication.translate("Widget", u"XV-8", None))
-        self.udpConnectButton1.setText(QCoreApplication.translate("Widget", u"Create UDP connection", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.telemetryTab), QCoreApplication.translate("Widget", u"Telemetry", None))
         self.pid_image.setText("")
         self.cv1State_tabpid.setText(QCoreApplication.translate("Widget", u"CLOSED", None))
