@@ -396,6 +396,17 @@ class Ui_Widget(object):
 
         self.plotLayout.addWidget(self.tankMassPlot, 1, 0, 1, 1)
 
+        self.temperaturePlot = PlotWidget(Widget)
+        self.temperaturePlot.setObjectName(u"temperaturePlot")
+        brush = QBrush(QColor(0, 0, 0, 255))
+        brush.setStyle(Qt.SolidPattern)
+        self.temperaturePlot.setBackgroundBrush(brush)
+        brush1 = QBrush(QColor(255, 0, 0, 255))
+        brush1.setStyle(Qt.NoBrush)
+        self.temperaturePlot.setForegroundBrush(brush1)
+
+        self.plotLayout.addWidget(self.temperaturePlot, 0, 1, 1, 1)
+
 
         self.verticalLayout.addLayout(self.plotLayout)
 

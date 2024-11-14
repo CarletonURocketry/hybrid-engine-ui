@@ -759,6 +759,19 @@
          </item>
         </layout>
        </item>
+       <item>
+        <widget class="QPushButton" name="udpConnectButton">
+         <property name="maximumSize">
+          <size>
+           <width>1000</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Create UDP connection</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="pAndIdTab">
