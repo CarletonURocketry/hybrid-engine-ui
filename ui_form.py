@@ -17,9 +17,8 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QComboBox, QFormLayout, QGridLayout,
     QHBoxLayout, QLabel, QLayout, QLineEdit,
-    QPushButton, QRadioButton, QSizePolicy, QTabWidget, QTextBrowser,
-
-    QVBoxLayout, QWidget)
+    QPushButton, QRadioButton, QSizePolicy, QTabWidget,
+    QTextBrowser, QVBoxLayout, QWidget)
 
 from pyqtgraph import PlotWidget
 import rc_resources
@@ -394,17 +393,20 @@ class Ui_Widget(object):
         sizePolicy2.setVerticalStretch(0)
         sizePolicy2.setHeightForWidth(self.pressurePlot.sizePolicy().hasHeightForWidth())
         self.pressurePlot.setSizePolicy(sizePolicy2)
+        brush = QBrush(QColor(255, 255, 255, 255))
+        brush.setStyle(Qt.NoBrush)
+        self.pressurePlot.setBackgroundBrush(brush)
 
         self.plotLayout.addWidget(self.pressurePlot, 0, 0, 1, 1)
 
         self.temperaturePlot = PlotWidget(self.telemetryTab)
         self.temperaturePlot.setObjectName(u"temperaturePlot")
-        brush = QBrush(QColor(0, 0, 0, 255))
-        brush.setStyle(Qt.SolidPattern)
-        self.temperaturePlot.setBackgroundBrush(brush)
-        brush1 = QBrush(QColor(255, 0, 0, 255))
-        brush1.setStyle(Qt.NoBrush)
-        self.temperaturePlot.setForegroundBrush(brush1)
+        brush1 = QBrush(QColor(0, 0, 0, 255))
+        brush1.setStyle(Qt.SolidPattern)
+        self.temperaturePlot.setBackgroundBrush(brush1)
+        brush2 = QBrush(QColor(255, 0, 0, 255))
+        brush2.setStyle(Qt.NoBrush)
+        self.temperaturePlot.setForegroundBrush(brush2)
 
         self.plotLayout.addWidget(self.temperaturePlot, 0, 1, 1, 1)
 

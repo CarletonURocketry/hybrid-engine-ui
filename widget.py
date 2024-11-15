@@ -66,10 +66,10 @@ class Widget(QWidget):
                     self.ui.interfaceAddressDropdown.addItem(entry.ip().toString())
         
         # Graphing pens
-        red_pen = mkPen("r")
-        blue_pen = mkPen("g")
-        green_pen = mkPen("b")
-        pink_pen = mkPen("pink")
+        red_pen = mkPen("r", width=3)
+        blue_pen = mkPen("g", width=3)
+        green_pen = mkPen("b", width=3)
+        pink_pen = mkPen("pink", width=3)
 
         # Set labels and create plot data for each graph
         # each entry in plots contains a PlotInfo dataclass consisting of points and data_line
