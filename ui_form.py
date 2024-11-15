@@ -17,9 +17,8 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QComboBox, QFormLayout, QGridLayout,
     QHBoxLayout, QLabel, QLayout, QLineEdit,
-    QPushButton, QRadioButton, QSizePolicy, QTabWidget, QTextBrowser,
-
-    QVBoxLayout, QWidget)
+    QPushButton, QRadioButton, QSizePolicy, QTabWidget,
+    QTextBrowser, QVBoxLayout, QWidget)
 
 from pyqtgraph import PlotWidget
 import rc_resources
@@ -394,13 +393,15 @@ class Ui_Widget(object):
         sizePolicy2.setVerticalStretch(0)
         sizePolicy2.setHeightForWidth(self.pressurePlot.sizePolicy().hasHeightForWidth())
         self.pressurePlot.setSizePolicy(sizePolicy2)
+        self.pressurePlot.setAutoFillBackground(False)
+        brush = QBrush(QColor(240, 240, 240, 255))
+        brush.setStyle(Qt.SolidPattern)
+        self.pressurePlot.setBackgroundBrush(brush)
 
         self.plotLayout.addWidget(self.pressurePlot, 0, 0, 1, 1)
 
         self.temperaturePlot = PlotWidget(self.telemetryTab)
         self.temperaturePlot.setObjectName(u"temperaturePlot")
-        brush = QBrush(QColor(0, 0, 0, 255))
-        brush.setStyle(Qt.SolidPattern)
         self.temperaturePlot.setBackgroundBrush(brush)
         brush1 = QBrush(QColor(255, 0, 0, 255))
         brush1.setStyle(Qt.NoBrush)
@@ -410,11 +411,17 @@ class Ui_Widget(object):
 
         self.engineThrustPlot = PlotWidget(self.telemetryTab)
         self.engineThrustPlot.setObjectName(u"engineThrustPlot")
+        brush2 = QBrush(QColor(240, 240, 240, 255))
+        brush2.setStyle(Qt.NoBrush)
+        self.engineThrustPlot.setBackgroundBrush(brush2)
 
         self.plotLayout.addWidget(self.engineThrustPlot, 1, 1, 1, 1)
 
         self.tankMassPlot = PlotWidget(self.telemetryTab)
         self.tankMassPlot.setObjectName(u"tankMassPlot")
+        brush3 = QBrush(QColor(240, 240, 240, 255))
+        brush3.setStyle(Qt.NoBrush)
+        self.tankMassPlot.setBackgroundBrush(brush3)
 
         self.plotLayout.addWidget(self.tankMassPlot, 1, 0, 1, 1)
 

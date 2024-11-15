@@ -66,43 +66,60 @@ class Widget(QWidget):
                     self.ui.interfaceAddressDropdown.addItem(entry.ip().toString())
         
         # Graphing pens
-        red_pen = mkPen("r")
-        blue_pen = mkPen("g")
-        green_pen = mkPen("b")
-        pink_pen = mkPen("pink")
+        red_pen = mkPen("r", width=2)
+        blue_pen = mkPen("g", width=2)
+        green_pen = mkPen("b", width=2)
+        pink_pen = mkPen("purple", width=2)
+        black_pen = mkPen("black", width=2)
 
         # Set labels and create plot data for each graph
         # each entry in plots contains a PlotInfo dataclass consisting of points and data_line
         # points refers to the np array containing the data
         # data_line refers to the PlotDataItem object used to show data on the plots
-        self.ui.pressurePlot.addLegend(offset=(0,0), colCount=4)
-        self.ui.pressurePlot.setTitle("Pressure")
-        self.ui.pressurePlot.setLabel("left", "Pressure (PSI)")
-        self.ui.pressurePlot.setLabel("bottom", "Time")
+        self.ui.pressurePlot.addLegend(offset=(0,0), colCount=4, labelTextColor="black")
+        self.ui.pressurePlot.setTitle("Pressure", color="black")
+        self.ui.pressurePlot.setLabel("left", "Pressure (PSI)", color="black")
+        self.ui.pressurePlot.setLabel("bottom", "Time", color="black")
+        self.ui.pressurePlot.getAxis("left").setPen(black_pen)
+        self.ui.pressurePlot.getAxis("left").setTextPen(black_pen)
+        self.ui.pressurePlot.getAxis("bottom").setPen(black_pen)
+        self.ui.pressurePlot.getAxis("bottom").setTextPen(black_pen)
         self.plots["p1"] = PlotInfo(self.p1_points, self.ui.pressurePlot.plot(self.p1_points, pen=red_pen, name="p1"))
         self.plots["p2"] = PlotInfo(self.p2_points, self.ui.pressurePlot.plot(self.p2_points, pen=blue_pen, name="p2"))
         self.plots["p3"] = PlotInfo(self.p3_points, self.ui.pressurePlot.plot(self.p3_points, pen=green_pen, name="p3"))
         self.plots["p4"] = PlotInfo(self.p4_points, self.ui.pressurePlot.plot(self.p4_points, pen=pink_pen, name="p4"))
 
-        self.ui.temperaturePlot.addLegend(offset=(0,0), colCount=4)
-        self.ui.temperaturePlot.setTitle("Temperature")
-        self.ui.temperaturePlot.setLabel("left", "Temperature (°C)")
-        self.ui.temperaturePlot.setLabel("bottom", "Time")
+        self.ui.temperaturePlot.addLegend(offset=(0,0), colCount=4, labelTextColor="black")
+        self.ui.temperaturePlot.setTitle("Temperature", color="black")
+        self.ui.temperaturePlot.setLabel("left", "Temperature (°C)", color="black")
+        self.ui.temperaturePlot.setLabel("bottom", "Time", color="black")
+        self.ui.temperaturePlot.getAxis("left").setPen(black_pen)
+        self.ui.temperaturePlot.getAxis("left").setTextPen(black_pen)
+        self.ui.temperaturePlot.getAxis("bottom").setPen(black_pen)
+        self.ui.temperaturePlot.getAxis("bottom").setTextPen(black_pen)
         self.plots["t1"] = PlotInfo(self.t1_points, self.ui.temperaturePlot.plot(self.t1_points, pen=red_pen, name="t1"))
         self.plots["t2"] = PlotInfo(self.t2_points, self.ui.temperaturePlot.plot(self.t2_points, pen=blue_pen, name="t2"))
         self.plots["t3"] = PlotInfo(self.t3_points, self.ui.temperaturePlot.plot(self.t3_points, pen=green_pen, name="t3"))
         self.plots["t4"] = PlotInfo(self.t4_points, self.ui.temperaturePlot.plot(self.t4_points, pen=pink_pen, name="t4"))
 
         self.ui.tankMassPlot.addLegend()
-        self.ui.tankMassPlot.setTitle("Tank Mass")
-        self.ui.tankMassPlot.setLabel("left", "Mass (Kg)")
-        self.ui.tankMassPlot.setLabel("bottom", "Time")
+        self.ui.tankMassPlot.setTitle("Tank Mass", color="black")
+        self.ui.tankMassPlot.setLabel("left", "Mass (Kg)", color="black")
+        self.ui.tankMassPlot.setLabel("bottom", "Time", color="black")
+        self.ui.tankMassPlot.getAxis("left").setPen(black_pen)
+        self.ui.tankMassPlot.getAxis("left").setTextPen(black_pen)
+        self.ui.tankMassPlot.getAxis("bottom").setPen(black_pen)
+        self.ui.tankMassPlot.getAxis("bottom").setTextPen(black_pen)
         self.plots["tank_mass"] = PlotInfo(self.tank_mass_points, self.ui.tankMassPlot.plot(self.tank_mass_points, pen=red_pen))
 
         self.ui.engineThrustPlot.addLegend()
-        self.ui.engineThrustPlot.setTitle("Engine Thrust")
-        self.ui.engineThrustPlot.setLabel("left", "Thrust (KN)")
-        self.ui.engineThrustPlot.setLabel("bottom", "Time")
+        self.ui.engineThrustPlot.setTitle("Engine Thrust", color="black")
+        self.ui.engineThrustPlot.setLabel("left", "Thrust (KN)", color="black")
+        self.ui.engineThrustPlot.setLabel("bottom", "Time", color="black")
+        self.ui.engineThrustPlot.getAxis("left").setPen(black_pen)
+        self.ui.engineThrustPlot.getAxis("left").setTextPen(black_pen)
+        self.ui.engineThrustPlot.getAxis("bottom").setPen(black_pen)
+        self.ui.engineThrustPlot.getAxis("bottom").setTextPen(black_pen)
         self.plots["engine_thrust"] = PlotInfo(self.engine_thrust_points, self.ui.engineThrustPlot.plot(self.engine_thrust_points, pen=red_pen))
 
         #QTimer to help us to filter the data
@@ -121,6 +138,7 @@ class Widget(QWidget):
 
         #Connect toggle button for recording data
         self.ui.recordingToggleButton.toggled.connect(self.recording_toggle_button_handler)
+        self.file_out = None
 
     def plot_point(self, header, message):
         plots = self.plots
