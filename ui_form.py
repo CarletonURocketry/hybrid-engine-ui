@@ -393,30 +393,35 @@ class Ui_Widget(object):
         sizePolicy2.setVerticalStretch(0)
         sizePolicy2.setHeightForWidth(self.pressurePlot.sizePolicy().hasHeightForWidth())
         self.pressurePlot.setSizePolicy(sizePolicy2)
-        brush = QBrush(QColor(255, 255, 255, 255))
-        brush.setStyle(Qt.NoBrush)
+        self.pressurePlot.setAutoFillBackground(False)
+        brush = QBrush(QColor(240, 240, 240, 255))
+        brush.setStyle(Qt.SolidPattern)
         self.pressurePlot.setBackgroundBrush(brush)
 
         self.plotLayout.addWidget(self.pressurePlot, 0, 0, 1, 1)
 
         self.temperaturePlot = PlotWidget(self.telemetryTab)
         self.temperaturePlot.setObjectName(u"temperaturePlot")
-        brush1 = QBrush(QColor(0, 0, 0, 255))
-        brush1.setStyle(Qt.SolidPattern)
-        self.temperaturePlot.setBackgroundBrush(brush1)
-        brush2 = QBrush(QColor(255, 0, 0, 255))
-        brush2.setStyle(Qt.NoBrush)
-        self.temperaturePlot.setForegroundBrush(brush2)
+        self.temperaturePlot.setBackgroundBrush(brush)
+        brush1 = QBrush(QColor(255, 0, 0, 255))
+        brush1.setStyle(Qt.NoBrush)
+        self.temperaturePlot.setForegroundBrush(brush1)
 
         self.plotLayout.addWidget(self.temperaturePlot, 0, 1, 1, 1)
 
         self.engineThrustPlot = PlotWidget(self.telemetryTab)
         self.engineThrustPlot.setObjectName(u"engineThrustPlot")
+        brush2 = QBrush(QColor(240, 240, 240, 255))
+        brush2.setStyle(Qt.NoBrush)
+        self.engineThrustPlot.setBackgroundBrush(brush2)
 
         self.plotLayout.addWidget(self.engineThrustPlot, 1, 1, 1, 1)
 
         self.tankMassPlot = PlotWidget(self.telemetryTab)
         self.tankMassPlot.setObjectName(u"tankMassPlot")
+        brush3 = QBrush(QColor(240, 240, 240, 255))
+        brush3.setStyle(Qt.NoBrush)
+        self.tankMassPlot.setBackgroundBrush(brush3)
 
         self.plotLayout.addWidget(self.tankMassPlot, 1, 0, 1, 1)
 
