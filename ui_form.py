@@ -175,6 +175,7 @@ class Ui_Widget(object):
         font1.setPointSize(12)
         font1.setBold(True)
         self.xv8State.setFont(font1)
+        self.xv8State.setStyleSheet(u"background-color: rgb(255, 80, 80);")
         self.xv8State.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.gridLayout_2.addWidget(self.xv8State, 3, 3, 1, 1)
@@ -192,6 +193,7 @@ class Ui_Widget(object):
         self.xv6State = QLabel(self.telemetryTab)
         self.xv6State.setObjectName(u"xv6State")
         self.xv6State.setFont(font1)
+        self.xv6State.setStyleSheet(u"background-color: rgb(255, 80, 80);")
 
         self.gridLayout_2.addWidget(self.xv6State, 2, 5, 1, 1)
 
@@ -211,6 +213,7 @@ class Ui_Widget(object):
         self.xv7State.setObjectName(u"xv7State")
         self.xv7State.setMinimumSize(QSize(50, 0))
         self.xv7State.setFont(font1)
+        self.xv7State.setStyleSheet(u"background-color: rgb(255, 80, 80);")
         self.xv7State.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.gridLayout_2.addWidget(self.xv7State, 3, 1, 1, 1)
@@ -218,6 +221,7 @@ class Ui_Widget(object):
         self.xv1State = QLabel(self.telemetryTab)
         self.xv1State.setObjectName(u"xv1State")
         self.xv1State.setFont(font1)
+        self.xv1State.setStyleSheet(u"background-color: rgb(255, 80, 80);")
 
         self.gridLayout_2.addWidget(self.xv1State, 1, 1, 1, 1)
 
@@ -232,6 +236,7 @@ class Ui_Widget(object):
         self.xv4State.setObjectName(u"xv4State")
         self.xv4State.setMinimumSize(QSize(50, 0))
         self.xv4State.setFont(font1)
+        self.xv4State.setStyleSheet(u"background-color: rgb(255, 80, 80);")
         self.xv4State.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.gridLayout_2.addWidget(self.xv4State, 2, 1, 1, 1)
@@ -239,6 +244,7 @@ class Ui_Widget(object):
         self.xv5State = QLabel(self.telemetryTab)
         self.xv5State.setObjectName(u"xv5State")
         self.xv5State.setFont(font1)
+        self.xv5State.setStyleSheet(u"background-color: rgb(255, 80, 80);")
 
         self.gridLayout_2.addWidget(self.xv5State, 2, 3, 1, 1)
 
@@ -251,12 +257,14 @@ class Ui_Widget(object):
         self.xv11State = QLabel(self.telemetryTab)
         self.xv11State.setObjectName(u"xv11State")
         self.xv11State.setFont(font1)
+        self.xv11State.setStyleSheet(u"background-color: rgb(255, 80, 80);")
 
         self.gridLayout_2.addWidget(self.xv11State, 4, 3, 1, 1)
 
         self.igniterState = QLabel(self.telemetryTab)
         self.igniterState.setObjectName(u"igniterState")
         self.igniterState.setFont(font1)
+        self.igniterState.setStyleSheet(u"background-color: rgb(255, 80, 80);")
 
         self.gridLayout_2.addWidget(self.igniterState, 0, 5, 1, 1)
 
@@ -276,6 +284,8 @@ class Ui_Widget(object):
         self.quickDisconnectState.setObjectName(u"quickDisconnectState")
         self.quickDisconnectState.setMinimumSize(QSize(50, 0))
         self.quickDisconnectState.setFont(font1)
+        self.quickDisconnectState.setAutoFillBackground(False)
+        self.quickDisconnectState.setStyleSheet(u"background-color: rgb(255, 80, 80);")
         self.quickDisconnectState.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.gridLayout_2.addWidget(self.quickDisconnectState, 0, 1, 1, 1)
@@ -284,7 +294,7 @@ class Ui_Widget(object):
         self.cv1.setObjectName(u"cv1")
         self.cv1.setMinimumSize(QSize(80, 0))
         self.cv1.setFont(font2)
-        self.cv1.setIndent(10)
+        self.cv1.setIndent(-1)
 
         self.gridLayout_2.addWidget(self.cv1, 0, 2, 1, 1)
 
@@ -297,18 +307,21 @@ class Ui_Widget(object):
         self.xv10State = QLabel(self.telemetryTab)
         self.xv10State.setObjectName(u"xv10State")
         self.xv10State.setFont(font1)
+        self.xv10State.setStyleSheet(u"background-color: rgb(255, 80, 80);")
 
         self.gridLayout_2.addWidget(self.xv10State, 4, 1, 1, 1)
 
         self.xv9State = QLabel(self.telemetryTab)
         self.xv9State.setObjectName(u"xv9State")
         self.xv9State.setFont(font1)
+        self.xv9State.setStyleSheet(u"background-color: rgb(255, 80, 80);")
 
         self.gridLayout_2.addWidget(self.xv9State, 3, 5, 1, 1)
 
         self.xv3State = QLabel(self.telemetryTab)
         self.xv3State.setObjectName(u"xv3State")
         self.xv3State.setFont(font1)
+        self.xv3State.setStyleSheet(u"background-color: rgb(255, 80, 80);")
 
         self.gridLayout_2.addWidget(self.xv3State, 1, 5, 1, 1)
 
@@ -322,6 +335,7 @@ class Ui_Widget(object):
         self.xv2State.setObjectName(u"xv2State")
         self.xv2State.setMinimumSize(QSize(50, 0))
         self.xv2State.setFont(font1)
+        self.xv2State.setStyleSheet(u"background-color: rgb(255, 80, 80);")
         self.xv2State.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.gridLayout_2.addWidget(self.xv2State, 1, 3, 1, 1)
@@ -330,6 +344,7 @@ class Ui_Widget(object):
         self.cv1State.setObjectName(u"cv1State")
         self.cv1State.setMinimumSize(QSize(50, 0))
         self.cv1State.setFont(font1)
+        self.cv1State.setStyleSheet(u"background-color: rgb(255, 80, 80);")
         self.cv1State.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.gridLayout_2.addWidget(self.cv1State, 0, 3, 1, 1)
@@ -353,6 +368,7 @@ class Ui_Widget(object):
         self.xv12State = QLabel(self.telemetryTab)
         self.xv12State.setObjectName(u"xv12State")
         self.xv12State.setFont(font1)
+        self.xv12State.setStyleSheet(u"background-color: rgb(255, 80, 80);")
 
         self.gridLayout_2.addWidget(self.xv12State, 4, 5, 1, 1)
 
@@ -431,6 +447,44 @@ class Ui_Widget(object):
         self.tabWidget.addTab(self.telemetryTab, "")
         self.pAndIdTab = QWidget()
         self.pAndIdTab.setObjectName(u"pAndIdTab")
+        self.pid_image = QLabel(self.pAndIdTab)
+        self.pid_image.setObjectName(u"pid_image")
+        self.pid_image.setGeometry(QRect(0, 10, 1261, 691))
+        self.pid_image.setPixmap(QPixmap(u":/images/P&I diagram"))
+        self.pid_image.setScaledContents(True)
+        self.cv1State_tabpid = QLabel(self.pAndIdTab)
+        self.cv1State_tabpid.setObjectName(u"cv1State_tabpid")
+        self.cv1State_tabpid.setGeometry(QRect(940, 390, 74, 37))
+        self.cv1State_tabpid.setMinimumSize(QSize(50, 0))
+        self.cv1State_tabpid.setFont(font1)
+        self.cv1State_tabpid.setStyleSheet(u"background-color: rgb(255, 80, 80);")
+        self.cv1State_tabpid.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.xv1State_tabpid = QLabel(self.pAndIdTab)
+        self.xv1State_tabpid.setObjectName(u"xv1State_tabpid")
+        self.xv1State_tabpid.setGeometry(QRect(280, 420, 74, 37))
+        self.xv1State_tabpid.setFont(font1)
+        self.xv1State_tabpid.setStyleSheet(u"background-color: rgb(255, 80, 80);")
+        self.xv1State_tabpid.setIndent(8)
+        self.xv2State_tabpid = QLabel(self.pAndIdTab)
+        self.xv2State_tabpid.setObjectName(u"xv2State_tabpid")
+        self.xv2State_tabpid.setGeometry(QRect(400, 290, 74, 37))
+        self.xv2State_tabpid.setMinimumSize(QSize(50, 0))
+        self.xv2State_tabpid.setFont(font1)
+        self.xv2State_tabpid.setStyleSheet(u"background-color: rgb(255, 80, 80);")
+        self.xv2State_tabpid.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.xv3State_tabpid = QLabel(self.pAndIdTab)
+        self.xv3State_tabpid.setObjectName(u"xv3State_tabpid")
+        self.xv3State_tabpid.setGeometry(QRect(500, 510, 74, 37))
+        self.xv3State_tabpid.setFont(font1)
+        self.xv3State_tabpid.setStyleSheet(u"background-color: rgb(255, 80, 80);")
+        self.xv3State_tabpid.setIndent(8)
+        self.xv4State_tabpid = QLabel(self.pAndIdTab)
+        self.xv4State_tabpid.setObjectName(u"xv4State_tabpid")
+        self.xv4State_tabpid.setGeometry(QRect(730, 130, 74, 36))
+        self.xv4State_tabpid.setMinimumSize(QSize(50, 0))
+        self.xv4State_tabpid.setFont(font1)
+        self.xv4State_tabpid.setStyleSheet(u"background-color: rgb(255, 80, 80);")
+        self.xv4State_tabpid.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.tabWidget.addTab(self.pAndIdTab, "")
 
         self.horizontalLayout.addWidget(self.tabWidget)
@@ -493,6 +547,12 @@ class Ui_Widget(object):
         self.xv9.setText(QCoreApplication.translate("Widget", u"XV-9", None))
         self.xv8.setText(QCoreApplication.translate("Widget", u"XV-8", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.telemetryTab), QCoreApplication.translate("Widget", u"Telemetry", None))
+        self.pid_image.setText("")
+        self.cv1State_tabpid.setText(QCoreApplication.translate("Widget", u"CLOSED", None))
+        self.xv1State_tabpid.setText(QCoreApplication.translate("Widget", u"CLOSED", None))
+        self.xv2State_tabpid.setText(QCoreApplication.translate("Widget", u"CLOSED", None))
+        self.xv3State_tabpid.setText(QCoreApplication.translate("Widget", u"CLOSED", None))
+        self.xv4State_tabpid.setText(QCoreApplication.translate("Widget", u"CLOSED", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.pAndIdTab), QCoreApplication.translate("Widget", u"P&&ID", None))
     # retranslateUi
 
