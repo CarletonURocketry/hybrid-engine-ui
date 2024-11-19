@@ -79,4 +79,6 @@ __pycache__
 venv
 .venv
 
+# Sensor recordings and log outputs
 /recording/*
+/logs/*

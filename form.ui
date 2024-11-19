@@ -210,6 +210,9 @@
            </item>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_2">
+             <property name="spacing">
+              <number>0</number>
+             </property>
              <item>
               <widget class="QRadioButton" name="recordingToggleButton">
                <property name="text">
@@ -219,9 +222,9 @@
              </item>
              <item>
               <widget class="QPushButton" name="exporter">
-              <property name="text">
+               <property name="text">
                 <string>Export to File</string>
-              </property>
+               </property>
               </widget>
              </item>
             </layout>
