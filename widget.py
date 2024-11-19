@@ -65,29 +65,6 @@ class Widget(QWidget):
         self.tank_mass_points = np.empty((0,2))
         self.engine_thrust_points = np.empty((0,2))
 
-        # Also need to connect to data to change accordingly
-        # self.ui.quickDisconnectState.setStyleSheet("background-color: rgb(255, 80, 80)") #edited
-        # self.ui.cv1State.setStyleSheet("background-color: rgb(255, 80, 80)")
-        # self.ui.xv1State.setStyleSheet("background-color: rgb(255, 80, 80)")
-        # self.ui.xv2State.setStyleSheet("background-color: rgb(255, 80, 80)")
-        # self.ui.xv3State.setStyleSheet("background-color: rgb(255, 80, 80)")
-        # self.ui.xv4State.setStyleSheet("background-color: rgb(255, 80, 80)")
-
-
-        """ connect them with the data
-        self.ui.quickDisconectState.setStyleSheet("background-color: rgb(80, 255, 80)") #edited
-        self.ui.quickDisconectState.setText("ON")
-        self.ui.cv1State.setStyleSheet("background-color: rgb(80, 255, 80)")
-        self.ui.cv1State.setText("ON")
-        self.ui.xv1State.setStyleSheet("background-color: rgb(80, 255, 80)")
-        self.ui.xv1State.setText("ON")
-        self.ui.xv2State.setStyleSheet("background-color: rgb(80, 255, 80)")
-        self.ui.xv2State.setText("ON")
-        self.ui.xv3State.setStyleSheet("background-color: rgb(80, 255, 80)")
-        self.ui.xv3State.setText("ON")
-        self.ui.xv4State.setStyleSheet("background-color: rgb(80, 255, 80)")
-        self.ui.xv4State.setText("ON")
-        """
         # Plot data
         self.plots = {}
 
@@ -467,6 +444,7 @@ class Widget(QWidget):
                     self.ui.igniterState.setText("CLOSED")
                 elif(message.state == packet_spec.ActuatorState.ON):
                     self.ui.igniterState.setText("OPEN")
+    
     def show_new_window(self, checked):
         self.w = pid_window()
         self.w.show()
