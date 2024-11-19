@@ -83,6 +83,9 @@ class Widget(QWidget):
                     self.interfaces[entry.ip().toString()] = interface
                     self.ui.interfaceAddressDropdown.addItem(entry.ip().toString())
         
+        # Export to File button
+        self.ui.exporter.clicked.connect(self.save_to_file)
+
         # Graphing pens
         red_pen = mkPen("r", width=2)
         blue_pen = mkPen("g", width=2)
@@ -448,6 +451,17 @@ class Widget(QWidget):
     def show_new_window(self, checked):
         self.w = pid_window()
         self.w.show()
+
+    #Creates a file or overwrites existing one, and writes the text in the logOutput into the file
+    def save_to_file(self):
+        pathlib.Path('recording').mkdir(parents=True, exist_ok=True)
+        file_name = './recording/'
+        file_name += QDateTime.currentDateTime().toString("yyyy-MM-dd_HH-mm")
+        file_name += '.dump'
+        f = open(file_name, "w")
+        f.write(self.ui.logOutput.toPlainText())
+        f.close()
+        self.ui.logOutput.append(f"Exported logs to {file_name}")
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
