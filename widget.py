@@ -1,13 +1,14 @@
 # This Python file uses the following encoding: utf-8
 import sys
-import random
+import pathlib
 import ipaddress
 from dataclasses import dataclass
 
-from PySide6.QtWidgets import QApplication, QWidget
+from PySide6.QtWidgets import QApplication, QWidget, QFileDialog
 from PySide6.QtWebEngineWidgets import QWebEngineView
-from PySide6.QtCore import QTimer
-from PySide6.QtNetwork import QUdpSocket, QAbstractSocket, QHostAddress
+from PySide6.QtCore import QTimer, QDateTime
+from PySide6.QtNetwork import QUdpSocket, QAbstractSocket, QHostAddress, QNetworkInterface
+
 from pyqtgraph import mkPen, PlotDataItem
 from PySide6.QtGui import QPixmap
 import numpy as np
@@ -96,44 +97,70 @@ class Widget(QWidget):
         self.padUDPSocket.errorOccurred.connect(self.udp_on_error)
         self.padUDPSocket.disconnected.connect(self.udp_on_disconnected)
 
+        # Dictionary that maps IP addresses to network interfaces, these used when
+        # selecting the network interface to join the multicast group on
+        self.interfaces = {}
+        self.ui.interfaceAddressDropdown.addItem("Select interface IP address")
+        for interface in QNetworkInterface.allInterfaces():
+                for entry in interface.addressEntries():
+                    self.interfaces[entry.ip().toString()] = interface
+                    self.ui.interfaceAddressDropdown.addItem(entry.ip().toString())
+        
         # Graphing pens
-        red_pen = mkPen("r")
-        blue_pen = mkPen("g")
-        green_pen = mkPen("b")
-        pink_pen = mkPen("pink")
+        red_pen = mkPen("r", width=2)
+        blue_pen = mkPen("g", width=2)
+        green_pen = mkPen("b", width=2)
+        pink_pen = mkPen("purple", width=2)
+        black_pen = mkPen("black", width=2)
 
         # Set labels and create plot data for each graph
         # each entry in plots contains a PlotInfo dataclass consisting of points and data_line
         # points refers to the np array containing the data
         # data_line refers to the PlotDataItem object used to show data on the plots
-        self.ui.pressurePlot.addLegend(offset=(0,0), colCount=4)
-        self.ui.pressurePlot.setTitle("Pressure")
-        self.ui.pressurePlot.setLabel("left", "Pressure (PSI)")
-        self.ui.pressurePlot.setLabel("bottom", "Time")
+        self.ui.pressurePlot.addLegend(offset=(0,0), colCount=4, labelTextColor="black")
+        self.ui.pressurePlot.setTitle("Pressure", color="black")
+        self.ui.pressurePlot.setLabel("left", "Pressure (PSI)", color="black")
+        self.ui.pressurePlot.setLabel("bottom", "Time", color="black")
+        self.ui.pressurePlot.getAxis("left").setPen(black_pen)
+        self.ui.pressurePlot.getAxis("left").setTextPen(black_pen)
+        self.ui.pressurePlot.getAxis("bottom").setPen(black_pen)
+        self.ui.pressurePlot.getAxis("bottom").setTextPen(black_pen)
         self.plots["p1"] = PlotInfo(self.p1_points, self.ui.pressurePlot.plot(self.p1_points, pen=red_pen, name="p1"))
         self.plots["p2"] = PlotInfo(self.p2_points, self.ui.pressurePlot.plot(self.p2_points, pen=blue_pen, name="p2"))
         self.plots["p3"] = PlotInfo(self.p3_points, self.ui.pressurePlot.plot(self.p3_points, pen=green_pen, name="p3"))
         self.plots["p4"] = PlotInfo(self.p4_points, self.ui.pressurePlot.plot(self.p4_points, pen=pink_pen, name="p4"))
 
-        self.ui.temperaturePlot.addLegend(offset=(0,0), colCount=4)
-        self.ui.temperaturePlot.setTitle("Temperature")
-        self.ui.temperaturePlot.setLabel("left", "Temperature (°C)")
-        self.ui.temperaturePlot.setLabel("bottom", "Time")
+        self.ui.temperaturePlot.addLegend(offset=(0,0), colCount=4, labelTextColor="black")
+        self.ui.temperaturePlot.setTitle("Temperature", color="black")
+        self.ui.temperaturePlot.setLabel("left", "Temperature (°C)", color="black")
+        self.ui.temperaturePlot.setLabel("bottom", "Time", color="black")
+        self.ui.temperaturePlot.getAxis("left").setPen(black_pen)
+        self.ui.temperaturePlot.getAxis("left").setTextPen(black_pen)
+        self.ui.temperaturePlot.getAxis("bottom").setPen(black_pen)
+        self.ui.temperaturePlot.getAxis("bottom").setTextPen(black_pen)
         self.plots["t1"] = PlotInfo(self.t1_points, self.ui.temperaturePlot.plot(self.t1_points, pen=red_pen, name="t1"))
         self.plots["t2"] = PlotInfo(self.t2_points, self.ui.temperaturePlot.plot(self.t2_points, pen=blue_pen, name="t2"))
         self.plots["t3"] = PlotInfo(self.t3_points, self.ui.temperaturePlot.plot(self.t3_points, pen=green_pen, name="t3"))
         self.plots["t4"] = PlotInfo(self.t4_points, self.ui.temperaturePlot.plot(self.t4_points, pen=pink_pen, name="t4"))
 
         self.ui.tankMassPlot.addLegend()
-        self.ui.tankMassPlot.setTitle("Tank Mass")
-        self.ui.tankMassPlot.setLabel("left", "Mass (Kg)")
-        self.ui.tankMassPlot.setLabel("bottom", "Time")
+        self.ui.tankMassPlot.setTitle("Tank Mass", color="black")
+        self.ui.tankMassPlot.setLabel("left", "Mass (Kg)", color="black")
+        self.ui.tankMassPlot.setLabel("bottom", "Time", color="black")
+        self.ui.tankMassPlot.getAxis("left").setPen(black_pen)
+        self.ui.tankMassPlot.getAxis("left").setTextPen(black_pen)
+        self.ui.tankMassPlot.getAxis("bottom").setPen(black_pen)
+        self.ui.tankMassPlot.getAxis("bottom").setTextPen(black_pen)
         self.plots["tank_mass"] = PlotInfo(self.tank_mass_points, self.ui.tankMassPlot.plot(self.tank_mass_points, pen=red_pen))
 
         self.ui.engineThrustPlot.addLegend()
-        self.ui.engineThrustPlot.setTitle("Engine Thrust")
-        self.ui.engineThrustPlot.setLabel("left", "Thrust (KN)")
-        self.ui.engineThrustPlot.setLabel("bottom", "Time")
+        self.ui.engineThrustPlot.setTitle("Engine Thrust", color="black")
+        self.ui.engineThrustPlot.setLabel("left", "Thrust (KN)", color="black")
+        self.ui.engineThrustPlot.setLabel("bottom", "Time", color="black")
+        self.ui.engineThrustPlot.getAxis("left").setPen(black_pen)
+        self.ui.engineThrustPlot.getAxis("left").setTextPen(black_pen)
+        self.ui.engineThrustPlot.getAxis("bottom").setPen(black_pen)
+        self.ui.engineThrustPlot.getAxis("bottom").setTextPen(black_pen)
         self.plots["engine_thrust"] = PlotInfo(self.engine_thrust_points, self.ui.engineThrustPlot.plot(self.engine_thrust_points, pen=red_pen))
 
         #QTimer to help us to filter the data
@@ -147,6 +174,13 @@ class Widget(QWidget):
         # Button handlers
         #self.ui.pid_button.clicked.connect(self.show_new_window)
         self.ui.udpConnectButton.clicked.connect(self.udp_connection_button_handler)
+
+        #Open new file heandler
+        self.ui.openFileButton.clicked.connect(self.open_file_button_handler)
+
+        #Connect toggle button for recording data
+        self.ui.recordingToggleButton.toggled.connect(self.recording_toggle_button_handler)
+        self.file_out = None
 
     def plot_point(self, header, message):
         plots = self.plots
@@ -175,51 +209,103 @@ class Widget(QWidget):
                     case packet_spec.TelemetryPacketSubType.WARNING:
                         pass
 
-    def join_multicast_group(self, ip_addr, port):
-        multicastGroup = QHostAddress(ip_addr)
-        
-        if self.padUDPSocket.bind(QHostAddress.AnyIPv4, port) and self.padUDPSocket.joinMulticastGroup(multicastGroup):
-            self.ui.logOutput.append(f"Successfully connected to {ip_addr}:{port}")
-            self.ui.udpConnectButton.setText("Close UDP connection")
-            self.ui.udpIpAddressInput.setReadOnly(True)
-            self.ui.udpPortInput.setReadOnly(True)
-            return True
-        else:
-            self.ui.logOutput.append(f"Unable to join multicast group at IP address: {ip_addr}, port: {port}")
-            return False
-
     def udp_connection_button_handler(self):
         if self.padUDPSocket.state() == QAbstractSocket.SocketState.UnconnectedState:
-            ip_addr = self.ui.udpIpAddressInput.text()
-            port = self.ui.udpPortInput.text()
+            mcast_addr = self.ui.udpIpAddressInput.text()
+            mcast_port = self.ui.udpPortInput.text()
+            interface_addr = self.ui.interfaceAddressDropdown.currentText() if self.ui.interfaceAddressDropdown.currentIndex() > 1 else None
 
-            if ip_addr == "funi":
+            if mcast_addr == "funi":
                 self.web_view = QWebEngineView()
                 self.web_view.setUrl("https://www.youtube.com/watch?app=desktop&v=vPDvMVEwKzM")
                 self.ui.plotLayout.addWidget(self.web_view, 0, 2, 2, 1)
                 self.ui.udpIpAddressInput.clear()
                 return
-            if ip_addr == "close":
+            if mcast_addr == "close":
                 self.web_view.deleteLater()
                 self.ui.plotLayout.removeWidget(self.web_view)
                 self.ui.udpIpAddressInput.clear()
                 return
 
             try:
-                ipaddress.ip_address(ip_addr)
+                ipaddress.ip_address(mcast_addr)
             except ValueError:
-                self.ui.logOutput.append(f"IP address '{ip_addr}' is invalid")
+                self.ui.logOutput.append(f"IP address '{mcast_addr}' is invalid")
                 return
 
             try:
-                port = int(port)
+                mcast_port = int(mcast_port)
             except ValueError:
-                self.ui.logOutput.append(f"Port '{port}' is invalid")
+                self.ui.logOutput.append(f"Port '{mcast_port}' is invalid")
                 return
 
-            self.join_multicast_group(ip_addr, port)
+            if interface_addr:
+                try:
+                    ipaddress.ip_address(interface_addr)
+                except ValueError:
+                    self.ui.logOutput.append(f"Interface IP address '{interface_addr}' is invalid")
+                    return
+
+            self.join_multicast_group(mcast_addr, mcast_port, interface_addr)
         else:
             self.padUDPSocket.disconnectFromHost()
+
+    def recording_toggle_button_handler(self):
+        pathlib.Path('recording').mkdir(parents=True, exist_ok=True)
+        if self.ui.recordingToggleButton.isChecked() == True:
+            file_name = './recording/'
+            file_name += QDateTime.currentDateTime().toString("yyyy-MM-dd_HH-mm")
+            file_name += '.dump'
+            self.file_out = open(file_name, "a+b")
+        else:
+            self.file_out.close()
+
+    def display_previous_data(self,data):
+            ptr = 0
+            data_len = len(data)
+            while(ptr < data_len):
+                header = data[ptr:ptr + 2]
+                ptr += 2
+                data_header = packet_spec.parse_packet_header(header)
+                message_bytes_length = packet_spec.packet_message_bytes_length(data_header)
+                message = data[ptr:ptr + message_bytes_length]
+                data_message = packet_spec.parse_packet_message(data_header, message)
+                ptr += message_bytes_length
+                self.plot_point(data_header, data_message)
+
+    def open_file_button_handler(self):
+            file_path, _ = QFileDialog.getOpenFileName(self, "Open Previous File", "recording", "Dump file(*.dump);;All files (*)")
+
+            # If a file is selected, read its contents
+            if file_path:
+                self.ui.logOutput.append(f"Reading data from {file_path}")
+                with open(file_path, 'rb') as file:
+                    data = file.read()
+                    self.display_previous_data(data)
+                self.ui.logOutput.append("Data loaded")
+                    
+    def join_multicast_group(self, mcast_addr, mcast_port, interface_addr=""):
+        interface_address = QHostAddress(interface_addr) if interface_addr else QHostAddress.AnyIPv4
+        multicast_group = QHostAddress(mcast_addr)
+        net_interface = QNetworkInterface(self.interfaces[interface_addr]) if interface_addr else None
+
+        # Always bind UDP socket to port but change interface address based on args
+        bound_to_port = self.padUDPSocket.bind(interface_address, mcast_port)
+        # Use different func for joining multicast group depending if interface addr is specified
+        if net_interface:
+            joined_mcast_group = self.padUDPSocket.joinMulticastGroup(multicast_group, net_interface)
+        else:
+            joined_mcast_group = self.padUDPSocket.joinMulticastGroup(multicast_group)
+
+        if bound_to_port and joined_mcast_group:
+            self.ui.logOutput.append(f"Successfully connected to {mcast_addr}:{mcast_port}")
+            self.ui.udpConnectButton.setText("Close UDP connection")
+            self.ui.udpIpAddressInput.setReadOnly(True)
+            self.ui.udpPortInput.setReadOnly(True)
+            return True
+        else:
+            self.ui.logOutput.append(f"Unable to join multicast group at IP address: {mcast_addr}, port: {mcast_port}")
+            return False
 
     def filter_data(self):
         for key in self.plots:
@@ -238,11 +324,15 @@ class Widget(QWidget):
             message_bytes = data[2:]
             header = packet_spec.parse_packet_header(header_bytes)
             message = packet_spec.parse_packet_message(header, message_bytes)
-            #Actuator state handling
-            if(header.sub_type == packet_spec.TelemetryPacketSubType.ACT_STATE):
+            if header.sub_type == packet_spec.TelemetryPacketSubType.ACT_STATE:
+                #Actuator state handling
                 self.updateActState(message)
             else:
                 self.plot_point(header, message)
+
+            #If we want to recording data
+            if self.ui.recordingToggleButton.isChecked():
+                self.file_out.write(datagram)
 
     # Any errors with the socket should be handled here and logged
     def udp_on_error(self):
@@ -257,6 +347,8 @@ class Widget(QWidget):
         self.ui.udpConnectButton.setText("Create UDP connection")
         self.ui.udpIpAddressInput.setReadOnly(False)
         self.ui.udpPortInput.setReadOnly(False)
+        if self.file_out:
+            self.file_out.close()
 
     # Handles when the window is closed, have to make sure to disconnect the TCP socket
     def closeEvent(self, event):

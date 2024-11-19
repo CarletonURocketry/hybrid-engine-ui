@@ -117,6 +117,17 @@ def parse_packet_header(header_bytes: bytes) -> PacketHeader:
     packet_type, packet_sub_type = struct.unpack("<BB", header_bytes)
     return PacketHeader(PacketType(packet_type), TelemetryPacketSubType(packet_sub_type))
 
+def packet_message_bytes_length(header: PacketHeader) -> int:
+    match header.type:
+        case PacketType.TELEMETRY:
+            match header.sub_type:
+                case TelemetryPacketSubType.TEMPERATURE | TelemetryPacketSubType.PRESSURE | TelemetryPacketSubType.MASS:
+                    return 9
+                case TelemetryPacketSubType.ACT_STATE:
+                    return 6
+                case TelemetryPacketSubType.ARMING_STATE | TelemetryPacketSubType.WARNING:
+                    return 5
+
 def parse_packet_message(header: PacketHeader, message_bytes: bytes) -> PacketMessage:
     match header.type:
         case PacketType.CONTROL:

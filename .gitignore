@@ -78,3 +78,5 @@ __pycache__
 .qtcreator
 venv
 .venv
+
+/recording/*

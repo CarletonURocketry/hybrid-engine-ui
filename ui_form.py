@@ -15,10 +15,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QFormLayout, QGridLayout, QHBoxLayout,
-    QLabel, QLayout, QLineEdit, QPushButton,
-    QSizePolicy, QTabWidget, QTextBrowser, QVBoxLayout,
-    QWidget)
+from PySide6.QtWidgets import (QApplication, QComboBox, QFormLayout, QGridLayout,
+    QHBoxLayout, QLabel, QLayout, QLineEdit,
+    QPushButton, QRadioButton, QSizePolicy, QTabWidget,
+    QTextBrowser, QVBoxLayout, QWidget)
 
 from pyqtgraph import PlotWidget
 import rc_resources
@@ -97,6 +97,26 @@ class Ui_Widget(object):
 
         self.connectionLayout.addLayout(self.portLayout)
 
+        self.interfaceLayout = QHBoxLayout()
+        self.interfaceLayout.setObjectName(u"interfaceLayout")
+        self.interfaceAddressLabel = QLabel(self.telemetryTab)
+        self.interfaceAddressLabel.setObjectName(u"interfaceAddressLabel")
+
+        self.interfaceLayout.addWidget(self.interfaceAddressLabel)
+
+        self.interfaceAddressDropdown = QComboBox(self.telemetryTab)
+        self.interfaceAddressDropdown.setObjectName(u"interfaceAddressDropdown")
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.interfaceAddressDropdown.sizePolicy().hasHeightForWidth())
+        self.interfaceAddressDropdown.setSizePolicy(sizePolicy1)
+
+        self.interfaceLayout.addWidget(self.interfaceAddressDropdown)
+
+
+        self.connectionLayout.addLayout(self.interfaceLayout)
+
         self.udpConnectButton = QPushButton(self.telemetryTab)
         self.udpConnectButton.setObjectName(u"udpConnectButton")
         self.udpConnectButton.setMaximumSize(QSize(1000, 16777215))
@@ -104,10 +124,16 @@ class Ui_Widget(object):
 
         self.connectionLayout.addWidget(self.udpConnectButton)
 
+        self.openFileButton = QPushButton(self.telemetryTab)
+        self.openFileButton.setObjectName(u"openFileButton")
+
+        self.connectionLayout.addWidget(self.openFileButton)
+
 
         self.controlLayout.addLayout(self.connectionLayout)
 
         self.logLayout = QVBoxLayout()
+        self.logLayout.setSpacing(6)
         self.logLayout.setObjectName(u"logLayout")
         self.logOutput = QTextBrowser(self.telemetryTab)
         self.logOutput.setObjectName(u"logOutput")
@@ -116,6 +142,17 @@ class Ui_Widget(object):
 
         self.logLayout.addWidget(self.logOutput)
 
+        self.horizontalLayout_2 = QHBoxLayout()
+        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.recordingToggleButton = QRadioButton(self.telemetryTab)
+        self.recordingToggleButton.setObjectName(u"recordingToggleButton")
+
+        self.horizontalLayout_2.addWidget(self.recordingToggleButton)
+
+
+        self.logLayout.addLayout(self.horizontalLayout_2)
+
+        self.logLayout.setStretch(0, 1)
 
         self.controlLayout.addLayout(self.logLayout)
 
@@ -367,18 +404,20 @@ class Ui_Widget(object):
         self.plotLayout.setObjectName(u"plotLayout")
         self.pressurePlot = PlotWidget(self.telemetryTab)
         self.pressurePlot.setObjectName(u"pressurePlot")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        sizePolicy1.setHorizontalStretch(0)
-        sizePolicy1.setVerticalStretch(0)
-        sizePolicy1.setHeightForWidth(self.pressurePlot.sizePolicy().hasHeightForWidth())
-        self.pressurePlot.setSizePolicy(sizePolicy1)
+        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        sizePolicy2.setHorizontalStretch(0)
+        sizePolicy2.setVerticalStretch(0)
+        sizePolicy2.setHeightForWidth(self.pressurePlot.sizePolicy().hasHeightForWidth())
+        self.pressurePlot.setSizePolicy(sizePolicy2)
+        self.pressurePlot.setAutoFillBackground(False)
+        brush = QBrush(QColor(240, 240, 240, 255))
+        brush.setStyle(Qt.SolidPattern)
+        self.pressurePlot.setBackgroundBrush(brush)
 
         self.plotLayout.addWidget(self.pressurePlot, 0, 0, 1, 1)
 
         self.temperaturePlot = PlotWidget(self.telemetryTab)
         self.temperaturePlot.setObjectName(u"temperaturePlot")
-        brush = QBrush(QColor(0, 0, 0, 255))
-        brush.setStyle(Qt.SolidPattern)
         self.temperaturePlot.setBackgroundBrush(brush)
         brush1 = QBrush(QColor(255, 0, 0, 255))
         brush1.setStyle(Qt.NoBrush)
@@ -388,22 +427,22 @@ class Ui_Widget(object):
 
         self.engineThrustPlot = PlotWidget(self.telemetryTab)
         self.engineThrustPlot.setObjectName(u"engineThrustPlot")
+        brush2 = QBrush(QColor(240, 240, 240, 255))
+        brush2.setStyle(Qt.NoBrush)
+        self.engineThrustPlot.setBackgroundBrush(brush2)
 
         self.plotLayout.addWidget(self.engineThrustPlot, 1, 1, 1, 1)
 
         self.tankMassPlot = PlotWidget(self.telemetryTab)
         self.tankMassPlot.setObjectName(u"tankMassPlot")
+        brush3 = QBrush(QColor(240, 240, 240, 255))
+        brush3.setStyle(Qt.NoBrush)
+        self.tankMassPlot.setBackgroundBrush(brush3)
 
         self.plotLayout.addWidget(self.tankMassPlot, 1, 0, 1, 1)
 
 
         self.verticalLayout.addLayout(self.plotLayout)
-
-        self.udpConnectButton1 = QPushButton(self.telemetryTab)
-        self.udpConnectButton1.setObjectName(u"udpConnectButton1")
-        self.udpConnectButton1.setMaximumSize(QSize(1000, 16777215))
-
-        self.verticalLayout.addWidget(self.udpConnectButton1)
 
         self.tabWidget.addTab(self.telemetryTab, "")
         self.pAndIdTab = QWidget()
@@ -453,7 +492,7 @@ class Ui_Widget(object):
 
         self.retranslateUi(Widget)
 
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(Widget)
@@ -462,9 +501,21 @@ class Ui_Widget(object):
     def retranslateUi(self, Widget):
         Widget.setWindowTitle(QCoreApplication.translate("Widget", u"Hybrid Engine Ground System UI", None))
         self.logoLabel.setText("")
-        self.udpIpAddressLabel.setText(QCoreApplication.translate("Widget", u"MG IPv4 address: ", None))
-        self.udpPortLabel.setText(QCoreApplication.translate("Widget", u"MG port: ", None))
+#if QT_CONFIG(tooltip)
+        self.udpIpAddressLabel.setToolTip(QCoreApplication.translate("Widget", u"Address of multicast group", None))
+#endif // QT_CONFIG(tooltip)
+        self.udpIpAddressLabel.setText(QCoreApplication.translate("Widget", u"MCast IPv4 address*: ", None))
+#if QT_CONFIG(tooltip)
+        self.udpPortLabel.setToolTip(QCoreApplication.translate("Widget", u"Port of multicast group", None))
+#endif // QT_CONFIG(tooltip)
+        self.udpPortLabel.setText(QCoreApplication.translate("Widget", u"MCast port*: ", None))
+#if QT_CONFIG(tooltip)
+        self.interfaceAddressLabel.setToolTip(QCoreApplication.translate("Widget", u"Enter ipconfig in terminal to see interfaces", None))
+#endif // QT_CONFIG(tooltip)
+        self.interfaceAddressLabel.setText(QCoreApplication.translate("Widget", u"Interface address:", None))
         self.udpConnectButton.setText(QCoreApplication.translate("Widget", u"Create UDP connection", None))
+        self.openFileButton.setText(QCoreApplication.translate("Widget", u"Open previous data", None))
+        self.recordingToggleButton.setText(QCoreApplication.translate("Widget", u"Recording", None))
         self.xv5.setText(QCoreApplication.translate("Widget", u"XV-5", None))
         self.xv8State.setText(QCoreApplication.translate("Widget", u"CLOSED", None))
         self.quickDisconnect.setText(QCoreApplication.translate("Widget", u"<html><head/><body><p>Quick Disconnect</p></body></html>", None))
@@ -495,7 +546,6 @@ class Ui_Widget(object):
         self.xv12State.setText(QCoreApplication.translate("Widget", u"CLOSED", None))
         self.xv9.setText(QCoreApplication.translate("Widget", u"XV-9", None))
         self.xv8.setText(QCoreApplication.translate("Widget", u"XV-8", None))
-        self.udpConnectButton1.setText(QCoreApplication.translate("Widget", u"Create UDP connection", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.telemetryTab), QCoreApplication.translate("Widget", u"Telemetry", None))
         self.pid_image.setText("")
         self.cv1State_tabpid.setText(QCoreApplication.translate("Widget", u"CLOSED", None))

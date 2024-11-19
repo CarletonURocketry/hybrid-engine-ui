@@ -36,7 +36,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="telemetryTab">
       <property name="autoFillBackground">
@@ -91,8 +91,11 @@
              </property>
              <item>
               <widget class="QLabel" name="udpIpAddressLabel">
+               <property name="toolTip">
+                <string>Address of multicast group</string>
+               </property>
                <property name="text">
-                <string>MG IPv4 address: </string>
+                <string>MCast IPv4 address*: </string>
                </property>
               </widget>
              </item>
@@ -121,8 +124,11 @@
                  <height>0</height>
                 </size>
                </property>
+               <property name="toolTip">
+                <string>Port of multicast group</string>
+               </property>
                <property name="text">
-                <string>MG port: </string>
+                <string>MCast port*: </string>
                </property>
               </widget>
              </item>
@@ -130,6 +136,30 @@
               <widget class="QLineEdit" name="udpPortInput">
                <property name="styleSheet">
                 <string notr="true"/>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="interfaceLayout">
+             <item>
+              <widget class="QLabel" name="interfaceAddressLabel">
+               <property name="toolTip">
+                <string>Enter ipconfig in terminal to see interfaces</string>
+               </property>
+               <property name="text">
+                <string>Interface address:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="interfaceAddressDropdown">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
                </property>
               </widget>
              </item>
@@ -151,10 +181,20 @@
              </property>
             </widget>
            </item>
+           <item>
+            <widget class="QPushButton" name="openFileButton">
+             <property name="text">
+              <string>Open previous data</string>
+             </property>
+            </widget>
+           </item>
           </layout>
          </item>
          <item>
-          <layout class="QVBoxLayout" name="logLayout">
+          <layout class="QVBoxLayout" name="logLayout" stretch="1,0">
+           <property name="spacing">
+            <number>6</number>
+           </property>
            <item>
             <widget class="QTextBrowser" name="logOutput">
              <property name="maximumSize">
@@ -167,6 +207,17 @@
               <string notr="true"/>
              </property>
             </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_2">
+             <item>
+              <widget class="QRadioButton" name="recordingToggleButton">
+               <property name="text">
+                <string>Recording</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
           </layout>
          </item>
@@ -727,6 +778,18 @@
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
+           <property name="autoFillBackground">
+            <bool>false</bool>
+           </property>
+           <property name="backgroundBrush">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>240</red>
+              <green>240</green>
+              <blue>240</blue>
+             </color>
+            </brush>
+           </property>
           </widget>
          </item>
          <item row="0" column="1">
@@ -734,9 +797,9 @@
            <property name="backgroundBrush">
             <brush brushstyle="SolidPattern">
              <color alpha="255">
-              <red>0</red>
-              <green>0</green>
-              <blue>0</blue>
+              <red>240</red>
+              <green>240</green>
+              <blue>240</blue>
              </color>
             </brush>
            </property>
@@ -752,25 +815,32 @@
           </widget>
          </item>
          <item row="1" column="1">
-          <widget class="PlotWidget" name="engineThrustPlot"/>
+          <widget class="PlotWidget" name="engineThrustPlot">
+           <property name="backgroundBrush">
+            <brush brushstyle="NoBrush">
+             <color alpha="255">
+              <red>240</red>
+              <green>240</green>
+              <blue>240</blue>
+             </color>
+            </brush>
+           </property>
+          </widget>
          </item>
          <item row="1" column="0">
-          <widget class="PlotWidget" name="tankMassPlot"/>
+          <widget class="PlotWidget" name="tankMassPlot">
+           <property name="backgroundBrush">
+            <brush brushstyle="NoBrush">
+             <color alpha="255">
+              <red>240</red>
+              <green>240</green>
+              <blue>240</blue>
+             </color>
+            </brush>
+           </property>
+          </widget>
          </item>
         </layout>
-       </item>
-       <item>
-        <widget class="QPushButton" name="udpConnectButton">
-         <property name="maximumSize">
-          <size>
-           <width>1000</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Create UDP connection</string>
-         </property>
-        </widget>
        </item>
       </layout>
      </widget>
