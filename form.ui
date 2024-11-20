@@ -17,7 +17,7 @@
    <iconset>
     <normaloff>logos/better_logo.png</normaloff>logos/better_logo.png</iconset>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout" stretch="0">
+  <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0">
    <property name="spacing">
     <number>10</number>
    </property>
@@ -827,7 +827,7 @@
          <item row="1" column="1">
           <widget class="PlotWidget" name="engineThrustPlot">
            <property name="backgroundBrush">
-            <brush brushstyle="NoBrush">
+            <brush brushstyle="SolidPattern">
              <color alpha="255">
               <red>240</red>
               <green>240</green>
@@ -840,13 +840,137 @@
          <item row="1" column="0">
           <widget class="PlotWidget" name="tankMassPlot">
            <property name="backgroundBrush">
-            <brush brushstyle="NoBrush">
+            <brush brushstyle="SolidPattern">
              <color alpha="255">
               <red>240</red>
               <green>240</green>
               <blue>240</blue>
              </color>
             </brush>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="configurationTab">
+      <property name="layoutDirection">
+       <enum>Qt::LayoutDirection::LeftToRight</enum>
+      </property>
+      <attribute name="title">
+       <string>Configuration</string>
+      </attribute>
+      <layout class="QFormLayout" name="formLayout">
+       <property name="leftMargin">
+        <number>400</number>
+       </property>
+       <property name="rightMargin">
+        <number>400</number>
+       </property>
+       <item row="0" column="0" colspan="2">
+        <layout class="QVBoxLayout" name="connectionLayout_3">
+         <item>
+          <layout class="QHBoxLayout" name="addressLayout_3">
+           <property name="spacing">
+            <number>1</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="udpIpAddressLabel_3">
+             <property name="toolTip">
+              <string>Address of multicast group</string>
+             </property>
+             <property name="text">
+              <string>MCast IPv4 address*: </string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="udpIpAddressInput_3">
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="portLayout_3" stretch="0,0">
+           <property name="spacing">
+            <number>6</number>
+           </property>
+           <property name="sizeConstraint">
+            <enum>QLayout::SizeConstraint::SetFixedSize</enum>
+           </property>
+           <item>
+            <widget class="QLabel" name="udpPortLabel_3">
+             <property name="minimumSize">
+              <size>
+               <width>85</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="toolTip">
+              <string>Port of multicast group</string>
+             </property>
+             <property name="text">
+              <string>MCast port*: </string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="udpPortInput_3">
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="interfaceLayout_3">
+           <item>
+            <widget class="QLabel" name="interfaceAddressLabel_3">
+             <property name="toolTip">
+              <string>Enter ipconfig in terminal to see interfaces</string>
+             </property>
+             <property name="text">
+              <string>Interface address:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="interfaceAddressDropdown_3">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QPushButton" name="udpConnectButton_3">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true"/>
+           </property>
+           <property name="text">
+            <string>Create UDP connection</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="openFileButton_3">
+           <property name="text">
+            <string>Open previous data</string>
            </property>
           </widget>
          </item>

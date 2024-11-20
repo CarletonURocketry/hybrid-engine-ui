@@ -31,10 +31,10 @@ class Ui_Widget(object):
         icon = QIcon()
         icon.addFile(u"logos/better_logo.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         Widget.setWindowIcon(icon)
-        self.horizontalLayout = QHBoxLayout(Widget)
-        self.horizontalLayout.setSpacing(10)
-        self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.horizontalLayout.setContentsMargins(20, 15, 20, 20)
+        self.verticalLayout_2 = QVBoxLayout(Widget)
+        self.verticalLayout_2.setSpacing(10)
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.verticalLayout_2.setContentsMargins(20, 15, 20, 20)
         self.tabWidget = QTabWidget(Widget)
         self.tabWidget.setObjectName(u"tabWidget")
         self.telemetryTab = QWidget()
@@ -433,17 +433,13 @@ class Ui_Widget(object):
 
         self.engineThrustPlot = PlotWidget(self.telemetryTab)
         self.engineThrustPlot.setObjectName(u"engineThrustPlot")
-        brush2 = QBrush(QColor(240, 240, 240, 255))
-        brush2.setStyle(Qt.NoBrush)
-        self.engineThrustPlot.setBackgroundBrush(brush2)
+        self.engineThrustPlot.setBackgroundBrush(brush)
 
         self.plotLayout.addWidget(self.engineThrustPlot, 1, 1, 1, 1)
 
         self.tankMassPlot = PlotWidget(self.telemetryTab)
         self.tankMassPlot.setObjectName(u"tankMassPlot")
-        brush3 = QBrush(QColor(240, 240, 240, 255))
-        brush3.setStyle(Qt.NoBrush)
-        self.tankMassPlot.setBackgroundBrush(brush3)
+        self.tankMassPlot.setBackgroundBrush(brush)
 
         self.plotLayout.addWidget(self.tankMassPlot, 1, 0, 1, 1)
 
@@ -451,6 +447,83 @@ class Ui_Widget(object):
         self.verticalLayout.addLayout(self.plotLayout)
 
         self.tabWidget.addTab(self.telemetryTab, "")
+        self.configurationTab = QWidget()
+        self.configurationTab.setObjectName(u"configurationTab")
+        self.configurationTab.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
+        self.formLayout = QFormLayout(self.configurationTab)
+        self.formLayout.setObjectName(u"formLayout")
+        self.formLayout.setContentsMargins(400, -1, 400, -1)
+        self.connectionLayout_3 = QVBoxLayout()
+        self.connectionLayout_3.setObjectName(u"connectionLayout_3")
+        self.addressLayout_3 = QHBoxLayout()
+        self.addressLayout_3.setSpacing(1)
+        self.addressLayout_3.setObjectName(u"addressLayout_3")
+        self.udpIpAddressLabel_3 = QLabel(self.configurationTab)
+        self.udpIpAddressLabel_3.setObjectName(u"udpIpAddressLabel_3")
+
+        self.addressLayout_3.addWidget(self.udpIpAddressLabel_3)
+
+        self.udpIpAddressInput_3 = QLineEdit(self.configurationTab)
+        self.udpIpAddressInput_3.setObjectName(u"udpIpAddressInput_3")
+        self.udpIpAddressInput_3.setStyleSheet(u"")
+
+        self.addressLayout_3.addWidget(self.udpIpAddressInput_3)
+
+
+        self.connectionLayout_3.addLayout(self.addressLayout_3)
+
+        self.portLayout_3 = QHBoxLayout()
+        self.portLayout_3.setSpacing(6)
+        self.portLayout_3.setObjectName(u"portLayout_3")
+        self.portLayout_3.setSizeConstraint(QLayout.SizeConstraint.SetFixedSize)
+        self.udpPortLabel_3 = QLabel(self.configurationTab)
+        self.udpPortLabel_3.setObjectName(u"udpPortLabel_3")
+        self.udpPortLabel_3.setMinimumSize(QSize(85, 0))
+
+        self.portLayout_3.addWidget(self.udpPortLabel_3)
+
+        self.udpPortInput_3 = QLineEdit(self.configurationTab)
+        self.udpPortInput_3.setObjectName(u"udpPortInput_3")
+        self.udpPortInput_3.setStyleSheet(u"")
+
+        self.portLayout_3.addWidget(self.udpPortInput_3)
+
+
+        self.connectionLayout_3.addLayout(self.portLayout_3)
+
+        self.interfaceLayout_3 = QHBoxLayout()
+        self.interfaceLayout_3.setObjectName(u"interfaceLayout_3")
+        self.interfaceAddressLabel_3 = QLabel(self.configurationTab)
+        self.interfaceAddressLabel_3.setObjectName(u"interfaceAddressLabel_3")
+
+        self.interfaceLayout_3.addWidget(self.interfaceAddressLabel_3)
+
+        self.interfaceAddressDropdown_3 = QComboBox(self.configurationTab)
+        self.interfaceAddressDropdown_3.setObjectName(u"interfaceAddressDropdown_3")
+        sizePolicy1.setHeightForWidth(self.interfaceAddressDropdown_3.sizePolicy().hasHeightForWidth())
+        self.interfaceAddressDropdown_3.setSizePolicy(sizePolicy1)
+
+        self.interfaceLayout_3.addWidget(self.interfaceAddressDropdown_3)
+
+
+        self.connectionLayout_3.addLayout(self.interfaceLayout_3)
+
+        self.udpConnectButton_3 = QPushButton(self.configurationTab)
+        self.udpConnectButton_3.setObjectName(u"udpConnectButton_3")
+        self.udpConnectButton_3.setMaximumSize(QSize(16777215, 16777215))
+        self.udpConnectButton_3.setStyleSheet(u"")
+
+        self.connectionLayout_3.addWidget(self.udpConnectButton_3)
+
+        self.openFileButton_3 = QPushButton(self.configurationTab)
+        self.openFileButton_3.setObjectName(u"openFileButton_3")
+
+        self.connectionLayout_3.addWidget(self.openFileButton_3)
+
+
+        self.formLayout.setLayout(0, QFormLayout.SpanningRole, self.connectionLayout_3)
+
+        self.tabWidget.addTab(self.configurationTab, "")
         self.pAndIdTab = QWidget()
         self.pAndIdTab.setObjectName(u"pAndIdTab")
         self.pid_image = QLabel(self.pAndIdTab)
@@ -493,7 +566,7 @@ class Ui_Widget(object):
         self.xv4State_tabpid.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.tabWidget.addTab(self.pAndIdTab, "")
 
-        self.horizontalLayout.addWidget(self.tabWidget)
+        self.verticalLayout_2.addWidget(self.tabWidget)
 
 
         self.retranslateUi(Widget)
@@ -554,6 +627,21 @@ class Ui_Widget(object):
         self.xv9.setText(QCoreApplication.translate("Widget", u"XV-9", None))
         self.xv8.setText(QCoreApplication.translate("Widget", u"XV-8", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.telemetryTab), QCoreApplication.translate("Widget", u"Telemetry", None))
+#if QT_CONFIG(tooltip)
+        self.udpIpAddressLabel_3.setToolTip(QCoreApplication.translate("Widget", u"Address of multicast group", None))
+#endif // QT_CONFIG(tooltip)
+        self.udpIpAddressLabel_3.setText(QCoreApplication.translate("Widget", u"MCast IPv4 address*: ", None))
+#if QT_CONFIG(tooltip)
+        self.udpPortLabel_3.setToolTip(QCoreApplication.translate("Widget", u"Port of multicast group", None))
+#endif // QT_CONFIG(tooltip)
+        self.udpPortLabel_3.setText(QCoreApplication.translate("Widget", u"MCast port*: ", None))
+#if QT_CONFIG(tooltip)
+        self.interfaceAddressLabel_3.setToolTip(QCoreApplication.translate("Widget", u"Enter ipconfig in terminal to see interfaces", None))
+#endif // QT_CONFIG(tooltip)
+        self.interfaceAddressLabel_3.setText(QCoreApplication.translate("Widget", u"Interface address:", None))
+        self.udpConnectButton_3.setText(QCoreApplication.translate("Widget", u"Create UDP connection", None))
+        self.openFileButton_3.setText(QCoreApplication.translate("Widget", u"Open previous data", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.configurationTab), QCoreApplication.translate("Widget", u"Configuration", None))
         self.pid_image.setText("")
         self.cv1State_tabpid.setText(QCoreApplication.translate("Widget", u"CLOSED", None))
         self.xv1State_tabpid.setText(QCoreApplication.translate("Widget", u"CLOSED", None))
