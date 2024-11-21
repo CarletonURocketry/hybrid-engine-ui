@@ -3,6 +3,7 @@
         "widget.py",
         "form.ui",
         "resources.qrc",
-        "packet_spec.py"
+        "packet_spec.py",
+        "main.py"
     ]
 }
