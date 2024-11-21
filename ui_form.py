@@ -17,8 +17,9 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QComboBox, QFormLayout, QGridLayout,
     QHBoxLayout, QLabel, QLayout, QLineEdit,
-    QPushButton, QRadioButton, QSizePolicy, QSpacerItem,
-    QTabWidget, QTextBrowser, QVBoxLayout, QWidget)
+    QListWidget, QListWidgetItem, QPushButton, QRadioButton,
+    QSizePolicy, QSpacerItem, QTabWidget, QTextBrowser,
+    QVBoxLayout, QWidget)
 
 from pyqtgraph import PlotWidget
 import rc_resources
@@ -59,78 +60,78 @@ class Ui_Widget(object):
 
         self.controlLayout.addWidget(self.logoLabel)
 
-        self.connectionLayout = QVBoxLayout()
-        self.connectionLayout.setObjectName(u"connectionLayout")
-        self.addressLayout = QHBoxLayout()
-        self.addressLayout.setSpacing(1)
-        self.addressLayout.setObjectName(u"addressLayout")
-        self.udpIpAddressLabel = QLabel(self.telemetryTab)
-        self.udpIpAddressLabel.setObjectName(u"udpIpAddressLabel")
+        self.connectionLayout_2 = QVBoxLayout()
+        self.connectionLayout_2.setObjectName(u"connectionLayout_2")
+        self.addressLayout_10 = QHBoxLayout()
+        self.addressLayout_10.setSpacing(1)
+        self.addressLayout_10.setObjectName(u"addressLayout_10")
+        self.udpIpAddressLabel_10 = QLabel(self.telemetryTab)
+        self.udpIpAddressLabel_10.setObjectName(u"udpIpAddressLabel_10")
 
-        self.addressLayout.addWidget(self.udpIpAddressLabel)
+        self.addressLayout_10.addWidget(self.udpIpAddressLabel_10)
 
-        self.udpIpAddressInput = QLineEdit(self.telemetryTab)
-        self.udpIpAddressInput.setObjectName(u"udpIpAddressInput")
-        self.udpIpAddressInput.setStyleSheet(u"")
+        self.udpIpAddressInput_10 = QLineEdit(self.telemetryTab)
+        self.udpIpAddressInput_10.setObjectName(u"udpIpAddressInput_10")
+        self.udpIpAddressInput_10.setStyleSheet(u"")
 
-        self.addressLayout.addWidget(self.udpIpAddressInput)
-
-
-        self.connectionLayout.addLayout(self.addressLayout)
-
-        self.portLayout = QHBoxLayout()
-        self.portLayout.setSpacing(6)
-        self.portLayout.setObjectName(u"portLayout")
-        self.portLayout.setSizeConstraint(QLayout.SizeConstraint.SetFixedSize)
-        self.udpPortLabel = QLabel(self.telemetryTab)
-        self.udpPortLabel.setObjectName(u"udpPortLabel")
-        self.udpPortLabel.setMinimumSize(QSize(85, 0))
-
-        self.portLayout.addWidget(self.udpPortLabel)
-
-        self.udpPortInput = QLineEdit(self.telemetryTab)
-        self.udpPortInput.setObjectName(u"udpPortInput")
-        self.udpPortInput.setStyleSheet(u"")
-
-        self.portLayout.addWidget(self.udpPortInput)
+        self.addressLayout_10.addWidget(self.udpIpAddressInput_10)
 
 
-        self.connectionLayout.addLayout(self.portLayout)
+        self.connectionLayout_2.addLayout(self.addressLayout_10)
 
-        self.interfaceLayout = QHBoxLayout()
-        self.interfaceLayout.setObjectName(u"interfaceLayout")
-        self.interfaceAddressLabel = QLabel(self.telemetryTab)
-        self.interfaceAddressLabel.setObjectName(u"interfaceAddressLabel")
+        self.portLayout_10 = QHBoxLayout()
+        self.portLayout_10.setSpacing(6)
+        self.portLayout_10.setObjectName(u"portLayout_10")
+        self.portLayout_10.setSizeConstraint(QLayout.SizeConstraint.SetFixedSize)
+        self.udpPortLabel_10 = QLabel(self.telemetryTab)
+        self.udpPortLabel_10.setObjectName(u"udpPortLabel_10")
+        self.udpPortLabel_10.setMinimumSize(QSize(85, 0))
 
-        self.interfaceLayout.addWidget(self.interfaceAddressLabel)
+        self.portLayout_10.addWidget(self.udpPortLabel_10)
 
-        self.interfaceAddressDropdown = QComboBox(self.telemetryTab)
-        self.interfaceAddressDropdown.setObjectName(u"interfaceAddressDropdown")
+        self.udpPortInput_10 = QLineEdit(self.telemetryTab)
+        self.udpPortInput_10.setObjectName(u"udpPortInput_10")
+        self.udpPortInput_10.setStyleSheet(u"")
+
+        self.portLayout_10.addWidget(self.udpPortInput_10)
+
+
+        self.connectionLayout_2.addLayout(self.portLayout_10)
+
+        self.interfaceLayout_10 = QHBoxLayout()
+        self.interfaceLayout_10.setObjectName(u"interfaceLayout_10")
+        self.interfaceAddressLabel_10 = QLabel(self.telemetryTab)
+        self.interfaceAddressLabel_10.setObjectName(u"interfaceAddressLabel_10")
+
+        self.interfaceLayout_10.addWidget(self.interfaceAddressLabel_10)
+
+        self.interfaceAddressDropdown_10 = QComboBox(self.telemetryTab)
+        self.interfaceAddressDropdown_10.setObjectName(u"interfaceAddressDropdown_10")
         sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         sizePolicy1.setHorizontalStretch(0)
         sizePolicy1.setVerticalStretch(0)
-        sizePolicy1.setHeightForWidth(self.interfaceAddressDropdown.sizePolicy().hasHeightForWidth())
-        self.interfaceAddressDropdown.setSizePolicy(sizePolicy1)
+        sizePolicy1.setHeightForWidth(self.interfaceAddressDropdown_10.sizePolicy().hasHeightForWidth())
+        self.interfaceAddressDropdown_10.setSizePolicy(sizePolicy1)
 
-        self.interfaceLayout.addWidget(self.interfaceAddressDropdown)
+        self.interfaceLayout_10.addWidget(self.interfaceAddressDropdown_10)
 
 
-        self.connectionLayout.addLayout(self.interfaceLayout)
+        self.connectionLayout_2.addLayout(self.interfaceLayout_10)
 
-        self.udpConnectButton = QPushButton(self.telemetryTab)
-        self.udpConnectButton.setObjectName(u"udpConnectButton")
-        self.udpConnectButton.setMaximumSize(QSize(1000, 16777215))
-        self.udpConnectButton.setStyleSheet(u"")
+        self.udpConnectButton_10 = QPushButton(self.telemetryTab)
+        self.udpConnectButton_10.setObjectName(u"udpConnectButton_10")
+        self.udpConnectButton_10.setMaximumSize(QSize(1000, 16777215))
+        self.udpConnectButton_10.setStyleSheet(u"")
 
-        self.connectionLayout.addWidget(self.udpConnectButton)
+        self.connectionLayout_2.addWidget(self.udpConnectButton_10)
 
         self.openFileButton = QPushButton(self.telemetryTab)
         self.openFileButton.setObjectName(u"openFileButton")
 
-        self.connectionLayout.addWidget(self.openFileButton)
+        self.connectionLayout_2.addWidget(self.openFileButton)
 
 
-        self.controlLayout.addLayout(self.connectionLayout)
+        self.controlLayout.addLayout(self.connectionLayout_2)
 
         self.logLayout = QVBoxLayout()
         self.logLayout.setSpacing(6)
@@ -454,115 +455,210 @@ class Ui_Widget(object):
         self.formLayout.setObjectName(u"formLayout")
         self.formLayout.setRowWrapPolicy(QFormLayout.RowWrapPolicy.DontWrapRows)
         self.formLayout.setLabelAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.formLayout.setContentsMargins(450, -1, 450, -1)
-        self._2 = QVBoxLayout()
-        self._2.setObjectName(u"_2")
-        self.label = QLabel(self.configurationTab)
-        self.label.setObjectName(u"label")
+        self.formLayout.setFormAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.formLayout.setContentsMargins(450, 0, 450, 10)
+        self.connectionLayout = QVBoxLayout()
+        self.connectionLayout.setObjectName(u"connectionLayout")
+        self.multicastConfigLabel = QLabel(self.configurationTab)
+        self.multicastConfigLabel.setObjectName(u"multicastConfigLabel")
         font3 = QFont()
         font3.setBold(True)
-        self.label.setFont(font3)
+        self.multicastConfigLabel.setFont(font3)
+        self.multicastConfigLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self._2.addWidget(self.label)
+        self.connectionLayout.addWidget(self.multicastConfigLabel)
 
-        self.addressLayout_3 = QHBoxLayout()
-        self.addressLayout_3.setObjectName(u"addressLayout_3")
-        self.udpIpAddressLabel_3 = QLabel(self.configurationTab)
-        self.udpIpAddressLabel_3.setObjectName(u"udpIpAddressLabel_3")
+        self.addressLayout = QHBoxLayout()
+        self.addressLayout.setObjectName(u"addressLayout")
+        self.udpIpAddressLabel = QLabel(self.configurationTab)
+        self.udpIpAddressLabel.setObjectName(u"udpIpAddressLabel")
 
-        self.addressLayout_3.addWidget(self.udpIpAddressLabel_3)
+        self.addressLayout.addWidget(self.udpIpAddressLabel)
 
-        self.udpIpAddressInput_3 = QLineEdit(self.configurationTab)
-        self.udpIpAddressInput_3.setObjectName(u"udpIpAddressInput_3")
+        self.udpIpAddressInput = QLineEdit(self.configurationTab)
+        self.udpIpAddressInput.setObjectName(u"udpIpAddressInput")
         sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
         sizePolicy3.setHorizontalStretch(0)
         sizePolicy3.setVerticalStretch(0)
-        sizePolicy3.setHeightForWidth(self.udpIpAddressInput_3.sizePolicy().hasHeightForWidth())
-        self.udpIpAddressInput_3.setSizePolicy(sizePolicy3)
+        sizePolicy3.setHeightForWidth(self.udpIpAddressInput.sizePolicy().hasHeightForWidth())
+        self.udpIpAddressInput.setSizePolicy(sizePolicy3)
 
-        self.addressLayout_3.addWidget(self.udpIpAddressInput_3)
-
-
-        self._2.addLayout(self.addressLayout_3)
-
-        self.portLayout_3 = QHBoxLayout()
-        self.portLayout_3.setObjectName(u"portLayout_3")
-        self.udpPortLabel_3 = QLabel(self.configurationTab)
-        self.udpPortLabel_3.setObjectName(u"udpPortLabel_3")
-        self.udpPortLabel_3.setMinimumSize(QSize(85, 0))
-
-        self.portLayout_3.addWidget(self.udpPortLabel_3)
-
-        self.udpPortInput_3 = QLineEdit(self.configurationTab)
-        self.udpPortInput_3.setObjectName(u"udpPortInput_3")
-        sizePolicy3.setHeightForWidth(self.udpPortInput_3.sizePolicy().hasHeightForWidth())
-        self.udpPortInput_3.setSizePolicy(sizePolicy3)
-        self.udpPortInput_3.setStyleSheet(u"")
-
-        self.portLayout_3.addWidget(self.udpPortInput_3)
+        self.addressLayout.addWidget(self.udpIpAddressInput)
 
 
-        self._2.addLayout(self.portLayout_3)
+        self.connectionLayout.addLayout(self.addressLayout)
 
-        self.interfaceLayout_3 = QHBoxLayout()
-        self.interfaceLayout_3.setObjectName(u"interfaceLayout_3")
-        self.interfaceAddressLabel_3 = QLabel(self.configurationTab)
-        self.interfaceAddressLabel_3.setObjectName(u"interfaceAddressLabel_3")
+        self.portLayout = QHBoxLayout()
+        self.portLayout.setObjectName(u"portLayout")
+        self.udpPortLabel = QLabel(self.configurationTab)
+        self.udpPortLabel.setObjectName(u"udpPortLabel")
+        self.udpPortLabel.setMinimumSize(QSize(85, 0))
 
-        self.interfaceLayout_3.addWidget(self.interfaceAddressLabel_3)
+        self.portLayout.addWidget(self.udpPortLabel)
 
-        self.interfaceAddressDropdown_3 = QComboBox(self.configurationTab)
-        self.interfaceAddressDropdown_3.setObjectName(u"interfaceAddressDropdown_3")
+        self.udpPortInput = QLineEdit(self.configurationTab)
+        self.udpPortInput.setObjectName(u"udpPortInput")
+        sizePolicy3.setHeightForWidth(self.udpPortInput.sizePolicy().hasHeightForWidth())
+        self.udpPortInput.setSizePolicy(sizePolicy3)
+        self.udpPortInput.setStyleSheet(u"")
 
-        self.interfaceLayout_3.addWidget(self.interfaceAddressDropdown_3)
-
-
-        self._2.addLayout(self.interfaceLayout_3)
-
-        self.udpConnectButton_3 = QPushButton(self.configurationTab)
-        self.udpConnectButton_3.setObjectName(u"udpConnectButton_3")
-        self.udpConnectButton_3.setStyleSheet(u"")
-
-        self._2.addWidget(self.udpConnectButton_3)
+        self.portLayout.addWidget(self.udpPortInput)
 
 
-        self.formLayout.setLayout(0, QFormLayout.SpanningRole, self._2)
+        self.connectionLayout.addLayout(self.portLayout)
 
-        self._3 = QVBoxLayout()
-        self._3.setObjectName(u"_3")
-        self.label_2 = QLabel(self.configurationTab)
-        self.label_2.setObjectName(u"label_2")
-        self.label_2.setFont(font3)
+        self.interfaceLayout = QHBoxLayout()
+        self.interfaceLayout.setObjectName(u"interfaceLayout")
+        self.interfaceAddressLabel = QLabel(self.configurationTab)
+        self.interfaceAddressLabel.setObjectName(u"interfaceAddressLabel")
 
-        self._3.addWidget(self.label_2)
+        self.interfaceLayout.addWidget(self.interfaceAddressLabel)
 
-        self.interfaceLayout_4 = QHBoxLayout()
-        self.interfaceLayout_4.setObjectName(u"interfaceLayout_4")
-        self.interfaceAddressLabel_4 = QLabel(self.configurationTab)
-        self.interfaceAddressLabel_4.setObjectName(u"interfaceAddressLabel_4")
+        self.interfaceAddressDropdown = QComboBox(self.configurationTab)
+        self.interfaceAddressDropdown.setObjectName(u"interfaceAddressDropdown")
 
-        self.interfaceLayout_4.addWidget(self.interfaceAddressLabel_4)
-
-        self.interfaceAddressDropdown_4 = QComboBox(self.configurationTab)
-        self.interfaceAddressDropdown_4.setObjectName(u"interfaceAddressDropdown_4")
-
-        self.interfaceLayout_4.addWidget(self.interfaceAddressDropdown_4)
+        self.interfaceLayout.addWidget(self.interfaceAddressDropdown)
 
 
-        self._3.addLayout(self.interfaceLayout_4)
+        self.connectionLayout.addLayout(self.interfaceLayout)
 
-        self.udpConnectButton_4 = QPushButton(self.configurationTab)
-        self.udpConnectButton_4.setObjectName(u"udpConnectButton_4")
-        self.udpConnectButton_4.setStyleSheet(u"")
+        self.udpConnectButton = QPushButton(self.configurationTab)
+        self.udpConnectButton.setObjectName(u"udpConnectButton")
+        self.udpConnectButton.setStyleSheet(u"")
 
-        self._3.addWidget(self.udpConnectButton_4)
+        self.connectionLayout.addWidget(self.udpConnectButton)
 
 
-        self.formLayout.setLayout(2, QFormLayout.SpanningRole, self._3)
+        self.formLayout.setLayout(0, QFormLayout.SpanningRole, self.connectionLayout)
 
         self.verticalSpacer = QSpacerItem(20, 10, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
 
         self.formLayout.setItem(1, QFormLayout.SpanningRole, self.verticalSpacer)
+
+        self.serialLayout_2 = QVBoxLayout()
+        self.serialLayout_2.setObjectName(u"serialLayout_2")
+        self.serialConfigLabel = QLabel(self.configurationTab)
+        self.serialConfigLabel.setObjectName(u"serialConfigLabel")
+        self.serialConfigLabel.setFont(font3)
+        self.serialConfigLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.serialLayout_2.addWidget(self.serialConfigLabel)
+
+        self.serialLayout = QHBoxLayout()
+        self.serialLayout.setObjectName(u"serialLayout")
+        self.serialPortLabel = QLabel(self.configurationTab)
+        self.serialPortLabel.setObjectName(u"serialPortLabel")
+
+        self.serialLayout.addWidget(self.serialPortLabel)
+
+        self.serialPortDropdown = QComboBox(self.configurationTab)
+        self.serialPortDropdown.setObjectName(u"serialPortDropdown")
+
+        self.serialLayout.addWidget(self.serialPortDropdown)
+
+
+        self.serialLayout_2.addLayout(self.serialLayout)
+
+        self.serialConnectButton = QPushButton(self.configurationTab)
+        self.serialConnectButton.setObjectName(u"serialConnectButton")
+        self.serialConnectButton.setStyleSheet(u"")
+
+        self.serialLayout_2.addWidget(self.serialConnectButton)
+
+
+        self.formLayout.setLayout(2, QFormLayout.SpanningRole, self.serialLayout_2)
+
+        self.verticalSpacer_2 = QSpacerItem(20, 10, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+
+        self.formLayout.setItem(3, QFormLayout.FieldRole, self.verticalSpacer_2)
+
+        self.gridLayout = QGridLayout()
+        self.gridLayout.setObjectName(u"gridLayout")
+        self.verticalLayout_4 = QVBoxLayout()
+        self.verticalLayout_4.setObjectName(u"verticalLayout_4")
+        self.listWidget = QListWidget(self.configurationTab)
+        self.listWidget.setObjectName(u"listWidget")
+        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
+        sizePolicy4.setHorizontalStretch(0)
+        sizePolicy4.setVerticalStretch(0)
+        sizePolicy4.setHeightForWidth(self.listWidget.sizePolicy().hasHeightForWidth())
+        self.listWidget.setSizePolicy(sizePolicy4)
+        self.listWidget.setMaximumSize(QSize(16777215, 100))
+
+        self.verticalLayout_4.addWidget(self.listWidget)
+
+        self.pushButton = QPushButton(self.configurationTab)
+        self.pushButton.setObjectName(u"pushButton")
+
+        self.verticalLayout_4.addWidget(self.pushButton)
+
+
+        self.gridLayout.addLayout(self.verticalLayout_4, 1, 0, 1, 1)
+
+        self.verticalLayout_7 = QVBoxLayout()
+        self.verticalLayout_7.setObjectName(u"verticalLayout_7")
+        self.listWidget_4 = QListWidget(self.configurationTab)
+        self.listWidget_4.setObjectName(u"listWidget_4")
+        sizePolicy1.setHeightForWidth(self.listWidget_4.sizePolicy().hasHeightForWidth())
+        self.listWidget_4.setSizePolicy(sizePolicy1)
+
+        self.verticalLayout_7.addWidget(self.listWidget_4)
+
+        self.pushButton_4 = QPushButton(self.configurationTab)
+        self.pushButton_4.setObjectName(u"pushButton_4")
+
+        self.verticalLayout_7.addWidget(self.pushButton_4)
+
+
+        self.gridLayout.addLayout(self.verticalLayout_7, 2, 1, 1, 1)
+
+        self.verticalLayout_6 = QVBoxLayout()
+        self.verticalLayout_6.setObjectName(u"verticalLayout_6")
+        self.listWidget_2 = QListWidget(self.configurationTab)
+        self.listWidget_2.setObjectName(u"listWidget_2")
+        sizePolicy5 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        sizePolicy5.setHorizontalStretch(0)
+        sizePolicy5.setVerticalStretch(0)
+        sizePolicy5.setHeightForWidth(self.listWidget_2.sizePolicy().hasHeightForWidth())
+        self.listWidget_2.setSizePolicy(sizePolicy5)
+        self.listWidget_2.setMaximumSize(QSize(16777215, 300))
+
+        self.verticalLayout_6.addWidget(self.listWidget_2)
+
+        self.pushButton_2 = QPushButton(self.configurationTab)
+        self.pushButton_2.setObjectName(u"pushButton_2")
+
+        self.verticalLayout_6.addWidget(self.pushButton_2)
+
+
+        self.gridLayout.addLayout(self.verticalLayout_6, 1, 1, 1, 1)
+
+        self.verticalLayout_3 = QVBoxLayout()
+        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
+        self.listWidget_3 = QListWidget(self.configurationTab)
+        self.listWidget_3.setObjectName(u"listWidget_3")
+        sizePolicy1.setHeightForWidth(self.listWidget_3.sizePolicy().hasHeightForWidth())
+        self.listWidget_3.setSizePolicy(sizePolicy1)
+
+        self.verticalLayout_3.addWidget(self.listWidget_3)
+
+        self.pushButton_3 = QPushButton(self.configurationTab)
+        self.pushButton_3.setObjectName(u"pushButton_3")
+
+        self.verticalLayout_3.addWidget(self.pushButton_3)
+
+
+        self.gridLayout.addLayout(self.verticalLayout_3, 2, 0, 1, 1)
+
+        self.label = QLabel(self.configurationTab)
+        self.label.setObjectName(u"label")
+        self.label.setFont(font3)
+        self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.gridLayout.addWidget(self.label, 0, 0, 1, 2)
+
+
+        self.formLayout.setLayout(4, QFormLayout.SpanningRole, self.gridLayout)
 
         self.tabWidget.addTab(self.configurationTab, "")
         self.pAndIdTab = QWidget()
@@ -612,7 +708,7 @@ class Ui_Widget(object):
 
         self.retranslateUi(Widget)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(Widget)
@@ -622,18 +718,18 @@ class Ui_Widget(object):
         Widget.setWindowTitle(QCoreApplication.translate("Widget", u"Hybrid Engine Ground System UI", None))
         self.logoLabel.setText("")
 #if QT_CONFIG(tooltip)
-        self.udpIpAddressLabel.setToolTip(QCoreApplication.translate("Widget", u"Address of multicast group", None))
+        self.udpIpAddressLabel_10.setToolTip(QCoreApplication.translate("Widget", u"Address of multicast group", None))
 #endif // QT_CONFIG(tooltip)
-        self.udpIpAddressLabel.setText(QCoreApplication.translate("Widget", u"MCast IPv4 address*: ", None))
+        self.udpIpAddressLabel_10.setText(QCoreApplication.translate("Widget", u"MCast IPv4 address*: ", None))
 #if QT_CONFIG(tooltip)
-        self.udpPortLabel.setToolTip(QCoreApplication.translate("Widget", u"Port of multicast group", None))
+        self.udpPortLabel_10.setToolTip(QCoreApplication.translate("Widget", u"Port of multicast group", None))
 #endif // QT_CONFIG(tooltip)
-        self.udpPortLabel.setText(QCoreApplication.translate("Widget", u"MCast port*: ", None))
+        self.udpPortLabel_10.setText(QCoreApplication.translate("Widget", u"MCast port*: ", None))
 #if QT_CONFIG(tooltip)
-        self.interfaceAddressLabel.setToolTip(QCoreApplication.translate("Widget", u"Enter ipconfig in terminal to see interfaces", None))
+        self.interfaceAddressLabel_10.setToolTip(QCoreApplication.translate("Widget", u"Enter ipconfig in terminal to see interfaces", None))
 #endif // QT_CONFIG(tooltip)
-        self.interfaceAddressLabel.setText(QCoreApplication.translate("Widget", u"Interface address:", None))
-        self.udpConnectButton.setText(QCoreApplication.translate("Widget", u"Create UDP connection", None))
+        self.interfaceAddressLabel_10.setText(QCoreApplication.translate("Widget", u"Interface address:", None))
+        self.udpConnectButton_10.setText(QCoreApplication.translate("Widget", u"Create UDP connection", None))
         self.openFileButton.setText(QCoreApplication.translate("Widget", u"Open previous data", None))
         self.recordingToggleButton.setText(QCoreApplication.translate("Widget", u"Recording", None))
         self.exporter.setText(QCoreApplication.translate("Widget", u"Export to File", None))
@@ -668,26 +764,31 @@ class Ui_Widget(object):
         self.xv9.setText(QCoreApplication.translate("Widget", u"XV-9", None))
         self.xv8.setText(QCoreApplication.translate("Widget", u"XV-8", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.telemetryTab), QCoreApplication.translate("Widget", u"Telemetry", None))
-        self.label.setText(QCoreApplication.translate("Widget", u"Multicast configuration", None))
+        self.multicastConfigLabel.setText(QCoreApplication.translate("Widget", u"Multicast configuration", None))
 #if QT_CONFIG(tooltip)
-        self.udpIpAddressLabel_3.setToolTip(QCoreApplication.translate("Widget", u"Address of multicast group", None))
+        self.udpIpAddressLabel.setToolTip(QCoreApplication.translate("Widget", u"Address of multicast group", None))
 #endif // QT_CONFIG(tooltip)
-        self.udpIpAddressLabel_3.setText(QCoreApplication.translate("Widget", u"MCast IPv4 address*: ", None))
+        self.udpIpAddressLabel.setText(QCoreApplication.translate("Widget", u"MCast IPv4 address*: ", None))
 #if QT_CONFIG(tooltip)
-        self.udpPortLabel_3.setToolTip(QCoreApplication.translate("Widget", u"Port of multicast group", None))
+        self.udpPortLabel.setToolTip(QCoreApplication.translate("Widget", u"Port of multicast group", None))
 #endif // QT_CONFIG(tooltip)
-        self.udpPortLabel_3.setText(QCoreApplication.translate("Widget", u"MCast port*: ", None))
+        self.udpPortLabel.setText(QCoreApplication.translate("Widget", u"MCast port*: ", None))
 #if QT_CONFIG(tooltip)
-        self.interfaceAddressLabel_3.setToolTip(QCoreApplication.translate("Widget", u"Enter ipconfig in terminal to see interfaces", None))
+        self.interfaceAddressLabel.setToolTip(QCoreApplication.translate("Widget", u"Enter ipconfig in terminal to see interfaces", None))
 #endif // QT_CONFIG(tooltip)
-        self.interfaceAddressLabel_3.setText(QCoreApplication.translate("Widget", u"Interface address:", None))
-        self.udpConnectButton_3.setText(QCoreApplication.translate("Widget", u"Join multicast group", None))
-        self.label_2.setText(QCoreApplication.translate("Widget", u"Serial configuration", None))
+        self.interfaceAddressLabel.setText(QCoreApplication.translate("Widget", u"Interface address:", None))
+        self.udpConnectButton.setText(QCoreApplication.translate("Widget", u"Join multicast group", None))
+        self.serialConfigLabel.setText(QCoreApplication.translate("Widget", u"Serial configuration", None))
 #if QT_CONFIG(tooltip)
-        self.interfaceAddressLabel_4.setToolTip(QCoreApplication.translate("Widget", u"Enter ipconfig in terminal to see interfaces", None))
+        self.serialPortLabel.setToolTip(QCoreApplication.translate("Widget", u"Enter ipconfig in terminal to see interfaces", None))
 #endif // QT_CONFIG(tooltip)
-        self.interfaceAddressLabel_4.setText(QCoreApplication.translate("Widget", u"Interface address:", None))
-        self.udpConnectButton_4.setText(QCoreApplication.translate("Widget", u"Connect to serial port", None))
+        self.serialPortLabel.setText(QCoreApplication.translate("Widget", u"Serial port:", None))
+        self.serialConnectButton.setText(QCoreApplication.translate("Widget", u"Connect to serial port", None))
+        self.pushButton.setText(QCoreApplication.translate("Widget", u"PushButton", None))
+        self.pushButton_4.setText(QCoreApplication.translate("Widget", u"PushButton", None))
+        self.pushButton_2.setText(QCoreApplication.translate("Widget", u"PushButton", None))
+        self.pushButton_3.setText(QCoreApplication.translate("Widget", u"PushButton", None))
+        self.label.setText(QCoreApplication.translate("Widget", u"Graph threshold lines", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.configurationTab), QCoreApplication.translate("Widget", u"Configuration", None))
         self.pid_image.setText("")
         self.cv1State_tabpid.setText(QCoreApplication.translate("Widget", u"CLOSED", None))

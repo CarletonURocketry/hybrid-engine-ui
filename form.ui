@@ -36,7 +36,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="telemetryTab">
       <property name="autoFillBackground">
@@ -83,14 +83,14 @@
           </widget>
          </item>
          <item>
-          <layout class="QVBoxLayout" name="connectionLayout">
+          <layout class="QVBoxLayout" name="connectionLayout_2">
            <item>
-            <layout class="QHBoxLayout" name="addressLayout">
+            <layout class="QHBoxLayout" name="addressLayout_10">
              <property name="spacing">
               <number>1</number>
              </property>
              <item>
-              <widget class="QLabel" name="udpIpAddressLabel">
+              <widget class="QLabel" name="udpIpAddressLabel_10">
                <property name="toolTip">
                 <string>Address of multicast group</string>
                </property>
@@ -100,7 +100,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="udpIpAddressInput">
+              <widget class="QLineEdit" name="udpIpAddressInput_10">
                <property name="styleSheet">
                 <string notr="true"/>
                </property>
@@ -109,7 +109,7 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="portLayout" stretch="0,0">
+            <layout class="QHBoxLayout" name="portLayout_10" stretch="0,0">
              <property name="spacing">
               <number>6</number>
              </property>
@@ -117,7 +117,7 @@
               <enum>QLayout::SizeConstraint::SetFixedSize</enum>
              </property>
              <item>
-              <widget class="QLabel" name="udpPortLabel">
+              <widget class="QLabel" name="udpPortLabel_10">
                <property name="minimumSize">
                 <size>
                  <width>85</width>
@@ -133,7 +133,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="udpPortInput">
+              <widget class="QLineEdit" name="udpPortInput_10">
                <property name="styleSheet">
                 <string notr="true"/>
                </property>
@@ -142,9 +142,9 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="interfaceLayout">
+            <layout class="QHBoxLayout" name="interfaceLayout_10">
              <item>
-              <widget class="QLabel" name="interfaceAddressLabel">
+              <widget class="QLabel" name="interfaceAddressLabel_10">
                <property name="toolTip">
                 <string>Enter ipconfig in terminal to see interfaces</string>
                </property>
@@ -154,7 +154,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QComboBox" name="interfaceAddressDropdown">
+              <widget class="QComboBox" name="interfaceAddressDropdown_10">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -166,7 +166,7 @@
             </layout>
            </item>
            <item>
-            <widget class="QPushButton" name="udpConnectButton">
+            <widget class="QPushButton" name="udpConnectButton_10">
              <property name="maximumSize">
               <size>
                <width>1000</width>
@@ -868,16 +868,25 @@
        <property name="labelAlignment">
         <set>Qt::AlignmentFlag::AlignCenter</set>
        </property>
+       <property name="formAlignment">
+        <set>Qt::AlignmentFlag::AlignCenter</set>
+       </property>
        <property name="leftMargin">
         <number>450</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
        </property>
        <property name="rightMargin">
         <number>450</number>
        </property>
+       <property name="bottomMargin">
+        <number>10</number>
+       </property>
        <item row="0" column="0" colspan="2">
-        <layout class="QVBoxLayout" name="_2">
+        <layout class="QVBoxLayout" name="connectionLayout">
          <item>
-          <widget class="QLabel" name="label">
+          <widget class="QLabel" name="multicastConfigLabel">
            <property name="font">
             <font>
              <bold>true</bold>
@@ -886,12 +895,15 @@
            <property name="text">
             <string>Multicast configuration</string>
            </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignCenter</set>
+           </property>
           </widget>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="addressLayout_3">
+          <layout class="QHBoxLayout" name="addressLayout">
            <item>
-            <widget class="QLabel" name="udpIpAddressLabel_3">
+            <widget class="QLabel" name="udpIpAddressLabel">
              <property name="toolTip">
               <string>Address of multicast group</string>
              </property>
@@ -901,7 +913,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="udpIpAddressInput_3">
+            <widget class="QLineEdit" name="udpIpAddressInput">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -913,9 +925,9 @@
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="portLayout_3">
+          <layout class="QHBoxLayout" name="portLayout">
            <item>
-            <widget class="QLabel" name="udpPortLabel_3">
+            <widget class="QLabel" name="udpPortLabel">
              <property name="minimumSize">
               <size>
                <width>85</width>
@@ -931,7 +943,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="udpPortInput_3">
+            <widget class="QLineEdit" name="udpPortInput">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -946,9 +958,9 @@
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="interfaceLayout_3">
+          <layout class="QHBoxLayout" name="interfaceLayout">
            <item>
-            <widget class="QLabel" name="interfaceAddressLabel_3">
+            <widget class="QLabel" name="interfaceAddressLabel">
              <property name="toolTip">
               <string>Enter ipconfig in terminal to see interfaces</string>
              </property>
@@ -958,60 +970,17 @@
             </widget>
            </item>
            <item>
-            <widget class="QComboBox" name="interfaceAddressDropdown_3"/>
+            <widget class="QComboBox" name="interfaceAddressDropdown"/>
            </item>
           </layout>
          </item>
          <item>
-          <widget class="QPushButton" name="udpConnectButton_3">
+          <widget class="QPushButton" name="udpConnectButton">
            <property name="styleSheet">
             <string notr="true"/>
            </property>
            <property name="text">
             <string>Join multicast group</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item row="2" column="0" colspan="2">
-        <layout class="QVBoxLayout" name="_3">
-         <item>
-          <widget class="QLabel" name="label_2">
-           <property name="font">
-            <font>
-             <bold>true</bold>
-            </font>
-           </property>
-           <property name="text">
-            <string>Serial configuration</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="interfaceLayout_4">
-           <item>
-            <widget class="QLabel" name="interfaceAddressLabel_4">
-             <property name="toolTip">
-              <string>Enter ipconfig in terminal to see interfaces</string>
-             </property>
-             <property name="text">
-              <string>Interface address:</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QComboBox" name="interfaceAddressDropdown_4"/>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <widget class="QPushButton" name="udpConnectButton_4">
-           <property name="styleSheet">
-            <string notr="true"/>
-           </property>
-           <property name="text">
-            <string>Connect to serial port</string>
            </property>
           </widget>
          </item>
@@ -1032,6 +1001,183 @@
           </size>
          </property>
         </spacer>
+       </item>
+       <item row="2" column="0" colspan="2">
+        <layout class="QVBoxLayout" name="serialLayout_2">
+         <item>
+          <widget class="QLabel" name="serialConfigLabel">
+           <property name="font">
+            <font>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Serial configuration</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="serialLayout">
+           <item>
+            <widget class="QLabel" name="serialPortLabel">
+             <property name="toolTip">
+              <string>Enter ipconfig in terminal to see interfaces</string>
+             </property>
+             <property name="text">
+              <string>Serial port:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="serialPortDropdown"/>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QPushButton" name="serialConnectButton">
+           <property name="styleSheet">
+            <string notr="true"/>
+           </property>
+           <property name="text">
+            <string>Connect to serial port</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="3" column="1">
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Orientation::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Policy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>10</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="4" column="0" colspan="2">
+        <layout class="QGridLayout" name="gridLayout">
+         <item row="1" column="0">
+          <layout class="QVBoxLayout" name="verticalLayout_4">
+           <item>
+            <widget class="QListWidget" name="listWidget">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>100</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton">
+             <property name="text">
+              <string>PushButton</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="2" column="1">
+          <layout class="QVBoxLayout" name="verticalLayout_7">
+           <item>
+            <widget class="QListWidget" name="listWidget_4">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_4">
+             <property name="text">
+              <string>PushButton</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="1" column="1">
+          <layout class="QVBoxLayout" name="verticalLayout_6">
+           <item>
+            <widget class="QListWidget" name="listWidget_2">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>300</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_2">
+             <property name="text">
+              <string>PushButton</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="2" column="0">
+          <layout class="QVBoxLayout" name="verticalLayout_3">
+           <item>
+            <widget class="QListWidget" name="listWidget_3">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_3">
+             <property name="text">
+              <string>PushButton</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="0" column="0" colspan="2">
+          <widget class="QLabel" name="label">
+           <property name="font">
+            <font>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Graph threshold lines</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
       </layout>
      </widget>

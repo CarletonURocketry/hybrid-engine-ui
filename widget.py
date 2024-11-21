@@ -65,6 +65,8 @@ class Widget(QWidget):
         self.tank_mass_points = np.empty((0,2))
         self.engine_thrust_points = np.empty((0,2))
 
+        self.ui.listWidget.addItem("Hola")
+
         # Plot data
         self.plots = {}
 
