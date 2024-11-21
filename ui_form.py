@@ -28,7 +28,7 @@ class Ui_Widget(object):
     def setupUi(self, Widget):
         if not Widget.objectName():
             Widget.setObjectName(u"Widget")
-        Widget.resize(1288, 757)
+        Widget.resize(1288, 892)
         icon = QIcon()
         icon.addFile(u"logos/better_logo.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         Widget.setWindowIcon(icon)
@@ -38,6 +38,7 @@ class Ui_Widget(object):
         self.verticalLayout_2.setContentsMargins(20, 15, 20, 20)
         self.tabWidget = QTabWidget(Widget)
         self.tabWidget.setObjectName(u"tabWidget")
+        self.tabWidget.setAutoFillBackground(False)
         self.telemetryTab = QWidget()
         self.telemetryTab.setObjectName(u"telemetryTab")
         self.telemetryTab.setAutoFillBackground(False)
@@ -451,6 +452,7 @@ class Ui_Widget(object):
         self.configurationTab = QWidget()
         self.configurationTab.setObjectName(u"configurationTab")
         self.configurationTab.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
+        self.configurationTab.setAutoFillBackground(True)
         self.formLayout = QFormLayout(self.configurationTab)
         self.formLayout.setObjectName(u"formLayout")
         self.formLayout.setRowWrapPolicy(QFormLayout.RowWrapPolicy.DontWrapRows)
@@ -576,9 +578,14 @@ class Ui_Widget(object):
         self.gridLayout.setObjectName(u"gridLayout")
         self.verticalLayout_4 = QVBoxLayout()
         self.verticalLayout_4.setObjectName(u"verticalLayout_4")
+        self.label_2 = QLabel(self.configurationTab)
+        self.label_2.setObjectName(u"label_2")
+
+        self.verticalLayout_4.addWidget(self.label_2)
+
         self.listWidget = QListWidget(self.configurationTab)
         self.listWidget.setObjectName(u"listWidget")
-        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
+        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
         sizePolicy4.setHorizontalStretch(0)
         sizePolicy4.setVerticalStretch(0)
         sizePolicy4.setHeightForWidth(self.listWidget.sizePolicy().hasHeightForWidth())
@@ -587,8 +594,17 @@ class Ui_Widget(object):
 
         self.verticalLayout_4.addWidget(self.listWidget)
 
+        self.lineEdit = QLineEdit(self.configurationTab)
+        self.lineEdit.setObjectName(u"lineEdit")
+        sizePolicy1.setHeightForWidth(self.lineEdit.sizePolicy().hasHeightForWidth())
+        self.lineEdit.setSizePolicy(sizePolicy1)
+
+        self.verticalLayout_4.addWidget(self.lineEdit)
+
         self.pushButton = QPushButton(self.configurationTab)
         self.pushButton.setObjectName(u"pushButton")
+        sizePolicy1.setHeightForWidth(self.pushButton.sizePolicy().hasHeightForWidth())
+        self.pushButton.setSizePolicy(sizePolicy1)
 
         self.verticalLayout_4.addWidget(self.pushButton)
 
@@ -597,15 +613,30 @@ class Ui_Widget(object):
 
         self.verticalLayout_7 = QVBoxLayout()
         self.verticalLayout_7.setObjectName(u"verticalLayout_7")
+        self.label_5 = QLabel(self.configurationTab)
+        self.label_5.setObjectName(u"label_5")
+
+        self.verticalLayout_7.addWidget(self.label_5)
+
         self.listWidget_4 = QListWidget(self.configurationTab)
         self.listWidget_4.setObjectName(u"listWidget_4")
         sizePolicy1.setHeightForWidth(self.listWidget_4.sizePolicy().hasHeightForWidth())
         self.listWidget_4.setSizePolicy(sizePolicy1)
+        self.listWidget_4.setMaximumSize(QSize(16777215, 100))
 
         self.verticalLayout_7.addWidget(self.listWidget_4)
 
+        self.lineEdit_4 = QLineEdit(self.configurationTab)
+        self.lineEdit_4.setObjectName(u"lineEdit_4")
+        sizePolicy1.setHeightForWidth(self.lineEdit_4.sizePolicy().hasHeightForWidth())
+        self.lineEdit_4.setSizePolicy(sizePolicy1)
+
+        self.verticalLayout_7.addWidget(self.lineEdit_4)
+
         self.pushButton_4 = QPushButton(self.configurationTab)
         self.pushButton_4.setObjectName(u"pushButton_4")
+        sizePolicy1.setHeightForWidth(self.pushButton_4.sizePolicy().hasHeightForWidth())
+        self.pushButton_4.setSizePolicy(sizePolicy1)
 
         self.verticalLayout_7.addWidget(self.pushButton_4)
 
@@ -614,19 +645,30 @@ class Ui_Widget(object):
 
         self.verticalLayout_6 = QVBoxLayout()
         self.verticalLayout_6.setObjectName(u"verticalLayout_6")
+        self.label_3 = QLabel(self.configurationTab)
+        self.label_3.setObjectName(u"label_3")
+
+        self.verticalLayout_6.addWidget(self.label_3)
+
         self.listWidget_2 = QListWidget(self.configurationTab)
         self.listWidget_2.setObjectName(u"listWidget_2")
-        sizePolicy5 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-        sizePolicy5.setHorizontalStretch(0)
-        sizePolicy5.setVerticalStretch(0)
-        sizePolicy5.setHeightForWidth(self.listWidget_2.sizePolicy().hasHeightForWidth())
-        self.listWidget_2.setSizePolicy(sizePolicy5)
-        self.listWidget_2.setMaximumSize(QSize(16777215, 300))
+        sizePolicy1.setHeightForWidth(self.listWidget_2.sizePolicy().hasHeightForWidth())
+        self.listWidget_2.setSizePolicy(sizePolicy1)
+        self.listWidget_2.setMaximumSize(QSize(16777215, 100))
 
         self.verticalLayout_6.addWidget(self.listWidget_2)
 
+        self.lineEdit_2 = QLineEdit(self.configurationTab)
+        self.lineEdit_2.setObjectName(u"lineEdit_2")
+        sizePolicy1.setHeightForWidth(self.lineEdit_2.sizePolicy().hasHeightForWidth())
+        self.lineEdit_2.setSizePolicy(sizePolicy1)
+
+        self.verticalLayout_6.addWidget(self.lineEdit_2)
+
         self.pushButton_2 = QPushButton(self.configurationTab)
         self.pushButton_2.setObjectName(u"pushButton_2")
+        sizePolicy1.setHeightForWidth(self.pushButton_2.sizePolicy().hasHeightForWidth())
+        self.pushButton_2.setSizePolicy(sizePolicy1)
 
         self.verticalLayout_6.addWidget(self.pushButton_2)
 
@@ -635,15 +677,30 @@ class Ui_Widget(object):
 
         self.verticalLayout_3 = QVBoxLayout()
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
+        self.label_4 = QLabel(self.configurationTab)
+        self.label_4.setObjectName(u"label_4")
+
+        self.verticalLayout_3.addWidget(self.label_4)
+
         self.listWidget_3 = QListWidget(self.configurationTab)
         self.listWidget_3.setObjectName(u"listWidget_3")
         sizePolicy1.setHeightForWidth(self.listWidget_3.sizePolicy().hasHeightForWidth())
         self.listWidget_3.setSizePolicy(sizePolicy1)
+        self.listWidget_3.setMaximumSize(QSize(16777215, 100))
 
         self.verticalLayout_3.addWidget(self.listWidget_3)
 
+        self.lineEdit_3 = QLineEdit(self.configurationTab)
+        self.lineEdit_3.setObjectName(u"lineEdit_3")
+        sizePolicy1.setHeightForWidth(self.lineEdit_3.sizePolicy().hasHeightForWidth())
+        self.lineEdit_3.setSizePolicy(sizePolicy1)
+
+        self.verticalLayout_3.addWidget(self.lineEdit_3)
+
         self.pushButton_3 = QPushButton(self.configurationTab)
         self.pushButton_3.setObjectName(u"pushButton_3")
+        sizePolicy1.setHeightForWidth(self.pushButton_3.sizePolicy().hasHeightForWidth())
+        self.pushButton_3.setSizePolicy(sizePolicy1)
 
         self.verticalLayout_3.addWidget(self.pushButton_3)
 
@@ -659,6 +716,15 @@ class Ui_Widget(object):
 
 
         self.formLayout.setLayout(4, QFormLayout.SpanningRole, self.gridLayout)
+
+        self.pushButton_5 = QPushButton(self.configurationTab)
+        self.pushButton_5.setObjectName(u"pushButton_5")
+
+        self.formLayout.setWidget(6, QFormLayout.SpanningRole, self.pushButton_5)
+
+        self.verticalSpacer_3 = QSpacerItem(20, 10, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+
+        self.formLayout.setItem(5, QFormLayout.FieldRole, self.verticalSpacer_3)
 
         self.tabWidget.addTab(self.configurationTab, "")
         self.pAndIdTab = QWidget()
@@ -708,7 +774,7 @@ class Ui_Widget(object):
 
         self.retranslateUi(Widget)
 
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(Widget)
@@ -784,11 +850,16 @@ class Ui_Widget(object):
 #endif // QT_CONFIG(tooltip)
         self.serialPortLabel.setText(QCoreApplication.translate("Widget", u"Serial port:", None))
         self.serialConnectButton.setText(QCoreApplication.translate("Widget", u"Connect to serial port", None))
-        self.pushButton.setText(QCoreApplication.translate("Widget", u"PushButton", None))
-        self.pushButton_4.setText(QCoreApplication.translate("Widget", u"PushButton", None))
-        self.pushButton_2.setText(QCoreApplication.translate("Widget", u"PushButton", None))
-        self.pushButton_3.setText(QCoreApplication.translate("Widget", u"PushButton", None))
+        self.label_2.setText(QCoreApplication.translate("Widget", u"Pressure", None))
+        self.pushButton.setText(QCoreApplication.translate("Widget", u"Add threshold marker", None))
+        self.label_5.setText(QCoreApplication.translate("Widget", u"Engine Thrust", None))
+        self.pushButton_4.setText(QCoreApplication.translate("Widget", u"Add threshold marker", None))
+        self.label_3.setText(QCoreApplication.translate("Widget", u"Temperature", None))
+        self.pushButton_2.setText(QCoreApplication.translate("Widget", u"Add threshold marker", None))
+        self.label_4.setText(QCoreApplication.translate("Widget", u"Tank Mass", None))
+        self.pushButton_3.setText(QCoreApplication.translate("Widget", u"Add threshold marker", None))
         self.label.setText(QCoreApplication.translate("Widget", u"Graph threshold lines", None))
+        self.pushButton_5.setText(QCoreApplication.translate("Widget", u"Save configuration", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.configurationTab), QCoreApplication.translate("Widget", u"Configuration", None))
         self.pid_image.setText("")
         self.cv1State_tabpid.setText(QCoreApplication.translate("Widget", u"CLOSED", None))
