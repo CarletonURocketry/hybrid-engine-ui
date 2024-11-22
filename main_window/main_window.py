@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from PySide6.QtWidgets import QWidget, QFileDialog
 from PySide6.QtWebEngineWidgets import QWebEngineView
 from PySide6.QtCore import QTimer, QDateTime
-from PySide6.QtNetwork import QUdpSocket, QAbstractSocket, QHostAddress, QNetworkInterface
+from PySide6.QtNetwork import QUdpSocket, QAbstractSocket, QNetworkInterface
 
 from pyqtgraph import mkPen, PlotDataItem
 from PySide6.QtGui import QPixmap
@@ -21,8 +21,6 @@ import packet_spec
 #     pyside2-uic form.ui -o ui_form.py
 from .ui import Ui_Widget
 
-sim_is_running = False
-i = 0
 points = np.empty((0,2))
 
 @dataclass
@@ -48,6 +46,9 @@ class pid_window(QWidget):
 
 
 class MainWindow(QWidget):
+    from .udp import udp_connection_button_handler, join_multicast_group, \
+        udp_receive_socket_data, udp_on_disconnected, udp_on_error
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.ui = Ui_Widget()
@@ -189,47 +190,6 @@ class MainWindow(QWidget):
                     case packet_spec.TelemetryPacketSubType.WARNING:
                         pass
 
-    def udp_connection_button_handler(self):
-        if self.padUDPSocket.state() == QAbstractSocket.SocketState.UnconnectedState:
-            mcast_addr = self.ui.udpIpAddressInput.text()
-            mcast_port = self.ui.udpPortInput.text()
-            interface_addr = self.ui.interfaceAddressDropdown.currentText() if self.ui.interfaceAddressDropdown.currentIndex() > 1 else None
-
-            if mcast_addr == "funi":
-                self.web_view = QWebEngineView()
-                self.web_view.setUrl("https://www.youtube.com/watch?app=desktop&v=vPDvMVEwKzM")
-                self.ui.plotLayout.addWidget(self.web_view, 0, 2, 2, 1)
-                self.ui.udpIpAddressInput.clear()
-                return
-            if mcast_addr == "close":
-                self.web_view.deleteLater()
-                self.ui.plotLayout.removeWidget(self.web_view)
-                self.ui.udpIpAddressInput.clear()
-                return
-
-            try:
-                ipaddress.ip_address(mcast_addr)
-            except ValueError:
-                self.ui.logOutput.append(f"IP address '{mcast_addr}' is invalid")
-                return
-
-            try:
-                mcast_port = int(mcast_port)
-            except ValueError:
-                self.ui.logOutput.append(f"Port '{mcast_port}' is invalid")
-                return
-
-            if interface_addr:
-                try:
-                    ipaddress.ip_address(interface_addr)
-                except ValueError:
-                    self.ui.logOutput.append(f"Interface IP address '{interface_addr}' is invalid")
-                    return
-
-            self.join_multicast_group(mcast_addr, mcast_port, interface_addr)
-        else:
-            self.padUDPSocket.disconnectFromHost()
-
     def recording_toggle_button_handler(self):
         pathlib.Path('recording').mkdir(parents=True, exist_ok=True)
         if self.ui.recordingToggleButton.isChecked() == True:
@@ -264,29 +224,6 @@ class MainWindow(QWidget):
                     self.display_previous_data(data)
                 self.ui.logOutput.append("Data loaded")
                     
-    def join_multicast_group(self, mcast_addr, mcast_port, interface_addr=""):
-        interface_address = QHostAddress(interface_addr) if interface_addr else QHostAddress.AnyIPv4
-        multicast_group = QHostAddress(mcast_addr)
-        net_interface = QNetworkInterface(self.interfaces[interface_addr]) if interface_addr else None
-
-        # Always bind UDP socket to port but change interface address based on args
-        bound_to_port = self.padUDPSocket.bind(interface_address, mcast_port)
-        # Use different func for joining multicast group depending if interface addr is specified
-        if net_interface:
-            joined_mcast_group = self.padUDPSocket.joinMulticastGroup(multicast_group, net_interface)
-        else:
-            joined_mcast_group = self.padUDPSocket.joinMulticastGroup(multicast_group)
-
-        if bound_to_port and joined_mcast_group:
-            self.ui.logOutput.append(f"Successfully connected to {mcast_addr}:{mcast_port}")
-            self.ui.udpConnectButton.setText("Close UDP connection")
-            self.ui.udpIpAddressInput.setReadOnly(True)
-            self.ui.udpPortInput.setReadOnly(True)
-            return True
-        else:
-            self.ui.logOutput.append(f"Unable to join multicast group at IP address: {mcast_addr}, port: {mcast_port}")
-            return False
-
     def filter_data(self):
         for key in self.plots:
             if self.plots[key].points.size == 0:
@@ -294,41 +231,6 @@ class MainWindow(QWidget):
             min_time: int = self.plots[key].points[:,0].max() - self.time_range
             self.plots[key].points = self.plots[key].points[self.plots[key].points[:,0] >= min_time]
             self.plots[key].data_line.setData(self.plots[key].points)
-
-    # Any data received should be handled here
-    def udp_receive_socket_data(self):
-        while self.padUDPSocket.hasPendingDatagrams():
-            datagram, host, port = self.padUDPSocket.readDatagram(self.padUDPSocket.pendingDatagramSize())
-            data = datagram.data()
-            header_bytes = data[:2]
-            message_bytes = data[2:]
-            header = packet_spec.parse_packet_header(header_bytes)
-            message = packet_spec.parse_packet_message(header, message_bytes)
-            if header.sub_type == packet_spec.TelemetryPacketSubType.ACT_STATE:
-                #Actuator state handling
-                self.updateActState(message)
-            else:
-                self.plot_point(header, message)
-
-            #If we want to recording data
-            if self.ui.recordingToggleButton.isChecked():
-                self.file_out.write(datagram)
-
-    # Any errors with the socket should be handled here and logged
-    def udp_on_error(self):
-        if self.padUDPSocket.errorString() == "The address is not available":
-            self.ui.logOutput.append(f"Connection failed - {self.padUDPSocket.error()}: {self.padUDPSocket.errorString()}")
-        else:
-            self.ui.logOutput.append(f"{self.padUDPSocket.error()}: {self.padUDPSocket.errorString()}")
-
-    # Any disconnection event should be handled here and logged
-    def udp_on_disconnected(self):
-        self.ui.logOutput.append("Socket connection was closed")
-        self.ui.udpConnectButton.setText("Create UDP connection")
-        self.ui.udpIpAddressInput.setReadOnly(False)
-        self.ui.udpPortInput.setReadOnly(False)
-        if self.file_out:
-            self.file_out.close()
 
     # Handles when the window is closed, have to make sure to disconnect the TCP socket
     def closeEvent(self, event):
