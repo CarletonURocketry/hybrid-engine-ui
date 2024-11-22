@@ -1,6 +1,0 @@
-<RCC>
-    <qresource prefix="/images">
-        <file alias="logo">logos/logoandtexttransparent.png</file>
-        <file alias="P&amp;I diagram">logos/PID hybrid.jpg</file>
-    </qresource>
-</RCC>
