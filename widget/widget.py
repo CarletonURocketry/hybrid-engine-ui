@@ -4,7 +4,7 @@ import pathlib
 import ipaddress
 from dataclasses import dataclass
 
-from PySide6.QtWidgets import QApplication, QWidget, QFileDialog
+from PySide6.QtWidgets import QWidget, QFileDialog
 from PySide6.QtWebEngineWidgets import QWebEngineView
 from PySide6.QtCore import QTimer, QDateTime
 from PySide6.QtNetwork import QUdpSocket, QAbstractSocket, QHostAddress, QNetworkInterface
@@ -462,9 +462,3 @@ class Widget(QWidget):
         f.write(self.ui.logOutput.toPlainText())
         f.close()
         self.ui.logOutput.append(f"Exported logs to {file_name}")
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    widget = Widget()
-    widget.show()
-    sys.exit(app.exec())
