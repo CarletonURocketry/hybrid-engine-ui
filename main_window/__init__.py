@@ -1,3 +1,3 @@
-from .widget import Widget
+from .main_window import MainWindow
 
-__all__ = ['Widget']
+__all__ = ['MainWindow']

@@ -47,7 +47,7 @@ class pid_window(QWidget):
         #print("new window open") tester
 
 
-class Widget(QWidget):
+class MainWindow(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.ui = Ui_Widget()
