@@ -5,11 +5,15 @@ and saving logs
 """
 
 import pathlib
+from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QDateTime
 
+if TYPE_CHECKING:
+    from main_window import MainWindow
+
 #Creates a file or overwrites existing one, and writes the text in the logOutput into the file
-def save_to_file(self):
+def save_to_file(self: "MainWindow"):
     pathlib.Path('recording').mkdir(parents=True, exist_ok=True)
     file_name = './recording/'
     file_name += QDateTime.currentDateTime().toString("yyyy-MM-dd_HH-mm")

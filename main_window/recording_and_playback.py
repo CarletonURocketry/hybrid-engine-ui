@@ -5,13 +5,17 @@ Should only be imported by main_window.py
 """
 
 import pathlib
+from typing import TYPE_CHECKING
 
 from PySide6.QtWidgets import QFileDialog
 from PySide6.QtCore import QDateTime
 
 import packet_spec
 
-def recording_toggle_button_handler(self):
+if TYPE_CHECKING:
+    from main_window import MainWindow
+
+def recording_toggle_button_handler(self: "MainWindow"):
     pathlib.Path('recording').mkdir(parents=True, exist_ok=True)
     if self.ui.recordingToggleButton.isChecked() == True:
         file_name = './recording/'
@@ -21,7 +25,7 @@ def recording_toggle_button_handler(self):
     else:
         self.file_out.close()
 
-def display_previous_data(self,data):
+def display_previous_data(self: "MainWindow", data):
         ptr = 0
         data_len = len(data)
         while(ptr < data_len):
@@ -34,7 +38,7 @@ def display_previous_data(self,data):
             ptr += message_bytes_length
             self.plot_point(data_header, data_message)
 
-def open_file_button_handler(self):
+def open_file_button_handler(self: "MainWindow"):
         file_path, _ = QFileDialog.getOpenFileName(self, "Open Previous File", "recording", "Dump file(*.dump);;All files (*)")
 
         # If a file is selected, read its contents
