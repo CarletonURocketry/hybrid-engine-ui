@@ -1,6 +1,6 @@
 """udp.py
 
-Contains all handlers and slots functions that handle UDP socket functionalities
+Contains all handlers and slot functions that handle UDP socket functionalities
 such as connection, data receive, disconnection and, error. Should only be 
 imported by main_window.py
 """
