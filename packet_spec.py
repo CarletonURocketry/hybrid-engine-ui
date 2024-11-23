@@ -46,7 +46,6 @@ class Warning(Enum):
     HIGH_PRESSURE = 0
     HIGH_TEMP = 1
 
-
 class ActuatorState(Enum):
     OFF = 0
     ON = 1

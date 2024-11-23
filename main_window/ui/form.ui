@@ -78,7 +78,7 @@
             <string/>
            </property>
            <property name="pixmap">
-            <pixmap resource="resources.qrc">:/images/logo</pixmap>
+            <pixmap resource="resources.qrc">:/images/logos/logoandtexttransparentsmol.png</pixmap>
            </property>
            <property name="scaledContents">
             <bool>true</bool>
@@ -1331,7 +1331,7 @@
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap resource="resources.qrc">:/images/P&amp;I diagram</pixmap>
+        <pixmap resource="resources.qrc">:/images/logos/PID hybrid.jpg</pixmap>
        </property>
        <property name="scaledContents">
         <bool>true</bool>
@@ -1493,6 +1493,7 @@
   </customwidget>
  </customwidgets>
  <resources>
+  <include location="resources.qrc"/>
   <include location="resources.qrc"/>
  </resources>
  <connections/>

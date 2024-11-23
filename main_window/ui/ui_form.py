@@ -22,7 +22,8 @@ from PySide6.QtWidgets import (QApplication, QComboBox, QFormLayout, QGridLayout
     QVBoxLayout, QWidget)
 
 from pyqtgraph import PlotWidget
-import rc_resources
+from . import rc_resources
+from . import rc_resources
 
 class Ui_Widget(object):
     def setupUi(self, Widget):
@@ -56,7 +57,7 @@ class Ui_Widget(object):
         self.logoLabel.setSizePolicy(sizePolicy)
         self.logoLabel.setMinimumSize(QSize(127, 90))
         self.logoLabel.setMaximumSize(QSize(127, 90))
-        self.logoLabel.setPixmap(QPixmap(u":/images/logo"))
+        self.logoLabel.setPixmap(QPixmap(u":/images/logos/logoandtexttransparentsmol.png"))
         self.logoLabel.setScaledContents(True)
 
         self.controlLayout.addWidget(self.logoLabel)
@@ -732,7 +733,7 @@ class Ui_Widget(object):
         self.pid_image = QLabel(self.pAndIdTab)
         self.pid_image.setObjectName(u"pid_image")
         self.pid_image.setGeometry(QRect(0, 10, 1261, 691))
-        self.pid_image.setPixmap(QPixmap(u":/images/P&I diagram"))
+        self.pid_image.setPixmap(QPixmap(u":/images/logos/PID hybrid.jpg"))
         self.pid_image.setScaledContents(True)
         self.cv1State_tabpid = QLabel(self.pAndIdTab)
         self.cv1State_tabpid.setObjectName(u"cv1State_tabpid")

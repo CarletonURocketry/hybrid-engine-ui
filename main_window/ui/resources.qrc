@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>logos/logoandtexttransparentsmol.png</file>
+        <file>logos/PID hybrid.jpg</file>
+    </qresource>
+</RCC>
