@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from PySide6.QtWidgets import QWidget
 from PySide6.QtCore import QTimer
 from PySide6.QtNetwork import QUdpSocket, QAbstractSocket, QNetworkInterface
+from PySide6.QtSerialPort import QSerialPort, QSerialPortInfo
 
 from pyqtgraph import mkPen, PlotDataItem
 from PySide6.QtGui import QPixmap
@@ -44,6 +45,8 @@ class MainWindow(QWidget):
     # smaller modules containing related functionality
     from .udp import udp_connection_button_handler, join_multicast_group, \
         udp_receive_socket_data, udp_on_disconnected, udp_on_error
+    from .serial import serial_connection_button_handler, serial_receive, \
+        serial_on_error, serial_on_disconnect
     from .data_handlers import plot_point, filter_data, updateActState
     from .recording_and_playback import recording_toggle_button_handler, \
         open_file_button_handler, display_previous_data
@@ -84,7 +87,17 @@ class MainWindow(QWidget):
                 for entry in interface.addressEntries():
                     self.interfaces[entry.ip().toString()] = interface
                     self.ui.interfaceAddressDropdown.addItem(entry.ip().toString())
-        
+
+        # Serial port connection
+        self.dataSerialPort = QSerialPort(self)
+        self.dataSerialPort.readyRead.connect(self.serial_receive)
+
+        self.serialPorts = {}
+        self.ui.serialPortDropdown.addItem("Select serial port")
+        for port in QSerialPortInfo.availablePorts():
+            self.serialPorts[port.portName()] = port
+            self.ui.serialPortDropdown.addItem(port.portName())
+
         # Export to File button
         self.ui.exporter.clicked.connect(self.save_to_file)
 
@@ -156,6 +169,7 @@ class MainWindow(QWidget):
         # Button handlers
         #self.ui.pid_button.clicked.connect(self.show_new_window)
         self.ui.udpConnectButton.clicked.connect(self.udp_connection_button_handler)
+        self.ui.serialConnectButton.clicked.connect(self.serial_connection_button_handler)
 
         #Open new file heandler
         self.ui.openFileButton.clicked.connect(self.open_file_button_handler)
