@@ -23,7 +23,6 @@ from PySide6.QtWidgets import (QApplication, QComboBox, QFormLayout, QGridLayout
 
 from pyqtgraph import PlotWidget
 from . import rc_resources
-from . import rc_resources
 
 class Ui_Widget(object):
     def setupUi(self, Widget):
