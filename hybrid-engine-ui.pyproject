@@ -4,6 +4,7 @@
         "form.ui",
         "resources.qrc",
         "packet_spec.py",
-        "main.py"
+        "main.py",
+        "main_window/ui/resources.qrc"
     ]
 }
