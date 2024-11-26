@@ -90,12 +90,8 @@ def udp_receive_socket_data(self: "MainWindow"):
         header_bytes = data[:2]
         message_bytes = data[2:]
         header = packet_spec.parse_packet_header(header_bytes)
-        message = packet_spec.parse_packet_message(header, message_bytes)
-        if header.sub_type == packet_spec.TelemetryPacketSubType.ACT_STATE:
-            #Actuator state handling
-            self.updateActState(message)
-        else:
-            self.plot_point(header, message)
+        message = packet_spec.parse_packet_message(header, message_bytes)  
+        self.plot_point(header, message)
 
         #If we want to recording data
         if self.ui.recordingToggleButton.isChecked():

@@ -35,7 +35,12 @@ def plot_point(self: "MainWindow", header: packet_spec.PacketHeader, message: pa
                 case packet_spec.TelemetryPacketSubType.ARMING_STATE:
                     pass
                 case packet_spec.TelemetryPacketSubType.ACT_STATE:
-                    pass
+                    match message.state:
+                        case packet_spec.ActuatorState.OFF:
+                            self.valves.turnOffValve(message.id)
+                        case packet_spec.ActuatorState.ON:
+                            self.valves.turnOnValve(message.id)
+
                 case packet_spec.TelemetryPacketSubType.WARNING:
                     pass
 
@@ -50,109 +55,115 @@ def filter_data(self: "MainWindow"):
 #UI updater, when actuator state messages are sent they will be updated with this function
 def updateActState(self: "MainWindow", message: packet_spec.PacketMessage):
     # Huge match case to match each valve id to a label in the UI
-    match message.id:
-        case 0:
-            if(message.state == packet_spec.ActuatorState.OFF):
-                self.ui.cv1State.setText("CLOSED")
-                self.ui.cv1State.setStyleSheet("background-color: rgb(255, 80, 80)")
-                self.ui.cv1State_tabpid.setStyleSheet("background-color: rgb(255, 80, 80)")
-                self.ui.cv1State_tabpid.setText("CLOSED")
-            elif(message.state == packet_spec.ActuatorState.ON):
-                self.ui.cv1State.setText("OPEN")
-                self.ui.cv1State.setStyleSheet("background-color: rgb(80, 255, 80)")
-                self.ui.cv1State_tabpid.setStyleSheet("background-color: rgb(80, 255, 80)")
-                self.ui.cv1State_tabpid.setText("OPEN")
-        case 1:
-            if(message.state == packet_spec.ActuatorState.OFF):
-                self.ui.xv1State.setText("CLOSED")
-                self.ui.xv1State.setStyleSheet("background-color: rgb(255, 80, 80)")
-                self.ui.xv1State_tabpid.setStyleSheet("background-color: rgb(255, 80, 80)")
-                self.ui.xv1State_tabpid.setText("CLOSED")
-            elif(message.state == packet_spec.ActuatorState.ON):
-                self.ui.xv1State.setText("OPEN")
-                self.ui.xv1State.setStyleSheet("background-color: rgb(80, 255, 80)")
-                self.ui.xv1State_tabpid.setStyleSheet("background-color: rgb(80, 255, 80)")
-                self.ui.xv1State_tabpid.setText("OPEN")
-        case 2:
-            if(message.state == packet_spec.ActuatorState.OFF):
-                self.ui.xv2State.setText("CLOSED")
-                self.ui.xv2State.setStyleSheet("background-color: rgb(255, 80, 80)")
-                self.ui.xv2State_tabpid.setStyleSheet("background-color: rgb(255, 80, 80)")
-                self.ui.xv2State_tabpid.setText("CLOSED")
-            elif(message.state == packet_spec.ActuatorState.ON):
-                self.ui.xv2State.setText("OPEN")
-                self.ui.xv2State.setStyleSheet("background-color: rgb(80, 255, 80)")
-                self.ui.xv2State_tabpid.setStyleSheet("background-color: rgb(80, 255, 80)")
-                self.ui.xv2State_tabpid.setText("OPEN")
-        case 3:
-            if(message.state == packet_spec.ActuatorState.OFF):
-                self.ui.xv3State.setText("CLOSED")
-                self.ui.xv3State.setStyleSheet("background-color: rgb(255, 80, 80)")
-                self.ui.xv3State_tabpid.setStyleSheet("background-color: rgb(255, 80, 80)")
-                self.ui.xv3State_tabpid.setText("CLOSED")
-            elif(message.state == packet_spec.ActuatorState.ON):
-                self.ui.xv3State.setText("OPEN")
-                self.ui.xv3State.setStyleSheet("background-color: rgb(80, 255, 80)")
-                self.ui.xv3State_tabpid.setStyleSheet("background-color: rgb(80, 255, 80)")
-                self.ui.xv3State_tabpid.setText("OPEN")
-        case 4:
-            if(message.state == packet_spec.ActuatorState.OFF):
-                self.ui.xv4State.setText("CLOSED")
-                self.ui.xv4State.setStyleSheet("background-color: rgb(255, 80, 80)")
-                self.ui.xv4State_tabpid.setStyleSheet("background-color: rgb(255, 80, 80)")
-                self.ui.xv4State_tabpid.setText("CLOSED")
-            elif(message.state == packet_spec.ActuatorState.ON):
-                self.ui.xv4State.setText("OPEN")
-                self.ui.xv4State.setStyleSheet("background-color: rgb(80, 255, 80)")
-                self.ui.xv4State_tabpid.setStyleSheet("background-color: rgb(80, 255, 80)")
-                self.ui.xv4State_tabpid.setText("OPEN")
-        case 5:
-            if(message.state == packet_spec.ActuatorState.OFF):
-                self.ui.xv5State.setText("CLOSED")
-            elif(message.state == packet_spec.ActuatorState.ON):
-                self.ui.xv5State.setText("OPEN")
-        case 6:
-            if(message.state == packet_spec.ActuatorState.OFF):
-                self.ui.xv6State.setText("CLOSED")
-            elif(message.state == packet_spec.ActuatorState.ON):
-                self.ui.xv6State.setText("OPEN")
-        case 7:
-            if(message.state == packet_spec.ActuatorState.OFF):
-                self.ui.xv7State.setText("CLOSED")
-            elif(message.state == packet_spec.ActuatorState.ON):
-                self.ui.xv7State.setText("OPEN")
-        case 8:
-            if(message.state == packet_spec.ActuatorState.OFF):
-                self.ui.xv8State.setText("CLOSED")
-            elif(message.state == packet_spec.ActuatorState.ON):
-                self.ui.xv8State.setText("OPEN")
-        case 9:
-            if(message.state == packet_spec.ActuatorState.OFF):
-                self.ui.xv9State.setText("CLOSED")
-            elif(message.state == packet_spec.ActuatorState.ON):
-                self.ui.xv9State.setText("OPEN")
-        case 10:
-            if(message.state == packet_spec.ActuatorState.OFF):
-                self.ui.xv10State.setText("CLOSED")
-            elif(message.state == packet_spec.ActuatorState.ON):
-                self.ui.xv10State.setText("OPEN")
-        case 11:
-            if(message.state == packet_spec.ActuatorState.OFF):
-                self.ui.xv11State.setText("CLOSED")
-            elif(message.state == packet_spec.ActuatorState.ON):
-                self.ui.xv11State.setText("OPEN")
-        case 12:
-            if(message.state == packet_spec.ActuatorState.OFF):
-                self.ui.xv12State.setText("CLOSED")
-            elif(message.state == packet_spec.ActuatorState.ON):
-                self.ui.xv12State.setText("OPEN")
-        case 13:
-            if(message.state == packet_spec.ActuatorState.OFF):
-                self.ui.quickDisconnectState.setText("CLOSED")
-            elif(message.state == packet_spec.ActuatorState.ON):
-                self.ui.quickDisconnectState.setText("OPEN")
-        case 14:
-            if(message.state == packet_spec.ActuatorState.OFF):
-                self.ui.igniterState.setText("CLOSED")
-            elif(message.state == packet_spec.ActuatorState.ON):
-                self.ui.igniterState.setText("OPEN")
+    match message.state:
+        case packet_spec.ActuatorState.OFF:
+            self.valves.turnOffValve(message.id)
+        case packet_spec.ActuatorState.ON:
+            self.valves.turnOnValve(message.id)
+    # match message.id:
+    #     self.valves.turnonValve(message.id)
+    #     case 0:
+    #         if(message.state == packet_spec.ActuatorState.OFF):
+    #             self.ui.cv1State.setText("CLOSED")
+    #             self.ui.cv1State.setStyleSheet("background-color: rgb(255, 80, 80)")
+    #             self.ui.cv1State_tabpid.setStyleSheet("background-color: rgb(255, 80, 80)")
+    #             self.ui.cv1State_tabpid.setText("CLOSED")
+    #         elif(message.state == packet_spec.ActuatorState.ON):
+    #             self.ui.cv1State.setText("OPEN")
+    #             self.ui.cv1State.setStyleSheet("background-color: rgb(80, 255, 80)")
+    #             self.ui.cv1State_tabpid.setStyleSheet("background-color: rgb(80, 255, 80)")
+    #             self.ui.cv1State_tabpid.setText("OPEN")
+    #     case 1:
+    #         if(message.state == packet_spec.ActuatorState.OFF):
+    #             self.ui.xv1State.setText("CLOSED")
+    #             self.ui.xv1State.setStyleSheet("background-color: rgb(255, 80, 80)")
+    #             self.ui.xv1State_tabpid.setStyleSheet("background-color: rgb(255, 80, 80)")
+    #             self.ui.xv1State_tabpid.setText("CLOSED")
+    #         elif(message.state == packet_spec.ActuatorState.ON):
+    #             self.ui.xv1State.setText("OPEN")
+    #             self.ui.xv1State.setStyleSheet("background-color: rgb(80, 255, 80)")
+    #             self.ui.xv1State_tabpid.setStyleSheet("background-color: rgb(80, 255, 80)")
+    #             self.ui.xv1State_tabpid.setText("OPEN")
+    #     case 2:
+    #         if(message.state == packet_spec.ActuatorState.OFF):
+    #             self.ui.xv2State.setText("CLOSED")
+    #             self.ui.xv2State.setStyleSheet("background-color: rgb(255, 80, 80)")
+    #             self.ui.xv2State_tabpid.setStyleSheet("background-color: rgb(255, 80, 80)")
+    #             self.ui.xv2State_tabpid.setText("CLOSED")
+    #         elif(message.state == packet_spec.ActuatorState.ON):
+    #             self.ui.xv2State.setText("OPEN")
+    #             self.ui.xv2State.setStyleSheet("background-color: rgb(80, 255, 80)")
+    #             self.ui.xv2State_tabpid.setStyleSheet("background-color: rgb(80, 255, 80)")
+    #             self.ui.xv2State_tabpid.setText("OPEN")
+    #     case 3:
+    #         if(message.state == packet_spec.ActuatorState.OFF):
+    #             self.ui.xv3State.setText("CLOSED")
+    #             self.ui.xv3State.setStyleSheet("background-color: rgb(255, 80, 80)")
+    #             self.ui.xv3State_tabpid.setStyleSheet("background-color: rgb(255, 80, 80)")
+    #             self.ui.xv3State_tabpid.setText("CLOSED")
+    #         elif(message.state == packet_spec.ActuatorState.ON):
+    #             self.ui.xv3State.setText("OPEN")
+    #             self.ui.xv3State.setStyleSheet("background-color: rgb(80, 255, 80)")
+    #             self.ui.xv3State_tabpid.setStyleSheet("background-color: rgb(80, 255, 80)")
+    #             self.ui.xv3State_tabpid.setText("OPEN")
+    #     case 4:
+    #         if(message.state == packet_spec.ActuatorState.OFF):
+    #             self.ui.xv4State.setText("CLOSED")
+    #             self.ui.xv4State.setStyleSheet("background-color: rgb(255, 80, 80)")
+    #             self.ui.xv4State_tabpid.setStyleSheet("background-color: rgb(255, 80, 80)")
+    #             self.ui.xv4State_tabpid.setText("CLOSED")
+    #         elif(message.state == packet_spec.ActuatorState.ON):
+    #             self.ui.xv4State.setText("OPEN")
+    #             self.ui.xv4State.setStyleSheet("background-color: rgb(80, 255, 80)")
+    #             self.ui.xv4State_tabpid.setStyleSheet("background-color: rgb(80, 255, 80)")
+    #             self.ui.xv4State_tabpid.setText("OPEN")
+    #     case 5:
+    #         if(message.state == packet_spec.ActuatorState.OFF):
+    #             self.ui.xv5State.setText("CLOSED")
+    #         elif(message.state == packet_spec.ActuatorState.ON):
+    #             self.ui.xv5State.setText("OPEN")
+    #     case 6:
+    #         if(message.state == packet_spec.ActuatorState.OFF):
+    #             self.ui.xv6State.setText("CLOSED")
+    #         elif(message.state == packet_spec.ActuatorState.ON):
+    #             self.ui.xv6State.setText("OPEN")
+    #     case 7:
+    #         if(message.state == packet_spec.ActuatorState.OFF):
+    #             self.ui.xv7State.setText("CLOSED")
+    #         elif(message.state == packet_spec.ActuatorState.ON):
+    #             self.ui.xv7State.setText("OPEN")
+    #     case 8:
+    #         if(message.state == packet_spec.ActuatorState.OFF):
+    #             self.ui.xv8State.setText("CLOSED")
+    #         elif(message.state == packet_spec.ActuatorState.ON):
+    #             self.ui.xv8State.setText("OPEN")
+    #     case 9:
+    #         if(message.state == packet_spec.ActuatorState.OFF):
+    #             self.ui.xv9State.setText("CLOSED")
+    #         elif(message.state == packet_spec.ActuatorState.ON):
+    #             self.ui.xv9State.setText("OPEN")
+    #     case 10:
+    #         if(message.state == packet_spec.ActuatorState.OFF):
+    #             self.ui.xv10State.setText("CLOSED")
+    #         elif(message.state == packet_spec.ActuatorState.ON):
+    #             self.ui.xv10State.setText("OPEN")
+    #     case 11:
+    #         if(message.state == packet_spec.ActuatorState.OFF):
+    #             self.ui.xv11State.setText("CLOSED")
+    #         elif(message.state == packet_spec.ActuatorState.ON):
+    #             self.ui.xv11State.setText("OPEN")
+    #     case 12:
+    #         if(message.state == packet_spec.ActuatorState.OFF):
+    #             self.ui.xv12State.setText("CLOSED")
+    #         elif(message.state == packet_spec.ActuatorState.ON):
+    #             self.ui.xv12State.setText("OPEN")
+    #     case 13:
+    #         if(message.state == packet_spec.ActuatorState.OFF):
+    #             self.ui.quickDisconnectState.setText("CLOSED")
+    #         elif(message.state == packet_spec.ActuatorState.ON):
+    #             self.ui.quickDisconnectState.setText("OPEN")
+    #     case 14:
+    #         if(message.state == packet_spec.ActuatorState.OFF):
+    #             self.ui.igniterState.setText("CLOSED")
+    #         elif(message.state == packet_spec.ActuatorState.ON):
+    #             self.ui.igniterState.setText("OPEN")
