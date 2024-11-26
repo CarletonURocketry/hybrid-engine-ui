@@ -1,0 +1,12 @@
+{ 
+  "multicast_options":{
+    "address": "239.100.110.210",
+    "port": "50002"
+  },
+  "thresholds": {
+    "pressure": [100, 1000],
+    "temperature": [],
+    "tank_mass": [],
+    "engine_thrust": []
+  }
+}

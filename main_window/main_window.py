@@ -1,10 +1,10 @@
 # This Python file uses the following encoding: utf-8
 from dataclasses import dataclass
+import json
 
 from PySide6.QtWidgets import QWidget
 from PySide6.QtCore import QTimer
 from PySide6.QtNetwork import QUdpSocket, QAbstractSocket, QNetworkInterface
-
 from pyqtgraph import mkPen, PlotDataItem
 from PySide6.QtGui import QPixmap
 import numpy as np
@@ -66,6 +66,20 @@ class MainWindow(QWidget):
         self.t4_points = np.empty((0,2))
         self.tank_mass_points = np.empty((0,2))
         self.engine_thrust_points = np.empty((0,2))
+
+        # Load config options
+        self.config = None
+        try:
+            with open("config.json") as config:
+                self.config = json.load(config)
+                self.ui.udpIpAddressInput.setText(self.config["multicast_options"]["address"])
+                self.ui.udpPortInput.setText(self.config["multicast_options"]["port"])
+                self.ui.pressureThresholdList.addItems([str(marker) for marker in self.config["thresholds"]["pressure"]])
+                self.ui.pressureThresholdList.addItems([str(marker) for marker in self.config["thresholds"]["temperature"]])
+                self.ui.pressureThresholdList.addItems([str(marker) for marker in self.config["thresholds"]["tank_mass"]])
+                self.ui.pressureThresholdList.addItems([str(marker) for marker in self.config["thresholds"]["engine_thrust"]])
+        except FileNotFoundError:
+            self.ui.logOutput.append("config.json not found")
 
         # Plot data
         self.plots = {}
