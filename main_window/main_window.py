@@ -48,6 +48,8 @@ class MainWindow(QWidget):
     from .recording_and_playback import recording_toggle_button_handler, \
         open_file_button_handler, display_previous_data
     from .logging import save_to_file
+    from .config import load_config, save_config, add_pressure_threshold_handler, \
+    add_temperature_threshold_handler, add_tank_mass_threshold_handler, add_engine_thrust_threshold_handler
 
 
     def __init__(self, parent=None):
@@ -71,13 +73,7 @@ class MainWindow(QWidget):
         self.config = None
         try:
             with open("config.json") as config:
-                self.config = json.load(config)
-                self.ui.udpIpAddressInput.setText(self.config["multicast_options"]["address"])
-                self.ui.udpPortInput.setText(self.config["multicast_options"]["port"])
-                self.ui.pressureThresholdList.addItems([str(marker) for marker in self.config["thresholds"]["pressure"]])
-                self.ui.temperatureThresholdList.addItems([str(marker) for marker in self.config["thresholds"]["temperature"]])
-                self.ui.tankMassThresholdList.addItems([str(marker) for marker in self.config["thresholds"]["tank_mass"]])
-                self.ui.engineThrustThresholdList.addItems([str(marker) for marker in self.config["thresholds"]["engine_thrust"]])
+                self.load_config(config)
         except FileNotFoundError:
             self.ui.logOutput.append("config.json not found")
 
@@ -185,6 +181,12 @@ class MainWindow(QWidget):
         #Connect toggle button for recording data
         self.ui.recordingToggleButton.toggled.connect(self.recording_toggle_button_handler)
         self.file_out = None
+
+        # Plot threshold handlers
+        self.ui.pressureThresholdButton.clicked.connect(self.add_pressure_threshold_handler)
+        self.ui.temperatureThresholdButton.clicked.connect(self.add_temperature_threshold_handler)
+        self.ui.tankMassThresholdButton.clicked.connect(self.add_tank_mass_threshold_handler)
+        self.ui.engineThrustThresholdButton.clicked.connect(self.add_engine_thrust_threshold_handler)
 
     # Handles when the window is closed, have to make sure to disconnect the TCP socket
     def closeEvent(self, event):
