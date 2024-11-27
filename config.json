@@ -4,9 +4,9 @@
     "port": "50002"
   },
   "thresholds": {
-    "pressure": [100, 1000],
-    "temperature": [],
-    "tank_mass": [],
+    "pressure": [830, 1000],
+    "temperature": [20],
+    "tank_mass": [3.5],
     "engine_thrust": []
   }
 }
