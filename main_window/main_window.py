@@ -5,7 +5,7 @@ import json
 from PySide6.QtWidgets import QWidget
 from PySide6.QtCore import QTimer
 from PySide6.QtNetwork import QUdpSocket, QAbstractSocket, QNetworkInterface
-from pyqtgraph import mkPen, PlotDataItem
+from pyqtgraph import mkPen, PlotDataItem, InfiniteLine
 from PySide6.QtGui import QPixmap
 import numpy as np
 
@@ -75,9 +75,9 @@ class MainWindow(QWidget):
                 self.ui.udpIpAddressInput.setText(self.config["multicast_options"]["address"])
                 self.ui.udpPortInput.setText(self.config["multicast_options"]["port"])
                 self.ui.pressureThresholdList.addItems([str(marker) for marker in self.config["thresholds"]["pressure"]])
-                self.ui.pressureThresholdList.addItems([str(marker) for marker in self.config["thresholds"]["temperature"]])
-                self.ui.pressureThresholdList.addItems([str(marker) for marker in self.config["thresholds"]["tank_mass"]])
-                self.ui.pressureThresholdList.addItems([str(marker) for marker in self.config["thresholds"]["engine_thrust"]])
+                self.ui.temperatureThresholdList.addItems([str(marker) for marker in self.config["thresholds"]["temperature"]])
+                self.ui.tankMassThresholdList.addItems([str(marker) for marker in self.config["thresholds"]["tank_mass"]])
+                self.ui.engineThrustThresholdList.addItems([str(marker) for marker in self.config["thresholds"]["engine_thrust"]])
         except FileNotFoundError:
             self.ui.logOutput.append("config.json not found")
 
@@ -125,6 +125,8 @@ class MainWindow(QWidget):
         self.plots["p2"] = PlotInfo(self.p2_points, self.ui.pressurePlot.plot(self.p2_points, pen=blue_pen, name="p2"))
         self.plots["p3"] = PlotInfo(self.p3_points, self.ui.pressurePlot.plot(self.p3_points, pen=green_pen, name="p3"))
         self.plots["p4"] = PlotInfo(self.p4_points, self.ui.pressurePlot.plot(self.p4_points, pen=pink_pen, name="p4"))
+        for marker in [self.ui.pressureThresholdList.item(x) for x in range(self.ui.pressureThresholdList.count())]:
+            self.ui.pressurePlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=black_pen))
 
         self.ui.temperaturePlot.addLegend(offset=(0,0), colCount=4, labelTextColor="black")
         self.ui.temperaturePlot.setTitle("Temperature", color="black")
@@ -138,6 +140,8 @@ class MainWindow(QWidget):
         self.plots["t2"] = PlotInfo(self.t2_points, self.ui.temperaturePlot.plot(self.t2_points, pen=blue_pen, name="t2"))
         self.plots["t3"] = PlotInfo(self.t3_points, self.ui.temperaturePlot.plot(self.t3_points, pen=green_pen, name="t3"))
         self.plots["t4"] = PlotInfo(self.t4_points, self.ui.temperaturePlot.plot(self.t4_points, pen=pink_pen, name="t4"))
+        for marker in [self.ui.temperatureThresholdList.item(x) for x in range(self.ui.temperatureThresholdList.count())]:
+            self.ui.temperaturePlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=black_pen))
 
         self.ui.tankMassPlot.addLegend()
         self.ui.tankMassPlot.setTitle("Tank Mass", color="black")
@@ -148,6 +152,8 @@ class MainWindow(QWidget):
         self.ui.tankMassPlot.getAxis("bottom").setPen(black_pen)
         self.ui.tankMassPlot.getAxis("bottom").setTextPen(black_pen)
         self.plots["tank_mass"] = PlotInfo(self.tank_mass_points, self.ui.tankMassPlot.plot(self.tank_mass_points, pen=red_pen))
+        for marker in [self.ui.tankMassThresholdList.item(x) for x in range(self.ui.tankMassThresholdList.count())]:
+            self.ui.tankMassPlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=black_pen))
 
         self.ui.engineThrustPlot.addLegend()
         self.ui.engineThrustPlot.setTitle("Engine Thrust", color="black")
@@ -158,6 +164,8 @@ class MainWindow(QWidget):
         self.ui.engineThrustPlot.getAxis("bottom").setPen(black_pen)
         self.ui.engineThrustPlot.getAxis("bottom").setTextPen(black_pen)
         self.plots["engine_thrust"] = PlotInfo(self.engine_thrust_points, self.ui.engineThrustPlot.plot(self.engine_thrust_points, pen=red_pen))
+        for marker in [self.ui.engineThrustThresholdList.item(x) for x in range(self.ui.engineThrustThresholdList.count())]:
+            self.ui.engineThrustPlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=black_pen))
 
         #QTimer to help us to filter the data
         self.timer_time = 25
