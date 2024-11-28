@@ -24,7 +24,11 @@ def load_config(self: "MainWindow", config):
     self.ui.engineThrustThresholdList.addItems([str(marker) for marker in self.config["thresholds"]["engine_thrust"]])
 
 def save_config(self: "MainWindow"):
-    pass
+    new_config = {}
+    new_config["multicast"]["address"] = self.ui.udpIpAddressInput.text()
+    new_config["multicast"]["port"] = self.ui.udpPortInput.text()
+    new_config["thresholds"]["pressure"] = [int(marker.text()) for marker in self.ui.pressureThresholdList.items()]
+    print(new_config)
 
 def add_pressure_threshold_handler(self: "MainWindow"):
     new_marker = self.ui.pressureThresholdInput.text()
