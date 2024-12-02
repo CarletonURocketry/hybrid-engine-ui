@@ -717,10 +717,10 @@ class Ui_Widget(object):
 
         self.formLayout.setLayout(4, QFormLayout.SpanningRole, self.gridLayout)
 
-        self.pushButton_5 = QPushButton(self.configurationTab)
-        self.pushButton_5.setObjectName(u"pushButton_5")
+        self.saveConfigButton = QPushButton(self.configurationTab)
+        self.saveConfigButton.setObjectName(u"saveConfigButton")
 
-        self.formLayout.setWidget(6, QFormLayout.SpanningRole, self.pushButton_5)
+        self.formLayout.setWidget(6, QFormLayout.SpanningRole, self.saveConfigButton)
 
         self.verticalSpacer_3 = QSpacerItem(20, 10, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
 
@@ -859,7 +859,7 @@ class Ui_Widget(object):
         self.tankMassThresholdLabel.setText(QCoreApplication.translate("Widget", u"Tank Mass", None))
         self.tankMassThresholdButton.setText(QCoreApplication.translate("Widget", u"Add threshold marker", None))
         self.graphThresholdLabel.setText(QCoreApplication.translate("Widget", u"Graph threshold lines", None))
-        self.pushButton_5.setText(QCoreApplication.translate("Widget", u"Save configuration", None))
+        self.saveConfigButton.setText(QCoreApplication.translate("Widget", u"Save configuration", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.configurationTab), QCoreApplication.translate("Widget", u"Configuration", None))
         self.pid_image.setText("")
         self.cv1State_tabpid.setText(QCoreApplication.translate("Widget", u"CLOSED", None))

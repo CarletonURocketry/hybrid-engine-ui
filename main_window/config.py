@@ -25,10 +25,16 @@ def load_config(self: "MainWindow", config):
 
 def save_config(self: "MainWindow"):
     new_config = {}
+    new_config["multicast"] = {}
     new_config["multicast"]["address"] = self.ui.udpIpAddressInput.text()
     new_config["multicast"]["port"] = self.ui.udpPortInput.text()
-    new_config["thresholds"]["pressure"] = [int(marker.text()) for marker in self.ui.pressureThresholdList.items()]
-    print(new_config)
+    new_config["thresholds"] = {}
+    new_config["thresholds"]["pressure"] = [float(self.ui.pressureThresholdList.item(x).text()) for x in range(self.ui.pressureThresholdList.count())]
+    new_config["thresholds"]["temperature"] = [float(self.ui.temperatureThresholdList.item(x).text()) for x in range(self.ui.temperatureThresholdList.count())]
+    new_config["thresholds"]["tank_mass"] = [float(self.ui.tankMassThresholdList.item(x).text()) for x in range(self.ui.tankMassThresholdList.count())]
+    new_config["thresholds"]["engine_thrust"] = [float(self.ui.engineThrustThresholdList.item(x).text()) for x in range(self.ui.engineThrustThresholdList.count())]
+    with open('config.json', 'w') as config_file:
+        json.dump(new_config, config_file, indent=4)
 
 def add_pressure_threshold_handler(self: "MainWindow"):
     new_marker = self.ui.pressureThresholdInput.text()

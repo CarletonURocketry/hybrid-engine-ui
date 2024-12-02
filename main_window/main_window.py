@@ -187,6 +187,7 @@ class MainWindow(QWidget):
         self.ui.temperatureThresholdButton.clicked.connect(self.add_temperature_threshold_handler)
         self.ui.tankMassThresholdButton.clicked.connect(self.add_tank_mass_threshold_handler)
         self.ui.engineThrustThresholdButton.clicked.connect(self.add_engine_thrust_threshold_handler)
+        self.ui.saveConfigButton.clicked.connect(self.save_config)
 
     # Handles when the window is closed, have to make sure to disconnect the TCP socket
     def closeEvent(self, event):
