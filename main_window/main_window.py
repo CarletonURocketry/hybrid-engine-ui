@@ -22,24 +22,6 @@ class PlotInfo:
     points: np.array
     data_line: PlotDataItem
 
-class Actuators:
-    def __init__(self, parentGrid):
-        valves = {}
-        self.valves = {}        
-        valves[0] = TelemetryLabel("Fire Valve", "CLOSED", 0, 2, parentGrid)
-        valves[13] = TelemetryLabel("Quick Disconnect", "CLOSED", 0, 0, parentGrid)
-        valves[14] =  TelemetryLabel("Igniter", "CLOSED", 0, 4, parentGrid)
-        for i in range(1, 13):
-            #There will be three label at each row, therefore divide by three, add 1 to skip the first row of valves
-            #Row timed 2 because there will be two label for state and for the name
-            valves[i] = TelemetryLabel("XV-" + str(i), "CLOSED", ((i - 1)// 3) + 1 , ((i - 1) % 3) * 2, parentGrid)
-
-    def turnOnValve(id):
-        valves[id].changeState("OPEN")
-
-    def turnOffValve(id):
-        valves[id].changeState["CLOSED"]   
-
 class TelemetryLabel:
     def __init__(self, name, state, row, column, parentGrid):
         self.row = row
@@ -48,7 +30,9 @@ class TelemetryLabel:
         self.qState = QLabel(state)
         parentGrid.addWidget(self.qName, row, column)
         parentGrid.addWidget(self.qState, row, column + 1)
-    
+        self.qState.setStyleSheet("background-color: rgb(255, 80, 80); font-weight: bold;")
+        # self.qState.setStyleSheet("font-weight: bold")
+
     def changeState(self, newState):
         self.qState.setText(newState)
 
@@ -74,7 +58,7 @@ class MainWindow(QWidget):
     # smaller modules containing related functionality
     from .udp import udp_connection_button_handler, join_multicast_group, \
         udp_receive_socket_data, udp_on_disconnected, udp_on_error
-    from .data_handlers import plot_point, filter_data, updateActState
+    from .data_handlers import plot_point, filter_data, update_act_state
     from .recording_and_playback import recording_toggle_button_handler, \
         open_file_button_handler, display_previous_data
     from .logging import save_to_file
@@ -193,7 +177,7 @@ class MainWindow(QWidget):
         self.ui.recordingToggleButton.toggled.connect(self.recording_toggle_button_handler)
         self.file_out = None
 
-        self.actuators = Actuators(self.ui.valveGrid) 
+        self.init_actuator_valve_label()
 
     # Handles when the window is closed, have to make sure to disconnect the TCP socket
     def closeEvent(self, event):
@@ -206,3 +190,13 @@ class MainWindow(QWidget):
     def show_new_window(self, checked):
         self.w = pid_window()
         self.w.show()
+    
+    def init_actuator_valve_label(self): 
+        self.valves = {}        
+        self.valves[0] = TelemetryLabel("Fire Valve", "CLOSED", 0, 2, self.ui.valveGrid)
+        self.valves[13] = TelemetryLabel("Quick Disconnect", "CLOSED", 0, 0, self.ui.valveGrid)
+        self.valves[14] =  TelemetryLabel("Igniter", "CLOSED", 0, 4, self.ui.valveGrid)
+        for i in range(1, 13):
+            #There will be three label at each row, therefore divide by three, add 1 to skip the first row of valves
+            #Row timed 2 because there will be two label for state and for the name
+            self.valves[i] = TelemetryLabel("XV-" + str(i), "CLOSED", ((i - 1)// 3) + 1 , ((i - 1) % 3) * 2, self.ui.valveGrid)

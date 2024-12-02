@@ -12,6 +12,29 @@ import packet_spec
 if TYPE_CHECKING:
     from main_window import MainWindow
 
+def process_data(self: "MainWIndow", header: packet_spec.PacketHeader, message: packet_spec.PacketMessage):
+    match header.sub_type:
+        case packet_spec.TelemetryPacketSubType.TEMPERATURE \
+        | packet_spec.TelemetryPacketSubType.PRESSURE \
+        | packet_spec.TelemetryPacketSubType.MASS:
+            self.plot_point(header, message)
+        case packet_spec.TelemetryPacketSubType.ACT_STATE:
+            self.update_act_state(message)
+        case _:
+            pass  
+def turnOnValve(self: "MainWindow", id: int):
+    self.valves[id].changeState("OPEN")
+
+def turnOffValve(self: "MainWindow", id: int):
+    self.valves[id].changeState["CLOSED"] 
+
+def update_act_state(self: "MainWindow", message: packet_spec.PacketMessage):
+    match message.state:
+        case packet_spec.ActuatorState.OFF:
+            self.turnOffValve(message.id)
+        case packet_spec.ActuatorState.ON:
+            self.turnOnValve(message.id)
+
 def plot_point(self: "MainWindow", header: packet_spec.PacketHeader, message: packet_spec.PacketMessage):
     plots = self.plots
     match header.type:
@@ -35,12 +58,7 @@ def plot_point(self: "MainWindow", header: packet_spec.PacketHeader, message: pa
                 case packet_spec.TelemetryPacketSubType.ARMING_STATE:
                     pass
                 case packet_spec.TelemetryPacketSubType.ACT_STATE:
-                    match message.state:
-                        case packet_spec.ActuatorState.OFF:
-                            self.valves.turnOffValve(message.id)
-                        case packet_spec.ActuatorState.ON:
-                            self.valves.turnOnValve(message.id)
-
+                    pass 
                 case packet_spec.TelemetryPacketSubType.WARNING:
                     pass
 
