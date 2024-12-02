@@ -25,9 +25,9 @@ def load_config(self: "MainWindow", config):
 
 def save_config(self: "MainWindow"):
     new_config = {}
-    new_config["multicast"] = {}
-    new_config["multicast"]["address"] = self.ui.udpIpAddressInput.text()
-    new_config["multicast"]["port"] = self.ui.udpPortInput.text()
+    new_config["multicast_options"] = {}
+    new_config["multicast_options"]["address"] = self.ui.udpIpAddressInput.text()
+    new_config["multicast_options"]["port"] = self.ui.udpPortInput.text()
     new_config["thresholds"] = {}
     new_config["thresholds"]["pressure"] = [float(self.ui.pressureThresholdList.item(x).text()) for x in range(self.ui.pressureThresholdList.count())]
     new_config["thresholds"]["temperature"] = [float(self.ui.temperatureThresholdList.item(x).text()) for x in range(self.ui.temperatureThresholdList.count())]
@@ -38,24 +38,24 @@ def save_config(self: "MainWindow"):
 
 def add_pressure_threshold_handler(self: "MainWindow"):
     new_marker = self.ui.pressureThresholdInput.text()
-    self.ui.pressureThresholdList.addItem(str(new_marker))
+    self.ui.pressureThresholdList.addItem(str(float(new_marker)))
     self.ui.pressurePlot.addItem(InfiniteLine(float(new_marker), angle=0, pen=black_pen))
     self.ui.pressureThresholdInput.setText("")
     
 def add_temperature_threshold_handler(self: "MainWindow"):
     new_marker = self.ui.temperatureThresholdInput.text()
-    self.ui.temperatureThresholdList.addItem(str(new_marker))
+    self.ui.temperatureThresholdList.addItem(str(float(new_marker)))
     self.ui.temperaturePlot.addItem(InfiniteLine(float(new_marker), angle=0, pen=black_pen))
     self.ui.temperatureThresholdInput.setText("")
 
 def add_tank_mass_threshold_handler(self: "MainWindow"):
     new_marker = self.ui.tankMassThresholdInput.text()
-    self.ui.tankMassThresholdList.addItem(str(new_marker))
+    self.ui.tankMassThresholdList.addItem(str(float(new_marker)))
     self.ui.tankMassPlot.addItem(InfiniteLine(float(new_marker), angle=0, pen=black_pen))
     self.ui.tankMassThresholdInput.setText("")
 
 def add_engine_thrust_threshold_handler(self: "MainWindow"):
     new_marker = self.ui.engineThrustThresholdInput.text()
-    self.ui.engineThrustThresholdList.addItem(str(new_marker))
+    self.ui.engineThrustThresholdList.addItem(str(float(new_marker)))
     self.ui.engineThrustPlot.addItem(InfiniteLine(float(new_marker), angle=0, pen=black_pen))
     self.ui.engineThrustThresholdInput.setText("")
