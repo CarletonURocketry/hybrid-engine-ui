@@ -1,11 +1,11 @@
 # This Python file uses the following encoding: utf-8
 from dataclasses import dataclass
+import json
 
 from PySide6.QtWidgets import QWidget
 from PySide6.QtCore import QTimer
 from PySide6.QtNetwork import QUdpSocket, QAbstractSocket, QNetworkInterface
-
-from pyqtgraph import mkPen, PlotDataItem
+from pyqtgraph import mkPen, PlotDataItem, InfiniteLine
 from PySide6.QtGui import QPixmap
 import numpy as np
 
@@ -48,6 +48,8 @@ class MainWindow(QWidget):
     from .recording_and_playback import recording_toggle_button_handler, \
         open_file_button_handler, display_previous_data
     from .logging import save_to_file
+    from .config import load_config, save_config, add_pressure_threshold_handler, \
+    add_temperature_threshold_handler, add_tank_mass_threshold_handler, add_engine_thrust_threshold_handler
 
 
     def __init__(self, parent=None):
@@ -66,6 +68,14 @@ class MainWindow(QWidget):
         self.t4_points = np.empty((0,2))
         self.tank_mass_points = np.empty((0,2))
         self.engine_thrust_points = np.empty((0,2))
+
+        # Load config options
+        self.config = None
+        try:
+            with open("config.json") as config:
+                self.load_config(config)
+        except FileNotFoundError:
+            self.ui.logOutput.append("config.json not found")
 
         # Plot data
         self.plots = {}
@@ -111,6 +121,8 @@ class MainWindow(QWidget):
         self.plots["p2"] = PlotInfo(self.p2_points, self.ui.pressurePlot.plot(self.p2_points, pen=blue_pen, name="p2"))
         self.plots["p3"] = PlotInfo(self.p3_points, self.ui.pressurePlot.plot(self.p3_points, pen=green_pen, name="p3"))
         self.plots["p4"] = PlotInfo(self.p4_points, self.ui.pressurePlot.plot(self.p4_points, pen=pink_pen, name="p4"))
+        for marker in [self.ui.pressureThresholdList.item(x) for x in range(self.ui.pressureThresholdList.count())]:
+            self.ui.pressurePlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=black_pen))
 
         self.ui.temperaturePlot.addLegend(offset=(0,0), colCount=4, labelTextColor="black")
         self.ui.temperaturePlot.setTitle("Temperature", color="black")
@@ -124,6 +136,8 @@ class MainWindow(QWidget):
         self.plots["t2"] = PlotInfo(self.t2_points, self.ui.temperaturePlot.plot(self.t2_points, pen=blue_pen, name="t2"))
         self.plots["t3"] = PlotInfo(self.t3_points, self.ui.temperaturePlot.plot(self.t3_points, pen=green_pen, name="t3"))
         self.plots["t4"] = PlotInfo(self.t4_points, self.ui.temperaturePlot.plot(self.t4_points, pen=pink_pen, name="t4"))
+        for marker in [self.ui.temperatureThresholdList.item(x) for x in range(self.ui.temperatureThresholdList.count())]:
+            self.ui.temperaturePlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=black_pen))
 
         self.ui.tankMassPlot.addLegend()
         self.ui.tankMassPlot.setTitle("Tank Mass", color="black")
@@ -134,6 +148,8 @@ class MainWindow(QWidget):
         self.ui.tankMassPlot.getAxis("bottom").setPen(black_pen)
         self.ui.tankMassPlot.getAxis("bottom").setTextPen(black_pen)
         self.plots["tank_mass"] = PlotInfo(self.tank_mass_points, self.ui.tankMassPlot.plot(self.tank_mass_points, pen=red_pen))
+        for marker in [self.ui.tankMassThresholdList.item(x) for x in range(self.ui.tankMassThresholdList.count())]:
+            self.ui.tankMassPlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=black_pen))
 
         self.ui.engineThrustPlot.addLegend()
         self.ui.engineThrustPlot.setTitle("Engine Thrust", color="black")
@@ -144,6 +160,8 @@ class MainWindow(QWidget):
         self.ui.engineThrustPlot.getAxis("bottom").setPen(black_pen)
         self.ui.engineThrustPlot.getAxis("bottom").setTextPen(black_pen)
         self.plots["engine_thrust"] = PlotInfo(self.engine_thrust_points, self.ui.engineThrustPlot.plot(self.engine_thrust_points, pen=red_pen))
+        for marker in [self.ui.engineThrustThresholdList.item(x) for x in range(self.ui.engineThrustThresholdList.count())]:
+            self.ui.engineThrustPlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=black_pen))
 
         #QTimer to help us to filter the data
         self.timer_time = 25
@@ -163,6 +181,13 @@ class MainWindow(QWidget):
         #Connect toggle button for recording data
         self.ui.recordingToggleButton.toggled.connect(self.recording_toggle_button_handler)
         self.file_out = None
+
+        # Plot threshold handlers
+        self.ui.pressureThresholdButton.clicked.connect(self.add_pressure_threshold_handler)
+        self.ui.temperatureThresholdButton.clicked.connect(self.add_temperature_threshold_handler)
+        self.ui.tankMassThresholdButton.clicked.connect(self.add_tank_mass_threshold_handler)
+        self.ui.engineThrustThresholdButton.clicked.connect(self.add_engine_thrust_threshold_handler)
+        self.ui.saveConfigButton.clicked.connect(self.save_config)
 
     # Handles when the window is closed, have to make sure to disconnect the TCP socket
     def closeEvent(self, event):

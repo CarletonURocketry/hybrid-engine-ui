@@ -576,151 +576,151 @@ class Ui_Widget(object):
 
         self.gridLayout = QGridLayout()
         self.gridLayout.setObjectName(u"gridLayout")
-        self.verticalLayout_4 = QVBoxLayout()
-        self.verticalLayout_4.setObjectName(u"verticalLayout_4")
-        self.label_2 = QLabel(self.configurationTab)
-        self.label_2.setObjectName(u"label_2")
+        self.pressureThresholdLayot = QVBoxLayout()
+        self.pressureThresholdLayot.setObjectName(u"pressureThresholdLayot")
+        self.pressureThresholdLabel = QLabel(self.configurationTab)
+        self.pressureThresholdLabel.setObjectName(u"pressureThresholdLabel")
 
-        self.verticalLayout_4.addWidget(self.label_2)
+        self.pressureThresholdLayot.addWidget(self.pressureThresholdLabel)
 
-        self.listWidget = QListWidget(self.configurationTab)
-        self.listWidget.setObjectName(u"listWidget")
+        self.pressureThresholdList = QListWidget(self.configurationTab)
+        self.pressureThresholdList.setObjectName(u"pressureThresholdList")
         sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
         sizePolicy4.setHorizontalStretch(0)
         sizePolicy4.setVerticalStretch(0)
-        sizePolicy4.setHeightForWidth(self.listWidget.sizePolicy().hasHeightForWidth())
-        self.listWidget.setSizePolicy(sizePolicy4)
-        self.listWidget.setMaximumSize(QSize(16777215, 100))
+        sizePolicy4.setHeightForWidth(self.pressureThresholdList.sizePolicy().hasHeightForWidth())
+        self.pressureThresholdList.setSizePolicy(sizePolicy4)
+        self.pressureThresholdList.setMaximumSize(QSize(16777215, 75))
 
-        self.verticalLayout_4.addWidget(self.listWidget)
+        self.pressureThresholdLayot.addWidget(self.pressureThresholdList)
 
-        self.lineEdit = QLineEdit(self.configurationTab)
-        self.lineEdit.setObjectName(u"lineEdit")
-        sizePolicy1.setHeightForWidth(self.lineEdit.sizePolicy().hasHeightForWidth())
-        self.lineEdit.setSizePolicy(sizePolicy1)
+        self.pressureThresholdInput = QLineEdit(self.configurationTab)
+        self.pressureThresholdInput.setObjectName(u"pressureThresholdInput")
+        sizePolicy1.setHeightForWidth(self.pressureThresholdInput.sizePolicy().hasHeightForWidth())
+        self.pressureThresholdInput.setSizePolicy(sizePolicy1)
 
-        self.verticalLayout_4.addWidget(self.lineEdit)
+        self.pressureThresholdLayot.addWidget(self.pressureThresholdInput)
 
-        self.pushButton = QPushButton(self.configurationTab)
-        self.pushButton.setObjectName(u"pushButton")
-        sizePolicy1.setHeightForWidth(self.pushButton.sizePolicy().hasHeightForWidth())
-        self.pushButton.setSizePolicy(sizePolicy1)
+        self.pressureThresholdButton = QPushButton(self.configurationTab)
+        self.pressureThresholdButton.setObjectName(u"pressureThresholdButton")
+        sizePolicy1.setHeightForWidth(self.pressureThresholdButton.sizePolicy().hasHeightForWidth())
+        self.pressureThresholdButton.setSizePolicy(sizePolicy1)
 
-        self.verticalLayout_4.addWidget(self.pushButton)
-
-
-        self.gridLayout.addLayout(self.verticalLayout_4, 1, 0, 1, 1)
-
-        self.verticalLayout_7 = QVBoxLayout()
-        self.verticalLayout_7.setObjectName(u"verticalLayout_7")
-        self.label_5 = QLabel(self.configurationTab)
-        self.label_5.setObjectName(u"label_5")
-
-        self.verticalLayout_7.addWidget(self.label_5)
-
-        self.listWidget_4 = QListWidget(self.configurationTab)
-        self.listWidget_4.setObjectName(u"listWidget_4")
-        sizePolicy1.setHeightForWidth(self.listWidget_4.sizePolicy().hasHeightForWidth())
-        self.listWidget_4.setSizePolicy(sizePolicy1)
-        self.listWidget_4.setMaximumSize(QSize(16777215, 100))
-
-        self.verticalLayout_7.addWidget(self.listWidget_4)
-
-        self.lineEdit_4 = QLineEdit(self.configurationTab)
-        self.lineEdit_4.setObjectName(u"lineEdit_4")
-        sizePolicy1.setHeightForWidth(self.lineEdit_4.sizePolicy().hasHeightForWidth())
-        self.lineEdit_4.setSizePolicy(sizePolicy1)
-
-        self.verticalLayout_7.addWidget(self.lineEdit_4)
-
-        self.pushButton_4 = QPushButton(self.configurationTab)
-        self.pushButton_4.setObjectName(u"pushButton_4")
-        sizePolicy1.setHeightForWidth(self.pushButton_4.sizePolicy().hasHeightForWidth())
-        self.pushButton_4.setSizePolicy(sizePolicy1)
-
-        self.verticalLayout_7.addWidget(self.pushButton_4)
+        self.pressureThresholdLayot.addWidget(self.pressureThresholdButton)
 
 
-        self.gridLayout.addLayout(self.verticalLayout_7, 2, 1, 1, 1)
+        self.gridLayout.addLayout(self.pressureThresholdLayot, 1, 0, 1, 1)
 
-        self.verticalLayout_6 = QVBoxLayout()
-        self.verticalLayout_6.setObjectName(u"verticalLayout_6")
-        self.label_3 = QLabel(self.configurationTab)
-        self.label_3.setObjectName(u"label_3")
+        self.engineThrustThreshold = QVBoxLayout()
+        self.engineThrustThreshold.setObjectName(u"engineThrustThreshold")
+        self.engineThrustThresholdLabel = QLabel(self.configurationTab)
+        self.engineThrustThresholdLabel.setObjectName(u"engineThrustThresholdLabel")
 
-        self.verticalLayout_6.addWidget(self.label_3)
+        self.engineThrustThreshold.addWidget(self.engineThrustThresholdLabel)
 
-        self.listWidget_2 = QListWidget(self.configurationTab)
-        self.listWidget_2.setObjectName(u"listWidget_2")
-        sizePolicy1.setHeightForWidth(self.listWidget_2.sizePolicy().hasHeightForWidth())
-        self.listWidget_2.setSizePolicy(sizePolicy1)
-        self.listWidget_2.setMaximumSize(QSize(16777215, 100))
+        self.engineThrustThresholdList = QListWidget(self.configurationTab)
+        self.engineThrustThresholdList.setObjectName(u"engineThrustThresholdList")
+        sizePolicy1.setHeightForWidth(self.engineThrustThresholdList.sizePolicy().hasHeightForWidth())
+        self.engineThrustThresholdList.setSizePolicy(sizePolicy1)
+        self.engineThrustThresholdList.setMaximumSize(QSize(16777215, 75))
 
-        self.verticalLayout_6.addWidget(self.listWidget_2)
+        self.engineThrustThreshold.addWidget(self.engineThrustThresholdList)
 
-        self.lineEdit_2 = QLineEdit(self.configurationTab)
-        self.lineEdit_2.setObjectName(u"lineEdit_2")
-        sizePolicy1.setHeightForWidth(self.lineEdit_2.sizePolicy().hasHeightForWidth())
-        self.lineEdit_2.setSizePolicy(sizePolicy1)
+        self.engineThrustThresholdInput = QLineEdit(self.configurationTab)
+        self.engineThrustThresholdInput.setObjectName(u"engineThrustThresholdInput")
+        sizePolicy1.setHeightForWidth(self.engineThrustThresholdInput.sizePolicy().hasHeightForWidth())
+        self.engineThrustThresholdInput.setSizePolicy(sizePolicy1)
 
-        self.verticalLayout_6.addWidget(self.lineEdit_2)
+        self.engineThrustThreshold.addWidget(self.engineThrustThresholdInput)
 
-        self.pushButton_2 = QPushButton(self.configurationTab)
-        self.pushButton_2.setObjectName(u"pushButton_2")
-        sizePolicy1.setHeightForWidth(self.pushButton_2.sizePolicy().hasHeightForWidth())
-        self.pushButton_2.setSizePolicy(sizePolicy1)
+        self.engineThrustThresholdButton = QPushButton(self.configurationTab)
+        self.engineThrustThresholdButton.setObjectName(u"engineThrustThresholdButton")
+        sizePolicy1.setHeightForWidth(self.engineThrustThresholdButton.sizePolicy().hasHeightForWidth())
+        self.engineThrustThresholdButton.setSizePolicy(sizePolicy1)
 
-        self.verticalLayout_6.addWidget(self.pushButton_2)
-
-
-        self.gridLayout.addLayout(self.verticalLayout_6, 1, 1, 1, 1)
-
-        self.verticalLayout_3 = QVBoxLayout()
-        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
-        self.label_4 = QLabel(self.configurationTab)
-        self.label_4.setObjectName(u"label_4")
-
-        self.verticalLayout_3.addWidget(self.label_4)
-
-        self.listWidget_3 = QListWidget(self.configurationTab)
-        self.listWidget_3.setObjectName(u"listWidget_3")
-        sizePolicy1.setHeightForWidth(self.listWidget_3.sizePolicy().hasHeightForWidth())
-        self.listWidget_3.setSizePolicy(sizePolicy1)
-        self.listWidget_3.setMaximumSize(QSize(16777215, 100))
-
-        self.verticalLayout_3.addWidget(self.listWidget_3)
-
-        self.lineEdit_3 = QLineEdit(self.configurationTab)
-        self.lineEdit_3.setObjectName(u"lineEdit_3")
-        sizePolicy1.setHeightForWidth(self.lineEdit_3.sizePolicy().hasHeightForWidth())
-        self.lineEdit_3.setSizePolicy(sizePolicy1)
-
-        self.verticalLayout_3.addWidget(self.lineEdit_3)
-
-        self.pushButton_3 = QPushButton(self.configurationTab)
-        self.pushButton_3.setObjectName(u"pushButton_3")
-        sizePolicy1.setHeightForWidth(self.pushButton_3.sizePolicy().hasHeightForWidth())
-        self.pushButton_3.setSizePolicy(sizePolicy1)
-
-        self.verticalLayout_3.addWidget(self.pushButton_3)
+        self.engineThrustThreshold.addWidget(self.engineThrustThresholdButton)
 
 
-        self.gridLayout.addLayout(self.verticalLayout_3, 2, 0, 1, 1)
+        self.gridLayout.addLayout(self.engineThrustThreshold, 2, 1, 1, 1)
 
-        self.label = QLabel(self.configurationTab)
-        self.label.setObjectName(u"label")
-        self.label.setFont(font3)
-        self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.temperatureThresholdLayout = QVBoxLayout()
+        self.temperatureThresholdLayout.setObjectName(u"temperatureThresholdLayout")
+        self.temperatureThresholdLabel = QLabel(self.configurationTab)
+        self.temperatureThresholdLabel.setObjectName(u"temperatureThresholdLabel")
 
-        self.gridLayout.addWidget(self.label, 0, 0, 1, 2)
+        self.temperatureThresholdLayout.addWidget(self.temperatureThresholdLabel)
+
+        self.temperatureThresholdList = QListWidget(self.configurationTab)
+        self.temperatureThresholdList.setObjectName(u"temperatureThresholdList")
+        sizePolicy1.setHeightForWidth(self.temperatureThresholdList.sizePolicy().hasHeightForWidth())
+        self.temperatureThresholdList.setSizePolicy(sizePolicy1)
+        self.temperatureThresholdList.setMaximumSize(QSize(16777215, 75))
+
+        self.temperatureThresholdLayout.addWidget(self.temperatureThresholdList)
+
+        self.temperatureThresholdInput = QLineEdit(self.configurationTab)
+        self.temperatureThresholdInput.setObjectName(u"temperatureThresholdInput")
+        sizePolicy1.setHeightForWidth(self.temperatureThresholdInput.sizePolicy().hasHeightForWidth())
+        self.temperatureThresholdInput.setSizePolicy(sizePolicy1)
+
+        self.temperatureThresholdLayout.addWidget(self.temperatureThresholdInput)
+
+        self.temperatureThresholdButton = QPushButton(self.configurationTab)
+        self.temperatureThresholdButton.setObjectName(u"temperatureThresholdButton")
+        sizePolicy1.setHeightForWidth(self.temperatureThresholdButton.sizePolicy().hasHeightForWidth())
+        self.temperatureThresholdButton.setSizePolicy(sizePolicy1)
+
+        self.temperatureThresholdLayout.addWidget(self.temperatureThresholdButton)
+
+
+        self.gridLayout.addLayout(self.temperatureThresholdLayout, 1, 1, 1, 1)
+
+        self.tankMassThresholdLayout = QVBoxLayout()
+        self.tankMassThresholdLayout.setObjectName(u"tankMassThresholdLayout")
+        self.tankMassThresholdLabel = QLabel(self.configurationTab)
+        self.tankMassThresholdLabel.setObjectName(u"tankMassThresholdLabel")
+
+        self.tankMassThresholdLayout.addWidget(self.tankMassThresholdLabel)
+
+        self.tankMassThresholdList = QListWidget(self.configurationTab)
+        self.tankMassThresholdList.setObjectName(u"tankMassThresholdList")
+        sizePolicy1.setHeightForWidth(self.tankMassThresholdList.sizePolicy().hasHeightForWidth())
+        self.tankMassThresholdList.setSizePolicy(sizePolicy1)
+        self.tankMassThresholdList.setMaximumSize(QSize(16777215, 75))
+
+        self.tankMassThresholdLayout.addWidget(self.tankMassThresholdList)
+
+        self.tankMassThresholdInput = QLineEdit(self.configurationTab)
+        self.tankMassThresholdInput.setObjectName(u"tankMassThresholdInput")
+        sizePolicy1.setHeightForWidth(self.tankMassThresholdInput.sizePolicy().hasHeightForWidth())
+        self.tankMassThresholdInput.setSizePolicy(sizePolicy1)
+
+        self.tankMassThresholdLayout.addWidget(self.tankMassThresholdInput)
+
+        self.tankMassThresholdButton = QPushButton(self.configurationTab)
+        self.tankMassThresholdButton.setObjectName(u"tankMassThresholdButton")
+        sizePolicy1.setHeightForWidth(self.tankMassThresholdButton.sizePolicy().hasHeightForWidth())
+        self.tankMassThresholdButton.setSizePolicy(sizePolicy1)
+
+        self.tankMassThresholdLayout.addWidget(self.tankMassThresholdButton)
+
+
+        self.gridLayout.addLayout(self.tankMassThresholdLayout, 2, 0, 1, 1)
+
+        self.graphThresholdLabel = QLabel(self.configurationTab)
+        self.graphThresholdLabel.setObjectName(u"graphThresholdLabel")
+        self.graphThresholdLabel.setFont(font3)
+        self.graphThresholdLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.gridLayout.addWidget(self.graphThresholdLabel, 0, 0, 1, 2)
 
 
         self.formLayout.setLayout(4, QFormLayout.SpanningRole, self.gridLayout)
 
-        self.pushButton_5 = QPushButton(self.configurationTab)
-        self.pushButton_5.setObjectName(u"pushButton_5")
+        self.saveConfigButton = QPushButton(self.configurationTab)
+        self.saveConfigButton.setObjectName(u"saveConfigButton")
 
-        self.formLayout.setWidget(6, QFormLayout.SpanningRole, self.pushButton_5)
+        self.formLayout.setWidget(6, QFormLayout.SpanningRole, self.saveConfigButton)
 
         self.verticalSpacer_3 = QSpacerItem(20, 10, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
 
@@ -774,7 +774,7 @@ class Ui_Widget(object):
 
         self.retranslateUi(Widget)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(Widget)
@@ -850,16 +850,16 @@ class Ui_Widget(object):
 #endif // QT_CONFIG(tooltip)
         self.serialPortLabel.setText(QCoreApplication.translate("Widget", u"Serial port:", None))
         self.serialConnectButton.setText(QCoreApplication.translate("Widget", u"Connect to serial port", None))
-        self.label_2.setText(QCoreApplication.translate("Widget", u"Pressure", None))
-        self.pushButton.setText(QCoreApplication.translate("Widget", u"Add threshold marker", None))
-        self.label_5.setText(QCoreApplication.translate("Widget", u"Engine Thrust", None))
-        self.pushButton_4.setText(QCoreApplication.translate("Widget", u"Add threshold marker", None))
-        self.label_3.setText(QCoreApplication.translate("Widget", u"Temperature", None))
-        self.pushButton_2.setText(QCoreApplication.translate("Widget", u"Add threshold marker", None))
-        self.label_4.setText(QCoreApplication.translate("Widget", u"Tank Mass", None))
-        self.pushButton_3.setText(QCoreApplication.translate("Widget", u"Add threshold marker", None))
-        self.label.setText(QCoreApplication.translate("Widget", u"Graph threshold lines", None))
-        self.pushButton_5.setText(QCoreApplication.translate("Widget", u"Save configuration", None))
+        self.pressureThresholdLabel.setText(QCoreApplication.translate("Widget", u"Pressure", None))
+        self.pressureThresholdButton.setText(QCoreApplication.translate("Widget", u"Add threshold marker", None))
+        self.engineThrustThresholdLabel.setText(QCoreApplication.translate("Widget", u"Engine Thrust", None))
+        self.engineThrustThresholdButton.setText(QCoreApplication.translate("Widget", u"Add threshold marker", None))
+        self.temperatureThresholdLabel.setText(QCoreApplication.translate("Widget", u"Temperature", None))
+        self.temperatureThresholdButton.setText(QCoreApplication.translate("Widget", u"Add threshold marker", None))
+        self.tankMassThresholdLabel.setText(QCoreApplication.translate("Widget", u"Tank Mass", None))
+        self.tankMassThresholdButton.setText(QCoreApplication.translate("Widget", u"Add threshold marker", None))
+        self.graphThresholdLabel.setText(QCoreApplication.translate("Widget", u"Graph threshold lines", None))
+        self.saveConfigButton.setText(QCoreApplication.translate("Widget", u"Save configuration", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.configurationTab), QCoreApplication.translate("Widget", u"Configuration", None))
         self.pid_image.setText("")
         self.cv1State_tabpid.setText(QCoreApplication.translate("Widget", u"CLOSED", None))
