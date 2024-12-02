@@ -39,7 +39,7 @@
       <bool>false</bool>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="telemetryTab">
       <property name="autoFillBackground">
@@ -1092,7 +1092,7 @@
              <property name="maximumSize">
               <size>
                <width>16777215</width>
-               <height>50</height>
+               <height>75</height>
               </size>
              </property>
             </widget>
@@ -1142,7 +1142,7 @@
              <property name="maximumSize">
               <size>
                <width>16777215</width>
-               <height>50</height>
+               <height>75</height>
               </size>
              </property>
             </widget>
@@ -1192,7 +1192,7 @@
              <property name="maximumSize">
               <size>
                <width>16777215</width>
-               <height>50</height>
+               <height>75</height>
               </size>
              </property>
             </widget>
@@ -1242,7 +1242,7 @@
              <property name="maximumSize">
               <size>
                <width>16777215</width>
-               <height>50</height>
+               <height>75</height>
               </size>
              </property>
             </widget>

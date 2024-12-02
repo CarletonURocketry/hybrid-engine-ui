@@ -590,7 +590,7 @@ class Ui_Widget(object):
         sizePolicy4.setVerticalStretch(0)
         sizePolicy4.setHeightForWidth(self.pressureThresholdList.sizePolicy().hasHeightForWidth())
         self.pressureThresholdList.setSizePolicy(sizePolicy4)
-        self.pressureThresholdList.setMaximumSize(QSize(16777215, 50))
+        self.pressureThresholdList.setMaximumSize(QSize(16777215, 75))
 
         self.pressureThresholdLayot.addWidget(self.pressureThresholdList)
 
@@ -622,7 +622,7 @@ class Ui_Widget(object):
         self.engineThrustThresholdList.setObjectName(u"engineThrustThresholdList")
         sizePolicy1.setHeightForWidth(self.engineThrustThresholdList.sizePolicy().hasHeightForWidth())
         self.engineThrustThresholdList.setSizePolicy(sizePolicy1)
-        self.engineThrustThresholdList.setMaximumSize(QSize(16777215, 50))
+        self.engineThrustThresholdList.setMaximumSize(QSize(16777215, 75))
 
         self.engineThrustThreshold.addWidget(self.engineThrustThresholdList)
 
@@ -654,7 +654,7 @@ class Ui_Widget(object):
         self.temperatureThresholdList.setObjectName(u"temperatureThresholdList")
         sizePolicy1.setHeightForWidth(self.temperatureThresholdList.sizePolicy().hasHeightForWidth())
         self.temperatureThresholdList.setSizePolicy(sizePolicy1)
-        self.temperatureThresholdList.setMaximumSize(QSize(16777215, 50))
+        self.temperatureThresholdList.setMaximumSize(QSize(16777215, 75))
 
         self.temperatureThresholdLayout.addWidget(self.temperatureThresholdList)
 
@@ -686,7 +686,7 @@ class Ui_Widget(object):
         self.tankMassThresholdList.setObjectName(u"tankMassThresholdList")
         sizePolicy1.setHeightForWidth(self.tankMassThresholdList.sizePolicy().hasHeightForWidth())
         self.tankMassThresholdList.setSizePolicy(sizePolicy1)
-        self.tankMassThresholdList.setMaximumSize(QSize(16777215, 50))
+        self.tankMassThresholdList.setMaximumSize(QSize(16777215, 75))
 
         self.tankMassThresholdLayout.addWidget(self.tankMassThresholdList)
 
@@ -774,7 +774,7 @@ class Ui_Widget(object):
 
         self.retranslateUi(Widget)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(Widget)
