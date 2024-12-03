@@ -58,7 +58,8 @@ class MainWindow(QWidget):
     # smaller modules containing related functionality
     from .udp import udp_connection_button_handler, join_multicast_group, \
         udp_receive_socket_data, udp_on_disconnected, udp_on_error
-    from .data_handlers import plot_point, filter_data, update_act_state
+    from .data_handlers import plot_point, filter_data, update_act_state, \
+        process_data, turn_off_valve, turn_on_valve
     from .recording_and_playback import recording_toggle_button_handler, \
         open_file_button_handler, display_previous_data
     from .logging import save_to_file

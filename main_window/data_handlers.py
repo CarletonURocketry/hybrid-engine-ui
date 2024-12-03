@@ -13,6 +13,7 @@ if TYPE_CHECKING:
     from main_window import MainWindow
 
 def process_data(self: "MainWIndow", header: packet_spec.PacketHeader, message: packet_spec.PacketMessage):
+    print(header, message)
     match header.sub_type:
         case packet_spec.TelemetryPacketSubType.TEMPERATURE \
         | packet_spec.TelemetryPacketSubType.PRESSURE \
@@ -22,18 +23,18 @@ def process_data(self: "MainWIndow", header: packet_spec.PacketHeader, message: 
             self.update_act_state(message)
         case _:
             pass  
-def turnOnValve(self: "MainWindow", id: int):
+def turn_on_valve(self: "MainWindow", id: int):
     self.valves[id].changeState("OPEN")
 
-def turnOffValve(self: "MainWindow", id: int):
+def turn_off_valve(self: "MainWindow", id: int):
     self.valves[id].changeState["CLOSED"] 
 
 def update_act_state(self: "MainWindow", message: packet_spec.PacketMessage):
     match message.state:
         case packet_spec.ActuatorState.OFF:
-            self.turnOffValve(message.id)
+            self.turn_off_valve(message.id)
         case packet_spec.ActuatorState.ON:
-            self.turnOnValve(message.id)
+            self.turn_on_valve(message.id)
 
 def plot_point(self: "MainWindow", header: packet_spec.PacketHeader, message: packet_spec.PacketMessage):
     plots = self.plots

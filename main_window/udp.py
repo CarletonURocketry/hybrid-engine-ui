@@ -91,7 +91,7 @@ def udp_receive_socket_data(self: "MainWindow"):
         message_bytes = data[2:]
         header = packet_spec.parse_packet_header(header_bytes)
         message = packet_spec.parse_packet_message(header, message_bytes)  
-        self.plot_point(header, message)
+        self.process_data(header, message)
 
         #If we want to recording data
         if self.ui.recordingToggleButton.isChecked():
