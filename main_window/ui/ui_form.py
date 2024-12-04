@@ -480,13 +480,9 @@ class Ui_Widget(object):
 
         self.gridLayout.addLayout(self.tankMassThresholdLayout, 2, 0, 1, 1)
 
-        self.label = QLabel(self.configurationTab)
-        self.label.setObjectName(u"label")
-        self.label.setFont(font)
-        self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.graphThresholdLabel = QLabel(self.configurationTab)
         self.graphThresholdLabel.setObjectName(u"graphThresholdLabel")
-        self.graphThresholdLabel.setFont(font3)
+        self.graphThresholdLabel.setFont(font)
         self.graphThresholdLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.gridLayout.addWidget(self.graphThresholdLabel, 0, 0, 1, 2)
@@ -554,7 +550,7 @@ class Ui_Widget(object):
 
         self.retranslateUi(Widget)
 
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(Widget)
