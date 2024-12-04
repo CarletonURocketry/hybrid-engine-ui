@@ -26,12 +26,13 @@ class TelemetryLabel:
     def __init__(self, name, state, row, column, parentGrid):
         self.row = row
         self.column = column
-        self.qName =  QLabel(name)
+        self.qName = QLabel(name)
         self.qState = QLabel(state)
         parentGrid.addWidget(self.qName, row, column)
         parentGrid.addWidget(self.qState, row, column + 1)
-        self.qState.setStyleSheet("background-color: rgb(255, 80, 80); font-weight: bold;")
-        # self.qState.setStyleSheet("font-weight: bold")
+        self.qName.setStyleSheet("font-size: 17px")
+        self.qName.setMinimumWidth(90)
+        self.qState.setStyleSheet("background-color: rgb(255, 80, 80); font-weight: bold; font-size: 17px")
 
     def changeState(self, newState):
         self.qState.setText(newState)
