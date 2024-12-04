@@ -2,7 +2,7 @@
 from dataclasses import dataclass
 import json
 
-from PySide6.QtWidgets import QWidget
+from PySide6.QtWidgets import QWidget, QLabel
 from PySide6.QtCore import QTimer
 from PySide6.QtNetwork import QUdpSocket, QAbstractSocket, QNetworkInterface
 from pyqtgraph import mkPen, PlotDataItem, InfiniteLine
@@ -14,13 +14,28 @@ import numpy as np
 #     pyside6-uic form.ui -o ui_form.py, or
 #     pyside2-uic form.ui -o ui_form.py
 from .ui import Ui_Widget
-
+ 
 points = np.empty((0,2))
 
 @dataclass
 class PlotInfo:
     points: np.array
     data_line: PlotDataItem
+
+class TelemetryLabel:
+    def __init__(self, name, state, row, column, parentGrid):
+        self.row = row
+        self.column = column
+        self.qName = QLabel(name)
+        self.qState = QLabel(state)
+        parentGrid.addWidget(self.qName, row, column)
+        parentGrid.addWidget(self.qState, row, column + 1)
+        self.qName.setStyleSheet("font-size: 17px")
+        self.qName.setMinimumWidth(90)
+        self.qState.setStyleSheet("background-color: rgb(255, 80, 80); font-weight: bold; font-size: 17px")
+
+    def changeState(self, newState):
+        self.qState.setText(newState)
 
 class pid_window(QWidget):
     def __init__(self):
@@ -44,13 +59,13 @@ class MainWindow(QWidget):
     # smaller modules containing related functionality
     from .udp import udp_connection_button_handler, join_multicast_group, \
         udp_receive_socket_data, udp_on_disconnected, udp_on_error
-    from .data_handlers import plot_point, filter_data, updateActState
+    from .data_handlers import plot_point, filter_data, update_act_state, \
+        process_data, turn_off_valve, turn_on_valve
     from .recording_and_playback import recording_toggle_button_handler, \
         open_file_button_handler, display_previous_data
     from .logging import save_to_file
     from .config import load_config, save_config, add_pressure_threshold_handler, \
     add_temperature_threshold_handler, add_tank_mass_threshold_handler, add_engine_thrust_threshold_handler
-
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -182,6 +197,9 @@ class MainWindow(QWidget):
         self.ui.recordingToggleButton.toggled.connect(self.recording_toggle_button_handler)
         self.file_out = None
 
+        # Init valve labels
+        self.init_actuator_valve_label()
+        
         # Plot threshold handlers
         self.ui.pressureThresholdButton.clicked.connect(self.add_pressure_threshold_handler)
         self.ui.temperatureThresholdButton.clicked.connect(self.add_temperature_threshold_handler)
@@ -200,3 +218,13 @@ class MainWindow(QWidget):
     def show_new_window(self, checked):
         self.w = pid_window()
         self.w.show()
+    
+    def init_actuator_valve_label(self): 
+        self.valves = {}        
+        self.valves[0] = TelemetryLabel("Fire Valve", "CLOSED", 0, 2, self.ui.valveGrid)
+        self.valves[13] = TelemetryLabel("Quick Disconnect", "CLOSED", 0, 0, self.ui.valveGrid)
+        self.valves[14] =  TelemetryLabel("Igniter", "CLOSED", 0, 4, self.ui.valveGrid)
+        for i in range(1, 13):
+            #There will be three label at each row, therefore divide by three, add 1 to skip the first row of valves
+            #Row timed 2 because there will be two label for state and for the name
+            self.valves[i] = TelemetryLabel("XV-" + str(i), "CLOSED", ((i - 1)// 3) + 1 , ((i - 1) % 3) * 2, self.ui.valveGrid)

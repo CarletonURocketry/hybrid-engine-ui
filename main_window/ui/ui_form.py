@@ -166,237 +166,10 @@ class Ui_Widget(object):
 
         self.valveStatusLayout = QFormLayout()
         self.valveStatusLayout.setObjectName(u"valveStatusLayout")
-        self.gridLayout_2 = QGridLayout()
-        self.gridLayout_2.setObjectName(u"gridLayout_2")
-        self.xv5 = QLabel(self.telemetryTab)
-        self.xv5.setObjectName(u"xv5")
-        font = QFont()
-        font.setPointSize(12)
-        self.xv5.setFont(font)
+        self.valveGrid = QGridLayout()
+        self.valveGrid.setObjectName(u"valveGrid")
 
-        self.gridLayout_2.addWidget(self.xv5, 2, 2, 1, 1)
-
-        self.xv8State = QLabel(self.telemetryTab)
-        self.xv8State.setObjectName(u"xv8State")
-        self.xv8State.setMinimumSize(QSize(50, 0))
-        font1 = QFont()
-        font1.setPointSize(12)
-        font1.setBold(True)
-        self.xv8State.setFont(font1)
-        self.xv8State.setStyleSheet(u"background-color: rgb(255, 80, 80);")
-        self.xv8State.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        self.gridLayout_2.addWidget(self.xv8State, 3, 3, 1, 1)
-
-        self.quickDisconnect = QLabel(self.telemetryTab)
-        self.quickDisconnect.setObjectName(u"quickDisconnect")
-        self.quickDisconnect.setMinimumSize(QSize(80, 23))
-        font2 = QFont()
-        font2.setPointSize(12)
-        font2.setBold(False)
-        self.quickDisconnect.setFont(font2)
-
-        self.gridLayout_2.addWidget(self.quickDisconnect, 0, 0, 1, 1)
-
-        self.xv6State = QLabel(self.telemetryTab)
-        self.xv6State.setObjectName(u"xv6State")
-        self.xv6State.setFont(font1)
-        self.xv6State.setStyleSheet(u"background-color: rgb(255, 80, 80);")
-
-        self.gridLayout_2.addWidget(self.xv6State, 2, 5, 1, 1)
-
-        self.xv3 = QLabel(self.telemetryTab)
-        self.xv3.setObjectName(u"xv3")
-        self.xv3.setFont(font)
-
-        self.gridLayout_2.addWidget(self.xv3, 1, 4, 1, 1)
-
-        self.xv11 = QLabel(self.telemetryTab)
-        self.xv11.setObjectName(u"xv11")
-        self.xv11.setFont(font)
-
-        self.gridLayout_2.addWidget(self.xv11, 4, 2, 1, 1)
-
-        self.xv7State = QLabel(self.telemetryTab)
-        self.xv7State.setObjectName(u"xv7State")
-        self.xv7State.setMinimumSize(QSize(50, 0))
-        self.xv7State.setFont(font1)
-        self.xv7State.setStyleSheet(u"background-color: rgb(255, 80, 80);")
-        self.xv7State.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        self.gridLayout_2.addWidget(self.xv7State, 3, 1, 1, 1)
-
-        self.xv1State = QLabel(self.telemetryTab)
-        self.xv1State.setObjectName(u"xv1State")
-        self.xv1State.setFont(font1)
-        self.xv1State.setStyleSheet(u"background-color: rgb(255, 80, 80);")
-
-        self.gridLayout_2.addWidget(self.xv1State, 1, 1, 1, 1)
-
-        self.xv1 = QLabel(self.telemetryTab)
-        self.xv1.setObjectName(u"xv1")
-        self.xv1.setMinimumSize(QSize(80, 23))
-        self.xv1.setFont(font2)
-
-        self.gridLayout_2.addWidget(self.xv1, 1, 0, 1, 1)
-
-        self.xv4State = QLabel(self.telemetryTab)
-        self.xv4State.setObjectName(u"xv4State")
-        self.xv4State.setMinimumSize(QSize(50, 0))
-        self.xv4State.setFont(font1)
-        self.xv4State.setStyleSheet(u"background-color: rgb(255, 80, 80);")
-        self.xv4State.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        self.gridLayout_2.addWidget(self.xv4State, 2, 1, 1, 1)
-
-        self.xv5State = QLabel(self.telemetryTab)
-        self.xv5State.setObjectName(u"xv5State")
-        self.xv5State.setFont(font1)
-        self.xv5State.setStyleSheet(u"background-color: rgb(255, 80, 80);")
-
-        self.gridLayout_2.addWidget(self.xv5State, 2, 3, 1, 1)
-
-        self.igniter = QLabel(self.telemetryTab)
-        self.igniter.setObjectName(u"igniter")
-        self.igniter.setFont(font)
-
-        self.gridLayout_2.addWidget(self.igniter, 0, 4, 1, 1)
-
-        self.xv11State = QLabel(self.telemetryTab)
-        self.xv11State.setObjectName(u"xv11State")
-        self.xv11State.setFont(font1)
-        self.xv11State.setStyleSheet(u"background-color: rgb(255, 80, 80);")
-
-        self.gridLayout_2.addWidget(self.xv11State, 4, 3, 1, 1)
-
-        self.igniterState = QLabel(self.telemetryTab)
-        self.igniterState.setObjectName(u"igniterState")
-        self.igniterState.setFont(font1)
-        self.igniterState.setStyleSheet(u"background-color: rgb(255, 80, 80);")
-
-        self.gridLayout_2.addWidget(self.igniterState, 0, 5, 1, 1)
-
-        self.xv6 = QLabel(self.telemetryTab)
-        self.xv6.setObjectName(u"xv6")
-        self.xv6.setFont(font)
-
-        self.gridLayout_2.addWidget(self.xv6, 2, 4, 1, 1)
-
-        self.xv12 = QLabel(self.telemetryTab)
-        self.xv12.setObjectName(u"xv12")
-        self.xv12.setFont(font)
-
-        self.gridLayout_2.addWidget(self.xv12, 4, 4, 1, 1)
-
-        self.quickDisconnectState = QLabel(self.telemetryTab)
-        self.quickDisconnectState.setObjectName(u"quickDisconnectState")
-        self.quickDisconnectState.setMinimumSize(QSize(50, 0))
-        self.quickDisconnectState.setFont(font1)
-        self.quickDisconnectState.setAutoFillBackground(False)
-        self.quickDisconnectState.setStyleSheet(u"background-color: rgb(255, 80, 80);")
-        self.quickDisconnectState.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        self.gridLayout_2.addWidget(self.quickDisconnectState, 0, 1, 1, 1)
-
-        self.cv1 = QLabel(self.telemetryTab)
-        self.cv1.setObjectName(u"cv1")
-        self.cv1.setMinimumSize(QSize(80, 0))
-        self.cv1.setFont(font2)
-        self.cv1.setIndent(-1)
-
-        self.gridLayout_2.addWidget(self.cv1, 0, 2, 1, 1)
-
-        self.xv4 = QLabel(self.telemetryTab)
-        self.xv4.setObjectName(u"xv4")
-        self.xv4.setFont(font)
-
-        self.gridLayout_2.addWidget(self.xv4, 2, 0, 1, 1)
-
-        self.xv10State = QLabel(self.telemetryTab)
-        self.xv10State.setObjectName(u"xv10State")
-        self.xv10State.setFont(font1)
-        self.xv10State.setStyleSheet(u"background-color: rgb(255, 80, 80);")
-
-        self.gridLayout_2.addWidget(self.xv10State, 4, 1, 1, 1)
-
-        self.xv9State = QLabel(self.telemetryTab)
-        self.xv9State.setObjectName(u"xv9State")
-        self.xv9State.setFont(font1)
-        self.xv9State.setStyleSheet(u"background-color: rgb(255, 80, 80);")
-
-        self.gridLayout_2.addWidget(self.xv9State, 3, 5, 1, 1)
-
-        self.xv3State = QLabel(self.telemetryTab)
-        self.xv3State.setObjectName(u"xv3State")
-        self.xv3State.setFont(font1)
-        self.xv3State.setStyleSheet(u"background-color: rgb(255, 80, 80);")
-
-        self.gridLayout_2.addWidget(self.xv3State, 1, 5, 1, 1)
-
-        self.xv10 = QLabel(self.telemetryTab)
-        self.xv10.setObjectName(u"xv10")
-        self.xv10.setFont(font)
-
-        self.gridLayout_2.addWidget(self.xv10, 4, 0, 1, 1)
-
-        self.xv2State = QLabel(self.telemetryTab)
-        self.xv2State.setObjectName(u"xv2State")
-        self.xv2State.setMinimumSize(QSize(50, 0))
-        self.xv2State.setFont(font1)
-        self.xv2State.setStyleSheet(u"background-color: rgb(255, 80, 80);")
-        self.xv2State.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        self.gridLayout_2.addWidget(self.xv2State, 1, 3, 1, 1)
-
-        self.cv1State = QLabel(self.telemetryTab)
-        self.cv1State.setObjectName(u"cv1State")
-        self.cv1State.setMinimumSize(QSize(50, 0))
-        self.cv1State.setFont(font1)
-        self.cv1State.setStyleSheet(u"background-color: rgb(255, 80, 80);")
-        self.cv1State.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        self.gridLayout_2.addWidget(self.cv1State, 0, 3, 1, 1)
-
-        self.xv2 = QLabel(self.telemetryTab)
-        self.xv2.setObjectName(u"xv2")
-        self.xv2.setMinimumSize(QSize(80, 0))
-        self.xv2.setFont(font2)
-        self.xv2.setAlignment(Qt.AlignmentFlag.AlignJustify|Qt.AlignmentFlag.AlignVCenter)
-        self.xv2.setIndent(10)
-
-        self.gridLayout_2.addWidget(self.xv2, 1, 2, 1, 1)
-
-        self.xv7 = QLabel(self.telemetryTab)
-        self.xv7.setObjectName(u"xv7")
-        self.xv7.setMinimumSize(QSize(80, 23))
-        self.xv7.setFont(font2)
-
-        self.gridLayout_2.addWidget(self.xv7, 3, 0, 1, 1)
-
-        self.xv12State = QLabel(self.telemetryTab)
-        self.xv12State.setObjectName(u"xv12State")
-        self.xv12State.setFont(font1)
-        self.xv12State.setStyleSheet(u"background-color: rgb(255, 80, 80);")
-
-        self.gridLayout_2.addWidget(self.xv12State, 4, 5, 1, 1)
-
-        self.xv9 = QLabel(self.telemetryTab)
-        self.xv9.setObjectName(u"xv9")
-        self.xv9.setFont(font)
-
-        self.gridLayout_2.addWidget(self.xv9, 3, 4, 1, 1)
-
-        self.xv8 = QLabel(self.telemetryTab)
-        self.xv8.setObjectName(u"xv8")
-        self.xv8.setMinimumSize(QSize(80, 0))
-        self.xv8.setFont(font2)
-        self.xv8.setAlignment(Qt.AlignmentFlag.AlignJustify|Qt.AlignmentFlag.AlignVCenter)
-        self.xv8.setIndent(10)
-
-        self.gridLayout_2.addWidget(self.xv8, 3, 2, 1, 1)
-
-
-        self.valveStatusLayout.setLayout(0, QFormLayout.LabelRole, self.gridLayout_2)
+        self.valveStatusLayout.setLayout(0, QFormLayout.LabelRole, self.valveGrid)
 
 
         self.controlLayout.addLayout(self.valveStatusLayout)
@@ -463,9 +236,9 @@ class Ui_Widget(object):
         self.connectionLayout.setObjectName(u"connectionLayout")
         self.multicastConfigLabel = QLabel(self.configurationTab)
         self.multicastConfigLabel.setObjectName(u"multicastConfigLabel")
-        font3 = QFont()
-        font3.setBold(True)
-        self.multicastConfigLabel.setFont(font3)
+        font = QFont()
+        font.setBold(True)
+        self.multicastConfigLabel.setFont(font)
         self.multicastConfigLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.connectionLayout.addWidget(self.multicastConfigLabel)
@@ -541,7 +314,7 @@ class Ui_Widget(object):
         self.serialLayout_2.setObjectName(u"serialLayout_2")
         self.serialConfigLabel = QLabel(self.configurationTab)
         self.serialConfigLabel.setObjectName(u"serialConfigLabel")
-        self.serialConfigLabel.setFont(font3)
+        self.serialConfigLabel.setFont(font)
         self.serialConfigLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.serialLayout_2.addWidget(self.serialConfigLabel)
@@ -709,7 +482,7 @@ class Ui_Widget(object):
 
         self.graphThresholdLabel = QLabel(self.configurationTab)
         self.graphThresholdLabel.setObjectName(u"graphThresholdLabel")
-        self.graphThresholdLabel.setFont(font3)
+        self.graphThresholdLabel.setFont(font)
         self.graphThresholdLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.gridLayout.addWidget(self.graphThresholdLabel, 0, 0, 1, 2)
@@ -738,6 +511,9 @@ class Ui_Widget(object):
         self.cv1State_tabpid.setObjectName(u"cv1State_tabpid")
         self.cv1State_tabpid.setGeometry(QRect(940, 390, 74, 37))
         self.cv1State_tabpid.setMinimumSize(QSize(50, 0))
+        font1 = QFont()
+        font1.setPointSize(12)
+        font1.setBold(True)
         self.cv1State_tabpid.setFont(font1)
         self.cv1State_tabpid.setStyleSheet(u"background-color: rgb(255, 80, 80);")
         self.cv1State_tabpid.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -774,7 +550,7 @@ class Ui_Widget(object):
 
         self.retranslateUi(Widget)
 
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(Widget)
@@ -799,36 +575,6 @@ class Ui_Widget(object):
         self.openFileButton.setText(QCoreApplication.translate("Widget", u"Open previous data", None))
         self.recordingToggleButton.setText(QCoreApplication.translate("Widget", u"Recording", None))
         self.exporter.setText(QCoreApplication.translate("Widget", u"Export to File", None))
-        self.xv5.setText(QCoreApplication.translate("Widget", u"XV-5", None))
-        self.xv8State.setText(QCoreApplication.translate("Widget", u"CLOSED", None))
-        self.quickDisconnect.setText(QCoreApplication.translate("Widget", u"<html><head/><body><p>Quick Disconnect</p></body></html>", None))
-        self.xv6State.setText(QCoreApplication.translate("Widget", u"CLOSED", None))
-        self.xv3.setText(QCoreApplication.translate("Widget", u"XV-3", None))
-        self.xv11.setText(QCoreApplication.translate("Widget", u"XV-11", None))
-        self.xv7State.setText(QCoreApplication.translate("Widget", u"CLOSED", None))
-        self.xv1State.setText(QCoreApplication.translate("Widget", u"CLOSED", None))
-        self.xv1.setText(QCoreApplication.translate("Widget", u"XV-1", None))
-        self.xv4State.setText(QCoreApplication.translate("Widget", u"CLOSED", None))
-        self.xv5State.setText(QCoreApplication.translate("Widget", u"CLOSED", None))
-        self.igniter.setText(QCoreApplication.translate("Widget", u"Igniter", None))
-        self.xv11State.setText(QCoreApplication.translate("Widget", u"CLOSED", None))
-        self.igniterState.setText(QCoreApplication.translate("Widget", u"CLOSED", None))
-        self.xv6.setText(QCoreApplication.translate("Widget", u"XV-6", None))
-        self.xv12.setText(QCoreApplication.translate("Widget", u"XV-12", None))
-        self.quickDisconnectState.setText(QCoreApplication.translate("Widget", u"CLOSED", None))
-        self.cv1.setText(QCoreApplication.translate("Widget", u"Fire Valve", None))
-        self.xv4.setText(QCoreApplication.translate("Widget", u"XV-4", None))
-        self.xv10State.setText(QCoreApplication.translate("Widget", u"CLOSED", None))
-        self.xv9State.setText(QCoreApplication.translate("Widget", u"CLOSED", None))
-        self.xv3State.setText(QCoreApplication.translate("Widget", u"CLOSED", None))
-        self.xv10.setText(QCoreApplication.translate("Widget", u"XV-10", None))
-        self.xv2State.setText(QCoreApplication.translate("Widget", u"CLOSED", None))
-        self.cv1State.setText(QCoreApplication.translate("Widget", u"CLOSED", None))
-        self.xv2.setText(QCoreApplication.translate("Widget", u"XV-2", None))
-        self.xv7.setText(QCoreApplication.translate("Widget", u"XV-7", None))
-        self.xv12State.setText(QCoreApplication.translate("Widget", u"CLOSED", None))
-        self.xv9.setText(QCoreApplication.translate("Widget", u"XV-9", None))
-        self.xv8.setText(QCoreApplication.translate("Widget", u"XV-8", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.telemetryTab), QCoreApplication.translate("Widget", u"Telemetry", None))
         self.multicastConfigLabel.setText(QCoreApplication.translate("Widget", u"Multicast configuration", None))
 #if QT_CONFIG(tooltip)
