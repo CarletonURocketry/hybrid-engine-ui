@@ -27,7 +27,7 @@ def turn_on_valve(self: "MainWindow", id: int):
     self.valves[id].changeState("OPEN")
 
 def turn_off_valve(self: "MainWindow", id: int):
-    self.valves[id].changeState["CLOSED"] 
+    self.valves[id].changeState("CLOSED") 
 
 def update_act_state(self: "MainWindow", message: packet_spec.PacketMessage):
     match message.state:
