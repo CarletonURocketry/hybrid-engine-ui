@@ -50,183 +50,51 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <layout class="QHBoxLayout" name="controlLayout" stretch="0,2,4,0">
+        <layout class="QHBoxLayout" name="controlLayout" stretch="4,0">
          <property name="sizeConstraint">
           <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
          </property>
          <item>
-          <layout class="QVBoxLayout" name="logoLayout">
-           <item>
-            <widget class="QLabel" name="logoLabel">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-               <horstretch>1</horstretch>
-               <verstretch>1</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>127</width>
-               <height>90</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>127</width>
-               <height>90</height>
-              </size>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-             <property name="pixmap">
-              <pixmap resource="resources.qrc">:/images/logos/logoandtexttransparentsmol.png</pixmap>
-             </property>
-             <property name="scaledContents">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="showPIDButton">
-             <property name="text">
-              <string>Show P&amp;&amp;ID Diagram</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QVBoxLayout" name="connectionLayout_2">
-           <item>
-            <layout class="QHBoxLayout" name="addressLayout_10">
-             <property name="spacing">
-              <number>1</number>
-             </property>
-             <item>
-              <widget class="QLabel" name="udpIpAddressLabel_10">
-               <property name="toolTip">
-                <string>Address of multicast group</string>
-               </property>
-               <property name="text">
-                <string>MCast IPv4 address*: </string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="udpIpAddressInput_10">
-               <property name="styleSheet">
-                <string notr="true"/>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="portLayout_10" stretch="0,0">
-             <property name="spacing">
-              <number>6</number>
-             </property>
-             <property name="sizeConstraint">
-              <enum>QLayout::SizeConstraint::SetFixedSize</enum>
-             </property>
-             <item>
-              <widget class="QLabel" name="udpPortLabel_10">
-               <property name="minimumSize">
-                <size>
-                 <width>85</width>
-                 <height>0</height>
-                </size>
-               </property>
-               <property name="toolTip">
-                <string>Port of multicast group</string>
-               </property>
-               <property name="text">
-                <string>MCast port*: </string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="udpPortInput_10">
-               <property name="styleSheet">
-                <string notr="true"/>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="interfaceLayout_10">
-             <item>
-              <widget class="QLabel" name="interfaceAddressLabel_10">
-               <property name="toolTip">
-                <string>Enter ipconfig in terminal to see interfaces</string>
-               </property>
-               <property name="text">
-                <string>Interface address:</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QComboBox" name="interfaceAddressDropdown_10">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <widget class="QPushButton" name="udpConnectButton_10">
-             <property name="maximumSize">
-              <size>
-               <width>1000</width>
-               <height>16777215</height>
-              </size>
-             </property>
-             <property name="styleSheet">
-              <string notr="true"/>
-             </property>
-             <property name="text">
-              <string>Create UDP connection</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="openFileButton">
-             <property name="text">
-              <string>Open previous data</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QVBoxLayout" name="logLayout" stretch="1,0">
+          <layout class="QVBoxLayout" name="logLayout" stretch="0">
            <property name="spacing">
             <number>6</number>
            </property>
            <item>
-            <widget class="QTextBrowser" name="logOutput">
-             <property name="maximumSize">
-              <size>
-               <width>16777215</width>
-               <height>110</height>
-              </size>
-             </property>
-             <property name="styleSheet">
-              <string notr="true"/>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <layout class="QVBoxLayout" name="verticalLayout_7">
              <property name="spacing">
               <number>0</number>
              </property>
+             <item>
+              <widget class="QLabel" name="logoLabel">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                 <horstretch>1</horstretch>
+                 <verstretch>1</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>127</width>
+                 <height>90</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>127</width>
+                 <height>90</height>
+                </size>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="pixmap">
+                <pixmap resource="resources.qrc">:/images/logos/logoandtexttransparentsmol.png</pixmap>
+               </property>
+               <property name="scaledContents">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
              <item>
               <widget class="QRadioButton" name="recordingToggleButton">
                <property name="text">
@@ -235,9 +103,9 @@
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="exporter">
+              <widget class="QPushButton" name="openFileButton">
                <property name="text">
-                <string>Export to File</string>
+                <string>Open previous data</string>
                </property>
               </widget>
              </item>
@@ -956,6 +824,62 @@
         <set>Qt::AlignmentFlag::AlignCenter</set>
        </property>
       </widget>
+     </widget>
+     <widget class="QWidget" name="logTab">
+      <attribute name="title">
+       <string>Log</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_5">
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_6">
+         <item>
+          <widget class="QTextBrowser" name="logOutput">
+           <property name="minimumSize">
+            <size>
+             <width>1250</width>
+             <height>600</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>1250</width>
+             <height>600</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true"/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <property name="spacing">
+            <number>3</number>
+           </property>
+           <item>
+            <widget class="QPushButton" name="exporter">
+             <property name="minimumSize">
+              <size>
+               <width>300</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>300</width>
+               <height>30</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Export to File</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+      </layout>
      </widget>
     </widget>
    </item>
