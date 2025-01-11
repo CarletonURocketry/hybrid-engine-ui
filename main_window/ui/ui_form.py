@@ -28,7 +28,7 @@ class Ui_Widget(object):
     def setupUi(self, Widget):
         if not Widget.objectName():
             Widget.setObjectName(u"Widget")
-        Widget.resize(1288, 892)
+        Widget.resize(1320, 892)
         icon = QIcon()
         icon.addFile(u"logos/better_logo.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         Widget.setWindowIcon(icon)
@@ -52,6 +52,165 @@ class Ui_Widget(object):
         self.logLayout = QVBoxLayout()
         self.logLayout.setSpacing(6)
         self.logLayout.setObjectName(u"logLayout")
+        self.formLayout_2 = QFormLayout()
+        self.formLayout_2.setObjectName(u"formLayout_2")
+        self.formLayout_2.setContentsMargins(0, -1, -1, -1)
+        self.gridLayout_3 = QGridLayout()
+        self.gridLayout_3.setObjectName(u"gridLayout_3")
+        self.gridLayout_3.setHorizontalSpacing(15)
+        self.gridLayout_3.setVerticalSpacing(5)
+        self.gridLayout_3.setContentsMargins(-1, -1, 0, 0)
+        self.label_8 = QLabel(self.telemetryTab)
+        self.label_8.setObjectName(u"label_8")
+        self.label_8.setMinimumSize(QSize(90, 0))
+        font = QFont()
+        font.setPointSize(13)
+        self.label_8.setFont(font)
+
+        self.gridLayout_3.addWidget(self.label_8, 2, 1, 1, 1)
+
+        self.label_9 = QLabel(self.telemetryTab)
+        self.label_9.setObjectName(u"label_9")
+        self.label_9.setMinimumSize(QSize(90, 0))
+        self.label_9.setFont(font)
+
+        self.gridLayout_3.addWidget(self.label_9, 2, 2, 1, 1)
+
+        self.label_5 = QLabel(self.telemetryTab)
+        self.label_5.setObjectName(u"label_5")
+        self.label_5.setMinimumSize(QSize(90, 0))
+        self.label_5.setFont(font)
+
+        self.gridLayout_3.addWidget(self.label_5, 0, 2, 1, 1)
+
+        self.label_7 = QLabel(self.telemetryTab)
+        self.label_7.setObjectName(u"label_7")
+        self.label_7.setMinimumSize(QSize(90, 0))
+        self.label_7.setFont(font)
+
+        self.gridLayout_3.addWidget(self.label_7, 2, 0, 1, 1)
+
+        self.label_11 = QLabel(self.telemetryTab)
+        self.label_11.setObjectName(u"label_11")
+        self.label_11.setMinimumSize(QSize(90, 0))
+        self.label_11.setFont(font)
+
+        self.gridLayout_3.addWidget(self.label_11, 4, 0, 1, 1)
+
+        self.label_4 = QLabel(self.telemetryTab)
+        self.label_4.setObjectName(u"label_4")
+        self.label_4.setMinimumSize(QSize(90, 0))
+        self.label_4.setFont(font)
+
+        self.gridLayout_3.addWidget(self.label_4, 0, 1, 1, 1)
+
+        self.label_10 = QLabel(self.telemetryTab)
+        self.label_10.setObjectName(u"label_10")
+        self.label_10.setMinimumSize(QSize(90, 0))
+        self.label_10.setFont(font)
+
+        self.gridLayout_3.addWidget(self.label_10, 3, 0, 1, 1)
+
+        self.label_3 = QLabel(self.telemetryTab)
+        self.label_3.setObjectName(u"label_3")
+        self.label_3.setMinimumSize(QSize(90, 0))
+        self.label_3.setFont(font)
+
+        self.gridLayout_3.addWidget(self.label_3, 1, 1, 1, 1)
+
+        self.label_12 = QLabel(self.telemetryTab)
+        self.label_12.setObjectName(u"label_12")
+        self.label_12.setMinimumSize(QSize(90, 0))
+        self.label_12.setFont(font)
+
+        self.gridLayout_3.addWidget(self.label_12, 3, 1, 1, 1)
+
+        self.label_15 = QLabel(self.telemetryTab)
+        self.label_15.setObjectName(u"label_15")
+        self.label_15.setMinimumSize(QSize(90, 0))
+        self.label_15.setFont(font)
+
+        self.gridLayout_3.addWidget(self.label_15, 3, 2, 1, 1)
+
+        self.label = QLabel(self.telemetryTab)
+        self.label.setObjectName(u"label")
+        self.label.setMinimumSize(QSize(90, 0))
+        self.label.setFont(font)
+
+        self.gridLayout_3.addWidget(self.label, 0, 0, 1, 1)
+
+        self.label_6 = QLabel(self.telemetryTab)
+        self.label_6.setObjectName(u"label_6")
+        self.label_6.setMinimumSize(QSize(90, 0))
+        self.label_6.setFont(font)
+
+        self.gridLayout_3.addWidget(self.label_6, 1, 2, 1, 1)
+
+        self.label_2 = QLabel(self.telemetryTab)
+        self.label_2.setObjectName(u"label_2")
+        self.label_2.setMinimumSize(QSize(90, 0))
+        self.label_2.setFont(font)
+
+        self.gridLayout_3.addWidget(self.label_2, 1, 0, 1, 1)
+
+        self.label_13 = QLabel(self.telemetryTab)
+        self.label_13.setObjectName(u"label_13")
+        self.label_13.setMinimumSize(QSize(90, 0))
+        self.label_13.setFont(font)
+
+        self.gridLayout_3.addWidget(self.label_13, 4, 1, 1, 1)
+
+        self.label_14 = QLabel(self.telemetryTab)
+        self.label_14.setObjectName(u"label_14")
+        self.label_14.setMinimumSize(QSize(90, 0))
+        self.label_14.setFont(font)
+
+        self.gridLayout_3.addWidget(self.label_14, 4, 2, 1, 1)
+
+        self.label_16 = QLabel(self.telemetryTab)
+        self.label_16.setObjectName(u"label_16")
+        self.label_16.setMinimumSize(QSize(90, 0))
+        self.label_16.setFont(font)
+
+        self.gridLayout_3.addWidget(self.label_16, 0, 3, 1, 1)
+
+        self.label_17 = QLabel(self.telemetryTab)
+        self.label_17.setObjectName(u"label_17")
+        self.label_17.setMinimumSize(QSize(90, 0))
+        self.label_17.setFont(font)
+
+        self.gridLayout_3.addWidget(self.label_17, 1, 3, 1, 1)
+
+        self.label_18 = QLabel(self.telemetryTab)
+        self.label_18.setObjectName(u"label_18")
+        self.label_18.setMinimumSize(QSize(90, 0))
+        self.label_18.setFont(font)
+
+        self.gridLayout_3.addWidget(self.label_18, 2, 3, 1, 1)
+
+        self.label_19 = QLabel(self.telemetryTab)
+        self.label_19.setObjectName(u"label_19")
+        self.label_19.setMinimumSize(QSize(90, 0))
+        self.label_19.setFont(font)
+
+        self.gridLayout_3.addWidget(self.label_19, 3, 3, 1, 1)
+
+        self.label_20 = QLabel(self.telemetryTab)
+        self.label_20.setObjectName(u"label_20")
+        self.label_20.setMinimumSize(QSize(90, 0))
+        self.label_20.setFont(font)
+
+        self.gridLayout_3.addWidget(self.label_20, 4, 3, 1, 1)
+
+
+        self.formLayout_2.setLayout(0, QFormLayout.LabelRole, self.gridLayout_3)
+
+
+        self.controlLayout.addLayout(self.formLayout_2)
+
+        self.mainLayout = QVBoxLayout()
+        self.mainLayout.setSpacing(6)
+        self.mainLayout.setObjectName(u"mainLayout")
         self.verticalLayout_7 = QVBoxLayout()
         self.verticalLayout_7.setSpacing(0)
         self.verticalLayout_7.setObjectName(u"verticalLayout_7")
@@ -89,10 +248,10 @@ class Ui_Widget(object):
         self.verticalLayout_7.addWidget(self.openFileButton)
 
 
-        self.logLayout.addLayout(self.verticalLayout_7)
+        self.mainLayout.addLayout(self.verticalLayout_7)
 
 
-        self.controlLayout.addLayout(self.logLayout)
+        self.controlLayout.addLayout(self.mainLayout)
 
         self.valveStatusLayout = QFormLayout()
         self.valveStatusLayout.setObjectName(u"valveStatusLayout")
@@ -107,6 +266,7 @@ class Ui_Widget(object):
         self.controlLayout.setStretch(1, 2)
         self.controlLayout.setStretch(2, 4)
         self.controlLayout.setStretch(0, 4)
+        self.controlLayout.setStretch(1, 4)
 
         self.verticalLayout.addLayout(self.controlLayout)
 
@@ -166,9 +326,9 @@ class Ui_Widget(object):
         self.connectionLayout.setObjectName(u"connectionLayout")
         self.multicastConfigLabel = QLabel(self.configurationTab)
         self.multicastConfigLabel.setObjectName(u"multicastConfigLabel")
-        font = QFont()
-        font.setBold(True)
-        self.multicastConfigLabel.setFont(font)
+        font1 = QFont()
+        font1.setBold(True)
+        self.multicastConfigLabel.setFont(font1)
         self.multicastConfigLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.connectionLayout.addWidget(self.multicastConfigLabel)
@@ -244,7 +404,7 @@ class Ui_Widget(object):
         self.serialLayout_2.setObjectName(u"serialLayout_2")
         self.serialConfigLabel = QLabel(self.configurationTab)
         self.serialConfigLabel.setObjectName(u"serialConfigLabel")
-        self.serialConfigLabel.setFont(font)
+        self.serialConfigLabel.setFont(font1)
         self.serialConfigLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.serialLayout_2.addWidget(self.serialConfigLabel)
@@ -415,7 +575,7 @@ class Ui_Widget(object):
 
         self.graphThresholdLabel = QLabel(self.configurationTab)
         self.graphThresholdLabel.setObjectName(u"graphThresholdLabel")
-        self.graphThresholdLabel.setFont(font)
+        self.graphThresholdLabel.setFont(font1)
         self.graphThresholdLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.gridLayout.addWidget(self.graphThresholdLabel, 0, 0, 1, 2)
@@ -444,36 +604,36 @@ class Ui_Widget(object):
         self.cv1State_tabpid.setObjectName(u"cv1State_tabpid")
         self.cv1State_tabpid.setGeometry(QRect(940, 390, 74, 37))
         self.cv1State_tabpid.setMinimumSize(QSize(50, 0))
-        font1 = QFont()
-        font1.setPointSize(12)
-        font1.setBold(True)
-        self.cv1State_tabpid.setFont(font1)
+        font2 = QFont()
+        font2.setPointSize(12)
+        font2.setBold(True)
+        self.cv1State_tabpid.setFont(font2)
         self.cv1State_tabpid.setStyleSheet(u"background-color: rgb(255, 80, 80);")
         self.cv1State_tabpid.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.xv1State_tabpid = QLabel(self.pAndIdTab)
         self.xv1State_tabpid.setObjectName(u"xv1State_tabpid")
         self.xv1State_tabpid.setGeometry(QRect(280, 420, 74, 37))
-        self.xv1State_tabpid.setFont(font1)
+        self.xv1State_tabpid.setFont(font2)
         self.xv1State_tabpid.setStyleSheet(u"background-color: rgb(255, 80, 80);")
         self.xv1State_tabpid.setIndent(8)
         self.xv2State_tabpid = QLabel(self.pAndIdTab)
         self.xv2State_tabpid.setObjectName(u"xv2State_tabpid")
         self.xv2State_tabpid.setGeometry(QRect(400, 290, 74, 37))
         self.xv2State_tabpid.setMinimumSize(QSize(50, 0))
-        self.xv2State_tabpid.setFont(font1)
+        self.xv2State_tabpid.setFont(font2)
         self.xv2State_tabpid.setStyleSheet(u"background-color: rgb(255, 80, 80);")
         self.xv2State_tabpid.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.xv3State_tabpid = QLabel(self.pAndIdTab)
         self.xv3State_tabpid.setObjectName(u"xv3State_tabpid")
         self.xv3State_tabpid.setGeometry(QRect(500, 510, 74, 37))
-        self.xv3State_tabpid.setFont(font1)
+        self.xv3State_tabpid.setFont(font2)
         self.xv3State_tabpid.setStyleSheet(u"background-color: rgb(255, 80, 80);")
         self.xv3State_tabpid.setIndent(8)
         self.xv4State_tabpid = QLabel(self.pAndIdTab)
         self.xv4State_tabpid.setObjectName(u"xv4State_tabpid")
         self.xv4State_tabpid.setGeometry(QRect(730, 130, 74, 36))
         self.xv4State_tabpid.setMinimumSize(QSize(50, 0))
-        self.xv4State_tabpid.setFont(font1)
+        self.xv4State_tabpid.setFont(font2)
         self.xv4State_tabpid.setStyleSheet(u"background-color: rgb(255, 80, 80);")
         self.xv4State_tabpid.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.tabWidget.addTab(self.pAndIdTab, "")
@@ -522,6 +682,26 @@ class Ui_Widget(object):
 
     def retranslateUi(self, Widget):
         Widget.setWindowTitle(QCoreApplication.translate("Widget", u"Hybrid Engine Ground System UI", None))
+        self.label_8.setText(QCoreApplication.translate("Widget", u"TextLabel", None))
+        self.label_9.setText(QCoreApplication.translate("Widget", u"TextLabel", None))
+        self.label_5.setText(QCoreApplication.translate("Widget", u"TextLabel", None))
+        self.label_7.setText(QCoreApplication.translate("Widget", u"TextLabel", None))
+        self.label_11.setText(QCoreApplication.translate("Widget", u"TextLabel", None))
+        self.label_4.setText(QCoreApplication.translate("Widget", u"TextLabel", None))
+        self.label_10.setText(QCoreApplication.translate("Widget", u"TextLabel", None))
+        self.label_3.setText(QCoreApplication.translate("Widget", u"TextLabel", None))
+        self.label_12.setText(QCoreApplication.translate("Widget", u"TextLabel", None))
+        self.label_15.setText(QCoreApplication.translate("Widget", u"TextLabel", None))
+        self.label.setText(QCoreApplication.translate("Widget", u"TextLabel", None))
+        self.label_6.setText(QCoreApplication.translate("Widget", u"TextLabel", None))
+        self.label_2.setText(QCoreApplication.translate("Widget", u"TextLabel", None))
+        self.label_13.setText(QCoreApplication.translate("Widget", u"TextLabel", None))
+        self.label_14.setText(QCoreApplication.translate("Widget", u"TextLabel", None))
+        self.label_16.setText(QCoreApplication.translate("Widget", u"TextLabel", None))
+        self.label_17.setText(QCoreApplication.translate("Widget", u"TextLabel", None))
+        self.label_18.setText(QCoreApplication.translate("Widget", u"TextLabel", None))
+        self.label_19.setText(QCoreApplication.translate("Widget", u"TextLabel", None))
+        self.label_20.setText(QCoreApplication.translate("Widget", u"TextLabel", None))
         self.logoLabel.setText("")
         self.showPIDButton.setText(QCoreApplication.translate("Widget", u"Show P&&ID Diagram", None))
 #if QT_CONFIG(tooltip)
