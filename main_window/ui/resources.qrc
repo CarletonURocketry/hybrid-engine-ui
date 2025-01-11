@@ -2,5 +2,6 @@
     <qresource prefix="/images">
         <file>logos/logoandtexttransparentsmol.png</file>
         <file>logos/PID hybrid.jpg</file>
+        <file>logos/PID_hybrid_readings.jpg</file>
     </qresource>
 </RCC>

@@ -47,6 +47,8 @@ class Ui_Widget(object):
         self.controlLayout = QHBoxLayout()
         self.controlLayout.setObjectName(u"controlLayout")
         self.controlLayout.setSizeConstraint(QLayout.SizeConstraint.SetDefaultConstraint)
+        self.logoLayout = QVBoxLayout()
+        self.logoLayout.setObjectName(u"logoLayout")
         self.logoLabel = QLabel(self.telemetryTab)
         self.logoLabel.setObjectName(u"logoLabel")
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
@@ -59,7 +61,15 @@ class Ui_Widget(object):
         self.logoLabel.setPixmap(QPixmap(u":/images/logos/logoandtexttransparentsmol.png"))
         self.logoLabel.setScaledContents(True)
 
-        self.controlLayout.addWidget(self.logoLabel)
+        self.logoLayout.addWidget(self.logoLabel)
+
+        self.showPIDButton = QPushButton(self.telemetryTab)
+        self.showPIDButton.setObjectName(u"showPIDButton")
+
+        self.logoLayout.addWidget(self.showPIDButton)
+
+
+        self.controlLayout.addLayout(self.logoLayout)
 
         self.connectionLayout_2 = QVBoxLayout()
         self.connectionLayout_2.setObjectName(u"connectionLayout_2")
@@ -174,7 +184,6 @@ class Ui_Widget(object):
 
         self.controlLayout.addLayout(self.valveStatusLayout)
 
-        self.controlLayout.setStretch(0, 3)
         self.controlLayout.setStretch(1, 2)
         self.controlLayout.setStretch(2, 4)
 
@@ -559,6 +568,7 @@ class Ui_Widget(object):
     def retranslateUi(self, Widget):
         Widget.setWindowTitle(QCoreApplication.translate("Widget", u"Hybrid Engine Ground System UI", None))
         self.logoLabel.setText("")
+        self.showPIDButton.setText(QCoreApplication.translate("Widget", u"Show P&&ID Diagram", None))
 #if QT_CONFIG(tooltip)
         self.udpIpAddressLabel_10.setToolTip(QCoreApplication.translate("Widget", u"Address of multicast group", None))
 #endif // QT_CONFIG(tooltip)

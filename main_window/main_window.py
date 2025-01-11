@@ -2,7 +2,7 @@
 from dataclasses import dataclass
 import json
 
-from PySide6.QtWidgets import QWidget, QLabel
+from PySide6.QtWidgets import QWidget, QLabel, QVBoxLayout
 from PySide6.QtCore import QTimer
 from PySide6.QtNetwork import QUdpSocket, QAbstractSocket, QNetworkInterface
 from pyqtgraph import mkPen, PlotDataItem, InfiniteLine
@@ -41,17 +41,20 @@ class pid_window(QWidget):
     def __init__(self):
         super().__init__()
         layout = QVBoxLayout()
-        self.scaledPic = QPixmap(":/images/logo")
-        self.scaledPic = self.scaledPic.scaled(1100,700)
+        self.scaledPic = QPixmap(":/images/logos/PID_hybrid_readings.jpg")
+        self.scaledPic = self.scaledPic.scaledToWidth(1200)
+        print(self.scaledPic.height())
         self.pic = QLabel("Another Window")
         self.pic.setPixmap(self.scaledPic)
-        self.pic.setMaximumWidth(1100)
-        self.pic.setMaximumHeight(700)
-        #self.pic.resize(100,100)
+        # self.pic.setMaximumWidth(1100)
+        # self.pic.setMaximumHeight(700)
+        # self.pic.resize(100,100)
         self.pic.show()
         layout.addWidget(self.pic)
         self.setLayout(layout)
         #print("new window open") tester
+        self.setFixedSize(self.scaledPic.width(),self.scaledPic.height())
+        # self.setResizable(False)
 
 
 class MainWindow(QWidget):
@@ -71,6 +74,9 @@ class MainWindow(QWidget):
         super().__init__(parent)
         self.ui = Ui_Widget()
         self.ui.setupUi(self)
+
+        # Show P&ID Diagram handler
+        self.ui.showPIDButton.clicked.connect(self.show_new_window)
 
         # Point numpy arrays for temperature, pressure and mass
         self.p1_points = np.empty((0,2))
@@ -187,10 +193,9 @@ class MainWindow(QWidget):
         self.data_filter_timer.start(self.timer_time)
 
         # Button handlers
-        #self.ui.pid_button.clicked.connect(self.show_new_window)
         self.ui.udpConnectButton.clicked.connect(self.udp_connection_button_handler)
 
-        #Open new file heandler
+        # Open new file heandler
         self.ui.openFileButton.clicked.connect(self.open_file_button_handler)
 
         #Connect toggle button for recording data
