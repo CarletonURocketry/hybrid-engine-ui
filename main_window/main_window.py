@@ -3,7 +3,7 @@ from dataclasses import dataclass
 import json
 
 from PySide6.QtWidgets import QWidget, QLabel, QVBoxLayout
-from PySide6.QtCore import QTimer
+from PySide6.QtCore import QTimer, Qt
 from PySide6.QtNetwork import QUdpSocket, QAbstractSocket, QNetworkInterface
 from pyqtgraph import mkPen, PlotDataItem, InfiniteLine
 from PySide6.QtGui import QPixmap
@@ -42,19 +42,16 @@ class pid_window(QWidget):
         super().__init__()
         layout = QVBoxLayout()
         self.scaledPic = QPixmap(":/images/logos/PID_hybrid_readings.jpg")
-        self.scaledPic = self.scaledPic.scaledToWidth(1200)
-        print(self.scaledPic.height())
-        self.pic = QLabel("Another Window")
-        self.pic.setPixmap(self.scaledPic)
-        # self.pic.setMaximumWidth(1100)
-        # self.pic.setMaximumHeight(700)
-        # self.pic.resize(100,100)
-        self.pic.show()
-        layout.addWidget(self.pic)
+        # self.scaledPic = self.scaledPic.scale
+        self.picLabel = QLabel()
+        self.picLabel.setPixmap(self.scaledPic)
+        # self.picLabel.setFixedSize(self.scaledPic.size)
+        # self.picLabel.show()
+        self.picLabel.setScaledContents(True)
+        self.picLabel.adjustSize()
+        layout.addWidget(self.picLabel)
         self.setLayout(layout)
-        #print("new window open") tester
-        self.setFixedSize(self.scaledPic.width(),self.scaledPic.height())
-        # self.setResizable(False)
+        self.setFixedSize(1500,800)
 
 
 class MainWindow(QWidget):
