@@ -3,5 +3,6 @@
         <file>logos/logoandtexttransparentsmol.png</file>
         <file>logos/PID hybrid.jpg</file>
         <file>logos/PID_hybrid_readings.jpg</file>
+        <file>logos/PID_hybrid_readings_trimmed.jpg</file>
     </qresource>
 </RCC>

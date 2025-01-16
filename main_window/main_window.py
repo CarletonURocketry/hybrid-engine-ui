@@ -37,21 +37,22 @@ class TelemetryLabel:
     def changeState(self, newState):
         self.qState.setText(newState)
 
-class pid_window(QWidget):
+class PIDWindow(QWidget):
     def __init__(self):
         super().__init__()
         layout = QVBoxLayout()
-        self.scaledPic = QPixmap(":/images/logos/PID_hybrid_readings.jpg")
-        # self.scaledPic = self.scaledPic.scale
+        self.pid_diagram_pixmap = QPixmap(":/images/logos/PID_hybrid_readings_trimmed.jpg")
+        self.scale_factor = 0.39
+        self.window_width = self.pid_diagram_pixmap.width() * self.scale_factor
+        self.window_height = self.pid_diagram_pixmap.height() * self.scale_factor
         self.picLabel = QLabel()
-        self.picLabel.setPixmap(self.scaledPic)
-        # self.picLabel.setFixedSize(self.scaledPic.size)
-        # self.picLabel.show()
+        self.picLabel.setPixmap(self.pid_diagram_pixmap)
         self.picLabel.setScaledContents(True)
         self.picLabel.adjustSize()
         layout.addWidget(self.picLabel)
         self.setLayout(layout)
-        self.setFixedSize(1500,800)
+        self.setWindowTitle("Hybrid PID Diagram")
+        self.setFixedSize(self.window_width,self.window_height)
 
 
 class MainWindow(QWidget):
@@ -73,6 +74,7 @@ class MainWindow(QWidget):
         self.ui.setupUi(self)
 
         # Show P&ID Diagram handler
+        self.pid_window = PIDWindow()
         self.ui.showPIDButton.clicked.connect(self.show_new_window)
 
         # Point numpy arrays for temperature, pressure and mass
@@ -217,9 +219,8 @@ class MainWindow(QWidget):
 
         event.accept()
     
-    def show_new_window(self, checked):
-        self.w = pid_window()
-        self.w.show()
+    def show_new_window(self):
+        self.pid_window.show()
     
     def init_actuator_valve_label(self): 
         self.valves = {}        
