@@ -2,9 +2,4 @@
     <qresource prefix="/images">
         <file>logos/logoandtexttransparentsmol.png</file>
     </qresource>
-    <qresource prefix="/diagrams">
-        <file>diagrams/PID hybrid.jpg</file>
-        <file>diagrams/PID_hybrid_readings.jpg</file>
-        <file>diagrams/PID_hybrid_readings_trimmed.jpg</file>
-    </qresource>
 </RCC>

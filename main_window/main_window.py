@@ -9,6 +9,8 @@ from pyqtgraph import mkPen, PlotDataItem, InfiniteLine
 from PySide6.QtGui import QPixmap
 import numpy as np
 
+from main_window.ui.pid_window.ui_pid_window import Ui_PIDWindow as PIDUI
+
 # Important:
 # You need to run the following command to generate the ui_form.py file
 #     pyside6-uic form.ui -o ui_form.py, or
@@ -40,36 +42,9 @@ class TelemetryLabel:
 class PIDWindow(QWidget):
     def __init__(self):
         super().__init__()
-        layout = QVBoxLayout()
-        self.labels = {}
-        self.pid_diagram_pixmap = QPixmap(":/diagrams/diagrams/PID_hybrid_readings_trimmed.jpg")
-        self.scale_factor = 0.39
-        self.window_width = self.pid_diagram_pixmap.width() * self.scale_factor
-        self.window_height = self.pid_diagram_pixmap.height() * self.scale_factor
-        self.picLabel = QLabel()
-        self.picLabel.setPixmap(self.pid_diagram_pixmap)
-        self.picLabel.setScaledContents(True)
-        self.picLabel.adjustSize()
-        layout.addWidget(self.picLabel)
-        self.setLayout(layout)
-        self.setWindowTitle("Hybrid PID Diagram")
-        self.setFixedSize(self.window_width,self.window_height)
-        self.labels["p1"] = QLabel("P1: 0000 psi", self)
-        self.labels["p1"].setGeometry(366, 70, 200, 50)
-        self.labels["p1"].setStyleSheet("font-size: 17px; color: black; font-weight: bold;")
-        self.labels["p2"] = QLabel("P2: 0000 psi", self)
-        self.labels["p2"].setGeometry(543, 456, 200, 50)
-        self.labels["p2"].setStyleSheet("font-size: 17px; color: black; font-weight: bold;")
-        self.labels["p3"] = QLabel("P3: 0000 psi", self)
-        self.labels["p3"].setGeometry(200, 435, 200, 50)
-        self.labels["p3"].setStyleSheet("font-size: 17px; color: black; font-weight: bold;")
-        print(self.window_width,self.window_height)
-
-    def mousePressEvent(self, event):
-        x = event.position().x()
-        y = event.position().y()
-        print(f"Cursor position: x={x}, y={y}")
-
+        self.ui = PIDUI()
+        self.ui.setupUi(self)
+        self.setFixedSize(self.width(), self.height())
 
 class MainWindow(QWidget):
     # Imports for MainWindow functionality. Helps split large file into
