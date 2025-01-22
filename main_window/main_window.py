@@ -41,6 +41,7 @@ class PIDWindow(QWidget):
     def __init__(self):
         super().__init__()
         layout = QVBoxLayout()
+        self.labels = {}
         self.pid_diagram_pixmap = QPixmap(":/images/logos/PID_hybrid_readings_trimmed.jpg")
         self.scale_factor = 0.39
         self.window_width = self.pid_diagram_pixmap.width() * self.scale_factor
@@ -53,6 +54,18 @@ class PIDWindow(QWidget):
         self.setLayout(layout)
         self.setWindowTitle("Hybrid PID Diagram")
         self.setFixedSize(self.window_width,self.window_height)
+        self.labels["p1"] = QLabel("P1: 0000 psi", self)
+        self.labels["p1"].setGeometry(366, 70, 200, 50)
+        self.labels["p1"].setStyleSheet("font-size: 17px; color: black; font-weight: bold;")
+        self.labels["p2"] = QLabel("P2: 0000 psi", self)
+        self.labels["p2"].setGeometry(0,0, 200, 50)
+        self.labels["p3"] = QLabel("0000")
+        self.labels["p4"] = QLabel("0000")
+
+    def mousePressEvent(self, event):
+        x = event.position().x()
+        y = event.position().y()
+        print(f"Cursor position: x={x}, y={y}")
 
 
 class MainWindow(QWidget):
@@ -210,6 +223,7 @@ class MainWindow(QWidget):
         self.ui.tankMassThresholdButton.clicked.connect(self.add_tank_mass_threshold_handler)
         self.ui.engineThrustThresholdButton.clicked.connect(self.add_engine_thrust_threshold_handler)
         self.ui.saveConfigButton.clicked.connect(self.save_config)
+        self.pid_window.show()
 
     # Handles when the window is closed, have to make sure to disconnect the TCP socket
     def closeEvent(self, event):
