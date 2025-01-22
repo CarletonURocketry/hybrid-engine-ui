@@ -16,6 +16,8 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QLabel, QSizePolicy, QWidget)
+from . import rc_resources
+from . import rc_resources
 
 class Ui_PIDWindow(object):
     def setupUi(self, PIDWindow):
@@ -67,16 +69,39 @@ class Ui_PIDWindow(object):
         self.t1Label.setGeometry(QRect(574, 282, 49, 16))
         self.t1Label.setStyleSheet(u"font: 700 12pt \"Segoe UI\";\n"
 "color: rgb(0, 0, 0)")
-        self.p1ValLabel_2 = QLabel(PIDWindow)
-        self.p1ValLabel_2.setObjectName(u"p1ValLabel_2")
-        self.p1ValLabel_2.setGeometry(QRect(151, 433, 51, 51))
-        self.p1ValLabel_2.setStyleSheet(u"font: 700 8pt \"Segoe UI\";\n"
+        self.t2ValLabel = QLabel(PIDWindow)
+        self.t2ValLabel.setObjectName(u"t2ValLabel")
+        self.t2ValLabel.setGeometry(QRect(151, 433, 51, 51))
+        self.t2ValLabel.setStyleSheet(u"font: 700 8pt \"Segoe UI\";\n"
 "color: rgb(0, 0, 0)")
-        self.p1Label_2 = QLabel(PIDWindow)
-        self.p1Label_2.setObjectName(u"p1Label_2")
-        self.p1Label_2.setGeometry(QRect(122, 448, 49, 16))
-        self.p1Label_2.setStyleSheet(u"font: 700 12pt \"Segoe UI\";\n"
+        self.t2Label = QLabel(PIDWindow)
+        self.t2Label.setObjectName(u"t2Label")
+        self.t2Label.setGeometry(QRect(122, 448, 49, 16))
+        self.t2Label.setStyleSheet(u"font: 700 12pt \"Segoe UI\";\n"
 "color: rgb(0, 0, 0)")
+        self.p4Label = QLabel(PIDWindow)
+        self.p4Label.setObjectName(u"p4Label")
+        self.p4Label.setGeometry(QRect(540, 404, 49, 16))
+        self.p4Label.setStyleSheet(u"font: 700 12pt \"Segoe UI\";\n"
+"color: rgb(0, 0, 0)")
+        self.p4ValLabel = QLabel(PIDWindow)
+        self.p4ValLabel.setObjectName(u"p4ValLabel")
+        self.p4ValLabel.setGeometry(QRect(566, 389, 51, 51))
+        self.p4ValLabel.setStyleSheet(u"font: 700 8pt \"Segoe UI\";\n"
+"color: rgb(0, 0, 0)")
+        self.pidDiagramLabel.raise_()
+        self.p1ValLabel.raise_()
+        self.p1Label.raise_()
+        self.p2ValLabel.raise_()
+        self.p2Label.raise_()
+        self.p3ValLabel.raise_()
+        self.p3Label.raise_()
+        self.t1Label.raise_()
+        self.t2ValLabel.raise_()
+        self.t2Label.raise_()
+        self.p4Label.raise_()
+        self.p4ValLabel.raise_()
+        self.t1ValLabel.raise_()
 
         self.retranslateUi(PIDWindow)
 
@@ -94,7 +119,9 @@ class Ui_PIDWindow(object):
         self.p3Label.setText(QCoreApplication.translate("PIDWindow", u"P3:", None))
         self.t1ValLabel.setText(QCoreApplication.translate("PIDWindow", u"0000 \u00b0C", None))
         self.t1Label.setText(QCoreApplication.translate("PIDWindow", u"T1:", None))
-        self.p1ValLabel_2.setText(QCoreApplication.translate("PIDWindow", u"0000 \u00b0C", None))
-        self.p1Label_2.setText(QCoreApplication.translate("PIDWindow", u"T2:", None))
+        self.t2ValLabel.setText(QCoreApplication.translate("PIDWindow", u"0000 \u00b0C", None))
+        self.t2Label.setText(QCoreApplication.translate("PIDWindow", u"T2:", None))
+        self.p4Label.setText(QCoreApplication.translate("PIDWindow", u"P4:", None))
+        self.p4ValLabel.setText(QCoreApplication.translate("PIDWindow", u"0000 psi", None))
     # retranslateUi
 

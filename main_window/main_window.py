@@ -9,7 +9,7 @@ from pyqtgraph import mkPen, PlotDataItem, InfiniteLine
 from PySide6.QtGui import QPixmap
 import numpy as np
 
-from main_window.ui.pid_window.ui_pid_window import Ui_PIDWindow as PIDUI
+from .ui.ui_pid_window import Ui_PIDWindow
 
 # Important:
 # You need to run the following command to generate the ui_form.py file
@@ -42,7 +42,7 @@ class TelemetryLabel:
 class PIDWindow(QWidget):
     def __init__(self):
         super().__init__()
-        self.ui = PIDUI()
+        self.ui = Ui_PIDWindow()
         self.ui.setupUi(self)
         self.setFixedSize(self.width(), self.height())
 
