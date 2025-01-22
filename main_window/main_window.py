@@ -42,7 +42,7 @@ class PIDWindow(QWidget):
         super().__init__()
         layout = QVBoxLayout()
         self.labels = {}
-        self.pid_diagram_pixmap = QPixmap(":/images/logos/PID_hybrid_readings_trimmed.jpg")
+        self.pid_diagram_pixmap = QPixmap(":/diagrams/diagrams/PID_hybrid_readings_trimmed.jpg")
         self.scale_factor = 0.39
         self.window_width = self.pid_diagram_pixmap.width() * self.scale_factor
         self.window_height = self.pid_diagram_pixmap.height() * self.scale_factor
@@ -58,9 +58,12 @@ class PIDWindow(QWidget):
         self.labels["p1"].setGeometry(366, 70, 200, 50)
         self.labels["p1"].setStyleSheet("font-size: 17px; color: black; font-weight: bold;")
         self.labels["p2"] = QLabel("P2: 0000 psi", self)
-        self.labels["p2"].setGeometry(0,0, 200, 50)
-        self.labels["p3"] = QLabel("0000")
-        self.labels["p4"] = QLabel("0000")
+        self.labels["p2"].setGeometry(543, 456, 200, 50)
+        self.labels["p2"].setStyleSheet("font-size: 17px; color: black; font-weight: bold;")
+        self.labels["p3"] = QLabel("P3: 0000 psi", self)
+        self.labels["p3"].setGeometry(200, 435, 200, 50)
+        self.labels["p3"].setStyleSheet("font-size: 17px; color: black; font-weight: bold;")
+        print(self.window_width,self.window_height)
 
     def mousePressEvent(self, event):
         x = event.position().x()

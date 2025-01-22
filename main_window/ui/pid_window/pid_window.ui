@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>763</width>
+    <height>643</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QLabel" name="pidDiagramLabel">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>741</width>
+     <height>621</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="../resources.qrc">:/diagrams/diagrams/PID_hybrid_readings_trimmed.jpg</pixmap>
+   </property>
+   <property name="scaledContents">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="p1ValLabel">
+   <property name="geometry">
+    <rect>
+     <x>393</x>
+     <y>69</y>
+     <width>51</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 700 8pt &quot;Segoe UI&quot;;
+color: rgb(0, 0, 0)</string>
+   </property>
+   <property name="text">
+    <string>0000 psi</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="p1Label">
+   <property name="geometry">
+    <rect>
+     <x>368</x>
+     <y>84</y>
+     <width>49</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 700 12pt &quot;Segoe UI&quot;;
+color: rgb(0, 0, 0)</string>
+   </property>
+   <property name="text">
+    <string>P1:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="p2ValLabel">
+   <property name="geometry">
+    <rect>
+     <x>563</x>
+     <y>438</y>
+     <width>51</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 700 8pt &quot;Segoe UI&quot;;
+color: rgb(0, 0, 0)</string>
+   </property>
+   <property name="text">
+    <string>0000 psi</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="p2Label">
+   <property name="geometry">
+    <rect>
+     <x>538</x>
+     <y>453</y>
+     <width>49</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 700 12pt &quot;Segoe UI&quot;;
+color: rgb(0, 0, 0)</string>
+   </property>
+   <property name="text">
+    <string>P2:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="p3ValLabel">
+   <property name="geometry">
+    <rect>
+     <x>218</x>
+     <y>432</y>
+     <width>51</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 700 8pt &quot;Segoe UI&quot;;
+color: rgb(0, 0, 0)</string>
+   </property>
+   <property name="text">
+    <string>0000 psi</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="p3Label">
+   <property name="geometry">
+    <rect>
+     <x>193</x>
+     <y>448</y>
+     <width>49</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 700 12pt &quot;Segoe UI&quot;;
+color: rgb(0, 0, 0)</string>
+   </property>
+   <property name="text">
+    <string>P3:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="t1ValLabel">
+   <property name="geometry">
+    <rect>
+     <x>601</x>
+     <y>275</y>
+     <width>51</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 700 8pt &quot;Segoe UI&quot;;
+color: rgb(0, 0, 0)</string>
+   </property>
+   <property name="text">
+    <string>0000 °C</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="t1Label">
+   <property name="geometry">
+    <rect>
+     <x>574</x>
+     <y>282</y>
+     <width>49</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 700 12pt &quot;Segoe UI&quot;;
+color: rgb(0, 0, 0)</string>
+   </property>
+   <property name="text">
+    <string>T1:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="p1ValLabel_2">
+   <property name="geometry">
+    <rect>
+     <x>151</x>
+     <y>433</y>
+     <width>51</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 700 8pt &quot;Segoe UI&quot;;
+color: rgb(0, 0, 0)</string>
+   </property>
+   <property name="text">
+    <string>0000 °C</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="p1Label_2">
+   <property name="geometry">
+    <rect>
+     <x>122</x>
+     <y>448</y>
+     <width>49</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 700 12pt &quot;Segoe UI&quot;;
+color: rgb(0, 0, 0)</string>
+   </property>
+   <property name="text">
+    <string>T2:</string>
+   </property>
+  </widget>
+ </widget>
+ <resources>
+  <include location="../resources.qrc"/>
+ </resources>
+ <connections/>
+</ui>

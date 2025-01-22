@@ -5,6 +5,9 @@
         "resources.qrc",
         "packet_spec.py",
         "main.py",
-        "main_window/ui/resources.qrc"
+        "main_window/ui/resources.qrc",
+        "main_window/ui/pid_window/pid_diagrams.qrc",
+        "main_window/pid_window/pid_window.ui",
+        "main_window/ui/pid_window/pid_window.ui"
     ]
 }
