@@ -1,10 +1,5 @@
 {
     "files": [
-        "widget.py",
-        "form.ui",
-        "resources.qrc",
-        "packet_spec.py",
-        "main.py",
-        "main_window/ui/resources.qrc",
+        "main_window/ui/resources.qrc"
     ]
 }
