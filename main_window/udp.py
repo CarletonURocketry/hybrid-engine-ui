@@ -22,7 +22,7 @@ def udp_connection_button_handler(self: "MainWindow"):
     if self.padUDPSocket.state() == QAbstractSocket.SocketState.UnconnectedState:
         mcast_addr = self.ui.udpIpAddressInput.text()
         mcast_port = self.ui.udpPortInput.text()
-        interface_addr = self.ui.interfaceAddressDropdown.currentText() if self.ui.interfaceAddressDropdown.currentIndex() > 1 else None
+        interface_addr = self.ui.interfaceAddressDropdown.currentText() if self.ui.interfaceAddressDropdown.currentIndex() > 0 else None
 
         if mcast_addr == "funi":
             self.web_view = QWebEngineView()
@@ -60,12 +60,13 @@ def udp_connection_button_handler(self: "MainWindow"):
         self.padUDPSocket.disconnectFromHost()
 
 def join_multicast_group(self: "MainWindow", mcast_addr: str, mcast_port: str, interface_addr: str =""):
-    interface_address = QHostAddress(interface_addr) if interface_addr else QHostAddress.AnyIPv4
+
     multicast_group = QHostAddress(mcast_addr)
-    net_interface = QNetworkInterface(self.interfaces[interface_addr]) if interface_addr else None
+    net_interface = QNetworkInterface.interfaceFromName("enp8s0")
 
     # Always bind UDP socket to port but change interface address based on args
-    bound_to_port = self.padUDPSocket.bind(interface_address, mcast_port)
+    bound_to_port = self.padUDPSocket.bind(QHostAddress.AnyIPv4, mcast_port)
+
     # Use different func for joining multicast group depending if interface addr is specified
     if net_interface:
         joined_mcast_group = self.padUDPSocket.joinMulticastGroup(multicast_group, net_interface)
