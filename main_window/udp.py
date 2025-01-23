@@ -62,18 +62,26 @@ def udp_connection_button_handler(self: "MainWindow"):
 def join_multicast_group(self: "MainWindow", mcast_addr: str, mcast_port: str, interface_addr: str =""):
 
     multicast_group = QHostAddress(mcast_addr)
-    print(self.interfaces[interface_addr].addressEntries())
+    # print(self.interfaces[interface_addr].addressEntries())
     # net_interface = None
-    net_interface = self.interfaces[interface_addr]
+    net_interface = self.interfaces.get(interface_addr, None)
+    print(net_interface)
 
     # Always bind UDP socket to port but change interface address based on args
     bound_to_port = self.padUDPSocket.bind(QHostAddress.AnyIPv4, mcast_port, QAbstractSocket.BindFlag.ReuseAddressHint|QAbstractSocket.BindFlag.DontShareAddress)
 
     # Use different func for joining multicast group depending if interface addr is specified
-    if net_interface:
-        joined_mcast_group = self.padUDPSocket.joinMulticastGroup(multicast_group, net_interface)
-    else:
-        joined_mcast_group = self.padUDPSocket.joinMulticastGroup(multicast_group)
+    # if net_interface:
+    #     joined_mcast_group = self.padUDPSocket.joinMulticastGroup(multicast_group, net_interface)
+    # else:
+    #     joined_mcast_group = self.padUDPSocket.joinMulticastGroup(multicast_group)
+
+    for interface in QNetworkInterface.allInterfaces():
+        print(f"Joining multicast group on interface: {interface.humanReadableName()}")
+        # Join multicast group for each interface
+        self.padUDPSocket.joinMulticastGroup(multicast_group, interface)
+
+    joined_mcast_group = True
 
     if bound_to_port and joined_mcast_group:
         self.ui.logOutput.append(f"Successfully connected to {mcast_addr}:{mcast_port}")
