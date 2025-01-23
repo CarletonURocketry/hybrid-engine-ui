@@ -38,7 +38,7 @@ def update_act_state(self: "MainWindow", message: packet_spec.PacketMessage):
 
 def plot_point(self: "MainWindow", header: packet_spec.PacketHeader, message: packet_spec.PacketMessage):
     plots = self.plots
-    window_labels = self.pid_window.labels
+    value_labels = self.pid_window.value_labels
     match header.type:
         case packet_spec.PacketType.CONTROL:
             # Cannot reach since the we only receive telemetry data
@@ -49,11 +49,12 @@ def plot_point(self: "MainWindow", header: packet_spec.PacketHeader, message: pa
                     temperatureId:str = "t" + str(message.id)
                     plots[temperatureId].points = np.append(plots[temperatureId].points, np.array([[message.time_since_power, message.temperature]]), axis=0)
                     plots[temperatureId].data_line.setData(plots[temperatureId].points)
+                    if temperatureId in value_labels: value_labels[temperatureId].setText(f"{message.temperature} °C")
                 case packet_spec.TelemetryPacketSubType.PRESSURE:
                     pressureId:str = "p" + str(message.id)
                     plots[pressureId].points = np.append(plots[pressureId].points, np.array([[message.time_since_power, message.pressure]]), axis=0)
                     plots[pressureId].data_line.setData(plots[pressureId].points)
-                    window_labels[pressureId].setText(f"{message.pressure}")
+                    if pressureId in value_labels: value_labels[pressureId].setText(f"{message.pressure} psi")
                 case packet_spec.TelemetryPacketSubType.MASS:
                     tankMass:str = "tank_mass"
                     plots[tankMass].points = np.append(plots[tankMass].points, np.array([[message.time_since_power, message.mass]]), axis=0)
