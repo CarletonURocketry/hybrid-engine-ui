@@ -2,18 +2,20 @@
 from dataclasses import dataclass
 import json
 
-from PySide6.QtWidgets import QWidget, QLabel
-from PySide6.QtCore import QTimer
+from PySide6.QtWidgets import QWidget, QLabel, QVBoxLayout
+from PySide6.QtCore import QTimer, Qt
 from PySide6.QtNetwork import QUdpSocket, QAbstractSocket, QNetworkInterface
 from pyqtgraph import mkPen, PlotDataItem, InfiniteLine
 from PySide6.QtGui import QPixmap
 import numpy as np
 
+# from .ui.ui_pid_window import Ui_PIDWindow
+
 # Important:
 # You need to run the following command to generate the ui_form.py file
 #     pyside6-uic form.ui -o ui_form.py, or
 #     pyside2-uic form.ui -o ui_form.py
-from .ui import Ui_Widget
+from .ui import Ui_Widget, Ui_PIDWindow
  
 points = np.empty((0,2))
 
@@ -37,22 +39,17 @@ class TelemetryLabel:
     def changeState(self, newState):
         self.qState.setText(newState)
 
-class pid_window(QWidget):
+class PIDWindow(QWidget):
     def __init__(self):
         super().__init__()
-        layout = QVBoxLayout()
-        self.scaledPic = QPixmap(":/images/logo")
-        self.scaledPic = self.scaledPic.scaled(1100,700)
-        self.pic = QLabel("Another Window")
-        self.pic.setPixmap(self.scaledPic)
-        self.pic.setMaximumWidth(1100)
-        self.pic.setMaximumHeight(700)
-        #self.pic.resize(100,100)
-        self.pic.show()
-        layout.addWidget(self.pic)
-        self.setLayout(layout)
-        #print("new window open") tester
-
+        self.ui = Ui_PIDWindow()
+        self.ui.setupUi(self)
+        self.value_labels = {}
+        self.setFixedSize(self.width(), self.height())
+        for i in range(1, 5):
+            self.value_labels[f"p{i}"] = getattr(self.ui, f"p{i}ValLabel")
+        for i in range(1, 3):
+            self.value_labels[f"t{i}"] = getattr(self.ui, f"t{i}ValLabel")
 
 class MainWindow(QWidget):
     # Imports for MainWindow functionality. Helps split large file into
@@ -71,6 +68,10 @@ class MainWindow(QWidget):
         super().__init__(parent)
         self.ui = Ui_Widget()
         self.ui.setupUi(self)
+
+        # Show P&ID Diagram handler
+        self.pid_window = PIDWindow()
+        self.ui.showPIDButton.clicked.connect(self.open_pid_window)
 
         # Point numpy arrays for temperature, pressure and mass
         self.p1_points = np.empty((0,2))
@@ -187,10 +188,9 @@ class MainWindow(QWidget):
         self.data_filter_timer.start(self.timer_time)
 
         # Button handlers
-        #self.ui.pid_button.clicked.connect(self.show_new_window)
         self.ui.udpConnectButton.clicked.connect(self.udp_connection_button_handler)
 
-        #Open new file heandler
+        # Open new file heandler
         self.ui.openFileButton.clicked.connect(self.open_file_button_handler)
 
         #Connect toggle button for recording data
@@ -215,9 +215,8 @@ class MainWindow(QWidget):
 
         event.accept()
     
-    def show_new_window(self, checked):
-        self.w = pid_window()
-        self.w.show()
+    def open_pid_window(self):
+        self.pid_window.show()
     
     def init_actuator_valve_label(self): 
         self.valves = {}        
