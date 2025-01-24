@@ -9,13 +9,13 @@ from pyqtgraph import mkPen, PlotDataItem, InfiniteLine
 from PySide6.QtGui import QPixmap
 import numpy as np
 
-from .ui.ui_pid_window import Ui_PIDWindow
+# from .ui.ui_pid_window import Ui_PIDWindow
 
 # Important:
 # You need to run the following command to generate the ui_form.py file
 #     pyside6-uic form.ui -o ui_form.py, or
 #     pyside2-uic form.ui -o ui_form.py
-from .ui import Ui_Widget
+from .ui import Ui_Widget, Ui_PIDWindow
  
 points = np.empty((0,2))
 
