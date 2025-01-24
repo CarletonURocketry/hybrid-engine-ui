@@ -71,7 +71,7 @@ class MainWindow(QWidget):
 
         # Show P&ID Diagram handler
         self.pid_window = PIDWindow()
-        self.ui.showPIDButton.clicked.connect(self.show_new_window)
+        self.ui.showPIDButton.clicked.connect(self.open_pid_window)
 
         # Point numpy arrays for temperature, pressure and mass
         self.p1_points = np.empty((0,2))
@@ -206,7 +206,6 @@ class MainWindow(QWidget):
         self.ui.tankMassThresholdButton.clicked.connect(self.add_tank_mass_threshold_handler)
         self.ui.engineThrustThresholdButton.clicked.connect(self.add_engine_thrust_threshold_handler)
         self.ui.saveConfigButton.clicked.connect(self.save_config)
-        self.pid_window.show()
 
     # Handles when the window is closed, have to make sure to disconnect the TCP socket
     def closeEvent(self, event):
@@ -216,7 +215,7 @@ class MainWindow(QWidget):
 
         event.accept()
     
-    def show_new_window(self):
+    def open_pid_window(self):
         self.pid_window.show()
     
     def init_actuator_valve_label(self): 
