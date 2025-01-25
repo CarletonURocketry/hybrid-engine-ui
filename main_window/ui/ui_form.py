@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'form.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.8.1
+## Created by: Qt User Interface Compiler version 6.7.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -47,14 +47,6 @@ class Ui_Widget(object):
         self.controlLayout = QHBoxLayout()
         self.controlLayout.setObjectName(u"controlLayout")
         self.controlLayout.setSizeConstraint(QLayout.SizeConstraint.SetDefaultConstraint)
-        self.logoLayout = QVBoxLayout()
-        self.logoLayout.setObjectName(u"logoLayout")
-        self.logLayout = QVBoxLayout()
-        self.logLayout.setSpacing(6)
-        self.logLayout.setObjectName(u"logLayout")
-        self.formLayout_2 = QFormLayout()
-        self.formLayout_2.setObjectName(u"formLayout_2")
-        self.formLayout_2.setContentsMargins(0, -1, -1, -1)
         self.mainLayout = QVBoxLayout()
         self.mainLayout.setSpacing(6)
         self.mainLayout.setObjectName(u"mainLayout")
@@ -234,55 +226,6 @@ class Ui_Widget(object):
         self.gridLayout_3.addWidget(self.label_20, 4, 3, 1, 1)
 
 
-        self.formLayout_2.setLayout(0, QFormLayout.LabelRole, self.gridLayout_3)
-
-
-        self.controlLayout.addLayout(self.formLayout_2)
-
-        self.mainLayout = QVBoxLayout()
-        self.mainLayout.setSpacing(6)
-        self.mainLayout.setObjectName(u"mainLayout")
-        self.verticalLayout_7 = QVBoxLayout()
-        self.verticalLayout_7.setSpacing(0)
-        self.verticalLayout_7.setObjectName(u"verticalLayout_7")
-        self.logoLabel = QLabel(self.telemetryTab)
-        self.logoLabel.setObjectName(u"logoLabel")
-        sizePolicy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        sizePolicy.setHorizontalStretch(1)
-        sizePolicy.setVerticalStretch(1)
-        sizePolicy.setHeightForWidth(self.logoLabel.sizePolicy().hasHeightForWidth())
-        self.logoLabel.setSizePolicy(sizePolicy)
-        self.logoLabel.setMinimumSize(QSize(127, 90))
-        self.logoLabel.setMaximumSize(QSize(127, 90))
-        self.logoLabel.setPixmap(QPixmap(u":/images/logos/logoandtexttransparentsmol.png"))
-        self.logoLabel.setScaledContents(True)
-
-        self.logoLayout.addWidget(self.logoLabel)
-
-        self.showPIDButton = QPushButton(self.telemetryTab)
-        self.showPIDButton.setObjectName(u"showPIDButton")
-
-        self.logoLayout.addWidget(self.showPIDButton)
-
-
-        self.controlLayout.addLayout(self.logoLayout)
-        self.verticalLayout_7.addWidget(self.logoLabel)
-
-        self.recordingToggleButton = QRadioButton(self.telemetryTab)
-        self.recordingToggleButton.setObjectName(u"recordingToggleButton")
-
-        self.verticalLayout_7.addWidget(self.recordingToggleButton)
-
-        self.openFileButton = QPushButton(self.telemetryTab)
-        self.openFileButton.setObjectName(u"openFileButton")
-
-        self.verticalLayout_7.addWidget(self.openFileButton)
-
-
-        self.mainLayout.addLayout(self.verticalLayout_7)
-
-
-        self.controlLayout.addLayout(self.mainLayout)
         self.controlLayout.addLayout(self.gridLayout_3)
 
         self.valveStatusLayout = QFormLayout()
@@ -295,10 +238,6 @@ class Ui_Widget(object):
 
         self.controlLayout.addLayout(self.valveStatusLayout)
 
-        self.controlLayout.setStretch(1, 2)
-        self.controlLayout.setStretch(2, 4)
-        self.controlLayout.setStretch(0, 4)
-        self.controlLayout.setStretch(1, 4)
 
         self.verticalLayout.addLayout(self.controlLayout)
 
@@ -737,24 +676,6 @@ class Ui_Widget(object):
         self.label_9.setText(QCoreApplication.translate("Widget", u"TextLabel", None))
         self.label_10.setText(QCoreApplication.translate("Widget", u"TextLabel", None))
         self.label_20.setText(QCoreApplication.translate("Widget", u"TextLabel", None))
-        self.logoLabel.setText("")
-        self.showPIDButton.setText(QCoreApplication.translate("Widget", u"Show P&&ID Diagram", None))
-#if QT_CONFIG(tooltip)
-        self.udpIpAddressLabel_10.setToolTip(QCoreApplication.translate("Widget", u"Address of multicast group", None))
-#endif // QT_CONFIG(tooltip)
-        self.udpIpAddressLabel_10.setText(QCoreApplication.translate("Widget", u"MCast IPv4 address*: ", None))
-#if QT_CONFIG(tooltip)
-        self.udpPortLabel_10.setToolTip(QCoreApplication.translate("Widget", u"Port of multicast group", None))
-#endif // QT_CONFIG(tooltip)
-        self.udpPortLabel_10.setText(QCoreApplication.translate("Widget", u"MCast port*: ", None))
-#if QT_CONFIG(tooltip)
-        self.interfaceAddressLabel_10.setToolTip(QCoreApplication.translate("Widget", u"Enter ipconfig in terminal to see interfaces", None))
-#endif // QT_CONFIG(tooltip)
-        self.interfaceAddressLabel_10.setText(QCoreApplication.translate("Widget", u"Interface address:", None))
-        self.udpConnectButton_10.setText(QCoreApplication.translate("Widget", u"Create UDP connection", None))
-        self.openFileButton.setText(QCoreApplication.translate("Widget", u"Open previous data", None))
-        self.recordingToggleButton.setText(QCoreApplication.translate("Widget", u"Recording", None))
-        self.openFileButton.setText(QCoreApplication.translate("Widget", u"Open previous data", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.telemetryTab), QCoreApplication.translate("Widget", u"Telemetry", None))
         self.multicastConfigLabel.setText(QCoreApplication.translate("Widget", u"Multicast configuration", None))
 #if QT_CONFIG(tooltip)

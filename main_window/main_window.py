@@ -71,7 +71,7 @@ class MainWindow(QWidget):
 
         # Show P&ID Diagram handler
         self.pid_window = PIDWindow()
-        self.ui.showPIDButton.clicked.connect(self.open_pid_window)
+        #self.ui.showPIDButton.clicked.connect(self.open_pid_window)
 
         # Point numpy arrays for temperature, pressure and mass
         self.p1_points = np.empty((0,2))
