@@ -39,6 +39,21 @@ class TelemetryLabel:
     def changeState(self, newState):
         self.qState.setText(newState)
 
+class SensorLabel:
+    def __init__(self, name, reading, row, column, parentGrid):
+        self.row = row
+        self.column = column
+        self.qName = QLabel(name)
+        self.qReading = QLabel(reading)
+        parentGrid.addWidget(self.qName, row, column)
+        parentGrid.addWidget(self.qReading, row, column + 1)
+        self.qName.setStyleSheet("font-size: 17px")
+        self.qName.setMinimumWidth(30)
+        self.qReading.setStyleSheet("font-size: 17px; font-weight: bold")
+
+    def changeReading(self, newReading):
+        self.qReading.setText(newReading)
+
 class PIDWindow(QWidget):
     def __init__(self):
         super().__init__()
@@ -197,8 +212,9 @@ class MainWindow(QWidget):
         self.ui.recordingToggleButton.toggled.connect(self.recording_toggle_button_handler)
         self.file_out = None
 
-        # Init valve labels
+        # Init valve and sensor labels
         self.init_actuator_valve_label()
+        self.init_sensor_reading_label()
         
         # Plot threshold handlers
         self.ui.pressureThresholdButton.clicked.connect(self.add_pressure_threshold_handler)
@@ -227,3 +243,13 @@ class MainWindow(QWidget):
             #There will be three label at each row, therefore divide by three, add 1 to skip the first row of valves
             #Row timed 2 because there will be two label for state and for the name
             self.valves[i] = TelemetryLabel("XV-" + str(i), "CLOSED", ((i - 1)// 3) + 1 , ((i - 1) % 3) * 2, self.ui.valveGrid)
+
+    def init_sensor_reading_label(self):
+        self.sensors ={}
+        self.sensors[4] = SensorLabel("Tank Mass", "0", 4, 0, self.ui.sensorLayout)
+        #print("first label created") tester
+        self.sensors[9] = SensorLabel("Engine Thrust", "0", 4, 2, self.ui.sensorLayout)
+        for i in range (0, 4):
+            self.sensors[i] = SensorLabel("T" + str(i), "0", i, 0, self.ui.sensorLayout)
+            self.sensors[i + 5] = SensorLabel("P" + str(i), "0", i, 2, self.ui.sensorLayout)
+
