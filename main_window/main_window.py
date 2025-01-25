@@ -249,7 +249,7 @@ class MainWindow(QWidget):
         self.sensors[4] = SensorLabel("Tank Mass", "0", 4, 0, self.ui.sensorLayout)
         #print("first label created") tester
         self.sensors[9] = SensorLabel("Engine Thrust", "0", 4, 2, self.ui.sensorLayout)
-        for i in range (0, 4):
-            self.sensors[i] = SensorLabel("T" + str(i), "0", i, 0, self.ui.sensorLayout)
-            self.sensors[i + 5] = SensorLabel("P" + str(i), "0", i, 2, self.ui.sensorLayout)
+        for i in range (1, 5):
+            self.sensors[i - 1] = SensorLabel("T" + str(i), "0" + " °C", i - 1, 0, self.ui.sensorLayout)
+            self.sensors[i + 4] = SensorLabel("P" + str(i), "0", i - 1, 2, self.ui.sensorLayout)
 
