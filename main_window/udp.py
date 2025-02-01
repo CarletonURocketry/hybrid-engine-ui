@@ -91,7 +91,6 @@ def join_multicast_group(self: "MainWindow", mcast_addr: str, mcast_port: str, i
 def udp_receive_socket_data(self: "MainWindow"):
     while self.padUDPSocket.hasPendingDatagrams():
         datagram, host, port = self.padUDPSocket.readDatagram(self.padUDPSocket.pendingDatagramSize())
-        print(f"{datagram=} {host=} {port=}")
         data = datagram.data()
         header_bytes = data[:2]
         message_bytes = data[2:]
