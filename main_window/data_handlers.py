@@ -13,7 +13,6 @@ if TYPE_CHECKING:
     from main_window import MainWindow
 
 def process_data(self: "MainWindow", header: packet_spec.PacketHeader, message: packet_spec.PacketMessage):
-    # print(header, message)
     match header.sub_type:
         case packet_spec.TelemetryPacketSubType.TEMPERATURE \
         | packet_spec.TelemetryPacketSubType.PRESSURE \
@@ -23,6 +22,7 @@ def process_data(self: "MainWindow", header: packet_spec.PacketHeader, message: 
             self.update_act_state(message)
         case _:
             pass  
+
 def turn_on_valve(self: "MainWindow", id: int):
     self.valves[id].changeState("OPEN")
 
@@ -64,7 +64,6 @@ def plot_point(self: "MainWindow", header: packet_spec.PacketHeader, message: pa
                     tankMass:str = "tank_mass"
                     plots[tankMass].points = np.append(plots[tankMass].points, np.array([[message.time_since_power, message.mass]]), axis=0)
                     plots[tankMass].data_line.setData(plots[tankMass].points)
-                    change_new_reading(self, 4, str(message.mass)) # array id for tank mass label is 4
                 case packet_spec.TelemetryPacketSubType.ARMING_STATE:
                     pass
                 case packet_spec.TelemetryPacketSubType.ACT_STATE:
