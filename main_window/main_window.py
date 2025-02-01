@@ -250,6 +250,7 @@ class MainWindow(QWidget):
         #print("first label created") tester
         self.sensors[9] = SensorLabel("Engine Thrust", "0", 4, 2, self.ui.sensorLayout)
         for i in range (1, 5):
+            # 0 - 3 id, takes first column
             self.sensors[i - 1] = SensorLabel("T" + str(i), "0" + " °C", i - 1, 0, self.ui.sensorLayout)
+            # 5 - 8 id, takes third column since the second one is for temp readings values
             self.sensors[i + 4] = SensorLabel("P" + str(i), "0" + " psi", i - 1, 2, self.ui.sensorLayout)
-
