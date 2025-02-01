@@ -60,19 +60,14 @@ def udp_connection_button_handler(self: "MainWindow"):
         self.padUDPSocket.disconnectFromHost()
 
 def join_multicast_group(self: "MainWindow", mcast_addr: str, mcast_port: str, interface_addr: str =""):
-
     multicast_group = QHostAddress(mcast_addr)
-    # print(self.interfaces[interface_addr].addressEntries())
-    # net_interface = None
-    # net_interface = self.interfaces.get(interface_addr, None)
-    # print(net_interface)
 
     # This should listen on all addresses
     bound_to_port = self.padUDPSocket.bind(QHostAddress.AnyIPv4, mcast_port, QAbstractSocket.BindFlag.ReuseAddressHint|QAbstractSocket.BindFlag.DontShareAddress)
 
+    # Join multicast group for each interface
     for interface in QNetworkInterface.allInterfaces():
-        print(f"Joining multicast group on interface: {interface.humanReadableName()}")
-        # Join multicast group for each interface
+        self.ui.logOutput.append(f"Joining multicast group on interface: {interface.humanReadableName()}")
         self.padUDPSocket.joinMulticastGroup(multicast_group, interface)
 
     joined_mcast_group = True
