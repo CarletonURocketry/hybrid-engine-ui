@@ -33,7 +33,7 @@ class TelemetryLabel:
         parentGrid.addWidget(self.qName, row, column)
         parentGrid.addWidget(self.qState, row, column + 1)
         self.qName.setStyleSheet("font-size: 17px")
-        self.qName.setMinimumWidth(90)
+        self.qName.setMinimumWidth(150)
         self.qState.setStyleSheet("background-color: rgb(255, 80, 80); font-weight: bold; font-size: 17px")
 
     def changeState(self, newState):
