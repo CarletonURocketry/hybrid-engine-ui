@@ -440,23 +440,6 @@
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="interfaceLayout">
-           <item>
-            <widget class="QLabel" name="interfaceAddressLabel">
-             <property name="toolTip">
-              <string>Enter ipconfig in terminal to see interfaces</string>
-             </property>
-             <property name="text">
-              <string>Interface address:</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QComboBox" name="interfaceAddressDropdown"/>
-           </item>
-          </layout>
-         </item>
-         <item>
           <widget class="QPushButton" name="udpConnectButton">
            <property name="styleSheet">
             <string notr="true"/>

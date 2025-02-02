@@ -101,15 +101,6 @@ class MainWindow(QWidget):
         self.padUDPSocket.readyRead.connect(self.udp_receive_socket_data)
         self.padUDPSocket.errorOccurred.connect(self.udp_on_error)
         self.padUDPSocket.disconnected.connect(self.udp_on_disconnected)
-
-        # Dictionary that maps IP addresses to network interfaces, these used when
-        # selecting the network interface to join the multicast group on
-        self.interfaces = {}
-        self.ui.interfaceAddressDropdown.addItem("Select interface IP address")
-        for interface in QNetworkInterface.allInterfaces():
-                for entry in interface.addressEntries():
-                    self.interfaces[entry.ip().toString()] = interface
-                    self.ui.interfaceAddressDropdown.addItem(entry.ip().toString())
         
         # Export to File button
         self.ui.exporter.clicked.connect(self.save_to_file)

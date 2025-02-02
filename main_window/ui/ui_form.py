@@ -291,21 +291,6 @@ class Ui_Widget(object):
 
         self.connectionLayout.addLayout(self.portLayout)
 
-        self.interfaceLayout = QHBoxLayout()
-        self.interfaceLayout.setObjectName(u"interfaceLayout")
-        self.interfaceAddressLabel = QLabel(self.configurationTab)
-        self.interfaceAddressLabel.setObjectName(u"interfaceAddressLabel")
-
-        self.interfaceLayout.addWidget(self.interfaceAddressLabel)
-
-        self.interfaceAddressDropdown = QComboBox(self.configurationTab)
-        self.interfaceAddressDropdown.setObjectName(u"interfaceAddressDropdown")
-
-        self.interfaceLayout.addWidget(self.interfaceAddressDropdown)
-
-
-        self.connectionLayout.addLayout(self.interfaceLayout)
-
         self.udpConnectButton = QPushButton(self.configurationTab)
         self.udpConnectButton.setObjectName(u"udpConnectButton")
         self.udpConnectButton.setStyleSheet(u"")
@@ -595,10 +580,6 @@ class Ui_Widget(object):
         self.udpPortLabel.setToolTip(QCoreApplication.translate("Widget", u"Port of multicast group", None))
 #endif // QT_CONFIG(tooltip)
         self.udpPortLabel.setText(QCoreApplication.translate("Widget", u"MCast port*: ", None))
-#if QT_CONFIG(tooltip)
-        self.interfaceAddressLabel.setToolTip(QCoreApplication.translate("Widget", u"Enter ipconfig in terminal to see interfaces", None))
-#endif // QT_CONFIG(tooltip)
-        self.interfaceAddressLabel.setText(QCoreApplication.translate("Widget", u"Interface address:", None))
         self.udpConnectButton.setText(QCoreApplication.translate("Widget", u"Join multicast group", None))
         self.serialConfigLabel.setText(QCoreApplication.translate("Widget", u"Serial configuration", None))
 #if QT_CONFIG(tooltip)
