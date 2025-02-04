@@ -24,6 +24,8 @@ Here's a quick breakdown of the files and directories of this project
   - `ui` - Contains generated and compiled UI code and images
     - `form.ui` - Generated XML-like file representation of UI
     - `ui_form.py` - Compiled Python code of `form.ui`
+    - `pid_window.ui` - Generated XML-like file representation of the P&ID diagram window
+    - `ui_pid_window.ui` - Compiled Python code of `pid_window.ui`
     - `resources.qrc` - Generated file containing information of images and other assets
     - `rc_resources.qrc` - Compiled Python code of `resources.qrc`
   - `main_window.py` - Contains code for `MainWindow` class, primarily consists of imports from other files
@@ -31,3 +33,4 @@ Here's a quick breakdown of the files and directories of this project
   - `data_handlers.py` - Contains all code for processing data
   - `recording_and_playback.py` - Contains all code for handling recording and playback of data
   - `logging.py` - Contains all code for handling logging
+  - `config.py` - Contains code for loading the ui with preset values from `config.json`. Primarily for default threshold lines on graphs and multicast settings.
