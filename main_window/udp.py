@@ -61,9 +61,9 @@ def join_multicast_group(self: "MainWindow", mcast_addr: str, mcast_port: str):
     # Join multicast group for each interface
     for interface in QNetworkInterface.allInterfaces():
         self.ui.logOutput.append(f"Joining multicast group on interface: {interface.humanReadableName()}")
-        if not joined_mcast_group: joined_mcast_group = self.padUDPSocket.joinMulticastGroup(multicast_group, interface)
+        self.padUDPSocket.joinMulticastGroup(multicast_group, interface)
 
-    if bound_to_port and joined_mcast_group:
+    if bound_to_port:
         self.ui.logOutput.append(f"Successfully connected to {mcast_addr}:{mcast_port}")
         self.ui.udpConnectButton.setText("Close UDP connection")
         self.ui.udpIpAddressInput.setReadOnly(True)
