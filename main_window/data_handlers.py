@@ -64,12 +64,6 @@ def plot_point(self: "MainWindow", header: packet_spec.PacketHeader, message: pa
                     tankMass:str = "tank_mass"
                     plots[tankMass].points = np.append(plots[tankMass].points, np.array([[message.time_since_power, message.mass]]), axis=0)
                     plots[tankMass].data_line.setData(plots[tankMass].points)
-                case packet_spec.TelemetryPacketSubType.ARMING_STATE:
-                    pass
-                case packet_spec.TelemetryPacketSubType.ACT_STATE:
-                    pass 
-                case packet_spec.TelemetryPacketSubType.WARNING:
-                    pass
 
 def filter_data(self: "MainWindow"):
     for key in self.plots:
