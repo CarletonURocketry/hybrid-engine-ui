@@ -38,6 +38,10 @@ def update_act_state(self: "MainWindow", message: packet_spec.PacketMessage):
             self.turn_off_valve(message.id)
         case packet_spec.ActuatorState.ON:
             self.turn_on_valve(message.id)
+            
+    # match message.id:
+    #     case 0:
+    #         self.write_to_log(f"")
 
 def plot_point(self: "MainWindow", header: packet_spec.PacketHeader, message: packet_spec.PacketMessage):
     plots = self.plots

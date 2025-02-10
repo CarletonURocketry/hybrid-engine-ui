@@ -43,8 +43,8 @@ def open_file_button_handler(self: "MainWindow"):
 
         # If a file is selected, read its contents
         if file_path:
-            self.ui.logOutput.append(f"Reading data from {file_path}")
+            self.write_to_log(f"Reading data from {file_path}")
             with open(file_path, 'rb') as file:
                 data = file.read()
                 self.display_previous_data(data)
-            self.ui.logOutput.append("Data loaded")
+            self.write_to_log("Data loaded")
