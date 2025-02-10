@@ -22,7 +22,6 @@ def udp_connection_button_handler(self: "MainWindow"):
     if self.padUDPSocket.state() == QAbstractSocket.SocketState.UnconnectedState:
         mcast_addr = self.ui.udpIpAddressInput.text()
         mcast_port = self.ui.udpPortInput.text()
-        interface_addr = self.ui.interfaceAddressDropdown.currentText() if self.ui.interfaceAddressDropdown.currentIndex() > 1 else None
 
         if mcast_addr == "funi":
             self.web_view = QWebEngineView()
@@ -48,31 +47,23 @@ def udp_connection_button_handler(self: "MainWindow"):
             self.ui.logOutput.append(f"Port '{mcast_port}' is invalid")
             return
 
-        if interface_addr:
-            try:
-                ipaddress.ip_address(interface_addr)
-            except ValueError:
-                self.ui.logOutput.append(f"Interface IP address '{interface_addr}' is invalid")
-                return
-
-        self.join_multicast_group(mcast_addr, mcast_port, interface_addr)
+        self.join_multicast_group(mcast_addr, mcast_port)
     else:
         self.padUDPSocket.disconnectFromHost()
 
-def join_multicast_group(self: "MainWindow", mcast_addr: str, mcast_port: str, interface_addr: str =""):
-    interface_address = QHostAddress(interface_addr) if interface_addr else QHostAddress.AnyIPv4
+def join_multicast_group(self: "MainWindow", mcast_addr: str, mcast_port: str):
     multicast_group = QHostAddress(mcast_addr)
-    net_interface = QNetworkInterface(self.interfaces[interface_addr]) if interface_addr else None
 
-    # Always bind UDP socket to port but change interface address based on args
-    bound_to_port = self.padUDPSocket.bind(interface_address, mcast_port)
-    # Use different func for joining multicast group depending if interface addr is specified
-    if net_interface:
-        joined_mcast_group = self.padUDPSocket.joinMulticastGroup(multicast_group, net_interface)
-    else:
-        joined_mcast_group = self.padUDPSocket.joinMulticastGroup(multicast_group)
+    # This should listen on all addresses
+    bound_to_port = self.padUDPSocket.bind(QHostAddress.AnyIPv4, mcast_port, QAbstractSocket.BindFlag.ReuseAddressHint|QAbstractSocket.BindFlag.DontShareAddress)
 
-    if bound_to_port and joined_mcast_group:
+    joined_mcast_group = False
+    # Join multicast group for each interface
+    for interface in QNetworkInterface.allInterfaces():
+        self.ui.logOutput.append(f"Joining multicast group on interface: {interface.humanReadableName()}")
+        self.padUDPSocket.joinMulticastGroup(multicast_group, interface)
+
+    if bound_to_port:
         self.ui.logOutput.append(f"Successfully connected to {mcast_addr}:{mcast_port}")
         self.ui.udpConnectButton.setText("Close UDP connection")
         self.ui.udpIpAddressInput.setReadOnly(True)
