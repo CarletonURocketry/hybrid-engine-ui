@@ -3,10 +3,10 @@ from dataclasses import dataclass
 import json
 
 from PySide6.QtWidgets import QWidget, QLabel, QVBoxLayout
-from PySide6.QtCore import QTimer, Qt
+from PySide6.QtCore import QTimer, Qt, QPoint
 from PySide6.QtNetwork import QUdpSocket, QAbstractSocket, QNetworkInterface
 from pyqtgraph import mkPen, PlotDataItem, InfiniteLine
-from PySide6.QtGui import QPixmap
+from PySide6.QtGui import QPainter, QPolygon
 import numpy as np
 
 # from .ui.ui_pid_window import Ui_PIDWindow
@@ -16,7 +16,7 @@ import numpy as np
 #     pyside6-uic form.ui -o ui_form.py, or
 #     pyside2-uic form.ui -o ui_form.py
 from .ui import Ui_Widget, Ui_PIDWindow
- 
+
 points = np.empty((0,2))
 
 @dataclass
@@ -62,6 +62,19 @@ class PIDWindow(QWidget):
         self.ui.setupUi(self)
         self.value_labels = {}
         self.setFixedSize(self.width(), self.height())
+        self.red_pen = mkPen("r", width=2)
+        self.painter = QPainter(self)
+        self.painter.setPen(self.red_pen)
+        # Define the points of the triangle
+        self.triangle_points = QPolygon([
+            QPoint(50, 50),  # Point 1
+            QPoint(100, 150),  # Point 2
+            QPoint(150, 50)  # Point 3
+        ])
+
+        self.painter = QPainter(self)
+        self.painter.setPen(self.red_pen)
+        self.painter.drawPolygon(self.triangle_points)
         for i in range(1, 5):
             self.value_labels[f"p{i}"] = getattr(self.ui, f"p{i}ValLabel")
         for i in range(1, 3):
@@ -207,7 +220,7 @@ class MainWindow(QWidget):
         # Init valve and sensor labels
         self.init_actuator_valve_label()
         self.init_sensor_reading_label()
-        
+
         # Plot threshold handlers
         self.ui.pressureThresholdButton.clicked.connect(self.add_pressure_threshold_handler)
         self.ui.temperatureThresholdButton.clicked.connect(self.add_temperature_threshold_handler)
@@ -222,12 +235,12 @@ class MainWindow(QWidget):
             self.padUDPSocket.waitForDisconnected()
 
         event.accept()
-    
+
     def open_pid_window(self):
         self.pid_window.show()
-    
-    def init_actuator_valve_label(self): 
-        self.valves = {}        
+
+    def init_actuator_valve_label(self):
+        self.valves = {}
         self.valves[0] = TelemetryLabel("Fire Valve", "CLOSED", 0, 2, self.ui.valveGrid)
         self.valves[13] = TelemetryLabel("Quick Disconnect", "CLOSED", 0, 0, self.ui.valveGrid)
         self.valves[14] =  TelemetryLabel("Igniter", "CLOSED", 0, 4, self.ui.valveGrid)
