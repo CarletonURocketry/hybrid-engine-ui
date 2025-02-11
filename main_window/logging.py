@@ -21,4 +21,8 @@ def save_to_file(self: "MainWindow"):
     f = open(file_name, "w")
     f.write(self.ui.logOutput.toPlainText())
     f.close()
-    self.ui.logOutput.append(f"Exported logs to {file_name}")
+    self.write_to_log(f"Exported logs to {file_name}")
+
+def write_to_log(self: "MainWindow", msg: str):
+    cur_date_time = QDateTime.currentDateTime().toString("yyyy-MM-dd - HH:mm:ss")
+    self.ui.logOutput.append(f"[{cur_date_time}]: {msg}")

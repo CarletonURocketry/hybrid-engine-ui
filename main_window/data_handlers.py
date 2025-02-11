@@ -38,6 +38,18 @@ def update_act_state(self: "MainWindow", message: packet_spec.PacketMessage):
             self.turn_off_valve(message.id)
         case packet_spec.ActuatorState.ON:
             self.turn_on_valve(message.id)
+            
+    match message.id:
+        case 0:
+            self.write_to_log("////////////////////////////")
+            self.write_to_log(f"Fire Valve: {message.state}")
+        case 13:
+            self.write_to_log(f"Quick Disconnect: {message.state}")
+        case 14:
+            self.write_to_log(f"Igniter: {message.state}")
+            self.write_to_log("////////////////////////////")
+        case _:
+            self.write_to_log(f"XV-{message.id}: {message.state}")
 
 def plot_point(self: "MainWindow", header: packet_spec.PacketHeader, message: packet_spec.PacketMessage):
     plots = self.plots

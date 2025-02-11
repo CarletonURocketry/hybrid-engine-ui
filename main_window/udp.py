@@ -38,13 +38,13 @@ def udp_connection_button_handler(self: "MainWindow"):
         try:
             ipaddress.ip_address(mcast_addr)
         except ValueError:
-            self.ui.logOutput.append(f"IP address '{mcast_addr}' is invalid")
+            self.write_to_log(f"IP address '{mcast_addr}' is invalid")
             return
 
         try:
             mcast_port = int(mcast_port)
         except ValueError:
-            self.ui.logOutput.append(f"Port '{mcast_port}' is invalid")
+            self.write_to_log(f"Port '{mcast_port}' is invalid")
             return
 
         self.join_multicast_group(mcast_addr, mcast_port)
@@ -60,17 +60,17 @@ def join_multicast_group(self: "MainWindow", mcast_addr: str, mcast_port: str):
     joined_mcast_group = False
     # Join multicast group for each interface
     for interface in QNetworkInterface.allInterfaces():
-        self.ui.logOutput.append(f"Joining multicast group on interface: {interface.humanReadableName()}")
+        self.write_to_log(f"Joining multicast group on interface: {interface.humanReadableName()}")
         self.padUDPSocket.joinMulticastGroup(multicast_group, interface)
 
     if bound_to_port:
-        self.ui.logOutput.append(f"Successfully connected to {mcast_addr}:{mcast_port}")
+        self.write_to_log(f"Successfully connected to {mcast_addr}:{mcast_port}")
         self.ui.udpConnectButton.setText("Close UDP connection")
         self.ui.udpIpAddressInput.setReadOnly(True)
         self.ui.udpPortInput.setReadOnly(True)
         return True
     else:
-        self.ui.logOutput.append(f"Unable to join multicast group at IP address: {mcast_addr}, port: {mcast_port}")
+        self.write_to_log(f"Unable to join multicast group at IP address: {mcast_addr}, port: {mcast_port}")
         return False
     
 # Any data received should be handled here
@@ -91,13 +91,13 @@ def udp_receive_socket_data(self: "MainWindow"):
 # Any errors with the socket should be handled here and logged
 def udp_on_error(self: "MainWindow"):
     if self.padUDPSocket.errorString() == "The address is not available":
-        self.ui.logOutput.append(f"Connection failed - {self.padUDPSocket.error()}: {self.padUDPSocket.errorString()}")
+        self.write_to_log(f"Connection failed - {self.padUDPSocket.error()}: {self.padUDPSocket.errorString()}")
     else:
-        self.ui.logOutput.append(f"{self.padUDPSocket.error()}: {self.padUDPSocket.errorString()}")
+        self.write_to_log(f"{self.padUDPSocket.error()}: {self.padUDPSocket.errorString()}")
 
 # Any disconnection event should be handled here and logged
 def udp_on_disconnected(self: "MainWindow"):
-    self.ui.logOutput.append("Socket connection was closed")
+    self.write_to_log("Socket connection was closed")
     self.ui.udpConnectButton.setText("Create UDP connection")
     self.ui.udpIpAddressInput.setReadOnly(False)
     self.ui.udpPortInput.setReadOnly(False)

@@ -419,8 +419,6 @@ class Ui_Widget(object):
         self.verticalLayout_6.setObjectName(u"verticalLayout_6")
         self.logOutput = QTextBrowser(self.logTab)
         self.logOutput.setObjectName(u"logOutput")
-        self.logOutput.setMinimumSize(QSize(1250, 600))
-        self.logOutput.setMaximumSize(QSize(1250, 600))
         self.logOutput.setStyleSheet(u"")
 
         self.verticalLayout_6.addWidget(self.logOutput)

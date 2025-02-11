@@ -75,7 +75,7 @@ class MainWindow(QWidget):
         process_data, turn_off_valve, turn_on_valve
     from .recording_and_playback import recording_toggle_button_handler, \
         open_file_button_handler, display_previous_data
-    from .logging import save_to_file
+    from .logging import save_to_file, write_to_log
     from .config import load_config, save_config, add_pressure_threshold_handler, \
     add_temperature_threshold_handler, add_tank_mass_threshold_handler, add_engine_thrust_threshold_handler
 
@@ -106,7 +106,7 @@ class MainWindow(QWidget):
             with open("config.json") as config:
                 self.load_config(config)
         except FileNotFoundError:
-            self.ui.logOutput.append("config.json not found")
+            self.write_to_log("config.json not found")
 
         # Plot data
         self.plots = {}
