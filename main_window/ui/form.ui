@@ -666,18 +666,6 @@
         <layout class="QVBoxLayout" name="verticalLayout_6">
          <item>
           <widget class="QTextBrowser" name="logOutput">
-           <property name="minimumSize">
-            <size>
-             <width>1250</width>
-             <height>600</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>1250</width>
-             <height>600</height>
-            </size>
-           </property>
            <property name="styleSheet">
             <string notr="true"/>
            </property>
