@@ -169,7 +169,7 @@ class MainWindow(QWidget):
         self.ui.tankMassPlot.getAxis("left").setTextPen(black_pen)
         self.ui.tankMassPlot.getAxis("bottom").setPen(black_pen)
         self.ui.tankMassPlot.getAxis("bottom").setTextPen(black_pen)
-        self.plots["tank_mass"] = PlotInfo(self.tank_mass_points, self.ui.tankMassPlot.plot(self.tank_mass_points, pen=red_pen))
+        self.plots["m1"] = PlotInfo(self.tank_mass_points, self.ui.tankMassPlot.plot(self.tank_mass_points, pen=red_pen))
         for marker in [self.ui.tankMassThresholdList.item(x) for x in range(self.ui.tankMassThresholdList.count())]:
             self.ui.tankMassPlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=black_pen))
 
@@ -181,7 +181,7 @@ class MainWindow(QWidget):
         self.ui.engineThrustPlot.getAxis("left").setTextPen(black_pen)
         self.ui.engineThrustPlot.getAxis("bottom").setPen(black_pen)
         self.ui.engineThrustPlot.getAxis("bottom").setTextPen(black_pen)
-        self.plots["engine_thrust"] = PlotInfo(self.engine_thrust_points, self.ui.engineThrustPlot.plot(self.engine_thrust_points, pen=red_pen))
+        self.plots["m2"] = PlotInfo(self.engine_thrust_points, self.ui.engineThrustPlot.plot(self.engine_thrust_points, pen=red_pen))
         for marker in [self.ui.engineThrustThresholdList.item(x) for x in range(self.ui.engineThrustThresholdList.count())]:
             self.ui.engineThrustPlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=black_pen))
 
