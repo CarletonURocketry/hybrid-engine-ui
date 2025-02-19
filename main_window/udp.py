@@ -58,7 +58,6 @@ def udp_connection_button_handler(self: "MainWindow"):
             self.write_to_log(f"Unable to join multicast group at IP address: {mcast_addr}, port: {mcast_port}")
     else:
         self.padUDPSocket.disconnectFromHost()
-        self.heartbeat_timer.stop()
 
 def join_multicast_group(self: "MainWindow", mcast_addr: str, mcast_port: str):
     multicast_group = QHostAddress(mcast_addr)
@@ -102,5 +101,7 @@ def udp_on_disconnected(self: "MainWindow"):
     self.ui.udpConnectButton.setText("Create UDP connection")
     self.ui.udpIpAddressInput.setReadOnly(False)
     self.ui.udpPortInput.setReadOnly(False)
+    self.heartbeat_timer.stop()
+    self.reset_heartbeat_timeout()
     if self.file_out:
         self.file_out.close()
