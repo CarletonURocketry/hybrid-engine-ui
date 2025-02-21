@@ -3,10 +3,10 @@ from dataclasses import dataclass
 import json
 
 from PySide6.QtWidgets import QWidget, QLabel, QVBoxLayout
-from PySide6.QtCore import QTimer, Qt
+from PySide6.QtCore import QTimer, Qt, QPoint
 from PySide6.QtNetwork import QUdpSocket, QAbstractSocket, QNetworkInterface
 from pyqtgraph import mkPen, PlotDataItem, InfiniteLine
-from PySide6.QtGui import QPixmap
+from PySide6.QtGui import QPainter, QPolygon
 import numpy as np
 
 # from .ui.ui_pid_window import Ui_PIDWindow
@@ -16,7 +16,7 @@ import numpy as np
 #     pyside6-uic form.ui -o ui_form.py, or
 #     pyside2-uic form.ui -o ui_form.py
 from .ui import Ui_Widget, Ui_PIDWindow
- 
+
 points = np.empty((0,2))
 
 @dataclass
@@ -34,7 +34,8 @@ class TelemetryLabel:
         parentGrid.addWidget(self.qState, row, column + 1)
         self.qName.setStyleSheet("font-size: 17px")
         self.qName.setMinimumWidth(150)
-        self.qState.setStyleSheet("background-color: rgb(255, 80, 80); font-weight: bold; font-size: 17px")
+        self.qState.setStyleSheet("background-color: rgb(255, 80, 80); font-weight: bold; font-size: 20px;")
+        self.qState.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
     def changeState(self, newState):
         self.qState.setText(newState)
@@ -132,9 +133,9 @@ class MainWindow(QWidget):
         # points refers to the np array containing the data
         # data_line refers to the PlotDataItem object used to show data on the plots
         self.ui.pressurePlot.addLegend(offset=(0,0), colCount=4, labelTextColor="black")
-        self.ui.pressurePlot.setTitle("Pressure", color="black")
-        self.ui.pressurePlot.setLabel("left", "Pressure (PSI)", color="black")
-        self.ui.pressurePlot.setLabel("bottom", "Time", color="black")
+        self.ui.pressurePlot.setTitle("<span style='font-weight: bold;'>Pressure</span>", color="black")
+        self.ui.pressurePlot.setLabel("left", "<span style='font-size: 13px; font-weight: bold;'>Pressure (PSI)</span>", color="black")
+        self.ui.pressurePlot.setLabel("bottom", "<span style='font-size: 13px; font-weight: bold;'>Time (ms)</span>", color="black")
         self.ui.pressurePlot.getAxis("left").setPen(black_pen)
         self.ui.pressurePlot.getAxis("left").setTextPen(black_pen)
         self.ui.pressurePlot.getAxis("bottom").setPen(black_pen)
@@ -147,9 +148,9 @@ class MainWindow(QWidget):
             self.ui.pressurePlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=black_pen))
 
         self.ui.temperaturePlot.addLegend(offset=(0,0), colCount=4, labelTextColor="black")
-        self.ui.temperaturePlot.setTitle("Temperature", color="black")
-        self.ui.temperaturePlot.setLabel("left", "Temperature (°C)", color="black")
-        self.ui.temperaturePlot.setLabel("bottom", "Time", color="black")
+        self.ui.temperaturePlot.setTitle("<span style='font-weight: bold;'>Temperature</span>", color="black")
+        self.ui.temperaturePlot.setLabel("left", "<span style='font-size: 13px; font-weight: bold;'>Temperature (°C)</span>", color="black")
+        self.ui.temperaturePlot.setLabel("bottom", "<span style='font-size: 13px; font-weight: bold;'>Time (ms)</span>", color="black")
         self.ui.temperaturePlot.getAxis("left").setPen(black_pen)
         self.ui.temperaturePlot.getAxis("left").setTextPen(black_pen)
         self.ui.temperaturePlot.getAxis("bottom").setPen(black_pen)
@@ -163,8 +164,8 @@ class MainWindow(QWidget):
 
         self.ui.tankMassPlot.addLegend()
         self.ui.tankMassPlot.setTitle("Tank Mass", color="black")
-        self.ui.tankMassPlot.setLabel("left", "Mass (Kg)", color="black")
-        self.ui.tankMassPlot.setLabel("bottom", "Time", color="black")
+        self.ui.tankMassPlot.setLabel("left", "<span style='font-size: 13px; font-weight: bold;'>Mass (Kg)</span>", color="black")
+        self.ui.tankMassPlot.setLabel("bottom", "<span style='font-size: 13px; font-weight: bold;'>Time (ms)</span>", color="black")
         self.ui.tankMassPlot.getAxis("left").setPen(black_pen)
         self.ui.tankMassPlot.getAxis("left").setTextPen(black_pen)
         self.ui.tankMassPlot.getAxis("bottom").setPen(black_pen)
@@ -175,8 +176,8 @@ class MainWindow(QWidget):
 
         self.ui.engineThrustPlot.addLegend()
         self.ui.engineThrustPlot.setTitle("Engine Thrust", color="black")
-        self.ui.engineThrustPlot.setLabel("left", "Thrust (KN)", color="black")
-        self.ui.engineThrustPlot.setLabel("bottom", "Time", color="black")
+        self.ui.engineThrustPlot.setLabel("left", "<span style='font-size: 13px; font-weight: bold;'>Thrust (KN)</span>", color="black")
+        self.ui.engineThrustPlot.setLabel("bottom", "<span style='font-size: 13px; font-weight: bold;'>Time (ms)</span>", color="black")
         self.ui.engineThrustPlot.getAxis("left").setPen(black_pen)
         self.ui.engineThrustPlot.getAxis("left").setTextPen(black_pen)
         self.ui.engineThrustPlot.getAxis("bottom").setPen(black_pen)
@@ -206,7 +207,7 @@ class MainWindow(QWidget):
         # Init valve and sensor labels
         self.init_actuator_valve_label()
         self.init_sensor_reading_label()
-        
+
         # Plot threshold handlers
         self.ui.pressureThresholdButton.clicked.connect(self.add_pressure_threshold_handler)
         self.ui.temperatureThresholdButton.clicked.connect(self.add_temperature_threshold_handler)
@@ -221,12 +222,12 @@ class MainWindow(QWidget):
             self.padUDPSocket.waitForDisconnected()
 
         event.accept()
-    
+
     def open_pid_window(self):
         self.pid_window.show()
-    
-    def init_actuator_valve_label(self): 
-        self.valves = {}        
+
+    def init_actuator_valve_label(self):
+        self.valves = {}
         self.valves[0] = TelemetryLabel("Fire Valve", "CLOSED", 0, 2, self.ui.valveGrid)
         self.valves[13] = TelemetryLabel("Quick Disconnect", "CLOSED", 0, 0, self.ui.valveGrid)
         self.valves[14] =  TelemetryLabel("Igniter", "CLOSED", 0, 4, self.ui.valveGrid)

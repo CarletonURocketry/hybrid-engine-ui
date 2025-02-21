@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'form.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.7.2
+## Created by: Qt User Interface Compiler version 6.8.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -16,10 +16,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QComboBox, QFormLayout, QGridLayout,
-    QHBoxLayout, QLabel, QLayout, QLineEdit,
-    QListWidget, QListWidgetItem, QPushButton, QRadioButton,
-    QSizePolicy, QSpacerItem, QTabWidget, QTextBrowser,
-    QVBoxLayout, QWidget)
+    QHBoxLayout, QLabel, QLineEdit, QListWidget,
+    QListWidgetItem, QPushButton, QRadioButton, QSizePolicy,
+    QSpacerItem, QTabWidget, QTextBrowser, QVBoxLayout,
+    QWidget)
 
 from pyqtgraph import PlotWidget
 from . import rc_resources
@@ -46,9 +46,7 @@ class Ui_Widget(object):
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.controlLayout = QHBoxLayout()
         self.controlLayout.setObjectName(u"controlLayout")
-        self.controlLayout.setSizeConstraint(QLayout.SizeConstraint.SetDefaultConstraint)
         self.mainLayout = QVBoxLayout()
-        self.mainLayout.setSpacing(6)
         self.mainLayout.setObjectName(u"mainLayout")
         self.logoLabel = QLabel(self.telemetryTab)
         self.logoLabel.setObjectName(u"logoLabel")
@@ -83,36 +81,37 @@ class Ui_Widget(object):
         self.controlLayout.addLayout(self.mainLayout)
 
         self.sensorLayout = QGridLayout()
-        self.sensorLayout.setSpacing(0)
         self.sensorLayout.setObjectName(u"sensorLayout")
-        self.sensorLayout.setSizeConstraint(QLayout.SizeConstraint.SetNoConstraint)
-        self.sensorLayout.setContentsMargins(-1, -1, 0, 0)
 
         self.controlLayout.addLayout(self.sensorLayout)
 
-        self.valveStatusLayout = QFormLayout()
-        self.valveStatusLayout.setObjectName(u"valveStatusLayout")
         self.valveGrid = QGridLayout()
         self.valveGrid.setObjectName(u"valveGrid")
 
-        self.valveStatusLayout.setLayout(0, QFormLayout.LabelRole, self.valveGrid)
+        self.controlLayout.addLayout(self.valveGrid)
 
-
-        self.controlLayout.addLayout(self.valveStatusLayout)
-
+        self.controlLayout.setStretch(0, 2)
+        self.controlLayout.setStretch(1, 1)
+        self.controlLayout.setStretch(2, 1)
 
         self.verticalLayout.addLayout(self.controlLayout)
 
         self.plotLayout = QGridLayout()
         self.plotLayout.setSpacing(20)
         self.plotLayout.setObjectName(u"plotLayout")
-        self.tankMassPlot = PlotWidget(self.telemetryTab)
-        self.tankMassPlot.setObjectName(u"tankMassPlot")
+        self.pressurePlot = PlotWidget(self.telemetryTab)
+        self.pressurePlot.setObjectName(u"pressurePlot")
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.pressurePlot.sizePolicy().hasHeightForWidth())
+        self.pressurePlot.setSizePolicy(sizePolicy1)
+        self.pressurePlot.setAutoFillBackground(False)
         brush = QBrush(QColor(240, 240, 240, 255))
         brush.setStyle(Qt.SolidPattern)
-        self.tankMassPlot.setBackgroundBrush(brush)
+        self.pressurePlot.setBackgroundBrush(brush)
 
-        self.plotLayout.addWidget(self.tankMassPlot, 1, 0, 1, 1)
+        self.plotLayout.addWidget(self.pressurePlot, 0, 0, 1, 1)
 
         self.temperaturePlot = PlotWidget(self.telemetryTab)
         self.temperaturePlot.setObjectName(u"temperaturePlot")
@@ -123,23 +122,17 @@ class Ui_Widget(object):
 
         self.plotLayout.addWidget(self.temperaturePlot, 0, 1, 1, 1)
 
-        self.pressurePlot = PlotWidget(self.telemetryTab)
-        self.pressurePlot.setObjectName(u"pressurePlot")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        sizePolicy1.setHorizontalStretch(0)
-        sizePolicy1.setVerticalStretch(0)
-        sizePolicy1.setHeightForWidth(self.pressurePlot.sizePolicy().hasHeightForWidth())
-        self.pressurePlot.setSizePolicy(sizePolicy1)
-        self.pressurePlot.setAutoFillBackground(False)
-        self.pressurePlot.setBackgroundBrush(brush)
-
-        self.plotLayout.addWidget(self.pressurePlot, 0, 0, 1, 1)
-
         self.engineThrustPlot = PlotWidget(self.telemetryTab)
         self.engineThrustPlot.setObjectName(u"engineThrustPlot")
         self.engineThrustPlot.setBackgroundBrush(brush)
 
         self.plotLayout.addWidget(self.engineThrustPlot, 1, 1, 1, 1)
+
+        self.tankMassPlot = PlotWidget(self.telemetryTab)
+        self.tankMassPlot.setObjectName(u"tankMassPlot")
+        self.tankMassPlot.setBackgroundBrush(brush)
+
+        self.plotLayout.addWidget(self.tankMassPlot, 1, 0, 1, 1)
 
 
         self.verticalLayout.addLayout(self.plotLayout)
