@@ -133,9 +133,9 @@ class MainWindow(QWidget):
         # points refers to the np array containing the data
         # data_line refers to the PlotDataItem object used to show data on the plots
         self.ui.pressurePlot.addLegend(offset=(0,0), colCount=4, labelTextColor="black")
-        self.ui.pressurePlot.setTitle("Pressure", color="black")
-        self.ui.pressurePlot.setLabel("left", "Pressure (PSI)", color="black")
-        self.ui.pressurePlot.setLabel("bottom", "Time (s)", color="black")
+        self.ui.pressurePlot.setTitle("<span style='font-weight: bold;'>Pressure</span>", color="black")
+        self.ui.pressurePlot.setLabel("left", "<span style='font-size: 13px; font-weight: bold;'>Pressure (PSI)</span>", color="black")
+        self.ui.pressurePlot.setLabel("bottom", "<span style='font-size: 13px; font-weight: bold;'>Time (s)</span>", color="black")
         self.ui.pressurePlot.getAxis("left").setPen(black_pen)
         self.ui.pressurePlot.getAxis("left").setTextPen(black_pen)
         self.ui.pressurePlot.getAxis("bottom").setPen(black_pen)
@@ -148,9 +148,9 @@ class MainWindow(QWidget):
             self.ui.pressurePlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=black_pen))
 
         self.ui.temperaturePlot.addLegend(offset=(0,0), colCount=4, labelTextColor="black")
-        self.ui.temperaturePlot.setTitle("Temperature", color="black")
-        self.ui.temperaturePlot.setLabel("left", "Temperature (°C)", color="black")
-        self.ui.temperaturePlot.setLabel("bottom", "Time (s)", color="black")
+        self.ui.temperaturePlot.setTitle("<span style='font-weight: bold;'>Temperature</span>", color="black")
+        self.ui.temperaturePlot.setLabel("left", "<span style='font-size: 13px; font-weight: bold;'>Temperature (°C)</span>", color="black")
+        self.ui.temperaturePlot.setLabel("bottom", "<span style='font-size: 13px; font-weight: bold;'>Time (s)</span>", color="black")
         self.ui.temperaturePlot.getAxis("left").setPen(black_pen)
         self.ui.temperaturePlot.getAxis("left").setTextPen(black_pen)
         self.ui.temperaturePlot.getAxis("bottom").setPen(black_pen)
@@ -164,8 +164,8 @@ class MainWindow(QWidget):
 
         self.ui.tankMassPlot.addLegend()
         self.ui.tankMassPlot.setTitle("Tank Mass", color="black")
-        self.ui.tankMassPlot.setLabel("left", "Mass (Kg)", color="black")
-        self.ui.tankMassPlot.setLabel("bottom", "Time (s)", color="black")
+        self.ui.tankMassPlot.setLabel("left", "<span style='font-size: 13px; font-weight: bold;'>Mass (Kg)</span>", color="black")
+        self.ui.tankMassPlot.setLabel("bottom", "<span style='font-size: 13px; font-weight: bold;'>Time (s)</span>", color="black")
         self.ui.tankMassPlot.getAxis("left").setPen(black_pen)
         self.ui.tankMassPlot.getAxis("left").setTextPen(black_pen)
         self.ui.tankMassPlot.getAxis("bottom").setPen(black_pen)
@@ -176,8 +176,8 @@ class MainWindow(QWidget):
 
         self.ui.engineThrustPlot.addLegend()
         self.ui.engineThrustPlot.setTitle("Engine Thrust", color="black")
-        self.ui.engineThrustPlot.setLabel("left", "Thrust (KN)", color="black")
-        self.ui.engineThrustPlot.setLabel("bottom", "Time (s)", color="black")
+        self.ui.engineThrustPlot.setLabel("left", "<span style='font-size: 13px; font-weight: bold;'>Thrust (KN)</span>", color="black")
+        self.ui.engineThrustPlot.setLabel("bottom", "<span style='font-size: 13px; font-weight: bold;'>Time (s)</span>", color="black")
         self.ui.engineThrustPlot.getAxis("left").setPen(black_pen)
         self.ui.engineThrustPlot.getAxis("left").setTextPen(black_pen)
         self.ui.engineThrustPlot.getAxis("bottom").setPen(black_pen)
