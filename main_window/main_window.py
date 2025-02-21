@@ -62,19 +62,6 @@ class PIDWindow(QWidget):
         self.ui.setupUi(self)
         self.value_labels = {}
         self.setFixedSize(self.width(), self.height())
-        self.red_pen = mkPen("r", width=2)
-        self.painter = QPainter(self)
-        self.painter.setPen(self.red_pen)
-        # Define the points of the triangle
-        self.triangle_points = QPolygon([
-            QPoint(50, 50),  # Point 1
-            QPoint(100, 150),  # Point 2
-            QPoint(150, 50)  # Point 3
-        ])
-
-        self.painter = QPainter(self)
-        self.painter.setPen(self.red_pen)
-        self.painter.drawPolygon(self.triangle_points)
         for i in range(1, 5):
             self.value_labels[f"p{i}"] = getattr(self.ui, f"p{i}ValLabel")
         for i in range(1, 3):
