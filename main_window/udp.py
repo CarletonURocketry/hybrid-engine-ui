@@ -54,6 +54,8 @@ def udp_connection_button_handler(self: "MainWindow"):
             self.ui.udpPortInput.setReadOnly(True)
             self.reset_heartbeat_timeout()
             self.heartbeat_timer.start(self.heartbeat_interval)
+            self.ui.udpConnStatusLabel.setText("Connected")
+            self.ui.udpConnStatusLabel.setStyleSheet("background-color: rgb(0, 255, 0);")
         else:
             self.write_to_log(f"Unable to join multicast group at IP address: {mcast_addr}, port: {mcast_port}")
     else:
@@ -103,5 +105,7 @@ def udp_on_disconnected(self: "MainWindow"):
     self.ui.udpPortInput.setReadOnly(False)
     self.heartbeat_timer.stop()
     self.reset_heartbeat_timeout()
+    self.ui.udpConnStatusLabel.setText("Not connected")
+    self.ui.udpConnStatusLabel.setStyleSheet("background-color: rgb(0, 85, 127);")
     if self.file_out:
         self.file_out.close()
