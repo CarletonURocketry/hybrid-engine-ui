@@ -5,6 +5,7 @@ import json
 from PySide6.QtWidgets import QWidget, QLabel, QVBoxLayout
 from PySide6.QtCore import QTimer, Qt, QMutex, QPoint
 from PySide6.QtNetwork import QUdpSocket, QAbstractSocket, QNetworkInterface
+from PySide6.QtSerialPort import QSerialPort, QSerialPortInfo
 from pyqtgraph import mkPen, PlotDataItem, InfiniteLine
 from PySide6.QtGui import QPainter, QPolygon
 import numpy as np
@@ -72,6 +73,8 @@ class MainWindow(QWidget):
     # smaller modules containing related functionality
     from .udp import udp_connection_button_handler, join_multicast_group, \
         udp_receive_socket_data, udp_on_disconnected, udp_on_error
+    from .serial import serial_connection_button_handler, serial_receive_data, \
+        serial_on_disconnected, serial_on_error
     from .data_handlers import plot_point, filter_data, update_act_state, \
         process_data, turn_off_valve, turn_on_valve, decrease_heartbeat, reset_heartbeat_timeout
     from .recording_and_playback import recording_toggle_button_handler, \
@@ -109,6 +112,11 @@ class MainWindow(QWidget):
         except FileNotFoundError:
             self.write_to_log("config.json not found")
 
+        for port in QSerialPortInfo.availablePorts():
+            self.ui.serialPortDropdown.addItem(port.portName())
+        for rate in QSerialPortInfo.standardBaudRates():
+            self.ui.baudRateDropdown.addItem(str(rate))
+
         # Plot data
         self.plots = {}
 
@@ -117,6 +125,10 @@ class MainWindow(QWidget):
         self.padUDPSocket.readyRead.connect(self.udp_receive_socket_data)
         self.padUDPSocket.errorOccurred.connect(self.udp_on_error)
         self.padUDPSocket.disconnected.connect(self.udp_on_disconnected)
+
+        # Serial
+        self.serialPort = QSerialPort(self)
+        self.serialPort.readyRead.connect(self.serial_receive_data)
         
         # Export to File button
         self.ui.exporter.clicked.connect(self.save_to_file)
@@ -206,6 +218,7 @@ class MainWindow(QWidget):
 
         # Button handlers
         self.ui.udpConnectButton.clicked.connect(self.udp_connection_button_handler)
+        self.ui.serialConnectButton.clicked.connect(self.serial_connection_button_handler)
 
         # Open new file heandler
         self.ui.openFileButton.clicked.connect(self.open_file_button_handler)
@@ -230,6 +243,9 @@ class MainWindow(QWidget):
         if self.padUDPSocket.state() == QAbstractSocket.SocketState.ConnectedState:
             self.padUDPSocket.disconnectFromHost()
             self.padUDPSocket.waitForDisconnected()
+
+        if self.serialPort.isOpen():
+            self.serialPort.close()
 
         event.accept()
 

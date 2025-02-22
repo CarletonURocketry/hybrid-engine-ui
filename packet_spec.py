@@ -8,7 +8,6 @@ byte streams into their respective classes
 from dataclasses import dataclass
 from abc import ABC
 from enum import Enum
-import numpy as np
 
 import struct
 
@@ -142,7 +141,7 @@ def parse_packet_message(header: PacketHeader, message_bytes: bytes) -> PacketMe
                     id, status = struct.unpack("<BB", message_bytes)
                     return ActuationAcknowledgement(id=id, status=status)
                 case TelemetryPacketSubType.ARM_REQ:
-                    level:int
+                    level: int
                     level = struct.unpack("<B", message_bytes)
                     return ArmingRequest(level=level)
                 case TelemetryPacketSubType.ARM_ACK:
@@ -186,4 +185,3 @@ def parse_packet_message(header: PacketHeader, message_bytes: bytes) -> PacketMe
                     type:int
                     time, type = struct.unpack("<IB", message_bytes)
                     return WarningPacket(type=Warning(type), time_since_power=time)
-
