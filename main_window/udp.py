@@ -47,7 +47,17 @@ def udp_connection_button_handler(self: "MainWindow"):
             self.write_to_log(f"Port '{mcast_port}' is invalid")
             return
 
-        self.join_multicast_group(mcast_addr, mcast_port)
+        if self.join_multicast_group(mcast_addr, mcast_port):
+            self.write_to_log(f"Successfully connected to {mcast_addr}:{mcast_port}")
+            self.ui.udpConnectButton.setText("Close UDP connection")
+            self.ui.udpIpAddressInput.setReadOnly(True)
+            self.ui.udpPortInput.setReadOnly(True)
+            self.reset_heartbeat_timeout()
+            self.heartbeat_timer.start(self.heartbeat_interval)
+            self.ui.udpConnStatusLabel.setText("Connected")
+            self.ui.udpConnStatusLabel.setStyleSheet("background-color: rgb(0, 255, 0);")
+        else:
+            self.write_to_log(f"Unable to join multicast group at IP address: {mcast_addr}, port: {mcast_port}")
     else:
         self.padUDPSocket.disconnectFromHost()
 
@@ -61,17 +71,9 @@ def join_multicast_group(self: "MainWindow", mcast_addr: str, mcast_port: str):
     # Join multicast group for each interface
     for interface in QNetworkInterface.allInterfaces():
         self.write_to_log(f"Joining multicast group on interface: {interface.humanReadableName()}")
-        self.padUDPSocket.joinMulticastGroup(multicast_group, interface)
+        if self.padUDPSocket.joinMulticastGroup(multicast_group, interface): joined_mcast_group = True
 
-    if bound_to_port:
-        self.write_to_log(f"Successfully connected to {mcast_addr}:{mcast_port}")
-        self.ui.udpConnectButton.setText("Close UDP connection")
-        self.ui.udpIpAddressInput.setReadOnly(True)
-        self.ui.udpPortInput.setReadOnly(True)
-        return True
-    else:
-        self.write_to_log(f"Unable to join multicast group at IP address: {mcast_addr}, port: {mcast_port}")
-        return False
+    return bound_to_port and joined_mcast_group
     
 # Any data received should be handled here
 def udp_receive_socket_data(self: "MainWindow"):
@@ -101,5 +103,9 @@ def udp_on_disconnected(self: "MainWindow"):
     self.ui.udpConnectButton.setText("Create UDP connection")
     self.ui.udpIpAddressInput.setReadOnly(False)
     self.ui.udpPortInput.setReadOnly(False)
+    self.heartbeat_timer.stop()
+    self.reset_heartbeat_timeout()
+    self.ui.udpConnStatusLabel.setText("Not connected")
+    self.ui.udpConnStatusLabel.setStyleSheet("background-color: rgb(0, 85, 127);")
     if self.file_out:
         self.file_out.close()

@@ -3,7 +3,7 @@ from dataclasses import dataclass
 import json
 
 from PySide6.QtWidgets import QWidget, QLabel, QVBoxLayout
-from PySide6.QtCore import QTimer, Qt, QPoint
+from PySide6.QtCore import QTimer, Qt, QMutex, QPoint
 from PySide6.QtNetwork import QUdpSocket, QAbstractSocket, QNetworkInterface
 from pyqtgraph import mkPen, PlotDataItem, InfiniteLine
 from PySide6.QtGui import QPainter, QPolygon
@@ -73,7 +73,7 @@ class MainWindow(QWidget):
     from .udp import udp_connection_button_handler, join_multicast_group, \
         udp_receive_socket_data, udp_on_disconnected, udp_on_error
     from .data_handlers import plot_point, filter_data, update_act_state, \
-        process_data, turn_off_valve, turn_on_valve
+        process_data, turn_off_valve, turn_on_valve, decrease_heartbeat, reset_heartbeat_timeout
     from .recording_and_playback import recording_toggle_button_handler, \
         open_file_button_handler, display_previous_data
     from .logging import save_to_file, write_to_log
@@ -193,6 +193,16 @@ class MainWindow(QWidget):
         self.data_filter_timer = QTimer(self)
         self.data_filter_timer.timeout.connect(self.filter_data)
         self.data_filter_timer.start(self.timer_time)
+
+        # Time that the UI will wait to receive pad state heartbeats from pad server
+        # a timer that ticks every second will decrement heartbeat_timeout by 1
+        # if it's below 0, a warning should be displayed, preferably on the main section
+        # of the ui
+        self.heartbeat_timeout = 6
+        self.heartbeat_mutex = QMutex()
+        self.heartbeat_interval = 1000
+        self.heartbeat_timer = QTimer(self)
+        self.heartbeat_timer.timeout.connect(self.decrease_heartbeat)
 
         # Button handlers
         self.ui.udpConnectButton.clicked.connect(self.udp_connection_button_handler)

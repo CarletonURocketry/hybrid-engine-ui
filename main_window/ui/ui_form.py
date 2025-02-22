@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'form.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.8.1
+## Created by: Qt User Interface Compiler version 6.7.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -85,14 +85,56 @@ class Ui_Widget(object):
 
         self.controlLayout.addLayout(self.sensorLayout)
 
+        self.verticalLayout_3 = QVBoxLayout()
+        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
+        self.horizontalLayout_2 = QHBoxLayout()
+        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.udpConnLabel = QLabel(self.telemetryTab)
+        self.udpConnLabel.setObjectName(u"udpConnLabel")
+        font = QFont()
+        font.setPointSize(14)
+        self.udpConnLabel.setFont(font)
+
+        self.horizontalLayout_2.addWidget(self.udpConnLabel)
+
+        self.udpConnStatusLabel = QLabel(self.telemetryTab)
+        self.udpConnStatusLabel.setObjectName(u"udpConnStatusLabel")
+        font1 = QFont()
+        font1.setPointSize(15)
+        font1.setWeight(QFont.DemiBold)
+        self.udpConnStatusLabel.setFont(font1)
+        self.udpConnStatusLabel.setStyleSheet(u"background-color: rgb(0, 85, 127);")
+        self.udpConnStatusLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.horizontalLayout_2.addWidget(self.udpConnStatusLabel)
+
+        self.serialConnLabel = QLabel(self.telemetryTab)
+        self.serialConnLabel.setObjectName(u"serialConnLabel")
+        self.serialConnLabel.setFont(font)
+
+        self.horizontalLayout_2.addWidget(self.serialConnLabel)
+
+        self.serialConnStatusLabel = QLabel(self.telemetryTab)
+        self.serialConnStatusLabel.setObjectName(u"serialConnStatusLabel")
+        self.serialConnStatusLabel.setFont(font1)
+        self.serialConnStatusLabel.setStyleSheet(u"background-color: rgb(0, 85, 127);")
+        self.serialConnStatusLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.horizontalLayout_2.addWidget(self.serialConnStatusLabel)
+
+
+        self.verticalLayout_3.addLayout(self.horizontalLayout_2)
+
         self.valveGrid = QGridLayout()
         self.valveGrid.setObjectName(u"valveGrid")
 
-        self.controlLayout.addLayout(self.valveGrid)
+        self.verticalLayout_3.addLayout(self.valveGrid)
+
+
+        self.controlLayout.addLayout(self.verticalLayout_3)
 
         self.controlLayout.setStretch(0, 2)
         self.controlLayout.setStretch(1, 1)
-        self.controlLayout.setStretch(2, 1)
 
         self.verticalLayout.addLayout(self.controlLayout)
 
@@ -152,9 +194,9 @@ class Ui_Widget(object):
         self.connectionLayout.setObjectName(u"connectionLayout")
         self.multicastConfigLabel = QLabel(self.configurationTab)
         self.multicastConfigLabel.setObjectName(u"multicastConfigLabel")
-        font = QFont()
-        font.setBold(True)
-        self.multicastConfigLabel.setFont(font)
+        font2 = QFont()
+        font2.setBold(True)
+        self.multicastConfigLabel.setFont(font2)
         self.multicastConfigLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.connectionLayout.addWidget(self.multicastConfigLabel)
@@ -215,25 +257,40 @@ class Ui_Widget(object):
         self.serialLayout_2.setObjectName(u"serialLayout_2")
         self.serialConfigLabel = QLabel(self.configurationTab)
         self.serialConfigLabel.setObjectName(u"serialConfigLabel")
-        self.serialConfigLabel.setFont(font)
+        self.serialConfigLabel.setFont(font2)
         self.serialConfigLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.serialLayout_2.addWidget(self.serialConfigLabel)
 
-        self.serialLayout = QHBoxLayout()
-        self.serialLayout.setObjectName(u"serialLayout")
+        self.serialPortSelectLayout = QHBoxLayout()
+        self.serialPortSelectLayout.setObjectName(u"serialPortSelectLayout")
         self.serialPortLabel = QLabel(self.configurationTab)
         self.serialPortLabel.setObjectName(u"serialPortLabel")
 
-        self.serialLayout.addWidget(self.serialPortLabel)
+        self.serialPortSelectLayout.addWidget(self.serialPortLabel)
 
         self.serialPortDropdown = QComboBox(self.configurationTab)
         self.serialPortDropdown.setObjectName(u"serialPortDropdown")
 
-        self.serialLayout.addWidget(self.serialPortDropdown)
+        self.serialPortSelectLayout.addWidget(self.serialPortDropdown)
 
 
-        self.serialLayout_2.addLayout(self.serialLayout)
+        self.serialLayout_2.addLayout(self.serialPortSelectLayout)
+
+        self.serialBaudRateLayout = QHBoxLayout()
+        self.serialBaudRateLayout.setObjectName(u"serialBaudRateLayout")
+        self.baudRateLabel = QLabel(self.configurationTab)
+        self.baudRateLabel.setObjectName(u"baudRateLabel")
+
+        self.serialBaudRateLayout.addWidget(self.baudRateLabel)
+
+        self.baudRateDropdown = QComboBox(self.configurationTab)
+        self.baudRateDropdown.setObjectName(u"baudRateDropdown")
+
+        self.serialBaudRateLayout.addWidget(self.baudRateDropdown)
+
+
+        self.serialLayout_2.addLayout(self.serialBaudRateLayout)
 
         self.serialConnectButton = QPushButton(self.configurationTab)
         self.serialConnectButton.setObjectName(u"serialConnectButton")
@@ -386,7 +443,7 @@ class Ui_Widget(object):
 
         self.graphThresholdLabel = QLabel(self.configurationTab)
         self.graphThresholdLabel.setObjectName(u"graphThresholdLabel")
-        self.graphThresholdLabel.setFont(font)
+        self.graphThresholdLabel.setFont(font2)
         self.graphThresholdLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.gridLayout.addWidget(self.graphThresholdLabel, 0, 0, 1, 2)
@@ -451,6 +508,10 @@ class Ui_Widget(object):
         self.showPIDButton.setText(QCoreApplication.translate("Widget", u"Show PID ", None))
         self.openFileButton.setText(QCoreApplication.translate("Widget", u"Open previous data", None))
         self.recordingToggleButton.setText(QCoreApplication.translate("Widget", u"Recording", None))
+        self.udpConnLabel.setText(QCoreApplication.translate("Widget", u"UDP connection status: ", None))
+        self.udpConnStatusLabel.setText(QCoreApplication.translate("Widget", u"Not connected", None))
+        self.serialConnLabel.setText(QCoreApplication.translate("Widget", u"Serial connection status:", None))
+        self.serialConnStatusLabel.setText(QCoreApplication.translate("Widget", u"Not connected", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.telemetryTab), QCoreApplication.translate("Widget", u"Telemetry", None))
         self.multicastConfigLabel.setText(QCoreApplication.translate("Widget", u"Multicast configuration", None))
 #if QT_CONFIG(tooltip)
@@ -467,6 +528,7 @@ class Ui_Widget(object):
         self.serialPortLabel.setToolTip(QCoreApplication.translate("Widget", u"Enter ipconfig in terminal to see interfaces", None))
 #endif // QT_CONFIG(tooltip)
         self.serialPortLabel.setText(QCoreApplication.translate("Widget", u"Serial port:", None))
+        self.baudRateLabel.setText(QCoreApplication.translate("Widget", u"Baud rate:", None))
         self.serialConnectButton.setText(QCoreApplication.translate("Widget", u"Connect to serial port", None))
         self.pressureThresholdLabel.setText(QCoreApplication.translate("Widget", u"Pressure", None))
         self.pressureThresholdButton.setText(QCoreApplication.translate("Widget", u"Add threshold marker", None))
