@@ -128,6 +128,7 @@ class MainWindow(QWidget):
 
         # Serial
         self.serialPort = QSerialPort(self)
+        self.serialTimestamp = 0
         self.serialPort.readyRead.connect(self.serial_receive_data)
         self.serialPort.errorOccurred.connect(self.serial_on_error)
         

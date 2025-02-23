@@ -5,10 +5,10 @@ This file contains dataclass definitions of the packet header and packets from t
 byte streams into their respective classes
 """
 
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 from abc import ABC
 from enum import Enum
-
+from datetime import datetime
 import struct
 
 class PacketType(Enum):
@@ -109,6 +109,17 @@ class ActuatorStatePacket(PacketMessage):
 class WarningPacket(PacketMessage):
     type: Warning
 
+@dataclass
+class SerialDataPacket():
+    m1: int
+    p1: int
+    p2: int
+    p3: int
+    p4: int
+    t1: int
+    t2: int
+    status: int
+
 def parse_packet_header(header_bytes: bytes) -> PacketHeader:
     packet_type: int
     packet_sub_type: int
@@ -185,3 +196,31 @@ def parse_packet_message(header: PacketHeader, message_bytes: bytes) -> PacketMe
                     type:int
                     time, type = struct.unpack("<IB", message_bytes)
                     return WarningPacket(type=Warning(type), time_since_power=time)
+
+def parse_serial_packet(data: bytes, timestamp: int):
+    m1: int
+    p1: int
+    p2: int
+    p3: int
+    p4: int
+    t1: int
+    t2: int
+    status: int
+    m1, p1, p2, p3, p4, t1, t2, status = struct.unpack_from("<HHHHHHHI", data, offset=4)
+    parsed_packet = SerialDataPacket(m1=m1, p1=p1, p2=p2, p3=p3, p4=p4, t1=t1, t2=t2, status=status)
+    packet_list: list[(PacketHeader, PacketMessage)] = []
+    for field, val in asdict(parsed_packet).items():
+        if field.startswith("m"):
+            header = PacketHeader(PacketType.TELEMETRY, TelemetryPacketSubType.MASS)
+            message = MassPacket(timestamp, val, int(field[-1]))
+        elif field.startswith("p"):
+            header = PacketHeader(PacketType.TELEMETRY, TelemetryPacketSubType.PRESSURE)
+            message = PressurePacket(timestamp, val, int(field[-1]))
+        elif field.startswith("t"):
+            header = PacketHeader(PacketType.TELEMETRY, TelemetryPacketSubType.TEMPERATURE)
+            message = TemperaturePacket(timestamp, val, int(field[-1]))
+        else: continue
+        packet_list.append((header, message))
+    return packet_list
+
+            

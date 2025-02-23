@@ -4,7 +4,6 @@ Contains all handlers and slot functions that handle serial functionalities
 such as connection, data receive, disconnection and, error. Should only be
 imported by main_window.py
 """
-import ipaddress
 from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QIODevice
@@ -22,6 +21,7 @@ def serial_connection_button_handler(self: "MainWindow"):
       self.serialPort.setPortName(self.ui.serialPortDropdown.currentText())
       self.serialPort.setBaudRate(int(self.ui.baudRateDropdown.currentText()))
       if self.serialPort.open(QIODevice.OpenModeFlag.ReadOnly):
+        self.write_to_log(f"Opened serial connection on port {self.serialPort.portName()} (baud rate: {self.serialPort.baudRate()})")
         self.ui.serialConnectButton.setText("Close serial connection")
         self.ui.serialPortDropdown.setEnabled(False)
         self.ui.baudRateDropdown.setEnabled(False)
@@ -29,6 +29,7 @@ def serial_connection_button_handler(self: "MainWindow"):
         self.ui.serialConnStatusLabel.setStyleSheet("background-color: rgb(0, 255, 0);")
     else:
       self.serialPort.close()
+      self.write_to_log("Serial connection was closed")
       self.ui.serialConnectButton.setText("Connect to serial port")
       self.ui.serialPortDropdown.setEnabled(True)
       self.ui.baudRateDropdown.setEnabled(True)
@@ -46,18 +47,14 @@ def serial_receive_data(self: "MainWindow"):
     # bytes. Qt slot for serial ready receive might receive this over multiple
     # signals, make sure buffer contains at least 24 bytes, then read all 24 at once
     if self.serialPort.bytesAvailable() >= 24:
-       data = self.serialPort.read(24)
-       print(data)
+      data = bytes(self.serialPort.read(24))
+      parsed_data = packet_spec.parse_serial_packet(data, self.serialTimestamp)
+      self.serialTimestamp += 1
+      for datum in parsed_data:
+        header, message = datum 
+        self.process_data(header, message)
+          
 
 # Any errors with the socket should be handled here and logged
 def serial_on_error(self: "MainWindow"):
   self.write_to_log(f"{self.serialPort.error()}: {self.padUDPSocket.errorString()}")
-
-# Any disconnection event should be handled here and logged
-def serial_on_disconnected(self: "MainWindow"):
-    self.write_to_log("Socket connection was closed")
-    self.ui.udpConnectButton.setText("Create UDP connection")
-    self.ui.udpIpAddressInput.setReadOnly(False)
-    self.ui.udpPortInput.setReadOnly(False)
-    if self.file_out:
-        self.file_out.close()
