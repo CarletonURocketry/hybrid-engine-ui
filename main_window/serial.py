@@ -56,7 +56,7 @@ def serial_receive_data(self: "MainWindow"):
     # 24 bytes and if we were to read in the middle of the packet, we would be reading invalid
     # data. To fix that, this will loop reads bytes until it reads "~" which indicates the beginning
     # of a data packet 
-    while (self.serialPort.peek(1) != b'~'):
+    while (self.serialPort.bytesAvailable() > 0 and self.serialPort.peek(1) != b'~'):
       self.serialPort.read(1)
 
     if self.serialPort.bytesAvailable() >= 24:
