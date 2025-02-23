@@ -37,9 +37,12 @@ def serial_connection_button_handler(self: "MainWindow"):
  
 # Any data received should be handled here
 def serial_receive_data(self: "MainWindow"):
-    
-    data = self.serialPort.readAll()
-    print(data)
+    # code for sending data over serial will send a struct consisting of 24
+    # bytes. Qt slot for serial ready receive might receive this over multiple
+    # signals, make sure buffer contains at least 24 bytes, then read all 24 at once
+    if self.serialPort.bytesAvailable() >= 24:
+       data = self.serialPort.read(24)
+       print(data)
 
 # Any errors with the socket should be handled here and logged
 def serial_on_error(self: "MainWindow"):
