@@ -74,7 +74,7 @@ class MainWindow(QWidget):
     from .udp import udp_connection_button_handler, join_multicast_group, \
         udp_receive_socket_data, udp_on_disconnected, udp_on_error
     from .serial import serial_connection_button_handler, serial_receive_data, \
-        serial_on_disconnected, serial_on_error
+        serial_on_error
     from .data_handlers import plot_point, filter_data, update_act_state, \
         process_data, turn_off_valve, turn_on_valve, decrease_heartbeat, reset_heartbeat_timeout
     from .recording_and_playback import recording_toggle_button_handler, \
@@ -123,12 +123,13 @@ class MainWindow(QWidget):
         # UDP socket
         self.padUDPSocket = QUdpSocket(self)
         self.padUDPSocket.readyRead.connect(self.udp_receive_socket_data)
-        self.padUDPSocket.errorOccurred.connect(self.udp_on_error)
         self.padUDPSocket.disconnected.connect(self.udp_on_disconnected)
+        self.padUDPSocket.errorOccurred.connect(self.udp_on_error)
 
         # Serial
         self.serialPort = QSerialPort(self)
         self.serialPort.readyRead.connect(self.serial_receive_data)
+        self.serialPort.errorOccurred.connect(self.serial_on_error)
         
         # Export to File button
         self.ui.exporter.clicked.connect(self.save_to_file)

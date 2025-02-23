@@ -20,10 +20,20 @@ def serial_connection_button_handler(self: "MainWindow"):
     if not self.serialPort.isOpen():
       self.serialPort.setPortName(self.ui.serialPortDropdown.currentText())
       self.serialPort.setBaudRate(int(self.ui.baudRateDropdown.currentText()))
-      self.serialPort.open(QIODevice.OpenModeFlag.ReadOnly)
-      print("Connected", self.serialPort)
+      if self.serialPort.open(QIODevice.OpenModeFlag.ReadOnly):
+        self.ui.serialConnectButton.setText("Close serial connection")
+        self.ui.serialPortDropdown.setEnabled(False)
+        self.ui.baudRateDropdown.setEnabled(False)
+        self.ui.serialConnStatusLabel.setText("Connected")
+        self.ui.serialConnStatusLabel.setStyleSheet("background-color: rgb(0, 255, 0);")
     else:
-       self.serialPort.close()
+      self.serialPort.close()
+      self.ui.serialConnectButton.setText("Connect to serial port")
+      self.ui.serialPortDropdown.setEnabled(True)
+      self.ui.baudRateDropdown.setEnabled(True)
+      self.ui.serialConnStatusLabel.setText("Not connected")
+      self.ui.serialConnStatusLabel.setStyleSheet("background-color: rgb(0, 85, 127);")
+         
  
 # Any data received should be handled here
 def serial_receive_data(self: "MainWindow"):
