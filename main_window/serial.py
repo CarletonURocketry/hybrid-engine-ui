@@ -8,6 +8,7 @@ import ipaddress
 from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QIODevice
+from PySide6.QtSerialPort import QSerialPort, QSerialPortInfo
 
 import packet_spec
 
@@ -34,6 +35,10 @@ def serial_connection_button_handler(self: "MainWindow"):
       self.ui.serialConnStatusLabel.setText("Not connected")
       self.ui.serialConnStatusLabel.setStyleSheet("background-color: rgb(0, 85, 127);")
          
+def refresh_serial_button_handler(self: "MainWindow"):
+   self.ui.serialPortDropdown.clear()
+   for port in QSerialPortInfo.availablePorts():
+      self.ui.serialPortDropdown.addItem(port.portName())
  
 # Any data received should be handled here
 def serial_receive_data(self: "MainWindow"):

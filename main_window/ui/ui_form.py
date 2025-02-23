@@ -253,14 +253,14 @@ class Ui_Widget(object):
 
         self.formLayout.setItem(1, QFormLayout.SpanningRole, self.verticalSpacer)
 
-        self.serialLayout_2 = QVBoxLayout()
-        self.serialLayout_2.setObjectName(u"serialLayout_2")
+        self.serialLayout = QVBoxLayout()
+        self.serialLayout.setObjectName(u"serialLayout")
         self.serialConfigLabel = QLabel(self.configurationTab)
         self.serialConfigLabel.setObjectName(u"serialConfigLabel")
         self.serialConfigLabel.setFont(font2)
         self.serialConfigLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.serialLayout_2.addWidget(self.serialConfigLabel)
+        self.serialLayout.addWidget(self.serialConfigLabel)
 
         self.serialPortSelectLayout = QHBoxLayout()
         self.serialPortSelectLayout.setObjectName(u"serialPortSelectLayout")
@@ -275,7 +275,7 @@ class Ui_Widget(object):
         self.serialPortSelectLayout.addWidget(self.serialPortDropdown)
 
 
-        self.serialLayout_2.addLayout(self.serialPortSelectLayout)
+        self.serialLayout.addLayout(self.serialPortSelectLayout)
 
         self.serialBaudRateLayout = QHBoxLayout()
         self.serialBaudRateLayout.setObjectName(u"serialBaudRateLayout")
@@ -290,16 +290,27 @@ class Ui_Widget(object):
         self.serialBaudRateLayout.addWidget(self.baudRateDropdown)
 
 
-        self.serialLayout_2.addLayout(self.serialBaudRateLayout)
+        self.serialLayout.addLayout(self.serialBaudRateLayout)
 
+        self.serialConnectLayout = QHBoxLayout()
+        self.serialConnectLayout.setObjectName(u"serialConnectLayout")
         self.serialConnectButton = QPushButton(self.configurationTab)
         self.serialConnectButton.setObjectName(u"serialConnectButton")
         self.serialConnectButton.setStyleSheet(u"")
 
-        self.serialLayout_2.addWidget(self.serialConnectButton)
+        self.serialConnectLayout.addWidget(self.serialConnectButton)
+
+        self.serialRefreshButton = QPushButton(self.configurationTab)
+        self.serialRefreshButton.setObjectName(u"serialRefreshButton")
+
+        self.serialConnectLayout.addWidget(self.serialRefreshButton)
+
+        self.serialConnectLayout.setStretch(0, 100)
+
+        self.serialLayout.addLayout(self.serialConnectLayout)
 
 
-        self.formLayout.setLayout(2, QFormLayout.SpanningRole, self.serialLayout_2)
+        self.formLayout.setLayout(2, QFormLayout.SpanningRole, self.serialLayout)
 
         self.verticalSpacer_2 = QSpacerItem(20, 10, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
 
@@ -496,7 +507,7 @@ class Ui_Widget(object):
 
         self.retranslateUi(Widget)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(Widget)
@@ -530,6 +541,7 @@ class Ui_Widget(object):
         self.serialPortLabel.setText(QCoreApplication.translate("Widget", u"Serial port:", None))
         self.baudRateLabel.setText(QCoreApplication.translate("Widget", u"Baud rate:", None))
         self.serialConnectButton.setText(QCoreApplication.translate("Widget", u"Connect to serial port", None))
+        self.serialRefreshButton.setText(QCoreApplication.translate("Widget", u"Refresh", None))
         self.pressureThresholdLabel.setText(QCoreApplication.translate("Widget", u"Pressure", None))
         self.pressureThresholdButton.setText(QCoreApplication.translate("Widget", u"Add threshold marker", None))
         self.engineThrustThresholdLabel.setText(QCoreApplication.translate("Widget", u"Engine Thrust", None))

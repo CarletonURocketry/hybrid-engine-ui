@@ -73,8 +73,8 @@ class MainWindow(QWidget):
     # smaller modules containing related functionality
     from .udp import udp_connection_button_handler, join_multicast_group, \
         udp_receive_socket_data, udp_on_disconnected, udp_on_error
-    from .serial import serial_connection_button_handler, serial_receive_data, \
-        serial_on_error
+    from .serial import serial_connection_button_handler, refresh_serial_button_handler, \
+        serial_receive_data, serial_on_error
     from .data_handlers import plot_point, filter_data, update_act_state, \
         process_data, turn_off_valve, turn_on_valve, decrease_heartbeat, reset_heartbeat_timeout
     from .recording_and_playback import recording_toggle_button_handler, \
@@ -220,6 +220,7 @@ class MainWindow(QWidget):
         # Button handlers
         self.ui.udpConnectButton.clicked.connect(self.udp_connection_button_handler)
         self.ui.serialConnectButton.clicked.connect(self.serial_connection_button_handler)
+        self.ui.serialRefreshButton.clicked.connect(self.refresh_serial_button_handler)
 
         # Open new file heandler
         self.ui.openFileButton.clicked.connect(self.open_file_button_handler)
