@@ -7,7 +7,7 @@ imported by main_window.py
 from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QIODevice
-from PySide6.QtSerialPort import QSerialPort, QSerialPortInfo
+from PySide6.QtSerialPort import QSerialPortInfo
 
 import packet_spec
 

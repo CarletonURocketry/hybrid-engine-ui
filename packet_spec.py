@@ -8,7 +8,6 @@ byte streams into their respective classes
 from dataclasses import dataclass, asdict
 from abc import ABC
 from enum import Enum
-from datetime import datetime
 import struct
 
 class PacketType(Enum):

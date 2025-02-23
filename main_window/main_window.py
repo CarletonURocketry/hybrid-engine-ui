@@ -4,7 +4,7 @@ import json
 
 from PySide6.QtWidgets import QWidget, QLabel, QVBoxLayout
 from PySide6.QtCore import QTimer, Qt, QMutex, QPoint
-from PySide6.QtNetwork import QUdpSocket, QAbstractSocket, QNetworkInterface
+from PySide6.QtNetwork import QUdpSocket, QAbstractSocket
 from PySide6.QtSerialPort import QSerialPort, QSerialPortInfo
 from pyqtgraph import mkPen, PlotDataItem, InfiniteLine
 from PySide6.QtGui import QPainter, QPolygon
