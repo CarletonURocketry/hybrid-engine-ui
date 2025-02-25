@@ -136,10 +136,10 @@ class MainWindow(QWidget):
         self.ui.exporter.clicked.connect(self.save_to_file)
 
         # Graphing pens
-        red_pen = mkPen("r", width=2)
-        blue_pen = mkPen("g", width=2)
-        green_pen = mkPen("b", width=2)
-        pink_pen = mkPen("purple", width=2)
+        red_pen = mkPen("#d52728", width=2)
+        green_pen = mkPen("#2ba02d", width=2)
+        blue_pen = mkPen("#1f78b4", width=2)
+        orange_pen = mkPen("#fe7f0e", width=2)
         black_pen = mkPen("black", width=2)
 
         # Set labels and create plot data for each graph
@@ -155,9 +155,9 @@ class MainWindow(QWidget):
         self.ui.pressurePlot.getAxis("bottom").setPen(black_pen)
         self.ui.pressurePlot.getAxis("bottom").setTextPen(black_pen)
         self.plots["p1"] = PlotInfo(self.p1_points, self.ui.pressurePlot.plot(self.p1_points, pen=red_pen, name="p1"))
-        self.plots["p2"] = PlotInfo(self.p2_points, self.ui.pressurePlot.plot(self.p2_points, pen=blue_pen, name="p2"))
-        self.plots["p3"] = PlotInfo(self.p3_points, self.ui.pressurePlot.plot(self.p3_points, pen=green_pen, name="p3"))
-        self.plots["p4"] = PlotInfo(self.p4_points, self.ui.pressurePlot.plot(self.p4_points, pen=pink_pen, name="p4"))
+        self.plots["p2"] = PlotInfo(self.p2_points, self.ui.pressurePlot.plot(self.p2_points, pen=green_pen, name="p2"))
+        self.plots["p3"] = PlotInfo(self.p3_points, self.ui.pressurePlot.plot(self.p3_points, pen=blue_pen, name="p3"))
+        self.plots["p4"] = PlotInfo(self.p4_points, self.ui.pressurePlot.plot(self.p4_points, pen=orange_pen, name="p4"))
         for marker in [self.ui.pressureThresholdList.item(x) for x in range(self.ui.pressureThresholdList.count())]:
             self.ui.pressurePlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=black_pen))
 
@@ -170,9 +170,9 @@ class MainWindow(QWidget):
         self.ui.temperaturePlot.getAxis("bottom").setPen(black_pen)
         self.ui.temperaturePlot.getAxis("bottom").setTextPen(black_pen)
         self.plots["t1"] = PlotInfo(self.t1_points, self.ui.temperaturePlot.plot(self.t1_points, pen=red_pen, name="t1"))
-        self.plots["t2"] = PlotInfo(self.t2_points, self.ui.temperaturePlot.plot(self.t2_points, pen=blue_pen, name="t2"))
-        self.plots["t3"] = PlotInfo(self.t3_points, self.ui.temperaturePlot.plot(self.t3_points, pen=green_pen, name="t3"))
-        self.plots["t4"] = PlotInfo(self.t4_points, self.ui.temperaturePlot.plot(self.t4_points, pen=pink_pen, name="t4"))
+        self.plots["t2"] = PlotInfo(self.t2_points, self.ui.temperaturePlot.plot(self.t2_points, pen=green_pen, name="t2"))
+        self.plots["t3"] = PlotInfo(self.t3_points, self.ui.temperaturePlot.plot(self.t3_points, pen=blue_pen, name="t3"))
+        self.plots["t4"] = PlotInfo(self.t4_points, self.ui.temperaturePlot.plot(self.t4_points, pen=orange_pen, name="t4"))
         for marker in [self.ui.temperatureThresholdList.item(x) for x in range(self.ui.temperatureThresholdList.count())]:
             self.ui.temperaturePlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=black_pen))
 
