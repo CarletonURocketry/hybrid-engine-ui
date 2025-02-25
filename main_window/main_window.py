@@ -6,7 +6,7 @@ from PySide6.QtWidgets import QWidget, QLabel, QVBoxLayout
 from PySide6.QtCore import QTimer, Qt, QMutex, QPoint
 from PySide6.QtNetwork import QUdpSocket, QAbstractSocket
 from PySide6.QtSerialPort import QSerialPort, QSerialPortInfo
-from pyqtgraph import mkPen, PlotDataItem, InfiniteLine
+from pyqtgraph import mkPen, PlotDataItem, InfiniteLine, QtCore
 from PySide6.QtGui import QPainter, QPolygon
 import numpy as np
 
@@ -141,6 +141,7 @@ class MainWindow(QWidget):
         blue_pen = mkPen("#1f78b4", width=2)
         orange_pen = mkPen("#fe7f0e", width=2)
         black_pen = mkPen("black", width=2)
+        inf_line_pen = mkPen("black", width=2, style=QtCore.Qt.PenStyle.DashLine)
 
         # Set labels and create plot data for each graph
         # each entry in plots contains a PlotInfo dataclass consisting of points and data_line
@@ -159,7 +160,7 @@ class MainWindow(QWidget):
         self.plots["p3"] = PlotInfo(self.p3_points, self.ui.pressurePlot.plot(self.p3_points, pen=blue_pen, name="p3"))
         self.plots["p4"] = PlotInfo(self.p4_points, self.ui.pressurePlot.plot(self.p4_points, pen=orange_pen, name="p4"))
         for marker in [self.ui.pressureThresholdList.item(x) for x in range(self.ui.pressureThresholdList.count())]:
-            self.ui.pressurePlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=black_pen))
+            self.ui.pressurePlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=inf_line_pen))
 
         self.ui.temperaturePlot.addLegend(offset=(0,0), colCount=4, labelTextColor="black")
         self.ui.temperaturePlot.setTitle("<span style='font-weight: bold;'>Temperature</span>", color="black")
@@ -174,7 +175,7 @@ class MainWindow(QWidget):
         self.plots["t3"] = PlotInfo(self.t3_points, self.ui.temperaturePlot.plot(self.t3_points, pen=blue_pen, name="t3"))
         self.plots["t4"] = PlotInfo(self.t4_points, self.ui.temperaturePlot.plot(self.t4_points, pen=orange_pen, name="t4"))
         for marker in [self.ui.temperatureThresholdList.item(x) for x in range(self.ui.temperatureThresholdList.count())]:
-            self.ui.temperaturePlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=black_pen))
+            self.ui.temperaturePlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=inf_line_pen))
 
         self.ui.tankMassPlot.addLegend()
         self.ui.tankMassPlot.setTitle("Tank Mass", color="black")
@@ -186,7 +187,7 @@ class MainWindow(QWidget):
         self.ui.tankMassPlot.getAxis("bottom").setTextPen(black_pen)
         self.plots["m1"] = PlotInfo(self.tank_mass_points, self.ui.tankMassPlot.plot(self.tank_mass_points, pen=red_pen))
         for marker in [self.ui.tankMassThresholdList.item(x) for x in range(self.ui.tankMassThresholdList.count())]:
-            self.ui.tankMassPlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=black_pen))
+            self.ui.tankMassPlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=inf_line_pen))
 
         self.ui.engineThrustPlot.addLegend()
         self.ui.engineThrustPlot.setTitle("Engine Thrust", color="black")
@@ -198,7 +199,7 @@ class MainWindow(QWidget):
         self.ui.engineThrustPlot.getAxis("bottom").setTextPen(black_pen)
         self.plots["m2"] = PlotInfo(self.engine_thrust_points, self.ui.engineThrustPlot.plot(self.engine_thrust_points, pen=red_pen))
         for marker in [self.ui.engineThrustThresholdList.item(x) for x in range(self.ui.engineThrustThresholdList.count())]:
-            self.ui.engineThrustPlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=black_pen))
+            self.ui.engineThrustPlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=inf_line_pen))
 
         #QTimer to help us to filter the data
         self.timer_time = 25
