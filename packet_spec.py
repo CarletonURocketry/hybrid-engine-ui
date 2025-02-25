@@ -10,6 +10,8 @@ from abc import ABC
 from enum import Enum
 import struct
 
+from data_conversions import *
+
 class PacketType(Enum):
     CONTROL = 0
     TELEMETRY = 1
@@ -206,7 +208,16 @@ def parse_serial_packet(data: bytes, timestamp: int):
     t2: int
     status: int
     m1, p1, p2, p3, p4, t1, t2, status = struct.unpack_from("<HHHHHHHI", data, offset=4)
-    parsed_packet = SerialDataPacket(m1=m1, p1=p1, p2=p2, p3=p3, p4=p4, t1=t1, t2=t2, status=status)
+    parsed_packet = SerialDataPacket(
+        m1=m1, 
+        p1=pressureConversion(p1),
+        p2=pressureConversion(p2),
+        p3=pressureConversion(p3),
+        p4=pressureConversion(p4),
+        t1=thermistorConversion(t1),
+        t2=thermistor2Conversion(t2),
+        status=status
+    )
     packet_list: list[(PacketHeader, PacketMessage)] = []
     for field, val in asdict(parsed_packet).items():
         if field.startswith("m"):
