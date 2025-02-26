@@ -63,7 +63,7 @@ def serial_receive_data(self: "MainWindow"):
     if self.serialPort.bytesAvailable() >= 24:
       data = bytes(self.serialPort.read(24))
       parsed_data = packet_spec.parse_serial_packet(data, self.serialTimestamp)
-      self.serialTimestamp += 1
+      self.serialTimestamp += 0.1 # Receive updates 10 times a second, each packet represents 0.1 seconds
       for datum in parsed_data:
         header, message = datum 
         self.process_data(header, message)
