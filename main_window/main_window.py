@@ -277,6 +277,9 @@ class MainWindow(QWidget):
         self.ui.udpIpAddressInput.setEnabled(True)
         self.ui.udpPortInput.setEnabled(True)
 
+    # If disable_btn, button gets disabled but text does not changed
+    # used for when serial connection disabled ability to connect via udp
+    # or vice versa
     def disable_udp_config(self, disable_btn: bool):
         if disable_btn: self.ui.udpConnectButton.setEnabled(False) 
         else: self.ui.udpConnectButton.setText("Close UDP connection")
