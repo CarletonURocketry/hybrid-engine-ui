@@ -27,8 +27,8 @@ def serial_connection_button_handler(self: "MainWindow"):
       self.serialPort.setBaudRate(int(self.ui.baudRateDropdown.currentText()))
       if self.serialPort.open(QIODevice.OpenModeFlag.ReadOnly):
         self.write_to_log(f"Opened serial connection on port {self.serialPort.portName()} (baud rate: {self.serialPort.baudRate()})")
-        self.disable_serial_config(True)
-        self.disable_udp_config(False)
+        self.disable_serial_config(disable_btn=True)
+        self.disable_udp_config(disable_btn=False)
         self.update_serial_connection_display(SerialConnectionStatus.CONNECTED)
     else:
       self.serialPort.close()
