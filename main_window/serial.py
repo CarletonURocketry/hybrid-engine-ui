@@ -5,9 +5,10 @@ such as connection, data receive, disconnection and, error. Should only be
 imported by main_window.py
 """
 from typing import TYPE_CHECKING
+from enum import Enum
 
 from PySide6.QtCore import QIODevice
-from PySide6.QtSerialPort import QSerialPortInfo
+from PySide6.QtSerialPort import QSerialPortInfo, QSerialPort
 
 import packet_spec
 
@@ -16,25 +17,25 @@ import packet_spec
 if TYPE_CHECKING:
     from main_window import MainWindow
 
+class SerialConnectionStatus(Enum):
+  CONNECTED = 1,
+  NOT_CONNECTED = 2
+
 def serial_connection_button_handler(self: "MainWindow"):
     if not self.serialPort.isOpen():
       self.serialPort.setPortName(self.ui.serialPortDropdown.currentText())
       self.serialPort.setBaudRate(int(self.ui.baudRateDropdown.currentText()))
       if self.serialPort.open(QIODevice.OpenModeFlag.ReadOnly):
         self.write_to_log(f"Opened serial connection on port {self.serialPort.portName()} (baud rate: {self.serialPort.baudRate()})")
-        self.ui.serialConnectButton.setText("Close serial connection")
-        self.ui.serialPortDropdown.setEnabled(False)
-        self.ui.baudRateDropdown.setEnabled(False)
-        self.ui.serialConnStatusLabel.setText("Connected")
-        self.ui.serialConnStatusLabel.setStyleSheet("background-color: rgb(0, 255, 0);")
+        self.disable_serial_config()
+        self.disable_udp_config()
+        self.update_serial_connection_display(SerialConnectionStatus.CONNECTED)
     else:
       self.serialPort.close()
       self.write_to_log("Serial connection was closed")
-      self.ui.serialConnectButton.setText("Connect to serial port")
-      self.ui.serialPortDropdown.setEnabled(True)
-      self.ui.baudRateDropdown.setEnabled(True)
-      self.ui.serialConnStatusLabel.setText("Not connected")
-      self.ui.serialConnStatusLabel.setStyleSheet("background-color: rgb(0, 85, 127);")
+      self.enable_serial_config()
+      self.enable_udp_config()
+      self.update_serial_connection_display(SerialConnectionStatus.NOT_CONNECTED)
          
 def refresh_serial_button_handler(self: "MainWindow"):
    self.ui.serialPortDropdown.clear()
@@ -54,7 +55,7 @@ def serial_receive_data(self: "MainWindow"):
     # constant data stream meaning that if we start reading, we won't know where we
     # are in the data stream. This is important as the size of the data packet is always
     # 24 bytes and if we were to read in the middle of the packet, we would be reading invalid
-    # data. To fix that, this will loop reads bytes until it reads "~" which indicates the beginning
+    # data. To fix that, this while loop reads bytes until it reads "~" which indicates the beginning
     # of a data packet 
     while (self.serialPort.bytesAvailable() > 0 and self.serialPort.peek(1) != b'~'):
       self.serialPort.read(1)
@@ -71,3 +72,8 @@ def serial_receive_data(self: "MainWindow"):
 # Any errors with the socket should be handled here and logged
 def serial_on_error(self: "MainWindow"):
   self.write_to_log(f"{self.serialPort.error()}: {self.padUDPSocket.errorString()}")
+  if self.serialPort.error() == QSerialPort.SerialPortError.ResourceError():
+     self.serialPort.close()
+     self.enable_serial_config()
+     self.enable_udp_config()
+     self.update_serial_connection_display(SerialConnectionStatus.NOT_CONNECTED)

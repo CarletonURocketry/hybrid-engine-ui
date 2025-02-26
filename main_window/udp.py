@@ -7,6 +7,7 @@ imported by main_window.py
 
 import ipaddress
 from typing import TYPE_CHECKING
+from enum import Enum
 
 from PySide6.QtNetwork import QAbstractSocket, QHostAddress, QNetworkInterface
 from PySide6.QtWebEngineWidgets import QWebEngineView
@@ -17,6 +18,11 @@ import packet_spec
 # I love Python
 if TYPE_CHECKING:
     from main_window import MainWindow
+
+class UDPConnectionStatus(Enum):
+    CONNECTED = 0,
+    CONNECTION_LOST = 1,
+    NOT_CONNECTED = 2
 
 def udp_connection_button_handler(self: "MainWindow"):
     if self.padUDPSocket.state() == QAbstractSocket.SocketState.UnconnectedState:
@@ -49,13 +55,10 @@ def udp_connection_button_handler(self: "MainWindow"):
 
         if self.join_multicast_group(mcast_addr, mcast_port):
             self.write_to_log(f"Successfully connected to {mcast_addr}:{mcast_port}")
-            self.ui.udpConnectButton.setText("Close UDP connection")
-            self.ui.udpIpAddressInput.setReadOnly(True)
-            self.ui.udpPortInput.setReadOnly(True)
             self.reset_heartbeat_timeout()
             self.heartbeat_timer.start(self.heartbeat_interval)
-            self.ui.udpConnStatusLabel.setText("Connected")
-            self.ui.udpConnStatusLabel.setStyleSheet("background-color: rgb(0, 255, 0);")
+            self.disable_udp_config()
+            self.update_udp_connection_display(UDPConnectionStatus.CONNECTED)
         else:
             self.write_to_log(f"Unable to join multicast group at IP address: {mcast_addr}, port: {mcast_port}")
     else:
@@ -100,12 +103,9 @@ def udp_on_error(self: "MainWindow"):
 # Any disconnection event should be handled here and logged
 def udp_on_disconnected(self: "MainWindow"):
     self.write_to_log("Socket connection was closed")
-    self.ui.udpConnectButton.setText("Create UDP connection")
-    self.ui.udpIpAddressInput.setReadOnly(False)
-    self.ui.udpPortInput.setReadOnly(False)
     self.heartbeat_timer.stop()
     self.reset_heartbeat_timeout()
-    self.ui.udpConnStatusLabel.setText("Not connected")
-    self.ui.udpConnStatusLabel.setStyleSheet("background-color: rgb(0, 85, 127);")
+    self.enable_udp_config()
+    self.update_udp_connection_display(UDPConnectionStatus.NOT_CONNECTED)
     if self.file_out:
         self.file_out.close()
