@@ -289,7 +289,8 @@ class MainWindow(QWidget):
                 self.ui.udpConnStatusLabel.setText("Connected")
                 self.ui.udpConnStatusLabel.setStyleSheet("background-color: rgb(0, 255, 0);")
             case self.UDPConnectionStatus.CONNECTION_LOST:
-                self.ui.udpStatusLabel.setText("Disconnected")
+                self.ui.udpConnStatusLabel.setText("Connection lost")
+                self.ui.udpConnStatusLabel.setStyleSheet("background-color: rgb(255, 80, 80);")
             case self.UDPConnectionStatus.NOT_CONNECTED:
                 self.ui.udpConnStatusLabel.setText("Not connected")
                 self.ui.udpConnStatusLabel.setStyleSheet("background-color: rgb(0, 85, 127);")
