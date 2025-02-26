@@ -273,13 +273,15 @@ class MainWindow(QWidget):
 
     def enable_udp_config(self):
         self.ui.udpConnectButton.setText("Create UDP connection")
-        self.ui.udpIpAddressInput.setReadOnly(False)
-        self.ui.udpPortInput.setReadOnly(False)
+        self.ui.udpConnectButton.setEnabled(True)
+        self.ui.udpIpAddressInput.setEnabled(True)
+        self.ui.udpPortInput.setEnabled(True)
 
-    def disable_udp_config(self):
-        self.ui.udpConnectButton.setText("Close UDP connection")
-        self.ui.udpIpAddressInput.setReadOnly(True)
-        self.ui.udpPortInput.setReadOnly(True)
+    def disable_udp_config(self, disable_btn: bool):
+        if disable_btn: self.ui.udpConnectButton.setEnabled(False) 
+        else: self.ui.udpConnectButton.setText("Close UDP connection")
+        self.ui.udpIpAddressInput.setEnabled(False)
+        self.ui.udpPortInput.setEnabled(False)
 
     def update_udp_connection_display(self, status: UDPConnectionStatus):
         match status:
@@ -294,11 +296,13 @@ class MainWindow(QWidget):
 
     def enable_serial_config(self):
         self.ui.serialConnectButton.setText("Connect to serial port")
+        self.ui.serialConnectButton.setEnabled(True)
         self.ui.serialPortDropdown.setEnabled(True)
         self.ui.baudRateDropdown.setEnabled(True)
 
-    def disable_serial_config(self):
-        self.ui.serialConnectButton.setText("Close serial connection")
+    def disable_serial_config(self, disable_btn: bool):
+        if disable_btn: self.ui.serialConnectButton.setEnabled(False)
+        else: self.ui.serialConnectButton.setText("Close serial connection")
         self.ui.serialPortDropdown.setEnabled(False)
         self.ui.baudRateDropdown.setEnabled(False)
 
