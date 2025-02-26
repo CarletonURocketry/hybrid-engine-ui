@@ -399,7 +399,7 @@
         </spacer>
        </item>
        <item row="2" column="0" colspan="2">
-        <layout class="QVBoxLayout" name="serialLayout_2">
+        <layout class="QVBoxLayout" name="serialLayout">
          <item>
           <widget class="QLabel" name="serialConfigLabel">
            <property name="font">
@@ -447,14 +447,25 @@
           </layout>
          </item>
          <item>
-          <widget class="QPushButton" name="serialConnectButton">
-           <property name="styleSheet">
-            <string notr="true"/>
-           </property>
-           <property name="text">
-            <string>Connect to serial port</string>
-           </property>
-          </widget>
+          <layout class="QHBoxLayout" name="serialConnectLayout" stretch="100,0">
+           <item>
+            <widget class="QPushButton" name="serialConnectButton">
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string>Connect to serial port</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="serialRefreshButton">
+             <property name="text">
+              <string>Refresh</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
         </layout>
        </item>

@@ -4,17 +4,12 @@ import json
 
 from PySide6.QtWidgets import QWidget, QLabel, QVBoxLayout
 from PySide6.QtCore import QTimer, Qt, QMutex, QPoint
-from PySide6.QtNetwork import QUdpSocket, QAbstractSocket, QNetworkInterface
-from pyqtgraph import mkPen, PlotDataItem, InfiniteLine
+from PySide6.QtNetwork import QUdpSocket, QAbstractSocket
+from PySide6.QtSerialPort import QSerialPort, QSerialPortInfo
+from pyqtgraph import mkPen, PlotDataItem, InfiniteLine, QtCore
 from PySide6.QtGui import QPainter, QPolygon
 import numpy as np
 
-# from .ui.ui_pid_window import Ui_PIDWindow
-
-# Important:
-# You need to run the following command to generate the ui_form.py file
-#     pyside6-uic form.ui -o ui_form.py, or
-#     pyside2-uic form.ui -o ui_form.py
 from .ui import Ui_Widget, Ui_PIDWindow
 
 points = np.empty((0,2))
@@ -72,6 +67,8 @@ class MainWindow(QWidget):
     # smaller modules containing related functionality
     from .udp import udp_connection_button_handler, join_multicast_group, \
         udp_receive_socket_data, udp_on_disconnected, udp_on_error
+    from .serial import serial_connection_button_handler, refresh_serial_button_handler, \
+        serial_receive_data, serial_on_error
     from .data_handlers import plot_point, filter_data, update_act_state, \
         process_data, turn_off_valve, turn_on_valve, decrease_heartbeat, reset_heartbeat_timeout
     from .recording_and_playback import recording_toggle_button_handler, \
@@ -109,24 +106,36 @@ class MainWindow(QWidget):
         except FileNotFoundError:
             self.write_to_log("config.json not found")
 
+        for port in QSerialPortInfo.availablePorts():
+            self.ui.serialPortDropdown.addItem(port.portName())
+        for rate in QSerialPortInfo.standardBaudRates():
+            self.ui.baudRateDropdown.addItem(str(rate))
+
         # Plot data
         self.plots = {}
 
         # UDP socket
         self.padUDPSocket = QUdpSocket(self)
         self.padUDPSocket.readyRead.connect(self.udp_receive_socket_data)
-        self.padUDPSocket.errorOccurred.connect(self.udp_on_error)
         self.padUDPSocket.disconnected.connect(self.udp_on_disconnected)
+        self.padUDPSocket.errorOccurred.connect(self.udp_on_error)
+
+        # Serial
+        self.serialPort = QSerialPort(self)
+        self.serialTimestamp = 0
+        self.serialPort.readyRead.connect(self.serial_receive_data)
+        self.serialPort.errorOccurred.connect(self.serial_on_error)
         
         # Export to File button
         self.ui.exporter.clicked.connect(self.save_to_file)
 
         # Graphing pens
-        red_pen = mkPen("r", width=2)
-        blue_pen = mkPen("g", width=2)
-        green_pen = mkPen("b", width=2)
-        pink_pen = mkPen("purple", width=2)
+        red_pen = mkPen("#d52728", width=2)
+        green_pen = mkPen("#2ba02d", width=2)
+        blue_pen = mkPen("#1f78b4", width=2)
+        orange_pen = mkPen("#fe7f0e", width=2)
         black_pen = mkPen("black", width=2)
+        inf_line_pen = mkPen("black", width=2, style=QtCore.Qt.PenStyle.DashLine)
 
         # Set labels and create plot data for each graph
         # each entry in plots contains a PlotInfo dataclass consisting of points and data_line
@@ -141,11 +150,11 @@ class MainWindow(QWidget):
         self.ui.pressurePlot.getAxis("bottom").setPen(black_pen)
         self.ui.pressurePlot.getAxis("bottom").setTextPen(black_pen)
         self.plots["p1"] = PlotInfo(self.p1_points, self.ui.pressurePlot.plot(self.p1_points, pen=red_pen, name="p1"))
-        self.plots["p2"] = PlotInfo(self.p2_points, self.ui.pressurePlot.plot(self.p2_points, pen=blue_pen, name="p2"))
-        self.plots["p3"] = PlotInfo(self.p3_points, self.ui.pressurePlot.plot(self.p3_points, pen=green_pen, name="p3"))
-        self.plots["p4"] = PlotInfo(self.p4_points, self.ui.pressurePlot.plot(self.p4_points, pen=pink_pen, name="p4"))
+        self.plots["p2"] = PlotInfo(self.p2_points, self.ui.pressurePlot.plot(self.p2_points, pen=green_pen, name="p2"))
+        self.plots["p3"] = PlotInfo(self.p3_points, self.ui.pressurePlot.plot(self.p3_points, pen=blue_pen, name="p3"))
+        self.plots["p4"] = PlotInfo(self.p4_points, self.ui.pressurePlot.plot(self.p4_points, pen=orange_pen, name="p4"))
         for marker in [self.ui.pressureThresholdList.item(x) for x in range(self.ui.pressureThresholdList.count())]:
-            self.ui.pressurePlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=black_pen))
+            self.ui.pressurePlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=inf_line_pen))
 
         self.ui.temperaturePlot.addLegend(offset=(0,0), colCount=4, labelTextColor="black")
         self.ui.temperaturePlot.setTitle("<span style='font-weight: bold;'>Temperature</span>", color="black")
@@ -156,11 +165,11 @@ class MainWindow(QWidget):
         self.ui.temperaturePlot.getAxis("bottom").setPen(black_pen)
         self.ui.temperaturePlot.getAxis("bottom").setTextPen(black_pen)
         self.plots["t1"] = PlotInfo(self.t1_points, self.ui.temperaturePlot.plot(self.t1_points, pen=red_pen, name="t1"))
-        self.plots["t2"] = PlotInfo(self.t2_points, self.ui.temperaturePlot.plot(self.t2_points, pen=blue_pen, name="t2"))
-        self.plots["t3"] = PlotInfo(self.t3_points, self.ui.temperaturePlot.plot(self.t3_points, pen=green_pen, name="t3"))
-        self.plots["t4"] = PlotInfo(self.t4_points, self.ui.temperaturePlot.plot(self.t4_points, pen=pink_pen, name="t4"))
+        self.plots["t2"] = PlotInfo(self.t2_points, self.ui.temperaturePlot.plot(self.t2_points, pen=green_pen, name="t2"))
+        self.plots["t3"] = PlotInfo(self.t3_points, self.ui.temperaturePlot.plot(self.t3_points, pen=blue_pen, name="t3"))
+        self.plots["t4"] = PlotInfo(self.t4_points, self.ui.temperaturePlot.plot(self.t4_points, pen=orange_pen, name="t4"))
         for marker in [self.ui.temperatureThresholdList.item(x) for x in range(self.ui.temperatureThresholdList.count())]:
-            self.ui.temperaturePlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=black_pen))
+            self.ui.temperaturePlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=inf_line_pen))
 
         self.ui.tankMassPlot.addLegend()
         self.ui.tankMassPlot.setTitle("Tank Mass", color="black")
@@ -172,7 +181,7 @@ class MainWindow(QWidget):
         self.ui.tankMassPlot.getAxis("bottom").setTextPen(black_pen)
         self.plots["m1"] = PlotInfo(self.tank_mass_points, self.ui.tankMassPlot.plot(self.tank_mass_points, pen=red_pen))
         for marker in [self.ui.tankMassThresholdList.item(x) for x in range(self.ui.tankMassThresholdList.count())]:
-            self.ui.tankMassPlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=black_pen))
+            self.ui.tankMassPlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=inf_line_pen))
 
         self.ui.engineThrustPlot.addLegend()
         self.ui.engineThrustPlot.setTitle("Engine Thrust", color="black")
@@ -184,7 +193,7 @@ class MainWindow(QWidget):
         self.ui.engineThrustPlot.getAxis("bottom").setTextPen(black_pen)
         self.plots["m2"] = PlotInfo(self.engine_thrust_points, self.ui.engineThrustPlot.plot(self.engine_thrust_points, pen=red_pen))
         for marker in [self.ui.engineThrustThresholdList.item(x) for x in range(self.ui.engineThrustThresholdList.count())]:
-            self.ui.engineThrustPlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=black_pen))
+            self.ui.engineThrustPlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=inf_line_pen))
 
         #QTimer to help us to filter the data
         self.timer_time = 25
@@ -206,6 +215,8 @@ class MainWindow(QWidget):
 
         # Button handlers
         self.ui.udpConnectButton.clicked.connect(self.udp_connection_button_handler)
+        self.ui.serialConnectButton.clicked.connect(self.serial_connection_button_handler)
+        self.ui.serialRefreshButton.clicked.connect(self.refresh_serial_button_handler)
 
         # Open new file heandler
         self.ui.openFileButton.clicked.connect(self.open_file_button_handler)
@@ -230,6 +241,9 @@ class MainWindow(QWidget):
         if self.padUDPSocket.state() == QAbstractSocket.SocketState.ConnectedState:
             self.padUDPSocket.disconnectFromHost()
             self.padUDPSocket.waitForDisconnected()
+
+        if self.serialPort.isOpen():
+            self.serialPort.close()
 
         event.accept()
 
