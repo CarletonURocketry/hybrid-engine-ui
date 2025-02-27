@@ -4,7 +4,9 @@ on:
   release:
     types:
       - created  # Triggers only when a new release is created
-  workflow_dispatch:  # Allows manual execution
+  push:
+    branches:
+      - "release_workflow"
 
 jobs:
   build:
