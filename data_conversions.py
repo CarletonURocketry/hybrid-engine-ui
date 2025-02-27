@@ -7,11 +7,14 @@ def thermistorConversion(x):
     B = 2.373 * 0.0001
     C = 9.827 * 0.00000001
 
-    V = x * 5 / (2**10)
-    R = 2956 / ((4.945 / V) - 1)
-    if R > 0:
-        T = 1 / (A + B * math.log(R) + C * (math.log(R)) ** 3)
-    else:
+    try:
+        V = x * 5 / (2**10)
+        R = 2956 / ((4.945 / V) - 1)
+        if R > 0:
+            T = 1 / (A + B * math.log(R) + C * (math.log(R)) ** 3)
+        else:
+            T = 0
+    except ZeroDivisionError as e:
         T = 0
     return round(T - 273.15, 2)
 
@@ -22,11 +25,14 @@ def thermistor2Conversion(x):
     B = 2.383 * 0.0001
     C = 1.007 * 0.0000001
 
-    V = x * 5 / (2**10)
-    R = 2948 / ((4.945 / V) - 1)
-    if R > 0:
-        T = 1 / (A + B * math.log(R) + C * (math.log(R)) ** 3)
-    else:
+    try:
+        V = x * 5 / (2**10)
+        R = 2948 / ((4.945 / V) - 1)
+        if R > 0:
+            T = 1 / (A + B * math.log(R) + C * (math.log(R)) ** 3)
+        else:
+            T = 0
+    except ZeroDivisionError as e:
         T = 0
     return round(T - 273.15, 2)
 
