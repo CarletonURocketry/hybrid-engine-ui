@@ -27,8 +27,8 @@ def serial_connection_button_handler(self: "MainWindow"):
       self.serialPort.setBaudRate(int(self.ui.baudRateDropdown.currentText()))
       if self.serialPort.open(QIODevice.OpenModeFlag.ReadOnly):
         self.write_to_log(f"Opened serial connection on port {self.serialPort.portName()} (baud rate: {self.serialPort.baudRate()})")
-        self.disable_serial_config(disable_btn=True)
-        self.disable_udp_config(disable_btn=False)
+        self.disable_serial_config(disable_btn=False)
+        self.disable_udp_config(disable_btn=True)
         self.update_serial_connection_display(SerialConnectionStatus.CONNECTED)
     else:
       self.serialPort.close()
@@ -63,7 +63,7 @@ def serial_receive_data(self: "MainWindow"):
     if self.serialPort.bytesAvailable() >= 24:
       data = bytes(self.serialPort.read(24))
       parsed_data = packet_spec.parse_serial_packet(data, self.serialTimestamp)
-      self.serialTimestamp += 0.1 # Receive updates 10 times a second, each packet represents 0.1 seconds
+      self.serialTimestamp += 1
       for datum in parsed_data:
         header, message = datum 
         self.process_data(header, message)
