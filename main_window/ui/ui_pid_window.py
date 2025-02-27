@@ -30,7 +30,7 @@ class Ui_PIDWindow(object):
         self.pidDiagramLabel.setScaledContents(True)
         self.p1ValLabel = QLabel(PIDWindow)
         self.p1ValLabel.setObjectName(u"p1ValLabel")
-        self.p1ValLabel.setGeometry(QRect(394, 69, 51, 51))
+        self.p1ValLabel.setGeometry(QRect(394, 69, 81, 51))
         self.p1ValLabel.setStyleSheet(u"font: 700 8pt \"Segoe UI\";\n"
 "color: rgb(0, 0, 0)")
         self.p1Label = QLabel(PIDWindow)
@@ -40,7 +40,7 @@ class Ui_PIDWindow(object):
 "color: rgb(0, 0, 0)")
         self.p2ValLabel = QLabel(PIDWindow)
         self.p2ValLabel.setObjectName(u"p2ValLabel")
-        self.p2ValLabel.setGeometry(QRect(564, 438, 51, 51))
+        self.p2ValLabel.setGeometry(QRect(564, 438, 81, 51))
         self.p2ValLabel.setStyleSheet(u"font: 700 8pt \"Segoe UI\";\n"
 "color: rgb(0, 0, 0)")
         self.p2Label = QLabel(PIDWindow)
@@ -50,7 +50,7 @@ class Ui_PIDWindow(object):
 "color: rgb(0, 0, 0)")
         self.p3ValLabel = QLabel(PIDWindow)
         self.p3ValLabel.setObjectName(u"p3ValLabel")
-        self.p3ValLabel.setGeometry(QRect(219, 432, 51, 51))
+        self.p3ValLabel.setGeometry(QRect(219, 432, 81, 51))
         self.p3ValLabel.setStyleSheet(u"font: 700 8pt \"Segoe UI\";\n"
 "color: rgb(0, 0, 0)")
         self.p3Label = QLabel(PIDWindow)
@@ -60,7 +60,7 @@ class Ui_PIDWindow(object):
 "color: rgb(0, 0, 0)")
         self.t1ValLabel = QLabel(PIDWindow)
         self.t1ValLabel.setObjectName(u"t1ValLabel")
-        self.t1ValLabel.setGeometry(QRect(601, 275, 51, 51))
+        self.t1ValLabel.setGeometry(QRect(601, 275, 81, 51))
         self.t1ValLabel.setStyleSheet(u"font: 700 8pt \"Segoe UI\";\n"
 "color: rgb(0, 0, 0)")
         self.t1Label = QLabel(PIDWindow)
@@ -70,7 +70,7 @@ class Ui_PIDWindow(object):
 "color: rgb(0, 0, 0)")
         self.t2ValLabel = QLabel(PIDWindow)
         self.t2ValLabel.setObjectName(u"t2ValLabel")
-        self.t2ValLabel.setGeometry(QRect(151, 432, 51, 51))
+        self.t2ValLabel.setGeometry(QRect(151, 432, 81, 51))
         self.t2ValLabel.setStyleSheet(u"font: 700 8pt \"Segoe UI\";\n"
 "color: rgb(0, 0, 0)")
         self.t2Label = QLabel(PIDWindow)
@@ -85,7 +85,7 @@ class Ui_PIDWindow(object):
 "color: rgb(0, 0, 0)")
         self.p4ValLabel = QLabel(PIDWindow)
         self.p4ValLabel.setObjectName(u"p4ValLabel")
-        self.p4ValLabel.setGeometry(QRect(567, 389, 51, 51))
+        self.p4ValLabel.setGeometry(QRect(567, 389, 71, 51))
         self.p4ValLabel.setStyleSheet(u"font: 700 8pt \"Segoe UI\";\n"
 "color: rgb(0, 0, 0)")
         self.pidDiagramLabel.raise_()
@@ -110,17 +110,17 @@ class Ui_PIDWindow(object):
     def retranslateUi(self, PIDWindow):
         PIDWindow.setWindowTitle(QCoreApplication.translate("PIDWindow", u"Hybrid PID Diagram", None))
         self.pidDiagramLabel.setText("")
-        self.p1ValLabel.setText(QCoreApplication.translate("PIDWindow", u"0000 psi", None))
+        self.p1ValLabel.setText(QCoreApplication.translate("PIDWindow", u"000 psi", None))
         self.p1Label.setText(QCoreApplication.translate("PIDWindow", u"P1:", None))
-        self.p2ValLabel.setText(QCoreApplication.translate("PIDWindow", u"0000 psi", None))
+        self.p2ValLabel.setText(QCoreApplication.translate("PIDWindow", u"000 psi", None))
         self.p2Label.setText(QCoreApplication.translate("PIDWindow", u"P2:", None))
-        self.p3ValLabel.setText(QCoreApplication.translate("PIDWindow", u"0000 psi", None))
+        self.p3ValLabel.setText(QCoreApplication.translate("PIDWindow", u"000 psi", None))
         self.p3Label.setText(QCoreApplication.translate("PIDWindow", u"P3:", None))
-        self.t1ValLabel.setText(QCoreApplication.translate("PIDWindow", u"0000 \u00b0C", None))
+        self.t1ValLabel.setText(QCoreApplication.translate("PIDWindow", u"000 \u00b0C", None))
         self.t1Label.setText(QCoreApplication.translate("PIDWindow", u"T1:", None))
-        self.t2ValLabel.setText(QCoreApplication.translate("PIDWindow", u"0000 \u00b0C", None))
+        self.t2ValLabel.setText(QCoreApplication.translate("PIDWindow", u"000 \u00b0C", None))
         self.t2Label.setText(QCoreApplication.translate("PIDWindow", u"T2:", None))
         self.p4Label.setText(QCoreApplication.translate("PIDWindow", u"P4:", None))
-        self.p4ValLabel.setText(QCoreApplication.translate("PIDWindow", u"0000 psi", None))
+        self.p4ValLabel.setText(QCoreApplication.translate("PIDWindow", u"000 psi", None))
     # retranslateUi
 
