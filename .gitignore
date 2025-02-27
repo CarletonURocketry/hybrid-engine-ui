@@ -74,6 +74,10 @@ __pycache__
 *.dll
 *.exe
 
+# Pyinstaller folders
+/build
+/dist
+
 # Virtual environments
 .qtcreator
 venv
