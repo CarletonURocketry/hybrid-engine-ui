@@ -65,10 +65,10 @@ class PIDWindow(QWidget):
 class MainWindow(QWidget):
     # Imports for MainWindow functionality. Helps split large file into
     # smaller modules containing related functionality
-    from .udp import udp_connection_button_handler, join_multicast_group, \
+    from .udp import UDPConnectionStatus, udp_connection_button_handler, join_multicast_group, \
         udp_receive_socket_data, udp_on_disconnected, udp_on_error
-    from .serial import serial_connection_button_handler, refresh_serial_button_handler, \
-        serial_receive_data, serial_on_error
+    from .serial import SerialConnectionStatus, serial_connection_button_handler, \
+        refresh_serial_button_handler, serial_receive_data, serial_on_error
     from .data_handlers import plot_point, filter_data, update_act_state, \
         process_data, turn_off_valve, turn_on_valve, decrease_heartbeat, reset_heartbeat_timeout
     from .recording_and_playback import recording_toggle_button_handler, \
@@ -270,3 +270,51 @@ class MainWindow(QWidget):
             self.sensors[i - 1] = SensorLabel("T" + str(i), "0" + " °C", i - 1, 0, self.ui.sensorLayout)
             # 5 - 8 id, takes third column since the second one is for temp readings values
             self.sensors[i + 4] = SensorLabel("P" + str(i), "0" + " psi", i - 1, 2, self.ui.sensorLayout)
+
+    def enable_udp_config(self):
+        self.ui.udpConnectButton.setText("Create UDP connection")
+        self.ui.udpConnectButton.setEnabled(True)
+        self.ui.udpIpAddressInput.setEnabled(True)
+        self.ui.udpPortInput.setEnabled(True)
+
+    # If disable_btn, button gets disabled but text does not changed
+    # used for when serial connection disabled ability to connect via udp
+    # or vice versa
+    def disable_udp_config(self, disable_btn: bool):
+        if disable_btn: self.ui.udpConnectButton.setEnabled(False) 
+        else: self.ui.udpConnectButton.setText("Close UDP connection")
+        self.ui.udpIpAddressInput.setEnabled(False)
+        self.ui.udpPortInput.setEnabled(False)
+
+    def update_udp_connection_display(self, status: UDPConnectionStatus):
+        match status:
+            case self.UDPConnectionStatus.CONNECTED:
+                self.ui.udpConnStatusLabel.setText("Connected")
+                self.ui.udpConnStatusLabel.setStyleSheet("background-color: rgb(0, 255, 0);")
+            case self.UDPConnectionStatus.CONNECTION_LOST:
+                self.ui.udpConnStatusLabel.setText("Connection lost")
+                self.ui.udpConnStatusLabel.setStyleSheet("background-color: rgb(255, 80, 80);")
+            case self.UDPConnectionStatus.NOT_CONNECTED:
+                self.ui.udpConnStatusLabel.setText("Not connected")
+                self.ui.udpConnStatusLabel.setStyleSheet("background-color: rgb(0, 85, 127);")
+
+    def enable_serial_config(self):
+        self.ui.serialConnectButton.setText("Connect to serial port")
+        self.ui.serialConnectButton.setEnabled(True)
+        self.ui.serialPortDropdown.setEnabled(True)
+        self.ui.baudRateDropdown.setEnabled(True)
+
+    def disable_serial_config(self, disable_btn: bool):
+        if disable_btn: self.ui.serialConnectButton.setEnabled(False)
+        else: self.ui.serialConnectButton.setText("Close serial connection")
+        self.ui.serialPortDropdown.setEnabled(False)
+        self.ui.baudRateDropdown.setEnabled(False)
+
+    def update_serial_connection_display(self, status: SerialConnectionStatus):
+        match status:
+            case self.SerialConnectionStatus.CONNECTED:                
+                self.ui.serialConnStatusLabel.setText("Connected")
+                self.ui.serialConnStatusLabel.setStyleSheet("background-color: rgb(0, 255, 0);")
+            case self.SerialConnectionStatus.NOT_CONNECTED:
+                self.ui.serialConnStatusLabel.setText("Not connected")
+                self.ui.serialConnStatusLabel.setStyleSheet("background-color: rgb(0, 85, 127);")

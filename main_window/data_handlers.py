@@ -92,15 +92,13 @@ def filter_data(self: "MainWindow"):
 def reset_heartbeat_timeout(self: "MainWindow"):
     self.heartbeat_mutex.lock()
     self.heartbeat_timeout = 6
-    self.ui.udpConnStatusLabel.setText("Connected")
-    self.ui.udpConnStatusLabel.setStyleSheet("background-color: rgb(0, 255, 0);")
+    self.update_udp_connection_display(self.UDPConnectionStatus.CONNECTED)
     self.heartbeat_mutex.unlock()
 
 def decrease_heartbeat(self: "MainWindow"):
     self.heartbeat_mutex.lock()
     self.heartbeat_timeout -= 1
     if self.heartbeat_timeout <= 0:
-        self.ui.udpConnStatusLabel.setText("Connection lost")
-        self.ui.udpConnStatusLabel.setStyleSheet("background-color: rgb(255, 80, 80);")
+        self.update_udp_connection_display(self.UDPConnectionStatus.CONNECTION_LOST)
         self.write_to_log(f"Heartbeat not found for {abs(self.heartbeat_timeout) + 1} seconds")
     self.heartbeat_mutex.unlock()
