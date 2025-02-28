@@ -29,11 +29,18 @@ class TelemetryLabel:
         parentGrid.addWidget(self.qState, row, column + 1)
         self.qName.setStyleSheet("font-size: 17px")
         self.qName.setMinimumWidth(150)
-        self.qState.setStyleSheet("background-color: rgb(255, 80, 80); font-weight: bold; font-size: 20px;")
+        if self.qState.text() == "OPEN":
+            self.qState.setStyleSheet("background-color: rgb(0, 255, 0); font-weight: bold; font-size: 20px;")
+        else:
+            self.qState.setStyleSheet("background-color: rgb(255, 80, 80); font-weight: bold; font-size: 20px;")
         self.qState.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
     def changeState(self, newState):
         self.qState.setText(newState)
+        if newState == "OPEN":
+            self.qState.setStyleSheet("background-color: rgb(0, 255, 0); font-weight: bold; font-size: 20px;")
+        else:
+            self.qState.setStyleSheet("background-color: rgb(255, 80, 80); font-weight: bold; font-size: 20px;")
 
 class SensorLabel:
     def __init__(self, name, reading, row, column, parentGrid):
@@ -256,9 +263,10 @@ class MainWindow(QWidget):
         self.valves[13] = TelemetryLabel("Quick Disconnect", "CLOSED", 0, 0, self.ui.valveGrid)
         self.valves[14] =  TelemetryLabel("Igniter", "CLOSED", 0, 4, self.ui.valveGrid)
         for i in range(1, 13):
+            initial_state = "OPEN" if i in self.config['default_open_valves'] else "CLOSED"
             #There will be three label at each row, therefore divide by three, add 1 to skip the first row of valves
             #Row timed 2 because there will be two label for state and for the name
-            self.valves[i] = TelemetryLabel("XV-" + str(i), "CLOSED", ((i - 1)// 3) + 1 , ((i - 1) % 3) * 2, self.ui.valveGrid)
+            self.valves[i] = TelemetryLabel("XV-" + str(i), initial_state, ((i - 1)// 3) + 1 , ((i - 1) % 3) * 2, self.ui.valveGrid)
 
     def init_sensor_reading_label(self):
         self.sensors ={}

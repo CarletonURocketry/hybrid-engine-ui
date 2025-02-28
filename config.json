@@ -8,5 +8,6 @@
     "temperature": [20],
     "tank_mass": [3.5],
     "engine_thrust": []
-  }
+  },
+  "default_open_valves": [3, 4]
 }
