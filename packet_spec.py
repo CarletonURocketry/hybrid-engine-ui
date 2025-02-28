@@ -218,6 +218,7 @@ def parse_serial_packet(data: bytes, timestamp: int, default_open_valves: [int])
         t2=thermistor2Conversion(t2),
         status='{:012b}'.format(status//pow(2,16))[::-1] # Converts status int into bit string
         # corresponding to switch status, easier to read
+        # right-most 16 bits are removed since those don't correspond to valve status
     )
     packet_list: list[(PacketHeader, PacketMessage)] = []
     for field, val in asdict(parsed_packet).items():
