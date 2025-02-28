@@ -12,7 +12,7 @@ import packet_spec
 if TYPE_CHECKING:
     from main_window import MainWindow
 
-def process_data(self: "MainWindow", header: packet_spec.PacketHeader, message: packet_spec.PacketMessage):
+def process_data(self: "MainWindow", header: packet_spec.PacketHeader, message: packet_spec.PacketMessage, reset_heartbeat=True):
     match header.sub_type:
         case packet_spec.TelemetryPacketSubType.TEMPERATURE \
         | packet_spec.TelemetryPacketSubType.PRESSURE \
@@ -20,6 +20,7 @@ def process_data(self: "MainWindow", header: packet_spec.PacketHeader, message: 
             self.plot_point(header, message)
         case packet_spec.TelemetryPacketSubType.ACT_STATE:
             self.update_act_state(message)
+            if reset_heartbeat: self.reset_heartbeat_timeout()
         case _:
             pass  
 
@@ -50,8 +51,6 @@ def update_act_state(self: "MainWindow", message: packet_spec.PacketMessage):
             self.write_to_log("////////////////////////////")
         case _:
             self.write_to_log(f"XV-{message.id}: {message.state}")
-    
-    self.reset_heartbeat_timeout()
 
 def plot_point(self: "MainWindow", header: packet_spec.PacketHeader, message: packet_spec.PacketMessage):
     plots = self.plots
