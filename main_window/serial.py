@@ -62,11 +62,11 @@ def serial_receive_data(self: "MainWindow"):
 
     if self.serialPort.bytesAvailable() >= 24:
       data = bytes(self.serialPort.read(24))
-      parsed_data = packet_spec.parse_serial_packet(data, self.serialTimestamp)
+      parsed_data = packet_spec.parse_serial_packet(data, self.serialTimestamp, self.config['default_open_valves'])
       self.serialTimestamp += 1
       for datum in parsed_data:
         header, message = datum 
-        self.process_data(header, message)
+        self.process_data(header, message, reset_heartbeat=False)
           
 
 # Any errors with the socket should be handled here and logged

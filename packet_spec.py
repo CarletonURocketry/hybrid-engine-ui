@@ -198,7 +198,7 @@ def parse_packet_message(header: PacketHeader, message_bytes: bytes) -> PacketMe
                     time, type = struct.unpack("<IB", message_bytes)
                     return WarningPacket(type=Warning(type), time_since_power=time)
 
-def parse_serial_packet(data: bytes, timestamp: int):
+def parse_serial_packet(data: bytes, timestamp: int, default_open_valves: [int]):
     m1: int
     p1: int
     p2: int
@@ -216,21 +216,32 @@ def parse_serial_packet(data: bytes, timestamp: int):
         p4=pressureConversion(p4),
         t1=thermistorConversion(t1),
         t2=thermistor2Conversion(t2),
-        status=status
+        status='{:012b}'.format(status//pow(2,16))[::-1] # Converts status int into bit string
+        # corresponding to switch status, easier to read
     )
     packet_list: list[(PacketHeader, PacketMessage)] = []
     for field, val in asdict(parsed_packet).items():
         if field.startswith("m"):
             header = PacketHeader(PacketType.TELEMETRY, TelemetryPacketSubType.MASS)
             message = MassPacket(timestamp, val, int(field[-1]))
+            packet_list.append((header, message))
         elif field.startswith("p"):
             header = PacketHeader(PacketType.TELEMETRY, TelemetryPacketSubType.PRESSURE)
             message = PressurePacket(timestamp, val, int(field[-1]))
+            packet_list.append((header, message))
         elif field.startswith("t"):
             header = PacketHeader(PacketType.TELEMETRY, TelemetryPacketSubType.TEMPERATURE)
             message = TemperaturePacket(timestamp, val, int(field[-1]))
-        else: continue
-        packet_list.append((header, message))
+            packet_list.append((header, message))
+        else:
+            header = PacketHeader(PacketType.TELEMETRY, TelemetryPacketSubType.ACT_STATE)
+            for index, bit in enumerate(val):
+                if index in default_open_valves:
+                    state = ActuatorState.ON if bit == "0" else ActuatorState.OFF
+                else:
+                    state = ActuatorState.OFF if bit == "0" else ActuatorState.ON
+                message = ActuatorStatePacket(timestamp, index, state)
+                packet_list.append((header, message))
     return packet_list
 
             
