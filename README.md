@@ -20,6 +20,7 @@ Here's a quick breakdown of the files and directories of this project
 - `main.py` - Entrypoint of project, creates and displays and instance of `MainWindow`. This is the only file that needs to be executed
 - `build.py` - Python script that compiles generated `.ui` and `.qrc` files
 - `packet_spec.py` - Contains implementation of the [hybrid communications packet specification](https://github.com/CarletonURocketry/hybrid-comm-format/) and related parsing functions
+- `data_conversions.py` - Contains functions for converting data from sensor readings into their actual representative values
 - `main_window` - Contains code for user `MainWindow` interface
   - `ui` - Contains generated and compiled UI code and images
     - `form.ui` - Generated XML-like file representation of UI
@@ -27,10 +28,11 @@ Here's a quick breakdown of the files and directories of this project
     - `pid_window.ui` - Generated XML-like file representation of the P&ID diagram window
     - `ui_pid_window.ui` - Compiled Python code of `pid_window.ui`
     - `resources.qrc` - Generated file containing information of images and other assets
-    - `rc_resources.qrc` - Compiled Python code of `resources.qrc`
+    - `rc_resources.` - Compiled Python code of `resources.qrc`
   - `main_window.py` - Contains code for `MainWindow` class, primarily consists of imports from other files
   - `udp.py` - Contains all slots and handler code for UDP stuff
   - `data_handlers.py` - Contains all code for processing data
   - `recording_and_playback.py` - Contains all code for handling recording and playback of data
   - `logging.py` - Contains all code for handling logging
   - `config.py` - Contains code for loading the ui with preset values from `config.json`. Primarily for default threshold lines on graphs and multicast settings.
+  - `serial.py` - Contains all slots and handler code for serial stuff
