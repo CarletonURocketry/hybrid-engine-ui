@@ -1,6 +1,5 @@
 # This Python file uses the following encoding: utf-8
 from dataclasses import dataclass
-import json
 
 from PySide6.QtWidgets import QWidget, QLabel, QMessageBox
 from PySide6.QtCore import QTimer, Qt, QMutex, QPoint
@@ -33,7 +32,7 @@ class TelemetryLabel:
             self.qState.setStyleSheet("background-color: rgb(0, 255, 0); font-weight: bold; font-size: 20px;")
         else:
             self.qState.setStyleSheet("background-color: rgb(255, 80, 80); font-weight: bold; font-size: 20px;")
-        self.qName.setAlignment(Qt.AlignmentFlag.AlignRight)
+        self.qName.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignVCenter)
         self.qState.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
     def changeState(self, newState):
@@ -52,9 +51,7 @@ class SensorLabel:
         parentGrid.addWidget(self.qName, row, column)
         parentGrid.addWidget(self.qReading, row, column + 1)
         self.qName.setStyleSheet("font-size: 17px")
-        self.qName.setMinimumWidth(30)
         self.qReading.setStyleSheet("font-size: 17px; font-weight: bold")
-        self.qName.setAlignment(Qt.AlignmentFlag.AlignRight)
 
     def changeReading(self, newReading):
         self.qReading.setText(newReading)
