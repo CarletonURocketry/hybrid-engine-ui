@@ -60,10 +60,10 @@ def serial_receive_data(self: "MainWindow"):
     while (self.serialPort.bytesAvailable() > 0 and self.serialPort.peek(1) != b'~'):
       self.serialPort.read(1)
 
-    if self.serialPort.bytesAvailable() >= 24:
-      data = bytes(self.serialPort.read(24))
+    if self.serialPort.bytesAvailable() >= 28:
+      data = bytes(self.serialPort.read(28))
       parsed_data = packet_spec.parse_serial_packet(data, self.serialTimestamp, self.config['default_open_valves'])
-      self.serialTimestamp += 1
+      self.serialTimestamp += 0.1
       for datum in parsed_data:
         header, message = datum 
         self.process_data(header, message, reset_heartbeat=False)

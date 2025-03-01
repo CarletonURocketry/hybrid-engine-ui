@@ -36,6 +36,8 @@ def thermistor2Conversion(x):
         T = 0
     return round(T - 273.15, 2)
 
+def thermocouple3Conversion(x):
+    return x/1000
 
 # im being lazy -antoine
 def pressureConversion(x):
@@ -54,3 +56,6 @@ def pressureConversion(x):
 
     corrected = raw  # insert calibration code here
     return round(corrected, 2)
+
+def loadCell2Conversion(x):
+    return round((x/1024) * (500/2.2), 2)

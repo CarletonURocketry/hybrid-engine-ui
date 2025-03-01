@@ -204,7 +204,7 @@ class MainWindow(QWidget):
         #QTimer to help us to filter the data
         self.timer_time = 25
         #The time range in the graph
-        self.time_range = 2500
+        self.time_range = 25
         self.data_filter_timer = QTimer(self)
         self.data_filter_timer.timeout.connect(self.filter_data)
         self.data_filter_timer.start(self.timer_time)

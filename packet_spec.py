@@ -113,12 +113,14 @@ class WarningPacket(PacketMessage):
 @dataclass
 class SerialDataPacket():
     m1: int
+    m2: int
     p1: int
     p2: int
     p3: int
     p4: int
     t1: int
     t2: int
+    t3: int
     status: int
 
 def parse_packet_header(header_bytes: bytes) -> PacketHeader:
@@ -198,24 +200,28 @@ def parse_packet_message(header: PacketHeader, message_bytes: bytes) -> PacketMe
                     time, type = struct.unpack("<IB", message_bytes)
                     return WarningPacket(type=Warning(type), time_since_power=time)
 
-def parse_serial_packet(data: bytes, timestamp: int, default_open_valves: [int]):
+def parse_serial_packet(data: bytes, timestamp: int, default_open_valves):
     m1: int
+    m2: int
     p1: int
     p2: int
     p3: int
     p4: int
     t1: int
     t2: int
+    t3: int
     status: int
-    m1, p1, p2, p3, p4, t1, t2, status = struct.unpack_from("<HHHHHHHI", data, offset=4)
+    m2, m1, p1, p2, p3, p4, t1, t2, t3, status = struct.unpack_from("<HHHHHHHHHI", data, offset=4)
     parsed_packet = SerialDataPacket(
-        m1=m1, 
+        m1=m1/1000, 
+        m2=loadCell2Conversion(m2),
         p1=pressureConversion(p1),
         p2=pressureConversion(p2),
         p3=pressureConversion(p3),
         p4=pressureConversion(p4),
         t1=thermistorConversion(t1),
         t2=thermistor2Conversion(t2),
+        t3=thermocouple3Conversion(t3),
         status='{:012b}'.format(status//pow(2,16))[::-1] # Converts status int into bit string
         # corresponding to switch status, easier to read
         # right-most 16 bits are removed since those don't correspond to valve status
