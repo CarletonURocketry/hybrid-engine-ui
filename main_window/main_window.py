@@ -54,6 +54,7 @@ class SensorLabel:
         self.qName.setStyleSheet("font-size: 17px")
         self.qName.setMinimumWidth(30)
         self.qReading.setStyleSheet("font-size: 17px; font-weight: bold")
+        self.qName.setAlignment(Qt.AlignmentFlag.AlignRight)
 
     def changeReading(self, newReading):
         self.qReading.setText(newReading)
