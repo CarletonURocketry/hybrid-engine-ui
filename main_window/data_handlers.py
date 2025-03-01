@@ -6,6 +6,9 @@ data points and updating label text. Should only be imported by main_window.py
 from typing import TYPE_CHECKING
 
 import numpy as np
+import pathlib
+import csv
+from PySide6.QtCore import QDateTime
 
 import packet_spec
 
@@ -79,6 +82,7 @@ def plot_point(self: "MainWindow", header: packet_spec.PacketHeader, message: pa
                     plots[massId].data_line.setData(plots[massId].points)
                     if message.id == 1: change_new_reading(self, 4, str(message.mass) + " kg")
                     else: change_new_reading(self, 9, str(message.mass) + " kg")
+    write_to_csv(self)
 
 def filter_data(self: "MainWindow"):
     for key in self.plots:
@@ -101,3 +105,17 @@ def decrease_heartbeat(self: "MainWindow"):
         self.update_udp_connection_display(self.UDPConnectionStatus.CONNECTION_LOST)
         self.write_to_log(f"Heartbeat not found for {abs(self.heartbeat_timeout) + 1} seconds")
     self.heartbeat_mutex.unlock()
+
+def write_to_csv(self: "MainWindow"):
+    plots = self.plots
+    for i in range(1, 5):
+        temperatureId:str = "t" + str(i)
+        print(plots[temperatureId].points)
+
+    pathlib.Path('log-csv').mkdir(parents=True, exist_ok=True)
+    file_name = './log-csv/'
+    file_name += QDateTime.currentDateTime().toString("yyyy-MM-dd_HH-mm")
+    file_name += '.csv'
+    f = open(file_name, "w")
+    f.close()
+
