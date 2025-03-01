@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'form.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.7.2
+## Created by: Qt User Interface Compiler version 6.8.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -55,7 +55,7 @@ class Ui_Widget(object):
         sizePolicy.setVerticalStretch(1)
         sizePolicy.setHeightForWidth(self.logoLabel.sizePolicy().hasHeightForWidth())
         self.logoLabel.setSizePolicy(sizePolicy)
-        self.logoLabel.setMinimumSize(QSize(127, 90))
+        self.logoLabel.setMinimumSize(QSize(150, 106))
         self.logoLabel.setMaximumSize(QSize(127, 90))
         self.logoLabel.setPixmap(QPixmap(u":/images/logos/logoandtexttransparentsmol.png"))
         self.logoLabel.setScaledContents(True)

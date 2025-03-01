@@ -1,8 +1,7 @@
 # This Python file uses the following encoding: utf-8
 from dataclasses import dataclass
-import json
 
-from PySide6.QtWidgets import QWidget, QLabel, QVBoxLayout
+from PySide6.QtWidgets import QWidget, QLabel, QMessageBox
 from PySide6.QtCore import QTimer, Qt, QMutex, QPoint
 from PySide6.QtNetwork import QUdpSocket, QAbstractSocket
 from PySide6.QtSerialPort import QSerialPort, QSerialPortInfo
@@ -33,6 +32,7 @@ class TelemetryLabel:
             self.qState.setStyleSheet("background-color: rgb(0, 255, 0); font-weight: bold; font-size: 20px;")
         else:
             self.qState.setStyleSheet("background-color: rgb(255, 80, 80); font-weight: bold; font-size: 20px;")
+        self.qName.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignVCenter)
         self.qState.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
     def changeState(self, newState):
@@ -51,7 +51,6 @@ class SensorLabel:
         parentGrid.addWidget(self.qName, row, column)
         parentGrid.addWidget(self.qReading, row, column + 1)
         self.qName.setStyleSheet("font-size: 17px")
-        self.qName.setMinimumWidth(30)
         self.qReading.setStyleSheet("font-size: 17px; font-weight: bold")
 
     def changeReading(self, newReading):
@@ -245,14 +244,18 @@ class MainWindow(QWidget):
 
     # Handles when the window is closed, have to make sure to disconnect the TCP socket
     def closeEvent(self, event):
-        if self.padUDPSocket.state() == QAbstractSocket.SocketState.ConnectedState:
-            self.padUDPSocket.disconnectFromHost()
-            self.padUDPSocket.waitForDisconnected()
+        confirm = QMessageBox.question(self, "Close application", "Are you sure you want to close the application?", QMessageBox.Yes | QMessageBox.No)
+        if confirm == QMessageBox.StandardButton.Yes:
+            if self.padUDPSocket.state() == QAbstractSocket.SocketState.ConnectedState:
+                self.padUDPSocket.disconnectFromHost()
+                self.padUDPSocket.waitForDisconnected()
 
-        if self.serialPort.isOpen():
-            self.serialPort.close()
+            if self.serialPort.isOpen():
+                self.serialPort.close()
 
-        event.accept()
+            event.accept()
+        else:
+            event.ignore()
 
     def open_pid_window(self):
         self.pid_window.show()
