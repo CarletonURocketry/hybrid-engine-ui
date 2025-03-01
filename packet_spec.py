@@ -211,10 +211,10 @@ def parse_serial_packet(data: bytes, timestamp: int, default_open_valves):
     t2: int
     t3: int
     status: int
-    m1, m2, p1, p2, p3, p4, t1, t2, t3, status = struct.unpack_from("<HHHHHHHHHI", data, offset=4)
+    m2, m1, p1, p2, p3, p4, t1, t2, t3, status = struct.unpack_from("<HHHHHHHHHI", data, offset=4)
     parsed_packet = SerialDataPacket(
-        m1=loadCell2Conversion(m1), 
-        m2=m2/1000,
+        m1=m1/1000, 
+        m2=loadCell2Conversion(m2),
         p1=pressureConversion(p1),
         p2=pressureConversion(p2),
         p3=pressureConversion(p3),
