@@ -33,6 +33,7 @@ class TelemetryLabel:
             self.qState.setStyleSheet("background-color: rgb(0, 255, 0); font-weight: bold; font-size: 20px;")
         else:
             self.qState.setStyleSheet("background-color: rgb(255, 80, 80); font-weight: bold; font-size: 20px;")
+        self.qName.setAlignment(Qt.AlignmentFlag.AlignRight)
         self.qState.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
     def changeState(self, newState):
