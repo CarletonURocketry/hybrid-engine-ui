@@ -86,3 +86,4 @@ venv
 # Sensor recordings and log outputs
 /recording/*
 /logs/*
+/data_csv/*

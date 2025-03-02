@@ -230,6 +230,8 @@ class MainWindow(QWidget):
         #Connect toggle button for recording data
         self.ui.recordingToggleButton.toggled.connect(self.recording_toggle_button_handler)
         self.file_out = None
+        self.csv_fieldnames = ["t","m1","m2","p1","p2","p3","p4","t1","t2","t3","status"]
+        self.csv_out = None
 
         # Init valve and sensor labels
         self.init_actuator_valve_label()

@@ -249,6 +249,6 @@ def parse_serial_packet(data: bytes, timestamp: int, default_open_valves):
                     state = ActuatorState.OFF if bit == "0" else ActuatorState.ON
                 message = ActuatorStatePacket(timestamp, index, state)
                 packet_list.append((header, message))
-    return packet_list
+    return parsed_packet, packet_list
 
             

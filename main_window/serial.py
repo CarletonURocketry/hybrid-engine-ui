@@ -6,9 +6,13 @@ imported by main_window.py
 """
 from typing import TYPE_CHECKING
 from enum import Enum
+import csv
+from pathlib import Path
+import dataclasses
 
 from PySide6.QtCore import QIODevice
 from PySide6.QtSerialPort import QSerialPortInfo, QSerialPort
+from PySide6.QtCore import QDateTime
 
 import packet_spec
 
@@ -30,6 +34,12 @@ def serial_connection_button_handler(self: "MainWindow"):
         self.disable_serial_config(disable_btn=False)
         self.disable_udp_config(disable_btn=True)
         self.update_serial_connection_display(SerialConnectionStatus.CONNECTED)
+        directory = Path("data_csv")
+        self.csv_out = directory / f"{QDateTime.currentDateTime().toString("yyyy-MM-dd_HH-mm")}.csv"
+        directory.mkdir(parents=True, exist_ok=True)
+        with open(self.csv_out, "w", newline="") as file:
+           writer = csv.DictWriter(file, fieldnames=self.csv_fieldnames)
+           writer.writeheader()
     else:
       self.serialPort.close()
       self.write_to_log("Serial connection was closed")
@@ -62,8 +72,13 @@ def serial_receive_data(self: "MainWindow"):
 
     if self.serialPort.bytesAvailable() >= 28:
       data = bytes(self.serialPort.read(28))
-      parsed_data = packet_spec.parse_serial_packet(data, self.serialTimestamp, self.config['default_open_valves'])
-      self.serialTimestamp += 0.1
+      parsed_packet, parsed_data = packet_spec.parse_serial_packet(data, self.serialTimestamp, self.config['default_open_valves'])
+      self.serialTimestamp = round(self.serialTimestamp + 0.1, 2)
+      with open(self.csv_out, "a", newline="") as file:
+         writer = csv.DictWriter(file, fieldnames=self.csv_fieldnames)
+         packet_dict = dataclasses.asdict(parsed_packet)
+         packet_dict["t"] = self.serialTimestamp
+         writer.writerow(packet_dict)
       for datum in parsed_data:
         header, message = datum 
         self.process_data(header, message, reset_heartbeat=False)
