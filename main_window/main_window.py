@@ -275,9 +275,18 @@ class MainWindow(QWidget):
 
     def init_sensor_reading_label(self):
         self.sensors ={}
-        self.sensors[4] = SensorLabel("Tank Mass", "0 kg", 4, 0, self.ui.sensorLayout)
+        #To increase the font a tad bit 
+        tankMassSensor = SensorLabel("Tank Mass", "0 kg", 4, 0, self.ui.sensorLayout)
+        tankMassSensor.qName.setStyleSheet("font-size: 20px")
+        tankMassSensor.qReading.setStyleSheet("font-size: 20px; font-weight: bold")
+
+        self.sensors[4] = tankMassSensor 
         #print("first label created") tester
-        self.sensors[9] = SensorLabel("Engine Thrust", "0 kN", 4, 2, self.ui.sensorLayout)
+        engineThrustSensor = SensorLabel("Engine Thrust", "0 kN", 4, 2, self.ui.sensorLayout)
+        engineThrustSensor.qName.setStyleSheet("font-size: 20px")
+        engineThrustSensor.qReading.setStyleSheet("font-size: 20px; font-weight: bold")
+        
+        self.sensors[9] = engineThrustSensor
         for i in range (1, 5):
             # 0 - 3 id, takes first column
             self.sensors[i - 1] = SensorLabel("T" + str(i), "0" + " °C", i - 1, 0, self.ui.sensorLayout)
