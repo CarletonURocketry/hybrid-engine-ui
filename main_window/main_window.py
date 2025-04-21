@@ -275,9 +275,9 @@ class MainWindow(QWidget):
 
     def init_sensor_reading_label(self):
         self.sensors ={}
-        self.sensors[4] = SensorLabel("Tank Mass", "0", 4, 0, self.ui.sensorLayout)
+        self.sensors[4] = SensorLabel("Tank Mass", "0 kg", 4, 0, self.ui.sensorLayout)
         #print("first label created") tester
-        self.sensors[9] = SensorLabel("Engine Thrust", "0", 4, 2, self.ui.sensorLayout)
+        self.sensors[9] = SensorLabel("Engine Thrust", "0 kN", 4, 2, self.ui.sensorLayout)
         for i in range (1, 5):
             # 0 - 3 id, takes first column
             self.sensors[i - 1] = SensorLabel("T" + str(i), "0" + " °C", i - 1, 0, self.ui.sensorLayout)
