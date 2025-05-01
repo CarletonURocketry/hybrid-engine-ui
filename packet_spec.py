@@ -170,19 +170,25 @@ def parse_packet_message(header: PacketHeader, message_bytes: bytes) -> PacketMe
                     id: int
                     time: int
                     time, temperature, id = struct.unpack("<IIB", message_bytes)
-                    return TemperaturePacket(temperature=temperature, id=id, time_since_power=time)
+                    return TemperaturePacket(
+                        temperature=millis_to_units(temperature),
+                        id=id,
+                        time_since_power=millis_to_units(time))
                 case TelemetryPacketSubType.PRESSURE:
                     pressure: int
                     id: int
                     time: int
                     time, pressure, id = struct.unpack("<IIB", message_bytes)
-                    return PressurePacket(pressure=pressure, id=id, time_since_power=time)
+                    return PressurePacket(
+                        pressure=millis_to_units(pressure),
+                        id=id,
+                        time_since_power=millis_to_units(time))
                 case TelemetryPacketSubType.MASS:
                     time: int
                     mass: int
                     id: int
                     time, mass, id = struct.unpack("<IIB", message_bytes)
-                    return MassPacket(mass=mass, id=id, time_since_power=time)
+                    return MassPacket(mass=mass, id=id, time_since_power=millis_to_units(time))
                 case TelemetryPacketSubType.ARMING_STATE:
                     time:int
                     state:int

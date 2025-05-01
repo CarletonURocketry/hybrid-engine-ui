@@ -1,3 +1,12 @@
+"""Data conversions
+
+This file contains functions that convert values obtained from sensor into 
+the actual values they represent or into values that are nicer to work with
+(i.e milliunits -> units)
+
+The first five functions listed are legacy functions from the OG propulsion stand.
+The other functions are used in the newer propulsion stand
+"""
 import math
 
 
@@ -59,3 +68,6 @@ def pressureConversion(x):
 
 def loadCell2Conversion(x):
     return round((x/1024) * (500/2.2), 2)
+
+def millis_to_units(x):
+    return round(x/1000, 4)

@@ -201,9 +201,9 @@ class MainWindow(QWidget):
         for marker in [self.ui.engineThrustThresholdList.item(x) for x in range(self.ui.engineThrustThresholdList.count())]:
             self.ui.engineThrustPlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=inf_line_pen))
 
-        #QTimer to help us to filter the data
+        # QTimer to help us to filter the data, graph is updated every 25ms
         self.timer_time = 25
-        #The time range in the graph
+        # The time range in the graph, last 25 seconds of data is kept
         self.time_range = 25
         self.data_filter_timer = QTimer(self)
         self.data_filter_timer.timeout.connect(self.filter_data)
