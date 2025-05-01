@@ -139,13 +139,13 @@ class MainWindow(QWidget):
         self.ui.exporter.clicked.connect(self.save_to_file)
 
         # Graphing pens
-        red_pen = mkPen("#d52728", width=2)
-        green_pen = mkPen("#2ba02d", width=2)
-        blue_pen = mkPen("#1f78b4", width=2)
-        orange_pen = mkPen("#fe7f0e", width=2)
+        red_pen = mkPen("#d52728", width=4)
+        green_pen = mkPen("#2ba02d", width=4)
+        blue_pen = mkPen("#1f78b4", width=4)
+        orange_pen = mkPen("#fe7f0e", width=4)
         purple_pen = mkPen("#9632b8", width=4)
         brown_pen = mkPen("#755139", width=4)
-        black_pen = mkPen("black", width=2)
+        black_pen = mkPen("black", width=4)
         inf_line_pen = mkPen("black", width=2, style=QtCore.Qt.PenStyle.DashLine)
 
         # Set labels and create plot data for each graph
