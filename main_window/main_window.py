@@ -180,7 +180,7 @@ class MainWindow(QWidget):
         self.ui.tankMassPlot.addLegend()
         self.ui.tankMassPlot.setTitle("Tank Mass", color="black")
         self.ui.tankMassPlot.setLabel("left", "<span style='font-size: 13px; font-weight: bold;'>Mass (kg)</span>", color="black")
-        self.ui.tankMassPlot.setLabel("bottom", "<span style='font-size: 13px; font-weight: bold;'>Time (ms)</span>", color="black")
+        self.ui.tankMassPlot.setLabel("bottom", "<span style='font-size: 13px; font-weight: bold;'>Time (s)</span>", color="black")
         self.ui.tankMassPlot.getAxis("left").setPen(black_pen)
         self.ui.tankMassPlot.getAxis("left").setTextPen(black_pen)
         self.ui.tankMassPlot.getAxis("bottom").setPen(black_pen)

@@ -78,7 +78,7 @@ def plot_point(self: "MainWindow", header: packet_spec.PacketHeader, message: pa
                     plots[massId].points = np.append(plots[massId].points, np.array([[message.time_since_power, message.mass]]), axis=0)
                     plots[massId].data_line.setData(plots[massId].points)
                     if message.id == 1: change_new_reading(self, 4, str(message.mass) + " kg")
-                    else: change_new_reading(self, 9, str(message.mass) + " kg")
+                    else: change_new_reading(self, 9, str(message.mass) + " kN")
 
 def filter_data(self: "MainWindow"):
     for key in self.plots:
