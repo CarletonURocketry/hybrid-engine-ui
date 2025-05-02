@@ -97,6 +97,8 @@ class MainWindow(QWidget):
         self.p2_points = np.empty((0,2))
         self.p3_points = np.empty((0,2))
         self.p4_points = np.empty((0,2))
+        self.p5_points = np.empty((0,2))
+        self.p6_points = np.empty((0,2))
         self.t1_points = np.empty((0,2))
         self.t2_points = np.empty((0,2))
         self.t3_points = np.empty((0,2))
@@ -140,6 +142,8 @@ class MainWindow(QWidget):
         green_pen = mkPen("#2ba02d", width=2)
         blue_pen = mkPen("#1f78b4", width=2)
         orange_pen = mkPen("#fe7f0e", width=2)
+        purple_pen = mkPen("#9632b8", width=4)
+        brown_pen = mkPen("#755139", width=4)
         black_pen = mkPen("black", width=2)
         inf_line_pen = mkPen("black", width=2, style=QtCore.Qt.PenStyle.DashLine)
 
@@ -147,7 +151,7 @@ class MainWindow(QWidget):
         # each entry in plots contains a PlotInfo dataclass consisting of points and data_line
         # points refers to the np array containing the data
         # data_line refers to the PlotDataItem object used to show data on the plots
-        self.ui.pressurePlot.addLegend(offset=(0,0), colCount=4, labelTextColor="black")
+        self.ui.pressurePlot.addLegend(offset=(0,0), colCount=6, labelTextColor="black")
         self.ui.pressurePlot.setTitle("<span style='font-weight: bold;'>Pressure</span>", color="black")
         self.ui.pressurePlot.setLabel("left", "<span style='font-size: 13px; font-weight: bold;'>Pressure (PSI)</span>", color="black")
         self.ui.pressurePlot.setLabel("bottom", "<span style='font-size: 13px; font-weight: bold;'>Time (s)</span>", color="black")
@@ -159,6 +163,8 @@ class MainWindow(QWidget):
         self.plots["p2"] = PlotInfo(self.p2_points, self.ui.pressurePlot.plot(self.p2_points, pen=green_pen, name="p2"))
         self.plots["p3"] = PlotInfo(self.p3_points, self.ui.pressurePlot.plot(self.p3_points, pen=blue_pen, name="p3"))
         self.plots["p4"] = PlotInfo(self.p4_points, self.ui.pressurePlot.plot(self.p4_points, pen=orange_pen, name="p4"))
+        self.plots["p5"] = PlotInfo(self.p5_points, self.ui.pressurePlot.plot(self.p5_points, pen=purple_pen, name="p5"))
+        self.plots["p6"] = PlotInfo(self.p6_points, self.ui.pressurePlot.plot(self.p6_points, pen=brown_pen, name="p6"))
         for marker in [self.ui.pressureThresholdList.item(x) for x in range(self.ui.pressureThresholdList.count())]:
             self.ui.pressurePlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=inf_line_pen))
 
@@ -274,15 +280,18 @@ class MainWindow(QWidget):
             self.valves[i] = TelemetryLabel("XV-" + str(i), initial_state, ((i - 1)// 3) + 1 , ((i - 1) % 3) * 2, self.ui.valveGrid)
 
     def init_sensor_reading_label(self):
-        self.sensors ={}
+        self.sensors = {}
+        # Temperature sensor labels
+        for i in range(4):
+            self.sensors[i] = SensorLabel("T" + str(i+1), "0" + " °C", i, 0, self.ui.sensorLayout)
+        
+        # Tank mass & Engine thrust labels
         self.sensors[4] = SensorLabel("Tank Mass", "0", 4, 0, self.ui.sensorLayout)
-        #print("first label created") tester
-        self.sensors[9] = SensorLabel("Engine Thrust", "0", 4, 2, self.ui.sensorLayout)
-        for i in range (1, 5):
-            # 0 - 3 id, takes first column
-            self.sensors[i - 1] = SensorLabel("T" + str(i), "0" + " °C", i - 1, 0, self.ui.sensorLayout)
-            # 5 - 8 id, takes third column since the second one is for temp readings values
-            self.sensors[i + 4] = SensorLabel("P" + str(i), "0" + " psi", i - 1, 2, self.ui.sensorLayout)
+        self.sensors[5] = SensorLabel("Engine Thrust", "0", 5, 0, self.ui.sensorLayout)
+        
+        # Pressure labels
+        for i in range (6, 12):
+            self.sensors[i] = SensorLabel("P" + str(i-5), "0" + " psi", i-6, 2, self.ui.sensorLayout)
 
     def enable_udp_config(self):
         self.ui.udpConnectButton.setText("Create UDP connection")

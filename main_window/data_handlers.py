@@ -72,13 +72,13 @@ def plot_point(self: "MainWindow", header: packet_spec.PacketHeader, message: pa
                     plots[pressureId].points = np.append(plots[pressureId].points, np.array([[message.time_since_power, message.pressure]]), axis=0)
                     plots[pressureId].data_line.setData(plots[pressureId].points)
                     if pressureId in value_labels: value_labels[pressureId].setText(f"{message.pressure} psi")
-                    change_new_reading(self, message.id + 4, str(message.pressure) + " psi") #array id for pressure label is 5 - 8
+                    change_new_reading(self, message.id + 5, str(message.pressure) + " psi") #array id for pressure label is 5 - 8
                 case packet_spec.TelemetryPacketSubType.MASS:
                     massId:str = "m" + str(message.id)
                     plots[massId].points = np.append(plots[massId].points, np.array([[message.time_since_power, message.mass]]), axis=0)
                     plots[massId].data_line.setData(plots[massId].points)
                     if message.id == 1: change_new_reading(self, 4, str(message.mass) + " kg")
-                    else: change_new_reading(self, 9, str(message.mass) + " kN")
+                    else: change_new_reading(self, 5, str(message.mass) + " kN")
 
 def filter_data(self: "MainWindow"):
     for key in self.plots:
