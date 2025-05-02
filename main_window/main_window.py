@@ -150,7 +150,7 @@ class MainWindow(QWidget):
         self.ui.pressurePlot.addLegend(offset=(0,0), colCount=4, labelTextColor="black")
         self.ui.pressurePlot.setTitle("<span style='font-weight: bold;'>Pressure</span>", color="black")
         self.ui.pressurePlot.setLabel("left", "<span style='font-size: 13px; font-weight: bold;'>Pressure (PSI)</span>", color="black")
-        self.ui.pressurePlot.setLabel("bottom", "<span style='font-size: 13px; font-weight: bold;'>Time (ms)</span>", color="black")
+        self.ui.pressurePlot.setLabel("bottom", "<span style='font-size: 13px; font-weight: bold;'>Time (s)</span>", color="black")
         self.ui.pressurePlot.getAxis("left").setPen(black_pen)
         self.ui.pressurePlot.getAxis("left").setTextPen(black_pen)
         self.ui.pressurePlot.getAxis("bottom").setPen(black_pen)
@@ -165,7 +165,7 @@ class MainWindow(QWidget):
         self.ui.temperaturePlot.addLegend(offset=(0,0), colCount=4, labelTextColor="black")
         self.ui.temperaturePlot.setTitle("<span style='font-weight: bold;'>Temperature</span>", color="black")
         self.ui.temperaturePlot.setLabel("left", "<span style='font-size: 13px; font-weight: bold;'>Temperature (°C)</span>", color="black")
-        self.ui.temperaturePlot.setLabel("bottom", "<span style='font-size: 13px; font-weight: bold;'>Time (ms)</span>", color="black")
+        self.ui.temperaturePlot.setLabel("bottom", "<span style='font-size: 13px; font-weight: bold;'>Time (s)</span>", color="black")
         self.ui.temperaturePlot.getAxis("left").setPen(black_pen)
         self.ui.temperaturePlot.getAxis("left").setTextPen(black_pen)
         self.ui.temperaturePlot.getAxis("bottom").setPen(black_pen)
@@ -179,8 +179,8 @@ class MainWindow(QWidget):
 
         self.ui.tankMassPlot.addLegend()
         self.ui.tankMassPlot.setTitle("Tank Mass", color="black")
-        self.ui.tankMassPlot.setLabel("left", "<span style='font-size: 13px; font-weight: bold;'>Mass (Kg)</span>", color="black")
-        self.ui.tankMassPlot.setLabel("bottom", "<span style='font-size: 13px; font-weight: bold;'>Time (ms)</span>", color="black")
+        self.ui.tankMassPlot.setLabel("left", "<span style='font-size: 13px; font-weight: bold;'>Mass (kg)</span>", color="black")
+        self.ui.tankMassPlot.setLabel("bottom", "<span style='font-size: 13px; font-weight: bold;'>Time (s)</span>", color="black")
         self.ui.tankMassPlot.getAxis("left").setPen(black_pen)
         self.ui.tankMassPlot.getAxis("left").setTextPen(black_pen)
         self.ui.tankMassPlot.getAxis("bottom").setPen(black_pen)
@@ -191,8 +191,8 @@ class MainWindow(QWidget):
 
         self.ui.engineThrustPlot.addLegend()
         self.ui.engineThrustPlot.setTitle("Engine Thrust", color="black")
-        self.ui.engineThrustPlot.setLabel("left", "<span style='font-size: 13px; font-weight: bold;'>Thrust (KN)</span>", color="black")
-        self.ui.engineThrustPlot.setLabel("bottom", "<span style='font-size: 13px; font-weight: bold;'>Time (ms)</span>", color="black")
+        self.ui.engineThrustPlot.setLabel("left", "<span style='font-size: 13px; font-weight: bold;'>Thrust (kN)</span>", color="black")
+        self.ui.engineThrustPlot.setLabel("bottom", "<span style='font-size: 13px; font-weight: bold;'>Time (s)</span>", color="black")
         self.ui.engineThrustPlot.getAxis("left").setPen(black_pen)
         self.ui.engineThrustPlot.getAxis("left").setTextPen(black_pen)
         self.ui.engineThrustPlot.getAxis("bottom").setPen(black_pen)
@@ -201,9 +201,9 @@ class MainWindow(QWidget):
         for marker in [self.ui.engineThrustThresholdList.item(x) for x in range(self.ui.engineThrustThresholdList.count())]:
             self.ui.engineThrustPlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=inf_line_pen))
 
-        #QTimer to help us to filter the data
+        # QTimer to help us to filter the data, graph is updated every 25ms
         self.timer_time = 25
-        #The time range in the graph
+        # The time range in the graph, last 25 seconds of data is kept
         self.time_range = 25
         self.data_filter_timer = QTimer(self)
         self.data_filter_timer.timeout.connect(self.filter_data)
