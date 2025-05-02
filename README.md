@@ -36,3 +36,8 @@ Here's a quick breakdown of the files and directories of this project
   - `logging.py` - Contains all code for handling logging
   - `config.py` - Contains code for loading the ui with preset values from `config.json`. Primarily for default threshold lines on graphs and multicast settings.
   - `serial.py` - Contains all slots and handler code for serial stuff
+
+## Building
+In an effort to make the UI quickly accessible for all systems, Pyinstaller is used to create an executable that is included in each new release. Pyinstaller uses the `Hybrid Engine UI.spec` file that is included in this repo to compile the application into an executable. 
+
+To create a fresh executable with the current code, run `pyinstaller --noconfirm 'Hybrid Engine UI.spec'`. This process takes a few minutes and is only really necesarry when making a new release. Furthermore, at the cost of accessbility, the executable will take slightly longer to launch than the python application but should perform comparatively.
