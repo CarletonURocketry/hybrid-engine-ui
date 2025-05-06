@@ -8,6 +8,7 @@ imported by main_window.py
 import ipaddress
 from typing import TYPE_CHECKING
 from enum import Enum
+import csv
 
 from PySide6.QtNetwork import QAbstractSocket, QHostAddress, QNetworkInterface
 from PySide6.QtWebEngineWidgets import QWebEngineView
@@ -55,11 +56,15 @@ def udp_connection_button_handler(self: "MainWindow"):
 
         if self.join_multicast_group(mcast_addr, mcast_port):
             self.write_to_log(f"Successfully connected to {mcast_addr}:{mcast_port}")
+
             self.reset_heartbeat_timeout()
             self.heartbeat_timer.start(self.heartbeat_interval)
+
             self.disable_udp_config(disable_btn=False)
             self.disable_serial_config(disable_btn=True)
             self.update_udp_connection_display(UDPConnectionStatus.CONNECTED)
+
+            self.create_csv_log()
         else:
             self.write_to_log(f"Unable to join multicast group at IP address: {mcast_addr}, port: {mcast_port}")
     else:
@@ -89,6 +94,17 @@ def udp_receive_socket_data(self: "MainWindow"):
         header = packet_spec.parse_packet_header(header_bytes)
         message = packet_spec.parse_packet_message(header, message_bytes)  
         self.process_data(header, message)
+
+        # Write data to csv here
+        packet_dict = { "t": message.time_since_power }
+        match header.sub_type:
+            case packet_spec.TelemetryPacketSubType.TEMPERATURE:
+                packet_dict["t" + str(message.id)] = message.temperature
+            case packet_spec.TelemetryPacketSubType.PRESSURE:
+                packet_dict["p" + str(message.id)] = message.pressure
+            case packet_spec.TelemetryPacketSubType.MASS:
+                packet_dict["m" + str(message.id)] = message.mass 
+        self.write_to_csv_log(packet_dict)
 
         #If we want to recording data
         if self.ui.recordingToggleButton.isChecked():

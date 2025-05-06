@@ -6,8 +6,6 @@ imported by main_window.py
 """
 from typing import TYPE_CHECKING
 from enum import Enum
-import csv
-from pathlib import Path
 import dataclasses
 
 from PySide6.QtCore import QIODevice
@@ -34,12 +32,7 @@ def serial_connection_button_handler(self: "MainWindow"):
         self.disable_serial_config(disable_btn=False)
         self.disable_udp_config(disable_btn=True)
         self.update_serial_connection_display(SerialConnectionStatus.CONNECTED)
-        directory = Path("data_csv")
-        self.csv_out = directory / f"{QDateTime.currentDateTime().toString("yyyy-MM-dd_HH-mm")}.csv"
-        directory.mkdir(parents=True, exist_ok=True)
-        with open(self.csv_out, "w", newline="") as file:
-           writer = csv.DictWriter(file, fieldnames=self.csv_fieldnames)
-           writer.writeheader()
+        self.create_csv_log()
     else:
       self.serialPort.close()
       self.write_to_log("Serial connection was closed")
@@ -71,18 +64,20 @@ def serial_receive_data(self: "MainWindow"):
       self.serialPort.read(1)
 
     if self.serialPort.bytesAvailable() >= 28:
+      # Parse data
       data = bytes(self.serialPort.read(28))
       parsed_packet, parsed_data = packet_spec.parse_serial_packet(data, self.serialTimestamp, self.config['default_open_valves'])
-      self.serialTimestamp = round(self.serialTimestamp + 0.1, 2)
-      with open(self.csv_out, "a", newline="") as file:
-         writer = csv.DictWriter(file, fieldnames=self.csv_fieldnames)
-         packet_dict = dataclasses.asdict(parsed_packet)
-         packet_dict["t"] = self.serialTimestamp
-         writer.writerow(packet_dict)
+
+      # Add to graph
       for datum in parsed_data:
         header, message = datum 
         self.process_data(header, message, reset_heartbeat=False)
-          
+      
+      # Log to csv
+      self.serialTimestamp = round(self.serialTimestamp + 0.1, 2)
+      packet_dict = dataclasses.asdict(parsed_packet)
+      packet_dict["t"] = self.serialTimestamp
+      self.write_to_csv_log(packet_dict) 
 
 # Any errors with the socket should be handled here and logged
 def serial_on_error(self: "MainWindow"):
