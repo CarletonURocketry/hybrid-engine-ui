@@ -3,11 +3,10 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from PySide6.QtWidgets import QWidget, QLabel, QMessageBox
-from PySide6.QtCore import QTimer, Qt, QMutex, QPoint
+from PySide6.QtCore import QTimer, Qt, QMutex
 from PySide6.QtNetwork import QUdpSocket, QAbstractSocket
 from PySide6.QtSerialPort import QSerialPort, QSerialPortInfo
 from pyqtgraph import mkPen, PlotDataItem, InfiniteLine, QtCore
-from PySide6.QtGui import QPainter, QPolygon
 import numpy as np
 
 from .ui import Ui_Widget, Ui_PIDWindow
@@ -94,16 +93,16 @@ class MainWindow(QWidget):
         self.ui.showPIDButton.clicked.connect(self.open_pid_window)
 
         # Point numpy arrays for temperature, pressure and mass
+        self.p0_points = np.empty((0,2))
         self.p1_points = np.empty((0,2))
         self.p2_points = np.empty((0,2))
         self.p3_points = np.empty((0,2))
         self.p4_points = np.empty((0,2))
         self.p5_points = np.empty((0,2))
-        self.p6_points = np.empty((0,2))
+        self.t0_points = np.empty((0,2))
         self.t1_points = np.empty((0,2))
         self.t2_points = np.empty((0,2))
         self.t3_points = np.empty((0,2))
-        self.t4_points = np.empty((0,2))
         self.tank_mass_points = np.empty((0,2))
         self.engine_thrust_points = np.empty((0,2))
 
@@ -160,12 +159,12 @@ class MainWindow(QWidget):
         self.ui.pressurePlot.getAxis("left").setTextPen(black_pen)
         self.ui.pressurePlot.getAxis("bottom").setPen(black_pen)
         self.ui.pressurePlot.getAxis("bottom").setTextPen(black_pen)
-        self.plots["p1"] = PlotInfo(self.p1_points, self.ui.pressurePlot.plot(self.p1_points, pen=red_pen, name="p1"))
-        self.plots["p2"] = PlotInfo(self.p2_points, self.ui.pressurePlot.plot(self.p2_points, pen=green_pen, name="p2"))
-        self.plots["p3"] = PlotInfo(self.p3_points, self.ui.pressurePlot.plot(self.p3_points, pen=blue_pen, name="p3"))
-        self.plots["p4"] = PlotInfo(self.p4_points, self.ui.pressurePlot.plot(self.p4_points, pen=orange_pen, name="p4"))
-        self.plots["p5"] = PlotInfo(self.p5_points, self.ui.pressurePlot.plot(self.p5_points, pen=purple_pen, name="p5"))
-        self.plots["p6"] = PlotInfo(self.p6_points, self.ui.pressurePlot.plot(self.p6_points, pen=brown_pen, name="p6"))
+        self.plots["p0"] = PlotInfo(self.p0_points, self.ui.pressurePlot.plot(self.p0_points, pen=red_pen, name="p0"))
+        self.plots["p1"] = PlotInfo(self.p1_points, self.ui.pressurePlot.plot(self.p1_points, pen=green_pen, name="p1"))
+        self.plots["p2"] = PlotInfo(self.p2_points, self.ui.pressurePlot.plot(self.p2_points, pen=blue_pen, name="p2"))
+        self.plots["p3"] = PlotInfo(self.p3_points, self.ui.pressurePlot.plot(self.p3_points, pen=orange_pen, name="p3"))
+        self.plots["p4"] = PlotInfo(self.p4_points, self.ui.pressurePlot.plot(self.p4_points, pen=purple_pen, name="p4"))
+        self.plots["p5"] = PlotInfo(self.p5_points, self.ui.pressurePlot.plot(self.p5_points, pen=brown_pen, name="p5"))
         for marker in [self.ui.pressureThresholdList.item(x) for x in range(self.ui.pressureThresholdList.count())]:
             self.ui.pressurePlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=inf_line_pen))
 
@@ -177,34 +176,34 @@ class MainWindow(QWidget):
         self.ui.temperaturePlot.getAxis("left").setTextPen(black_pen)
         self.ui.temperaturePlot.getAxis("bottom").setPen(black_pen)
         self.ui.temperaturePlot.getAxis("bottom").setTextPen(black_pen)
-        self.plots["t1"] = PlotInfo(self.t1_points, self.ui.temperaturePlot.plot(self.t1_points, pen=red_pen, name="t1"))
-        self.plots["t2"] = PlotInfo(self.t2_points, self.ui.temperaturePlot.plot(self.t2_points, pen=green_pen, name="t2"))
-        self.plots["t3"] = PlotInfo(self.t3_points, self.ui.temperaturePlot.plot(self.t3_points, pen=blue_pen, name="t3"))
-        self.plots["t4"] = PlotInfo(self.t4_points, self.ui.temperaturePlot.plot(self.t4_points, pen=orange_pen, name="t4"))
+        self.plots["t0"] = PlotInfo(self.t0_points, self.ui.temperaturePlot.plot(self.t0_points, pen=red_pen, name="t0"))
+        self.plots["t1"] = PlotInfo(self.t1_points, self.ui.temperaturePlot.plot(self.t1_points, pen=green_pen, name="t1"))
+        self.plots["t2"] = PlotInfo(self.t2_points, self.ui.temperaturePlot.plot(self.t2_points, pen=blue_pen, name="t2"))
+        self.plots["t3"] = PlotInfo(self.t3_points, self.ui.temperaturePlot.plot(self.t3_points, pen=orange_pen, name="t3"))
         for marker in [self.ui.temperatureThresholdList.item(x) for x in range(self.ui.temperatureThresholdList.count())]:
             self.ui.temperaturePlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=inf_line_pen))
 
         self.ui.tankMassPlot.addLegend()
-        self.ui.tankMassPlot.setTitle("Tank Mass", color="black")
+        self.ui.tankMassPlot.setTitle("<span style='font-weight: bold;'>Tank Mass</span>", color="black")
         self.ui.tankMassPlot.setLabel("left", "<span style='font-size: 15px; font-weight: bold;'>Mass (Kg)</span>", color="black")
         self.ui.tankMassPlot.setLabel("bottom", "<span style='font-size: 17px; font-weight: bold;'>Time (ms)</span>", color="black")
         self.ui.tankMassPlot.getAxis("left").setPen(black_pen)
         self.ui.tankMassPlot.getAxis("left").setTextPen(black_pen)
         self.ui.tankMassPlot.getAxis("bottom").setPen(black_pen)
         self.ui.tankMassPlot.getAxis("bottom").setTextPen(black_pen)
-        self.plots["m1"] = PlotInfo(self.tank_mass_points, self.ui.tankMassPlot.plot(self.tank_mass_points, pen=red_pen))
+        self.plots["m0"] = PlotInfo(self.tank_mass_points, self.ui.tankMassPlot.plot(self.tank_mass_points, pen=red_pen))
         for marker in [self.ui.tankMassThresholdList.item(x) for x in range(self.ui.tankMassThresholdList.count())]:
             self.ui.tankMassPlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=inf_line_pen))
 
         self.ui.engineThrustPlot.addLegend()
-        self.ui.engineThrustPlot.setTitle("Engine Thrust", color="black")
+        self.ui.engineThrustPlot.setTitle("<span style='font-weight: bold;'>Engine Thrust</span>", color="black")
         self.ui.engineThrustPlot.setLabel("left", "<span style='font-size: 15px; font-weight: bold;'>Thrust (KN)</span>", color="black")
         self.ui.engineThrustPlot.setLabel("bottom", "<span style='font-size: 17px; font-weight: bold;'>Time (ms)</span>", color="black")
         self.ui.engineThrustPlot.getAxis("left").setPen(black_pen)
         self.ui.engineThrustPlot.getAxis("left").setTextPen(black_pen)
         self.ui.engineThrustPlot.getAxis("bottom").setPen(black_pen)
         self.ui.engineThrustPlot.getAxis("bottom").setTextPen(black_pen)
-        self.plots["m2"] = PlotInfo(self.engine_thrust_points, self.ui.engineThrustPlot.plot(self.engine_thrust_points, pen=red_pen))
+        self.plots["m1"] = PlotInfo(self.engine_thrust_points, self.ui.engineThrustPlot.plot(self.engine_thrust_points, pen=red_pen))
         for marker in [self.ui.engineThrustThresholdList.item(x) for x in range(self.ui.engineThrustThresholdList.count())]:
             self.ui.engineThrustPlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=inf_line_pen))
 
@@ -238,7 +237,7 @@ class MainWindow(QWidget):
         self.ui.recordingToggleButton.toggled.connect(self.recording_toggle_button_handler)
         self.file_out = None
         self.csv_dir = Path("data_csv")
-        self.csv_fieldnames = ["t","m1","m2","p1","p2","p3","p4","p5","p6","t1","t2","t3","t4","status"]
+        self.csv_fieldnames = ["t","m0","m1","p0","p1","p2","p3","p4","p5","t0","t1","t2","t3","status"]
         self.csv_out = None
 
         # Init valve and sensor labels
@@ -285,7 +284,7 @@ class MainWindow(QWidget):
         self.sensors = {}
         # Temperature sensor labels
         for i in range(4):
-            self.sensors[i] = SensorLabel("T" + str(i+1), "0" + " °C", i, 0, self.ui.sensorLayout)
+            self.sensors[i] = SensorLabel("T" + str(i), "0" + " °C", i, 0, self.ui.sensorLayout)
         
         # Tank mass & Engine thrust labels
         self.sensors[4] = SensorLabel("Tank Mass", "0", 4, 0, self.ui.sensorLayout)
@@ -293,7 +292,7 @@ class MainWindow(QWidget):
         
         # Pressure labels
         for i in range (6, 12):
-            self.sensors[i] = SensorLabel("P" + str(i-5), "0" + " psi", i-6, 2, self.ui.sensorLayout)
+            self.sensors[i] = SensorLabel("P" + str(i-6), "0" + " psi", i-6, 2, self.ui.sensorLayout)
 
     def enable_udp_config(self):
         self.ui.udpConnectButton.setText("Create UDP connection")
