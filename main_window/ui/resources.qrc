@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/images">
         <file>logos/logoandtexttransparentsmol.png</file>
+        <file>logos/logo_avionics_pro_transparent.png</file>
     </qresource>
     <qresource prefix="/diagrams">
         <file>diagrams/PID hybrid.jpg</file>

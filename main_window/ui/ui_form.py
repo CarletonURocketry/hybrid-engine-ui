@@ -57,7 +57,7 @@ class Ui_Widget(object):
         self.logoLabel.setSizePolicy(sizePolicy)
         self.logoLabel.setMinimumSize(QSize(150, 106))
         self.logoLabel.setMaximumSize(QSize(127, 90))
-        self.logoLabel.setPixmap(QPixmap(u":/images/logos/logoandtexttransparentsmol.png"))
+        self.logoLabel.setPixmap(QPixmap(u":/images/logos/logo_avionics_pro_transparent.png"))
         self.logoLabel.setScaledContents(True)
 
         self.mainLayout.addWidget(self.logoLabel)
