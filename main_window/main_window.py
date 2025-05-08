@@ -3,11 +3,10 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from PySide6.QtWidgets import QWidget, QLabel, QMessageBox
-from PySide6.QtCore import QTimer, Qt, QMutex, QPoint
+from PySide6.QtCore import QTimer, Qt, QMutex
 from PySide6.QtNetwork import QUdpSocket, QAbstractSocket
 from PySide6.QtSerialPort import QSerialPort, QSerialPortInfo
 from pyqtgraph import mkPen, PlotDataItem, InfiniteLine, QtCore
-from PySide6.QtGui import QPainter, QPolygon
 import numpy as np
 
 from .ui import Ui_Widget, Ui_PIDWindow
