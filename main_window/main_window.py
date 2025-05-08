@@ -184,7 +184,7 @@ class MainWindow(QWidget):
             self.ui.temperaturePlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=inf_line_pen))
 
         self.ui.tankMassPlot.addLegend()
-        self.ui.tankMassPlot.setTitle("Tank Mass", color="black")
+        self.ui.tankMassPlot.setTitle("<span style='font-weight: bold;'>Tank Mass</span>", color="black")
         self.ui.tankMassPlot.setLabel("left", "<span style='font-size: 15px; font-weight: bold;'>Mass (Kg)</span>", color="black")
         self.ui.tankMassPlot.setLabel("bottom", "<span style='font-size: 17px; font-weight: bold;'>Time (ms)</span>", color="black")
         self.ui.tankMassPlot.getAxis("left").setPen(black_pen)
@@ -196,7 +196,7 @@ class MainWindow(QWidget):
             self.ui.tankMassPlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=inf_line_pen))
 
         self.ui.engineThrustPlot.addLegend()
-        self.ui.engineThrustPlot.setTitle("Engine Thrust", color="black")
+        self.ui.engineThrustPlot.setTitle("<span style='font-weight: bold;'>Engine Thrust</span>", color="black")
         self.ui.engineThrustPlot.setLabel("left", "<span style='font-size: 15px; font-weight: bold;'>Thrust (KN)</span>", color="black")
         self.ui.engineThrustPlot.setLabel("bottom", "<span style='font-size: 17px; font-weight: bold;'>Time (ms)</span>", color="black")
         self.ui.engineThrustPlot.getAxis("left").setPen(black_pen)
