@@ -518,7 +518,7 @@ class Ui_Widget(object):
         self.logoLabel.setText("")
         self.showPIDButton.setText(QCoreApplication.translate("Widget", u"Show PID ", None))
         self.openFileButton.setText(QCoreApplication.translate("Widget", u"Open previous data", None))
-        self.recordingToggleButton.setText(QCoreApplication.translate("Widget", u"Recording", None))
+        self.recordingToggleButton.setText(QCoreApplication.translate("Widget", u"Recording raw data", None))
         self.udpConnLabel.setText(QCoreApplication.translate("Widget", u"UDP connection status: ", None))
         self.udpConnStatusLabel.setText(QCoreApplication.translate("Widget", u"Not connected", None))
         self.serialConnLabel.setText(QCoreApplication.translate("Widget", u"Serial connection status:", None))

@@ -101,7 +101,7 @@
            <item>
             <widget class="QRadioButton" name="recordingToggleButton">
              <property name="text">
-              <string>Recording</string>
+              <string>Recording raw data</string>
              </property>
             </widget>
            </item>
