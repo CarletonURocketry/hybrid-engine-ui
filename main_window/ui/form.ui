@@ -77,7 +77,7 @@
               <string/>
              </property>
              <property name="pixmap">
-              <pixmap resource="resources.qrc">:/images/logos/logoandtexttransparentsmol.png</pixmap>
+              <pixmap resource="resources.qrc">:/images/logos/logo_avionics_pro_transparent.png</pixmap>
              </property>
              <property name="scaledContents">
               <bool>true</bool>
