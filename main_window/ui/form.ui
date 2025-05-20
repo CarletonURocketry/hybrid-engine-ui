@@ -82,6 +82,9 @@
              <property name="scaledContents">
               <bool>true</bool>
              </property>
+             <property name="alignment">
+              <set>Qt::AlignmentFlag::AlignCenter</set>
+             </property>
             </widget>
            </item>
            <item>
@@ -111,70 +114,148 @@
           <layout class="QGridLayout" name="sensorLayout"/>
          </item>
          <item>
-          <layout class="QVBoxLayout" name="verticalLayout_3">
+          <layout class="QVBoxLayout" name="statesLayout">
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_2">
-             <item>
-              <widget class="QLabel" name="udpConnLabel">
-               <property name="font">
-                <font>
-                 <pointsize>14</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>UDP connection status: </string>
-               </property>
-              </widget>
+            <layout class="QGridLayout" name="connectionAndStateLayout">
+             <item row="1" column="0">
+              <layout class="QHBoxLayout" name="udpConnLabelsLayout">
+               <item>
+                <widget class="QLabel" name="udpConnLabel">
+                 <property name="font">
+                  <font>
+                   <pointsize>14</pointsize>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>UDP connection status:</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="udpConnStatusLabel">
+                 <property name="font">
+                  <font>
+                   <pointsize>15</pointsize>
+                   <fontweight>DemiBold</fontweight>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background-color: rgb(0, 85, 127);</string>
+                 </property>
+                 <property name="text">
+                  <string>Not connected</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignmentFlag::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </item>
-             <item>
-              <widget class="QLabel" name="udpConnStatusLabel">
-               <property name="font">
-                <font>
-                 <pointsize>15</pointsize>
-                 <fontweight>DemiBold</fontweight>
-                </font>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">background-color: rgb(0, 85, 127);</string>
-               </property>
-               <property name="text">
-                <string>Not connected</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignmentFlag::AlignCenter</set>
-               </property>
-              </widget>
+             <item row="1" column="1">
+              <layout class="QHBoxLayout" name="serialConnLabelsLayout">
+               <item>
+                <widget class="QLabel" name="serialConnLabel">
+                 <property name="font">
+                  <font>
+                   <pointsize>14</pointsize>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>Serial connection status:</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="serialConnStatusLabel">
+                 <property name="font">
+                  <font>
+                   <pointsize>15</pointsize>
+                   <fontweight>DemiBold</fontweight>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background-color: rgb(0, 85, 127);</string>
+                 </property>
+                 <property name="text">
+                  <string>Not connected</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignmentFlag::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </item>
-             <item>
-              <widget class="QLabel" name="serialConnLabel">
-               <property name="font">
-                <font>
-                 <pointsize>14</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>Serial connection status:</string>
-               </property>
-              </widget>
+             <item row="2" column="0">
+              <layout class="QHBoxLayout" name="armingStateLabelsLayout">
+               <item>
+                <widget class="QLabel" name="armingStateLabel">
+                 <property name="font">
+                  <font>
+                   <pointsize>14</pointsize>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>Arming state:</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="armingStateValueLabel">
+                 <property name="font">
+                  <font>
+                   <pointsize>15</pointsize>
+                   <fontweight>DemiBold</fontweight>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background-color: rgb(0, 85, 127);</string>
+                 </property>
+                 <property name="text">
+                  <string>N/A</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignmentFlag::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </item>
-             <item>
-              <widget class="QLabel" name="serialConnStatusLabel">
-               <property name="font">
-                <font>
-                 <pointsize>15</pointsize>
-                 <fontweight>DemiBold</fontweight>
-                </font>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">background-color: rgb(0, 85, 127);</string>
-               </property>
-               <property name="text">
-                <string>Not connected</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignmentFlag::AlignCenter</set>
-               </property>
-              </widget>
+             <item row="2" column="1">
+              <layout class="QHBoxLayout" name="continuityLabelsLayout">
+               <item>
+                <widget class="QLabel" name="continuityLabel">
+                 <property name="font">
+                  <font>
+                   <pointsize>14</pointsize>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>Continuity State:</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="continuityValueLabel">
+                 <property name="font">
+                  <font>
+                   <pointsize>15</pointsize>
+                   <fontweight>DemiBold</fontweight>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background-color: rgb(0, 85, 127);</string>
+                 </property>
+                 <property name="text">
+                  <string>N/A</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignmentFlag::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </item>
             </layout>
            </item>

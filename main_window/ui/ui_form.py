@@ -59,6 +59,7 @@ class Ui_Widget(object):
         self.logoLabel.setMaximumSize(QSize(127, 90))
         self.logoLabel.setPixmap(QPixmap(u":/images/logos/logo_avionics_pro_transparent.png"))
         self.logoLabel.setScaledContents(True)
+        self.logoLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.mainLayout.addWidget(self.logoLabel)
 
@@ -85,17 +86,19 @@ class Ui_Widget(object):
 
         self.controlLayout.addLayout(self.sensorLayout)
 
-        self.verticalLayout_3 = QVBoxLayout()
-        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
-        self.horizontalLayout_2 = QHBoxLayout()
-        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.statesLayout = QVBoxLayout()
+        self.statesLayout.setObjectName(u"statesLayout")
+        self.connectionAndStateLayout = QGridLayout()
+        self.connectionAndStateLayout.setObjectName(u"connectionAndStateLayout")
+        self.udpConnLabelsLayout = QHBoxLayout()
+        self.udpConnLabelsLayout.setObjectName(u"udpConnLabelsLayout")
         self.udpConnLabel = QLabel(self.telemetryTab)
         self.udpConnLabel.setObjectName(u"udpConnLabel")
         font = QFont()
         font.setPointSize(14)
         self.udpConnLabel.setFont(font)
 
-        self.horizontalLayout_2.addWidget(self.udpConnLabel)
+        self.udpConnLabelsLayout.addWidget(self.udpConnLabel)
 
         self.udpConnStatusLabel = QLabel(self.telemetryTab)
         self.udpConnStatusLabel.setObjectName(u"udpConnStatusLabel")
@@ -106,13 +109,18 @@ class Ui_Widget(object):
         self.udpConnStatusLabel.setStyleSheet(u"background-color: rgb(0, 85, 127);")
         self.udpConnStatusLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.horizontalLayout_2.addWidget(self.udpConnStatusLabel)
+        self.udpConnLabelsLayout.addWidget(self.udpConnStatusLabel)
 
+
+        self.connectionAndStateLayout.addLayout(self.udpConnLabelsLayout, 1, 0, 1, 1)
+
+        self.serialConnLabelsLayout = QHBoxLayout()
+        self.serialConnLabelsLayout.setObjectName(u"serialConnLabelsLayout")
         self.serialConnLabel = QLabel(self.telemetryTab)
         self.serialConnLabel.setObjectName(u"serialConnLabel")
         self.serialConnLabel.setFont(font)
 
-        self.horizontalLayout_2.addWidget(self.serialConnLabel)
+        self.serialConnLabelsLayout.addWidget(self.serialConnLabel)
 
         self.serialConnStatusLabel = QLabel(self.telemetryTab)
         self.serialConnStatusLabel.setObjectName(u"serialConnStatusLabel")
@@ -120,18 +128,59 @@ class Ui_Widget(object):
         self.serialConnStatusLabel.setStyleSheet(u"background-color: rgb(0, 85, 127);")
         self.serialConnStatusLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.horizontalLayout_2.addWidget(self.serialConnStatusLabel)
+        self.serialConnLabelsLayout.addWidget(self.serialConnStatusLabel)
 
 
-        self.verticalLayout_3.addLayout(self.horizontalLayout_2)
+        self.connectionAndStateLayout.addLayout(self.serialConnLabelsLayout, 1, 1, 1, 1)
+
+        self.armingStateLabelsLayout = QHBoxLayout()
+        self.armingStateLabelsLayout.setObjectName(u"armingStateLabelsLayout")
+        self.armingStateLabel = QLabel(self.telemetryTab)
+        self.armingStateLabel.setObjectName(u"armingStateLabel")
+        self.armingStateLabel.setFont(font)
+
+        self.armingStateLabelsLayout.addWidget(self.armingStateLabel)
+
+        self.armingStateValueLabel = QLabel(self.telemetryTab)
+        self.armingStateValueLabel.setObjectName(u"armingStateValueLabel")
+        self.armingStateValueLabel.setFont(font1)
+        self.armingStateValueLabel.setStyleSheet(u"background-color: rgb(0, 85, 127);")
+        self.armingStateValueLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.armingStateLabelsLayout.addWidget(self.armingStateValueLabel)
+
+
+        self.connectionAndStateLayout.addLayout(self.armingStateLabelsLayout, 2, 0, 1, 1)
+
+        self.continuityLabelsLayout = QHBoxLayout()
+        self.continuityLabelsLayout.setObjectName(u"continuityLabelsLayout")
+        self.continuityLabel = QLabel(self.telemetryTab)
+        self.continuityLabel.setObjectName(u"continuityLabel")
+        self.continuityLabel.setFont(font)
+
+        self.continuityLabelsLayout.addWidget(self.continuityLabel)
+
+        self.continuityValueLabel = QLabel(self.telemetryTab)
+        self.continuityValueLabel.setObjectName(u"continuityValueLabel")
+        self.continuityValueLabel.setFont(font1)
+        self.continuityValueLabel.setStyleSheet(u"background-color: rgb(0, 85, 127);")
+        self.continuityValueLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.continuityLabelsLayout.addWidget(self.continuityValueLabel)
+
+
+        self.connectionAndStateLayout.addLayout(self.continuityLabelsLayout, 2, 1, 1, 1)
+
+
+        self.statesLayout.addLayout(self.connectionAndStateLayout)
 
         self.valveGrid = QGridLayout()
         self.valveGrid.setObjectName(u"valveGrid")
 
-        self.verticalLayout_3.addLayout(self.valveGrid)
+        self.statesLayout.addLayout(self.valveGrid)
 
 
-        self.controlLayout.addLayout(self.verticalLayout_3)
+        self.controlLayout.addLayout(self.statesLayout)
 
         self.controlLayout.setStretch(0, 2)
         self.controlLayout.setStretch(1, 1)
@@ -519,10 +568,14 @@ class Ui_Widget(object):
         self.showPIDButton.setText(QCoreApplication.translate("Widget", u"Show PID ", None))
         self.openFileButton.setText(QCoreApplication.translate("Widget", u"Open previous data", None))
         self.recordingToggleButton.setText(QCoreApplication.translate("Widget", u"Recording raw data", None))
-        self.udpConnLabel.setText(QCoreApplication.translate("Widget", u"UDP connection status: ", None))
+        self.udpConnLabel.setText(QCoreApplication.translate("Widget", u"UDP connection status:", None))
         self.udpConnStatusLabel.setText(QCoreApplication.translate("Widget", u"Not connected", None))
         self.serialConnLabel.setText(QCoreApplication.translate("Widget", u"Serial connection status:", None))
         self.serialConnStatusLabel.setText(QCoreApplication.translate("Widget", u"Not connected", None))
+        self.armingStateLabel.setText(QCoreApplication.translate("Widget", u"Arming state:", None))
+        self.armingStateValueLabel.setText(QCoreApplication.translate("Widget", u"N/A", None))
+        self.continuityLabel.setText(QCoreApplication.translate("Widget", u"Continuity State:", None))
+        self.continuityValueLabel.setText(QCoreApplication.translate("Widget", u"N/A", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.telemetryTab), QCoreApplication.translate("Widget", u"Telemetry", None))
         self.multicastConfigLabel.setText(QCoreApplication.translate("Widget", u"Multicast configuration", None))
 #if QT_CONFIG(tooltip)
