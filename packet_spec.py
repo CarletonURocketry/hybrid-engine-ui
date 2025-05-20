@@ -16,6 +16,12 @@ class PacketType(Enum):
     CONTROL = 0
     TELEMETRY = 1
 
+class ControlPacketSubType(Enum):
+    ACT_REQ = 0
+    ACT_ACK = 1
+    ARM_REQ = 2
+    ARM_ACK = 3
+
 class TelemetryPacketSubType(Enum):
     TEMPERATURE = 0
     PRESSURE = 1
@@ -23,17 +29,18 @@ class TelemetryPacketSubType(Enum):
     ARMING_STATE = 3
     ACT_STATE = 4
     WARNING = 5
-    ACT_REQ = 6
-    ACT_ACK = 7
-    ARM_REQ = 8
-    ARM_ACK = 9
+    CONTINUITY = 6
 
-class ActuationRequestStatus(Enum):
+class ActuationResponse(Enum):
     ACT_OK = 0
     ACT_DENIED = 1
     ACT_DNE = 2
     ACT_INV = 3
 
+class ArmingResponse(Enum):
+    ARM_OK = 0
+    ARM_DENIED = 1
+    ARM_INV = 2
 
 class ArmingState(Enum):
     ARMED_PAD = 0
@@ -42,18 +49,17 @@ class ArmingState(Enum):
     ARMED_DISCONNECTED = 3
     ARMED_LAUNCH = 4
 
-class Warning(Enum):
-    HIGH_PRESSURE = 0
-    HIGH_TEMP = 1
-
 class ActuatorState(Enum):
     OFF = 0
     ON = 1
 
-class AcknowledgementStatus(Enum):
-    ARM_OK = 0
-    ARM_DENIED = 1
-    ARM_INV = 2
+class Warning(Enum):
+    HIGH_PRESSURE = 0
+    HIGH_TEMP = 1
+
+class ContinuityState(Enum):
+    OPEN = 0
+    CLOSED = 1
 
 @dataclass
 class PacketHeader:
@@ -72,7 +78,7 @@ class ActuationRequest():
 @dataclass
 class ActuationAcknowledgement():
     id: int
-    status: ActuationRequestStatus
+    status: ActuationResponse
 
 @dataclass
 class ArmingRequest():
@@ -80,7 +86,7 @@ class ArmingRequest():
 
 @dataclass
 class ArmingAcknowledgement():
-    status: AcknowledgementStatus
+    status: ArmingResponse
 
 @dataclass
 class TemperaturePacket(PacketMessage):
@@ -109,6 +115,10 @@ class ActuatorStatePacket(PacketMessage):
 @dataclass
 class WarningPacket(PacketMessage):
     type: Warning
+
+@dataclass
+class ContinuityPacket(PacketMessage):
+    state: ContinuityState
 
 @dataclass
 class SerialDataPacket():
