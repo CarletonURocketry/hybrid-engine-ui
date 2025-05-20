@@ -100,11 +100,13 @@ def udp_receive_socket_data(self: "MainWindow"):
         match header.sub_type:
             case packet_spec.TelemetryPacketSubType.TEMPERATURE:
                 packet_dict["t" + str(message.id)] = message.temperature
+                self.write_to_csv_log(packet_dict)
             case packet_spec.TelemetryPacketSubType.PRESSURE:
                 packet_dict["p" + str(message.id)] = message.pressure
+                self.write_to_csv_log(packet_dict)
             case packet_spec.TelemetryPacketSubType.MASS:
                 packet_dict["m" + str(message.id)] = message.mass 
-        self.write_to_csv_log(packet_dict)
+                self.write_to_csv_log(packet_dict)
 
         #If we want to recording data
         if self.ui.recordingToggleButton.isChecked():
