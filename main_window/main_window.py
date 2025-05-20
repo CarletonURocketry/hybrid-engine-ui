@@ -75,7 +75,7 @@ class MainWindow(QWidget):
         udp_receive_socket_data, udp_on_disconnected, udp_on_error
     from .serial import SerialConnectionStatus, serial_connection_button_handler, \
         refresh_serial_button_handler, serial_receive_data, serial_on_error
-    from .data_handlers import plot_point, filter_data, update_act_state, \
+    from .data_handlers import plot_point, filter_data, update_arming_state, update_act_state, \
         process_data, turn_off_valve, turn_on_valve, decrease_heartbeat, reset_heartbeat_timeout
     from .recording_and_playback import recording_toggle_button_handler, \
         open_file_button_handler, display_previous_data
@@ -185,7 +185,7 @@ class MainWindow(QWidget):
 
         self.ui.tankMassPlot.addLegend()
         self.ui.tankMassPlot.setTitle("<span style='font-weight: bold;'>Tank Mass</span>", color="black")
-        self.ui.tankMassPlot.setLabel("left", "<span style='font-size: 15px; font-weight: bold;'>Mass (Kg)</span>", color="black")
+        self.ui.tankMassPlot.setLabel("left", "<span style='font-size: 15px; font-weight: bold;'>Mass (kg)</span>", color="black")
         self.ui.tankMassPlot.setLabel("bottom", "<span style='font-size: 17px; font-weight: bold;'>Time (ms)</span>", color="black")
         self.ui.tankMassPlot.getAxis("left").setPen(black_pen)
         self.ui.tankMassPlot.getAxis("left").setTextPen(black_pen)
@@ -197,7 +197,7 @@ class MainWindow(QWidget):
 
         self.ui.engineThrustPlot.addLegend()
         self.ui.engineThrustPlot.setTitle("<span style='font-weight: bold;'>Engine Thrust</span>", color="black")
-        self.ui.engineThrustPlot.setLabel("left", "<span style='font-size: 15px; font-weight: bold;'>Thrust (KN)</span>", color="black")
+        self.ui.engineThrustPlot.setLabel("left", "<span style='font-size: 15px; font-weight: bold;'>Thrust (N)</span>", color="black")
         self.ui.engineThrustPlot.setLabel("bottom", "<span style='font-size: 17px; font-weight: bold;'>Time (ms)</span>", color="black")
         self.ui.engineThrustPlot.getAxis("left").setPen(black_pen)
         self.ui.engineThrustPlot.getAxis("left").setTextPen(black_pen)
@@ -287,8 +287,8 @@ class MainWindow(QWidget):
             self.sensors[i] = SensorLabel("T" + str(i), "0" + " °C", i, 0, self.ui.sensorLayout)
         
         # Tank mass & Engine thrust labels
-        self.sensors[4] = SensorLabel("Tank Mass", "0", 4, 0, self.ui.sensorLayout)
-        self.sensors[5] = SensorLabel("Engine Thrust", "0", 5, 0, self.ui.sensorLayout)
+        self.sensors[4] = SensorLabel("Tank Mass", "0" + " kg", 4, 0, self.ui.sensorLayout)
+        self.sensors[5] = SensorLabel("Engine Thrust", "0" + " N", 5, 0, self.ui.sensorLayout)
         
         # Pressure labels
         for i in range (6, 12):
