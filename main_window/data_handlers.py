@@ -18,6 +18,9 @@ def process_data(self: "MainWindow", header: packet_spec.PacketHeader, message: 
         | packet_spec.TelemetryPacketSubType.PRESSURE \
         | packet_spec.TelemetryPacketSubType.MASS:
             self.plot_point(header, message)
+        case packet_spec.TelemetryPacketSubType.ARMING_STATE:
+            self.update_arming_state(message)
+            if reset_heartbeat: self.reset_heartbeat_timeout()
         case packet_spec.TelemetryPacketSubType.ACT_STATE:
             self.update_act_state(message)
             if reset_heartbeat: self.reset_heartbeat_timeout()
@@ -52,6 +55,26 @@ def update_act_state(self: "MainWindow", message: packet_spec.PacketMessage):
         case _:
             self.write_to_log(f"XV-{message.id}: {message.state}")
 
+def update_arming_state(self: "MainWindow", message: packet_spec.ArmingStatePacket):
+    match message.state:
+        case packet_spec.ArmingState.ARMED_PAD:
+            self.ui.armingStateValueLabel.setStyleSheet("background-color: rgb(6, 171, 82);")
+            self.ui.armingStateValueLabel.setText("1 - ARMED PAD")
+        case packet_spec.ArmingState.ARMED_VALVES:
+            self.ui.armingStateValueLabel.setStyleSheet("background-color: rgb(174, 58, 239);")
+            self.ui.armingStateValueLabel.setText("2 - ARMED VALVES")
+        case packet_spec.ArmingState.ARMED_IGNITION:
+            self.ui.armingStateValueLabel.setStyleSheet("background-color: rgb(4, 110, 192);")
+            self.ui.armingStateValueLabel.setText("3 - ARMED IGNITION")
+        case packet_spec.ArmingState.ARMED_DISCONNECTED:
+            self.ui.armingStateValueLabel.setStyleSheet("background-color: rgb(252, 193, 0);")
+            self.ui.armingStateValueLabel.setText("4 - ARMED DISCONNECTED")
+        case packet_spec.ArmingState.ARMED_LAUNCH:
+            self.ui.armingStateValueLabel.setStyleSheet("background-color: rgb(243, 5, 2);")
+            self.ui.armingStateValueLabel.setText("5 - ARMED LAUNCH")
+
+    self.write_to_log(f"Arming state updated to {message.state}")
+
 def plot_point(self: "MainWindow", header: packet_spec.PacketHeader, message: packet_spec.PacketMessage):
     plots = self.plots
     value_labels = self.pid_window.value_labels
@@ -77,8 +100,8 @@ def plot_point(self: "MainWindow", header: packet_spec.PacketHeader, message: pa
                     massId:str = "m" + str(message.id)
                     plots[massId].points = np.append(plots[massId].points, np.array([[message.time_since_power, message.mass]]), axis=0)
                     plots[massId].data_line.setData(plots[massId].points)
-                    if message.id == 1: change_new_reading(self, 4, str(message.mass) + " kg")
-                    else: change_new_reading(self, 5, str(message.mass) + " kN")
+                    if message.id == 0: change_new_reading(self, 4, str(message.mass) + " kg")
+                    elif message.id == 1: change_new_reading(self, 5, str(message.mass) + " N")
 
 def filter_data(self: "MainWindow"):
     for key in self.plots:
