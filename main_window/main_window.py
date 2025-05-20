@@ -75,7 +75,7 @@ class MainWindow(QWidget):
         udp_receive_socket_data, udp_on_disconnected, udp_on_error
     from .serial import SerialConnectionStatus, serial_connection_button_handler, \
         refresh_serial_button_handler, serial_receive_data, serial_on_error
-    from .data_handlers import plot_point, filter_data, update_arming_state, update_act_state, \
+    from .data_handlers import plot_point, filter_data, update_arming_state, update_act_state, update_continuity_state, \
         process_data, turn_off_valve, turn_on_valve, decrease_heartbeat, reset_heartbeat_timeout
     from .recording_and_playback import recording_toggle_button_handler, \
         open_file_button_handler, display_previous_data
