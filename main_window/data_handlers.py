@@ -66,8 +66,12 @@ def plot_point(self: "MainWindow", header: packet_spec.PacketHeader, message: pa
                     massId:str = "m" + str(message.id)
                     plots[massId].points = np.append(plots[massId].points, np.array([[message.time_since_power, message.mass]]), axis=0)
                     plots[massId].data_line.setData(plots[massId].points)
-                    if message.id == 0: change_new_reading(self, 4, str(message.mass) + " kg")
-                    elif message.id == 1: change_new_reading(self, 5, str(message.mass) + " N")
+                    change_new_reading(self, 4, str(message.mass) + " kg")
+                case packet_spec.TelemetryPacketSubType.THRUST:
+                    thrustId:str = "th" + str(message.id)
+                    plots[thrustId].points = np.append(plots[thrustId].points, np.array([[message.time_since_power, message.thrust]]), axis=0)
+                    plots[thrustId].data_line.setData(plots[thrustId].points)
+                    change_new_reading(self, 5, str(message.mass) + " N")
 
 def update_arming_state(self: "MainWindow", message: packet_spec.ArmingStatePacket):
     match message.state:

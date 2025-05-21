@@ -203,7 +203,7 @@ class MainWindow(QWidget):
         self.ui.engineThrustPlot.getAxis("left").setTextPen(black_pen)
         self.ui.engineThrustPlot.getAxis("bottom").setPen(black_pen)
         self.ui.engineThrustPlot.getAxis("bottom").setTextPen(black_pen)
-        self.plots["m1"] = PlotInfo(self.engine_thrust_points, self.ui.engineThrustPlot.plot(self.engine_thrust_points, pen=red_pen))
+        self.plots["th0"] = PlotInfo(self.engine_thrust_points, self.ui.engineThrustPlot.plot(self.engine_thrust_points, pen=red_pen))
         for marker in [self.ui.engineThrustThresholdList.item(x) for x in range(self.ui.engineThrustThresholdList.count())]:
             self.ui.engineThrustPlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=inf_line_pen))
 
@@ -237,7 +237,7 @@ class MainWindow(QWidget):
         self.ui.recordingToggleButton.toggled.connect(self.recording_toggle_button_handler)
         self.file_out = None
         self.csv_dir = Path("data_csv")
-        self.csv_fieldnames = ["t","m0","m1","p0","p1","p2","p3","p4","p5","t0","t1","t2","t3","status"]
+        self.csv_fieldnames = ["t","p0","p1","p2","p3","p4","p5","t0","t1","t2","t3","m0","th0","status"]
         self.csv_out = None
 
         # Init valve and sensor labels
