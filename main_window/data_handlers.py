@@ -16,7 +16,8 @@ def process_data(self: "MainWindow", header: packet_spec.PacketHeader, message: 
     match header.sub_type:
         case packet_spec.TelemetryPacketSubType.TEMPERATURE \
         | packet_spec.TelemetryPacketSubType.PRESSURE \
-        | packet_spec.TelemetryPacketSubType.MASS:
+        | packet_spec.TelemetryPacketSubType.MASS \
+        | packet_spec.TelemetryPacketSubType.THRUST:
             self.plot_point(header, message)
         case packet_spec.TelemetryPacketSubType.ARMING_STATE:
             self.update_arming_state(message)
@@ -71,7 +72,7 @@ def plot_point(self: "MainWindow", header: packet_spec.PacketHeader, message: pa
                     thrustId:str = "th" + str(message.id)
                     plots[thrustId].points = np.append(plots[thrustId].points, np.array([[message.time_since_power, message.thrust]]), axis=0)
                     plots[thrustId].data_line.setData(plots[thrustId].points)
-                    change_new_reading(self, 5, str(message.mass) + " N")
+                    change_new_reading(self, 5, str(message.thrust) + " N")
 
 def update_arming_state(self: "MainWindow", message: packet_spec.ArmingStatePacket):
     match message.state:
