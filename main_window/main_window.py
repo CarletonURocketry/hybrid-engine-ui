@@ -79,9 +79,10 @@ class MainWindow(QWidget):
         process_data, turn_off_valve, turn_on_valve, decrease_heartbeat, reset_heartbeat_timeout
     from .recording_and_playback import recording_toggle_button_handler, \
         open_file_button_handler, display_previous_data
-    from .logging import save_to_file, write_to_log, create_csv_log, write_to_csv_log
+    from .logging import save_to_file, write_to_log
     from .config import load_config, save_config, add_pressure_threshold_handler, \
     add_temperature_threshold_handler, add_tank_mass_threshold_handler, add_engine_thrust_threshold_handler
+    from .csv_writer import CSVWriter
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -236,9 +237,7 @@ class MainWindow(QWidget):
         #Connect toggle button for recording data
         self.ui.recordingToggleButton.toggled.connect(self.recording_toggle_button_handler)
         self.file_out = None
-        self.csv_dir = Path("data_csv")
-        self.csv_fieldnames = ["t","p0","p1","p2","p3","p4","p5","t0","t1","t2","t3","m0","th0","status"]
-        self.csv_out = None
+        self.csv_writer = self.CSVWriter(["t","p0","p1","p2","p3","p4","p5","t0","t1","t2","t3","m0","th0","status"])
 
         # Init valve and sensor labels
         self.init_actuator_valve_label()

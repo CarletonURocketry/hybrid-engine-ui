@@ -64,7 +64,7 @@ def udp_connection_button_handler(self: "MainWindow"):
             self.disable_serial_config(disable_btn=True)
             self.update_udp_connection_display(UDPConnectionStatus.CONNECTED)
 
-            self.create_csv_log()
+            self.csv_writer.create_csv_log()
         else:
             self.write_to_log(f"Unable to join multicast group at IP address: {mcast_addr}, port: {mcast_port}")
     else:
@@ -96,17 +96,19 @@ def udp_receive_socket_data(self: "MainWindow"):
         self.process_data(header, message)
 
         # Write data to csv here
-        packet_dict = { "t": message.time_since_power }
+        packet_dict = {}
         match header.sub_type:
             case packet_spec.TelemetryPacketSubType.TEMPERATURE:
                 packet_dict["t" + str(message.id)] = message.temperature
-                self.write_to_csv_log(packet_dict)
+                self.csv_writer.add_timed_measurements(message.time_since_power, packet_dict)
             case packet_spec.TelemetryPacketSubType.PRESSURE:
                 packet_dict["p" + str(message.id)] = message.pressure
-                self.write_to_csv_log(packet_dict)
+                self.csv_writer.add_timed_measurements(message.time_since_power, packet_dict)
             case packet_spec.TelemetryPacketSubType.MASS:
                 packet_dict["m" + str(message.id)] = message.mass 
-                self.write_to_csv_log(packet_dict)
+                self.csv_writer.add_timed_measurements(message.time_since_power, packet_dict)
+            case packet_spec.TelemetryPacketSubType.THRUST:
+                self.csv_writer.add_timed_measurements(message.time_since_power, packet_dict)
 
         #If we want to recording data
         if self.ui.recordingToggleButton.isChecked():
@@ -127,5 +129,6 @@ def udp_on_disconnected(self: "MainWindow"):
     self.enable_udp_config()
     self.enable_serial_config()
     self.update_udp_connection_display(UDPConnectionStatus.NOT_CONNECTED)
+    self.csv_writer.flush_dict_buffer()
     if self.file_out:
         self.file_out.close()
