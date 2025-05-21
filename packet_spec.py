@@ -26,10 +26,11 @@ class TelemetryPacketSubType(Enum):
     TEMPERATURE = 0
     PRESSURE = 1
     MASS = 2
-    ARMING_STATE = 3
-    ACT_STATE = 4
-    WARNING = 5
-    CONTINUITY = 6
+    THRUST = 3
+    ARMING_STATE = 4
+    ACT_STATE = 5
+    WARNING = 6
+    CONTINUITY = 7
 
 class ActuationResponse(Enum):
     ACT_OK = 0
@@ -104,6 +105,11 @@ class MassPacket(PacketMessage):
     id: int
 
 @dataclass
+class ThrustPacket(PacketMessage):
+    thrust: int
+    id: int
+
+@dataclass
 class ArmingStatePacket(PacketMessage):
     state: ArmingState
 
@@ -143,32 +149,33 @@ def packet_message_bytes_length(header: PacketHeader) -> int:
     match header.type:
         case PacketType.TELEMETRY:
             match header.sub_type:
-                case TelemetryPacketSubType.TEMPERATURE | TelemetryPacketSubType.PRESSURE | TelemetryPacketSubType.MASS:
+                case TelemetryPacketSubType.TEMPERATURE | TelemetryPacketSubType.PRESSURE | TelemetryPacketSubType.MASS | TelemetryPacketSubType.THRUST:
                     return 9
                 case TelemetryPacketSubType.ACT_STATE:
                     return 6
-                case TelemetryPacketSubType.ARMING_STATE | TelemetryPacketSubType.WARNING:
+                case TelemetryPacketSubType.ARMING_STATE | TelemetryPacketSubType.WARNING | TelemetryPacketSubType.CONTINUITY:
                     return 5
 
 def parse_packet_message(header: PacketHeader, message_bytes: bytes) -> PacketMessage:
     match header.type:
+        # I don't even think we receive these, but good for consistency
         case PacketType.CONTROL:
             match header.sub_type:
-                case TelemetryPacketSubType.ACT_REQ:
+                case ControlPacketSubType.ACT_REQ:
                     id: int
                     state: int
                     id, state = struct.unpack("<BB". message_bytes)
                     return ActuationRequest(id=id, state=state)
-                case TelemetryPacketSubType.ACT_ACK:
+                case ControlPacketSubType.ACT_ACK:
                     id: int
                     status: int
                     id, status = struct.unpack("<BB", message_bytes)
                     return ActuationAcknowledgement(id=id, status=status)
-                case TelemetryPacketSubType.ARM_REQ:
+                case ControlPacketSubType.ARM_REQ:
                     level: int
                     level = struct.unpack("<B", message_bytes)
                     return ArmingRequest(level=level)
-                case TelemetryPacketSubType.ARM_ACK:
+                case ControlPacketSubType.ARM_ACK:
                     status:int
                     status = struct.unpack("<B", message_bytes)
                     return ArmingAcknowledgement(status=status)
@@ -197,9 +204,14 @@ def parse_packet_message(header: PacketHeader, message_bytes: bytes) -> PacketMe
                     time: int
                     mass: int
                     id: int
-                    time, mass, id = struct.unpack("<IIB", message_bytes)
-                    if id == 0: return MassPacket(mass=millis_to_units(mass), id=id, time_since_power=millis_to_units(time))
-                    else: return MassPacket(mass=mass, id=id, time_since_power=millis_to_units(time))
+                    time, mass, id = struct.unpack("<IiB", message_bytes)
+                    return MassPacket(mass=millis_to_units(mass), id=id, time_since_power=millis_to_units(time))
+                case TelemetryPacketSubType.THRUST:
+                    time: int
+                    thrust: int
+                    id: int
+                    time, thrust, id = struct.unpack("<IIB", message_bytes)
+                    return ThrustPacket(thrust=thrust, id=id, time_since_power=millis_to_units(time))
                 case TelemetryPacketSubType.ARMING_STATE:
                     time:int
                     state:int
