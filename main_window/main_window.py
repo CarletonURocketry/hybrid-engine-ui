@@ -270,14 +270,16 @@ class MainWindow(QWidget):
 
     def init_actuator_valve_label(self):
         self.valves = {}
-        self.valves[0] = TelemetryLabel("Fire Valve", "CLOSED", 0, 2, self.ui.valveGrid)
+        self.valves[0] = TelemetryLabel("Igniter", "CLOSED", 0, 2, self.ui.valveGrid)
         self.valves[13] = TelemetryLabel("Quick Disconnect", "CLOSED", 0, 0, self.ui.valveGrid)
-        self.valves[14] =  TelemetryLabel("Igniter", "CLOSED", 0, 4, self.ui.valveGrid)
+        self.valves[14] =  TelemetryLabel("Dump valve", "CLOSED", 0, 4, self.ui.valveGrid)
         for i in range(1, 13):
             initial_state = "OPEN" if i in self.config['default_open_valves'] else "CLOSED"
+            label = f"XV-{str(i)}"
+            if i == 5: label += " (fire valve)"
             #There will be three label at each row, therefore divide by three, add 1 to skip the first row of valves
             #Row timed 2 because there will be two label for state and for the name
-            self.valves[i] = TelemetryLabel("XV-" + str(i), initial_state, ((i - 1)// 3) + 1 , ((i - 1) % 3) * 2, self.ui.valveGrid)
+            self.valves[i] = TelemetryLabel(label, initial_state, ((i - 1)// 3) + 1 , ((i - 1) % 3) * 2, self.ui.valveGrid)
 
     def init_sensor_reading_label(self):
         self.sensors = {}
