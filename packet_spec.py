@@ -228,6 +228,11 @@ def parse_packet_message(header: PacketHeader, message_bytes: bytes) -> PacketMe
                     type:int
                     time, type = struct.unpack("<IB", message_bytes)
                     return WarningPacket(type=Warning(type), time_since_power=time)
+                case TelemetryPacketSubType.CONTINUITY:
+                    time:int
+                    state:int
+                    time, state = struct.unpack("<IB", message_bytes)
+                    return ContinuityPacket(time_since_power=time, state=ContinuityState(state))
 
 def parse_serial_packet(data: bytes, timestamp: int, default_open_valves):
     m1: int
