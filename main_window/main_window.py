@@ -65,8 +65,8 @@ class PIDWindow(QWidget):
         self.setFixedSize(self.width(), self.height())
         for i in range(1, 5):
             self.value_labels[f"p{i}"] = getattr(self.ui, f"p{i}ValLabel")
-        for i in range(1, 3):
-            self.value_labels[f"t{i}"] = getattr(self.ui, f"t{i}ValLabel")
+        # for i in range(1, 3):
+        #     self.value_labels[f"t{i}"] = getattr(self.ui, f"t{i}ValLabel")
 
 class MainWindow(QWidget):
     # Imports for MainWindow functionality. Helps split large file into
@@ -75,13 +75,14 @@ class MainWindow(QWidget):
         udp_receive_socket_data, udp_on_disconnected, udp_on_error
     from .serial import SerialConnectionStatus, serial_connection_button_handler, \
         refresh_serial_button_handler, serial_receive_data, serial_on_error
-    from .data_handlers import plot_point, filter_data, update_act_state, \
+    from .data_handlers import plot_point, filter_data, update_arming_state, update_act_state, update_continuity_state, \
         process_data, turn_off_valve, turn_on_valve, decrease_heartbeat, reset_heartbeat_timeout
     from .recording_and_playback import recording_toggle_button_handler, \
         open_file_button_handler, display_previous_data
-    from .logging import save_to_file, write_to_log, create_csv_log, write_to_csv_log
+    from .logging import save_to_file, write_to_log
     from .config import load_config, save_config, add_pressure_threshold_handler, \
     add_temperature_threshold_handler, add_tank_mass_threshold_handler, add_engine_thrust_threshold_handler
+    from .csv_writer import CSVWriter
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -154,7 +155,7 @@ class MainWindow(QWidget):
         self.ui.pressurePlot.addLegend(offset=(0,0), colCount=6, labelTextColor="black")
         self.ui.pressurePlot.setTitle("<span style='font-weight: bold;'>Pressure</span>", color="black")
         self.ui.pressurePlot.setLabel("left", "<span style='font-size: 15px; font-weight: bold;'>Pressure (PSI)</span>", color="black")
-        self.ui.pressurePlot.setLabel("bottom", "<span style='font-size: 17px; font-weight: bold;'>Time (ms)</span>", color="black")
+        self.ui.pressurePlot.setLabel("bottom", "<span style='font-size: 17px; font-weight: bold;'>Time (s)</span>", color="black")
         self.ui.pressurePlot.getAxis("left").setPen(black_pen)
         self.ui.pressurePlot.getAxis("left").setTextPen(black_pen)
         self.ui.pressurePlot.getAxis("bottom").setPen(black_pen)
@@ -171,7 +172,7 @@ class MainWindow(QWidget):
         self.ui.temperaturePlot.addLegend(offset=(0,0), colCount=4, labelTextColor="black")
         self.ui.temperaturePlot.setTitle("<span style='font-weight: bold;'>Temperature</span>", color="black")
         self.ui.temperaturePlot.setLabel("left", "<span style='font-size: 15px; font-weight: bold;'>Temperature (°C)</span>", color="black")
-        self.ui.temperaturePlot.setLabel("bottom", "<span style='font-size: 17px; font-weight: bold;'>Time (ms)</span>", color="black")
+        self.ui.temperaturePlot.setLabel("bottom", "<span style='font-size: 17px; font-weight: bold;'>Time (s)</span>", color="black")
         self.ui.temperaturePlot.getAxis("left").setPen(black_pen)
         self.ui.temperaturePlot.getAxis("left").setTextPen(black_pen)
         self.ui.temperaturePlot.getAxis("bottom").setPen(black_pen)
@@ -185,8 +186,8 @@ class MainWindow(QWidget):
 
         self.ui.tankMassPlot.addLegend()
         self.ui.tankMassPlot.setTitle("<span style='font-weight: bold;'>Tank Mass</span>", color="black")
-        self.ui.tankMassPlot.setLabel("left", "<span style='font-size: 15px; font-weight: bold;'>Mass (Kg)</span>", color="black")
-        self.ui.tankMassPlot.setLabel("bottom", "<span style='font-size: 17px; font-weight: bold;'>Time (ms)</span>", color="black")
+        self.ui.tankMassPlot.setLabel("left", "<span style='font-size: 15px; font-weight: bold;'>Mass (kg)</span>", color="black")
+        self.ui.tankMassPlot.setLabel("bottom", "<span style='font-size: 17px; font-weight: bold;'>Time (s)</span>", color="black")
         self.ui.tankMassPlot.getAxis("left").setPen(black_pen)
         self.ui.tankMassPlot.getAxis("left").setTextPen(black_pen)
         self.ui.tankMassPlot.getAxis("bottom").setPen(black_pen)
@@ -197,13 +198,13 @@ class MainWindow(QWidget):
 
         self.ui.engineThrustPlot.addLegend()
         self.ui.engineThrustPlot.setTitle("<span style='font-weight: bold;'>Engine Thrust</span>", color="black")
-        self.ui.engineThrustPlot.setLabel("left", "<span style='font-size: 15px; font-weight: bold;'>Thrust (KN)</span>", color="black")
-        self.ui.engineThrustPlot.setLabel("bottom", "<span style='font-size: 17px; font-weight: bold;'>Time (ms)</span>", color="black")
+        self.ui.engineThrustPlot.setLabel("left", "<span style='font-size: 15px; font-weight: bold;'>Thrust (N)</span>", color="black")
+        self.ui.engineThrustPlot.setLabel("bottom", "<span style='font-size: 17px; font-weight: bold;'>Time (s)</span>", color="black")
         self.ui.engineThrustPlot.getAxis("left").setPen(black_pen)
         self.ui.engineThrustPlot.getAxis("left").setTextPen(black_pen)
         self.ui.engineThrustPlot.getAxis("bottom").setPen(black_pen)
         self.ui.engineThrustPlot.getAxis("bottom").setTextPen(black_pen)
-        self.plots["m1"] = PlotInfo(self.engine_thrust_points, self.ui.engineThrustPlot.plot(self.engine_thrust_points, pen=red_pen))
+        self.plots["th0"] = PlotInfo(self.engine_thrust_points, self.ui.engineThrustPlot.plot(self.engine_thrust_points, pen=red_pen))
         for marker in [self.ui.engineThrustThresholdList.item(x) for x in range(self.ui.engineThrustThresholdList.count())]:
             self.ui.engineThrustPlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=inf_line_pen))
 
@@ -236,9 +237,7 @@ class MainWindow(QWidget):
         #Connect toggle button for recording data
         self.ui.recordingToggleButton.toggled.connect(self.recording_toggle_button_handler)
         self.file_out = None
-        self.csv_dir = Path("data_csv")
-        self.csv_fieldnames = ["t","m0","m1","p0","p1","p2","p3","p4","p5","t0","t1","t2","t3","status"]
-        self.csv_out = None
+        self.csv_writer = self.CSVWriter(["t","p0","p1","p2","p3","p4","p5","t0","t1","t2","t3","m0","th0","status"])
 
         # Init valve and sensor labels
         self.init_actuator_valve_label()
@@ -258,6 +257,7 @@ class MainWindow(QWidget):
             if self.padUDPSocket.state() == QAbstractSocket.SocketState.ConnectedState:
                 self.padUDPSocket.disconnectFromHost()
                 self.padUDPSocket.waitForDisconnected()
+                self.csv_writer.flush()
 
             if self.serialPort.isOpen():
                 self.serialPort.close()
@@ -271,14 +271,16 @@ class MainWindow(QWidget):
 
     def init_actuator_valve_label(self):
         self.valves = {}
-        self.valves[0] = TelemetryLabel("Fire Valve", "CLOSED", 0, 2, self.ui.valveGrid)
+        self.valves[0] = TelemetryLabel("Igniter", "CLOSED", 0, 2, self.ui.valveGrid)
         self.valves[13] = TelemetryLabel("Quick Disconnect", "CLOSED", 0, 0, self.ui.valveGrid)
-        self.valves[14] =  TelemetryLabel("Igniter", "CLOSED", 0, 4, self.ui.valveGrid)
+        self.valves[14] =  TelemetryLabel("Dump valve", "CLOSED", 0, 4, self.ui.valveGrid)
         for i in range(1, 13):
             initial_state = "OPEN" if i in self.config['default_open_valves'] else "CLOSED"
+            label = f"XV-{str(i)}"
+            if i == 5: label += " (fire valve)"
             #There will be three label at each row, therefore divide by three, add 1 to skip the first row of valves
             #Row timed 2 because there will be two label for state and for the name
-            self.valves[i] = TelemetryLabel("XV-" + str(i), initial_state, ((i - 1)// 3) + 1 , ((i - 1) % 3) * 2, self.ui.valveGrid)
+            self.valves[i] = TelemetryLabel(label, initial_state, ((i - 1)// 3) + 1 , ((i - 1) % 3) * 2, self.ui.valveGrid)
 
     def init_sensor_reading_label(self):
         self.sensors = {}
@@ -287,8 +289,8 @@ class MainWindow(QWidget):
             self.sensors[i] = SensorLabel("T" + str(i), "0" + " °C", i, 0, self.ui.sensorLayout)
         
         # Tank mass & Engine thrust labels
-        self.sensors[4] = SensorLabel("Tank Mass", "0", 4, 0, self.ui.sensorLayout)
-        self.sensors[5] = SensorLabel("Engine Thrust", "0", 5, 0, self.ui.sensorLayout)
+        self.sensors[4] = SensorLabel("Tank Mass", "0" + " kg", 4, 0, self.ui.sensorLayout)
+        self.sensors[5] = SensorLabel("Engine Thrust", "0" + " N", 5, 0, self.ui.sensorLayout)
         
         # Pressure labels
         for i in range (6, 12):

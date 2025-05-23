@@ -16,11 +16,20 @@ def process_data(self: "MainWindow", header: packet_spec.PacketHeader, message: 
     match header.sub_type:
         case packet_spec.TelemetryPacketSubType.TEMPERATURE \
         | packet_spec.TelemetryPacketSubType.PRESSURE \
-        | packet_spec.TelemetryPacketSubType.MASS:
+        | packet_spec.TelemetryPacketSubType.MASS \
+        | packet_spec.TelemetryPacketSubType.THRUST:
             self.plot_point(header, message)
+        case packet_spec.TelemetryPacketSubType.ARMING_STATE:
+            self.update_arming_state(message)
+            if reset_heartbeat: self.reset_heartbeat_timeout()
         case packet_spec.TelemetryPacketSubType.ACT_STATE:
             self.update_act_state(message)
             if reset_heartbeat: self.reset_heartbeat_timeout()
+        case packet_spec.TelemetryPacketSubType.WARNING:
+            # Write warning to logs maybe?
+            pass
+        case packet_spec.TelemetryPacketSubType.CONTINUITY:
+            self.update_continuity_state(message)
         case _:
             pass  
 
@@ -32,25 +41,6 @@ def turn_off_valve(self: "MainWindow", id: int):
 
 def change_new_reading(self: "MainWindow", id: int, newReading: str):
     self.sensors[id].changeReading(newReading)
-
-def update_act_state(self: "MainWindow", message: packet_spec.PacketMessage):
-    match message.state:
-        case packet_spec.ActuatorState.OFF:
-            self.turn_off_valve(message.id)
-        case packet_spec.ActuatorState.ON:
-            self.turn_on_valve(message.id)
-            
-    match message.id:
-        case 0:
-            self.write_to_log("////////////////////////////")
-            self.write_to_log(f"Fire Valve: {message.state}")
-        case 13:
-            self.write_to_log(f"Quick Disconnect: {message.state}")
-        case 14:
-            self.write_to_log(f"Igniter: {message.state}")
-            self.write_to_log("////////////////////////////")
-        case _:
-            self.write_to_log(f"XV-{message.id}: {message.state}")
 
 def plot_point(self: "MainWindow", header: packet_spec.PacketHeader, message: packet_spec.PacketMessage):
     plots = self.plots
@@ -77,8 +67,58 @@ def plot_point(self: "MainWindow", header: packet_spec.PacketHeader, message: pa
                     massId:str = "m" + str(message.id)
                     plots[massId].points = np.append(plots[massId].points, np.array([[message.time_since_power, message.mass]]), axis=0)
                     plots[massId].data_line.setData(plots[massId].points)
-                    if message.id == 1: change_new_reading(self, 4, str(message.mass) + " kg")
-                    else: change_new_reading(self, 5, str(message.mass) + " kN")
+                    change_new_reading(self, 4, str(message.mass) + " kg")
+                case packet_spec.TelemetryPacketSubType.THRUST:
+                    thrustId:str = "th" + str(message.id)
+                    plots[thrustId].points = np.append(plots[thrustId].points, np.array([[message.time_since_power, message.thrust]]), axis=0)
+                    plots[thrustId].data_line.setData(plots[thrustId].points)
+                    change_new_reading(self, 5, str(message.thrust) + " N")
+
+def update_arming_state(self: "MainWindow", message: packet_spec.ArmingStatePacket):
+    match message.state:
+        case packet_spec.ArmingState.ARMED_PAD:
+            self.ui.armingStateValueLabel.setStyleSheet("background-color: rgb(6, 171, 82);")
+            self.ui.armingStateValueLabel.setText("1 - ARMED PAD")
+        case packet_spec.ArmingState.ARMED_VALVES:
+            self.ui.armingStateValueLabel.setStyleSheet("background-color: rgb(174, 58, 239);")
+            self.ui.armingStateValueLabel.setText("2 - ARMED VALVES")
+        case packet_spec.ArmingState.ARMED_IGNITION:
+            self.ui.armingStateValueLabel.setStyleSheet("background-color: rgb(4, 110, 192);")
+            self.ui.armingStateValueLabel.setText("3 - ARMED IGNITION")
+        case packet_spec.ArmingState.ARMED_DISCONNECTED:
+            self.ui.armingStateValueLabel.setStyleSheet("background-color: rgb(252, 193, 0);")
+            self.ui.armingStateValueLabel.setText("4 - ARMED DISCONNECTED")
+        case packet_spec.ArmingState.ARMED_LAUNCH:
+            self.ui.armingStateValueLabel.setStyleSheet("background-color: rgb(243, 5, 2);")
+            self.ui.armingStateValueLabel.setText("5 - ARMED LAUNCH")
+            
+def update_act_state(self: "MainWindow", message: packet_spec.ActuatorStatePacket):
+    match message.state:
+        case packet_spec.ActuatorState.OFF:
+            self.turn_off_valve(message.id)
+        case packet_spec.ActuatorState.ON:
+            self.turn_on_valve(message.id)
+            
+    match message.id:
+        case 0:
+            self.write_to_log("////////////////////////////")
+            self.write_to_log(f"Fire Valve: {message.state}")
+        case 13:
+            self.write_to_log(f"Quick Disconnect: {message.state}")
+        case 14:
+            self.write_to_log(f"Igniter: {message.state}")
+            self.write_to_log("////////////////////////////")
+        case _:
+            self.write_to_log(f"XV-{message.id}: {message.state}")
+
+    self.write_to_log(f"Arming state updated to {message.state}")
+
+def update_continuity_state(self: "MainWindow", message: packet_spec.ContinuityPacket):
+    match message.state:
+        case packet_spec.ContinuityState.OPEN:
+            self.ui.continuityValueLabel.setText("OPEN")
+        case packet_spec.ContinuityState.CLOSED:
+            self.ui.continuityValueLabel.setText("CLOSED")
 
 def filter_data(self: "MainWindow"):
     for key in self.plots:

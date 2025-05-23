@@ -16,24 +16,32 @@ class PacketType(Enum):
     CONTROL = 0
     TELEMETRY = 1
 
+class ControlPacketSubType(Enum):
+    ACT_REQ = 0
+    ACT_ACK = 1
+    ARM_REQ = 2
+    ARM_ACK = 3
+
 class TelemetryPacketSubType(Enum):
     TEMPERATURE = 0
     PRESSURE = 1
     MASS = 2
-    ARMING_STATE = 3
-    ACT_STATE = 4
-    WARNING = 5
-    ACT_REQ = 6
-    ACT_ACK = 7
-    ARM_REQ = 8
-    ARM_ACK = 9
+    THRUST = 3
+    ARMING_STATE = 4
+    ACT_STATE = 5
+    WARNING = 6
+    CONTINUITY = 7
 
-class ActuationRequestStatus(Enum):
+class ActuationResponse(Enum):
     ACT_OK = 0
     ACT_DENIED = 1
     ACT_DNE = 2
     ACT_INV = 3
 
+class ArmingResponse(Enum):
+    ARM_OK = 0
+    ARM_DENIED = 1
+    ARM_INV = 2
 
 class ArmingState(Enum):
     ARMED_PAD = 0
@@ -42,18 +50,17 @@ class ArmingState(Enum):
     ARMED_DISCONNECTED = 3
     ARMED_LAUNCH = 4
 
-class Warning(Enum):
-    HIGH_PRESSURE = 0
-    HIGH_TEMP = 1
-
 class ActuatorState(Enum):
     OFF = 0
     ON = 1
 
-class AcknowledgementStatus(Enum):
-    ARM_OK = 0
-    ARM_DENIED = 1
-    ARM_INV = 2
+class Warning(Enum):
+    HIGH_PRESSURE = 0
+    HIGH_TEMP = 1
+
+class ContinuityState(Enum):
+    OPEN = 0
+    CLOSED = 1
 
 @dataclass
 class PacketHeader:
@@ -72,7 +79,7 @@ class ActuationRequest():
 @dataclass
 class ActuationAcknowledgement():
     id: int
-    status: ActuationRequestStatus
+    status: ActuationResponse
 
 @dataclass
 class ArmingRequest():
@@ -80,7 +87,7 @@ class ArmingRequest():
 
 @dataclass
 class ArmingAcknowledgement():
-    status: AcknowledgementStatus
+    status: ArmingResponse
 
 @dataclass
 class TemperaturePacket(PacketMessage):
@@ -98,6 +105,11 @@ class MassPacket(PacketMessage):
     id: int
 
 @dataclass
+class ThrustPacket(PacketMessage):
+    thrust: int
+    id: int
+
+@dataclass
 class ArmingStatePacket(PacketMessage):
     state: ArmingState
 
@@ -109,6 +121,10 @@ class ActuatorStatePacket(PacketMessage):
 @dataclass
 class WarningPacket(PacketMessage):
     type: Warning
+
+@dataclass
+class ContinuityPacket(PacketMessage):
+    state: ContinuityState
 
 @dataclass
 class SerialDataPacket():
@@ -133,32 +149,33 @@ def packet_message_bytes_length(header: PacketHeader) -> int:
     match header.type:
         case PacketType.TELEMETRY:
             match header.sub_type:
-                case TelemetryPacketSubType.TEMPERATURE | TelemetryPacketSubType.PRESSURE | TelemetryPacketSubType.MASS:
+                case TelemetryPacketSubType.TEMPERATURE | TelemetryPacketSubType.PRESSURE | TelemetryPacketSubType.MASS | TelemetryPacketSubType.THRUST:
                     return 9
                 case TelemetryPacketSubType.ACT_STATE:
                     return 6
-                case TelemetryPacketSubType.ARMING_STATE | TelemetryPacketSubType.WARNING:
+                case TelemetryPacketSubType.ARMING_STATE | TelemetryPacketSubType.WARNING | TelemetryPacketSubType.CONTINUITY:
                     return 5
 
 def parse_packet_message(header: PacketHeader, message_bytes: bytes) -> PacketMessage:
     match header.type:
+        # I don't even think we receive these, but good for consistency
         case PacketType.CONTROL:
             match header.sub_type:
-                case TelemetryPacketSubType.ACT_REQ:
+                case ControlPacketSubType.ACT_REQ:
                     id: int
                     state: int
                     id, state = struct.unpack("<BB". message_bytes)
                     return ActuationRequest(id=id, state=state)
-                case TelemetryPacketSubType.ACT_ACK:
+                case ControlPacketSubType.ACT_ACK:
                     id: int
                     status: int
                     id, status = struct.unpack("<BB", message_bytes)
                     return ActuationAcknowledgement(id=id, status=status)
-                case TelemetryPacketSubType.ARM_REQ:
+                case ControlPacketSubType.ARM_REQ:
                     level: int
                     level = struct.unpack("<B", message_bytes)
                     return ArmingRequest(level=level)
-                case TelemetryPacketSubType.ARM_ACK:
+                case ControlPacketSubType.ARM_ACK:
                     status:int
                     status = struct.unpack("<B", message_bytes)
                     return ArmingAcknowledgement(status=status)
@@ -169,7 +186,7 @@ def parse_packet_message(header: PacketHeader, message_bytes: bytes) -> PacketMe
                     temperature: int
                     id: int
                     time: int
-                    time, temperature, id = struct.unpack("<IIB", message_bytes)
+                    time, temperature, id = struct.unpack("<IiB", message_bytes)
                     return TemperaturePacket(
                         temperature=millis_to_units(temperature),
                         id=id,
@@ -178,7 +195,7 @@ def parse_packet_message(header: PacketHeader, message_bytes: bytes) -> PacketMe
                     pressure: int
                     id: int
                     time: int
-                    time, pressure, id = struct.unpack("<IIB", message_bytes)
+                    time, pressure, id = struct.unpack("<IiB", message_bytes)
                     return PressurePacket(
                         pressure=millis_to_units(pressure),
                         id=id,
@@ -187,8 +204,14 @@ def parse_packet_message(header: PacketHeader, message_bytes: bytes) -> PacketMe
                     time: int
                     mass: int
                     id: int
-                    time, mass, id = struct.unpack("<IIB", message_bytes)
-                    return MassPacket(mass=mass, id=id, time_since_power=millis_to_units(time))
+                    time, mass, id = struct.unpack("<IiB", message_bytes)
+                    return MassPacket(mass=millis_to_units(mass), id=id, time_since_power=millis_to_units(time))
+                case TelemetryPacketSubType.THRUST:
+                    time: int
+                    thrust: int
+                    id: int
+                    time, thrust, id = struct.unpack("<IIB", message_bytes)
+                    return ThrustPacket(thrust=thrust, id=id, time_since_power=millis_to_units(time))
                 case TelemetryPacketSubType.ARMING_STATE:
                     time:int
                     state:int
@@ -205,6 +228,11 @@ def parse_packet_message(header: PacketHeader, message_bytes: bytes) -> PacketMe
                     type:int
                     time, type = struct.unpack("<IB", message_bytes)
                     return WarningPacket(type=Warning(type), time_since_power=time)
+                case TelemetryPacketSubType.CONTINUITY:
+                    time:int
+                    state:int
+                    time, state = struct.unpack("<IB", message_bytes)
+                    return ContinuityPacket(time_since_power=time, state=ContinuityState(state))
 
 def parse_serial_packet(data: bytes, timestamp: int, default_open_valves):
     m1: int

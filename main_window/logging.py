@@ -27,15 +27,4 @@ def save_to_file(self: "MainWindow"):
 def write_to_log(self: "MainWindow", msg: str):
     cur_date_time = QDateTime.currentDateTime().toString("yyyy-MM-dd - HH:mm:ss")
     self.ui.logOutput.append(f"[{cur_date_time}]: {msg}")
-
-def create_csv_log(self: "MainWindow"):
-    self.csv_out = self.csv_dir / f"{QDateTime.currentDateTime().toString("yyyy-MM-dd_HH-mm")}.csv"
-    self.csv_dir.mkdir(parents=True, exist_ok=True)
-    with open(self.csv_out, "w", newline="") as file:
-        writer = csv.DictWriter(file, fieldnames=self.csv_fieldnames)
-        writer.writeheader()
-
-def write_to_csv_log(self: "MainWindow", packet_dict: dict):
-    with open(self.csv_out, "a", newline="") as file:
-        writer = csv.DictWriter(file, fieldnames=self.csv_fieldnames)
-        writer.writerow(packet_dict)   
+    
