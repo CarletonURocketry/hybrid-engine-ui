@@ -155,7 +155,7 @@ class MainWindow(QWidget):
         self.ui.pressurePlot.addLegend(offset=(0,0), colCount=6, labelTextColor="black")
         self.ui.pressurePlot.setTitle("<span style='font-weight: bold;'>Pressure</span>", color="black")
         self.ui.pressurePlot.setLabel("left", "<span style='font-size: 15px; font-weight: bold;'>Pressure (PSI)</span>", color="black")
-        self.ui.pressurePlot.setLabel("bottom", "<span style='font-size: 17px; font-weight: bold;'>Time (ms)</span>", color="black")
+        self.ui.pressurePlot.setLabel("bottom", "<span style='font-size: 17px; font-weight: bold;'>Time (s)</span>", color="black")
         self.ui.pressurePlot.getAxis("left").setPen(black_pen)
         self.ui.pressurePlot.getAxis("left").setTextPen(black_pen)
         self.ui.pressurePlot.getAxis("bottom").setPen(black_pen)
@@ -172,7 +172,7 @@ class MainWindow(QWidget):
         self.ui.temperaturePlot.addLegend(offset=(0,0), colCount=4, labelTextColor="black")
         self.ui.temperaturePlot.setTitle("<span style='font-weight: bold;'>Temperature</span>", color="black")
         self.ui.temperaturePlot.setLabel("left", "<span style='font-size: 15px; font-weight: bold;'>Temperature (°C)</span>", color="black")
-        self.ui.temperaturePlot.setLabel("bottom", "<span style='font-size: 17px; font-weight: bold;'>Time (ms)</span>", color="black")
+        self.ui.temperaturePlot.setLabel("bottom", "<span style='font-size: 17px; font-weight: bold;'>Time (s)</span>", color="black")
         self.ui.temperaturePlot.getAxis("left").setPen(black_pen)
         self.ui.temperaturePlot.getAxis("left").setTextPen(black_pen)
         self.ui.temperaturePlot.getAxis("bottom").setPen(black_pen)
@@ -187,7 +187,7 @@ class MainWindow(QWidget):
         self.ui.tankMassPlot.addLegend()
         self.ui.tankMassPlot.setTitle("<span style='font-weight: bold;'>Tank Mass</span>", color="black")
         self.ui.tankMassPlot.setLabel("left", "<span style='font-size: 15px; font-weight: bold;'>Mass (kg)</span>", color="black")
-        self.ui.tankMassPlot.setLabel("bottom", "<span style='font-size: 17px; font-weight: bold;'>Time (ms)</span>", color="black")
+        self.ui.tankMassPlot.setLabel("bottom", "<span style='font-size: 17px; font-weight: bold;'>Time (s)</span>", color="black")
         self.ui.tankMassPlot.getAxis("left").setPen(black_pen)
         self.ui.tankMassPlot.getAxis("left").setTextPen(black_pen)
         self.ui.tankMassPlot.getAxis("bottom").setPen(black_pen)
@@ -199,7 +199,7 @@ class MainWindow(QWidget):
         self.ui.engineThrustPlot.addLegend()
         self.ui.engineThrustPlot.setTitle("<span style='font-weight: bold;'>Engine Thrust</span>", color="black")
         self.ui.engineThrustPlot.setLabel("left", "<span style='font-size: 15px; font-weight: bold;'>Thrust (N)</span>", color="black")
-        self.ui.engineThrustPlot.setLabel("bottom", "<span style='font-size: 17px; font-weight: bold;'>Time (ms)</span>", color="black")
+        self.ui.engineThrustPlot.setLabel("bottom", "<span style='font-size: 17px; font-weight: bold;'>Time (s)</span>", color="black")
         self.ui.engineThrustPlot.getAxis("left").setPen(black_pen)
         self.ui.engineThrustPlot.getAxis("left").setTextPen(black_pen)
         self.ui.engineThrustPlot.getAxis("bottom").setPen(black_pen)
@@ -257,6 +257,7 @@ class MainWindow(QWidget):
             if self.padUDPSocket.state() == QAbstractSocket.SocketState.ConnectedState:
                 self.padUDPSocket.disconnectFromHost()
                 self.padUDPSocket.waitForDisconnected()
+                self.csv_writer.flush()
 
             if self.serialPort.isOpen():
                 self.serialPort.close()
