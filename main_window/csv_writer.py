@@ -19,9 +19,7 @@ class CSVWriter:
     # Only try to flush the buffer when receiving a new timestamp
     if str(time) not in self.activebuffer:
       if len(self.activebuffer) >= 100:
-        # Start buffer flush thread if buffer gets full
-        flush_thread = threading.Thread(target=self.flush_dict_buffer, args=(self.activebufferind,))
-        flush_thread.start()
+        self.flush()
 
         if self.activebufferind == 1:        
           self.activebuffer = self.dictbuffer2
@@ -41,7 +39,13 @@ class CSVWriter:
         writer = csv.DictWriter(file, fieldnames=self.csv_fieldnames)
         writer.writeheader()
 
-  def flush_dict_buffer(self, bufferind):
+  def flush(self):
+    # Start buffer flush thread if buffer gets full
+    flush_thread = threading.Thread(target=self.__flush_dict_buffer, args=(self.activebufferind,))
+    flush_thread.start()
+
+  # Should not be called outside of flush
+  def __flush_dict_buffer(self, bufferind):
     if bufferind == 1:
       with open(self.csv_out, "a", newline="") as file:
         writer = csv.DictWriter(file, fieldnames=self.csv_fieldnames)
