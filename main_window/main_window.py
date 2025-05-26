@@ -1,6 +1,5 @@
 # This Python file uses the following encoding: utf-8
 from dataclasses import dataclass
-from pathlib import Path
 
 from PySide6.QtWidgets import QWidget, QLabel, QMessageBox
 from PySide6.QtCore import QTimer, Qt, QMutex
@@ -121,7 +120,7 @@ class MainWindow(QWidget):
             self.ui.baudRateDropdown.addItem(str(rate))
 
         # Plot data
-        self.plots = {}
+        self.plots: dict[str, PlotInfo] = {}
 
         # UDP socket
         self.padUDPSocket = QUdpSocket(self)
