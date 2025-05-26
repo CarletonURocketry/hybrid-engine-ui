@@ -89,30 +89,43 @@ def udp_receive_socket_data(self: "MainWindow"):
     while self.padUDPSocket.hasPendingDatagrams():
         datagram, host, port = self.padUDPSocket.readDatagram(self.padUDPSocket.pendingDatagramSize())
         data = datagram.data()
-        header_bytes = data[:2]
-        message_bytes = data[2:]
-        header = packet_spec.parse_packet_header(header_bytes)
-        message = packet_spec.parse_packet_message(header, message_bytes)  
-        self.process_data(header, message)
+        
+        # Process all packets in the datagram
+        ptr = 0
+        data_len = len(data)
+        while ptr < data_len:
+            # Extract and parse header
+            header_bytes = data[ptr:ptr + 2]
+            ptr += 2
+            header = packet_spec.parse_packet_header(header_bytes)
+            
+            # Get message length and extract message bytes
+            message_bytes_length = packet_spec.packet_message_bytes_length(header)
+            message_bytes = data[ptr:ptr + message_bytes_length]
+            ptr += message_bytes_length
+            
+            # Parse and process the message
+            message = packet_spec.parse_packet_message(header, message_bytes)
+            self.process_data(header, message)
 
-        # Write data to csv here
-        packet_dict = {}
-        match header.sub_type:
-            case packet_spec.TelemetryPacketSubType.TEMPERATURE:
-                packet_dict["t" + str(message.id)] = message.temperature
-                self.csv_writer.add_timed_measurements(message.time_since_power, packet_dict)
-            case packet_spec.TelemetryPacketSubType.PRESSURE:
-                packet_dict["p" + str(message.id)] = message.pressure
-                self.csv_writer.add_timed_measurements(message.time_since_power, packet_dict)
-            case packet_spec.TelemetryPacketSubType.MASS:
-                packet_dict["m" + str(message.id)] = message.mass 
-                self.csv_writer.add_timed_measurements(message.time_since_power, packet_dict)
-            case packet_spec.TelemetryPacketSubType.THRUST:
-                self.csv_writer.add_timed_measurements(message.time_since_power, packet_dict)
+            # Write data to csv here
+            packet_dict = {}
+            match header.sub_type:
+                case packet_spec.TelemetryPacketSubType.TEMPERATURE:
+                    packet_dict["t" + str(message.id)] = message.temperature
+                    self.csv_writer.add_timed_measurements(message.time_since_power, packet_dict)
+                case packet_spec.TelemetryPacketSubType.PRESSURE:
+                    packet_dict["p" + str(message.id)] = message.pressure
+                    self.csv_writer.add_timed_measurements(message.time_since_power, packet_dict)
+                case packet_spec.TelemetryPacketSubType.MASS:
+                    packet_dict["m" + str(message.id)] = message.mass 
+                    self.csv_writer.add_timed_measurements(message.time_since_power, packet_dict)
+                case packet_spec.TelemetryPacketSubType.THRUST:
+                    self.csv_writer.add_timed_measurements(message.time_since_power, packet_dict)
 
-        #If we want to recording data
-        if self.ui.recordingToggleButton.isChecked():
-            self.file_out.write(datagram)
+            #If we want to recording data
+            if self.ui.recordingToggleButton.isChecked():
+                self.file_out.write(datagram)
 
 # Any errors with the socket should be handled here and logged
 def udp_on_error(self: "MainWindow"):
