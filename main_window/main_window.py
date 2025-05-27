@@ -64,8 +64,6 @@ class PIDWindow(QWidget):
         self.setFixedSize(self.width(), self.height())
         for i in range(1, 5):
             self.value_labels[f"p{i}"] = getattr(self.ui, f"p{i}ValLabel")
-        # for i in range(1, 3):
-        #     self.value_labels[f"t{i}"] = getattr(self.ui, f"t{i}ValLabel")
 
 class MainWindow(QWidget):
     # Imports for MainWindow functionality. Helps split large file into
@@ -108,6 +106,7 @@ class MainWindow(QWidget):
 
         # Load config options
         self.config = None
+        self.graph_range: int = 25
         try:
             with open("config.json") as config:
                 self.load_config(config)
@@ -208,12 +207,11 @@ class MainWindow(QWidget):
             self.ui.engineThrustPlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=inf_line_pen))
 
         # QTimer to help us to filter the data, graph is updated every 25ms
-        self.timer_time = 25
+        self.data_filter_interval = 25
         # The time range in the graph, last 25 seconds of data is kept
-        self.time_range = 25
         self.data_filter_timer = QTimer(self)
         self.data_filter_timer.timeout.connect(self.filter_data)
-        self.data_filter_timer.start(self.timer_time)
+        self.data_filter_timer.start(self.data_filter_interval)
 
         # Time that the UI will wait to receive pad state heartbeats from pad server
         # a timer that ticks every second will decrement heartbeat_timeout by 1
@@ -301,7 +299,7 @@ class MainWindow(QWidget):
         self.ui.udpIpAddressInput.setEnabled(True)
         self.ui.udpPortInput.setEnabled(True)
 
-    # If disable_btn, button gets disabled but text does not changed
+    # If disable_btn is true, button gets disabled but text does not changed
     # used for when serial connection disabled ability to connect via udp
     # or vice versa
     def disable_udp_config(self, disable_btn: bool):
