@@ -22,6 +22,7 @@ def load_config(self: "MainWindow", config):
     self.ui.temperatureThresholdList.addItems([str(marker) for marker in self.config["thresholds"]["temperature"]])
     self.ui.tankMassThresholdList.addItems([str(marker) for marker in self.config["thresholds"]["tank_mass"]])
     self.ui.engineThrustThresholdList.addItems([str(marker) for marker in self.config["thresholds"]["engine_thrust"]])
+    self.graph_range = self.config["graph_range"]
 
 def save_config(self: "MainWindow"):
     new_config = {}

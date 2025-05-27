@@ -208,7 +208,6 @@ class MainWindow(QWidget):
 
         # QTimer to help us to filter the data, graph is updated every 25ms
         self.data_filter_interval = 25
-        # The time range in the graph, last 25 seconds of data is kept
         self.data_filter_timer = QTimer(self)
         self.data_filter_timer.timeout.connect(self.filter_data)
         self.data_filter_timer.start(self.data_filter_interval)
