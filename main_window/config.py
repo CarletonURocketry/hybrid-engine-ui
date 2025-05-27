@@ -22,6 +22,7 @@ def load_config(self: "MainWindow", config):
     self.ui.temperatureThresholdList.addItems([str(marker) for marker in self.config["thresholds"]["temperature"]])
     self.ui.tankMassThresholdList.addItems([str(marker) for marker in self.config["thresholds"]["tank_mass"]])
     self.ui.engineThrustThresholdList.addItems([str(marker) for marker in self.config["thresholds"]["engine_thrust"]])
+    self.graph_range = self.config["graph_range"]
 
 def save_config(self: "MainWindow"):
     new_config = {}
@@ -33,6 +34,7 @@ def save_config(self: "MainWindow"):
     new_config["thresholds"]["temperature"] = [float(self.ui.temperatureThresholdList.item(x).text()) for x in range(self.ui.temperatureThresholdList.count())]
     new_config["thresholds"]["tank_mass"] = [float(self.ui.tankMassThresholdList.item(x).text()) for x in range(self.ui.tankMassThresholdList.count())]
     new_config["thresholds"]["engine_thrust"] = [float(self.ui.engineThrustThresholdList.item(x).text()) for x in range(self.ui.engineThrustThresholdList.count())]
+    new_config["graph_range"] = self.graph_range
     with open('config.json', 'w') as config_file:
         json.dump(new_config, config_file, indent=4)
 
@@ -59,3 +61,6 @@ def add_engine_thrust_threshold_handler(self: "MainWindow"):
     self.ui.engineThrustThresholdList.addItem(str(float(new_marker)))
     self.ui.engineThrustPlot.addItem(InfiniteLine(float(new_marker), angle=0, pen=black_pen))
     self.ui.engineThrustThresholdInput.setText("")
+
+def graph_range_change_handler(self: "MainWindow"):
+    self.graph_range = int(self.ui.graphRangeInput.value())

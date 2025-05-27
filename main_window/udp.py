@@ -142,6 +142,6 @@ def udp_on_disconnected(self: "MainWindow"):
     self.enable_udp_config()
     self.enable_serial_config()
     self.update_udp_connection_display(UDPConnectionStatus.NOT_CONNECTED)
-    self.csv_writer.flush_dict_buffer()
+    self.csv_writer.flush()
     if self.file_out:
         self.file_out.close()

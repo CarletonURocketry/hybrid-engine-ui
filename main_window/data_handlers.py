@@ -124,8 +124,7 @@ def filter_data(self: "MainWindow"):
     for key in self.plots:
         if self.plots[key].points.size == 0:
             continue
-        min_time: int = self.plots[key].points[:,0].max() - self.time_range
-        self.plots[key].points = self.plots[key].points[self.plots[key].points[:,0] >= min_time]
+        self.plots[key].points = self.plots[key].points[-(self.graph_range):]
         self.plots[key].data_line.setData(self.plots[key].points)
 
 def reset_heartbeat_timeout(self: "MainWindow"):

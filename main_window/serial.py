@@ -39,7 +39,7 @@ def serial_connection_button_handler(self: "MainWindow"):
       self.enable_serial_config()
       self.enable_udp_config()
       self.update_serial_connection_display(SerialConnectionStatus.NOT_CONNECTED)
-      self.csv_writer.flush_dict_buffer()
+      self.csv_writer.flush()
          
 def refresh_serial_button_handler(self: "MainWindow"):
    self.ui.serialPortDropdown.clear()

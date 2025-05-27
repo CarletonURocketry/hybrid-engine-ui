@@ -18,8 +18,8 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
 from PySide6.QtWidgets import (QApplication, QComboBox, QFormLayout, QGridLayout,
     QHBoxLayout, QLabel, QLineEdit, QListWidget,
     QListWidgetItem, QPushButton, QRadioButton, QSizePolicy,
-    QSpacerItem, QTabWidget, QTextBrowser, QVBoxLayout,
-    QWidget)
+    QSpacerItem, QSpinBox, QTabWidget, QTextBrowser,
+    QVBoxLayout, QWidget)
 
 from pyqtgraph import PlotWidget
 from . import rc_resources
@@ -509,16 +509,49 @@ class Ui_Widget(object):
         self.gridLayout.addWidget(self.graphThresholdLabel, 0, 0, 1, 2)
 
 
-        self.formLayout.setLayout(4, QFormLayout.SpanningRole, self.gridLayout)
+        self.formLayout.setLayout(6, QFormLayout.SpanningRole, self.gridLayout)
 
         self.saveConfigButton = QPushButton(self.configurationTab)
         self.saveConfigButton.setObjectName(u"saveConfigButton")
 
-        self.formLayout.setWidget(6, QFormLayout.SpanningRole, self.saveConfigButton)
+        self.formLayout.setWidget(8, QFormLayout.SpanningRole, self.saveConfigButton)
 
         self.verticalSpacer_3 = QSpacerItem(20, 10, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
 
-        self.formLayout.setItem(5, QFormLayout.FieldRole, self.verticalSpacer_3)
+        self.formLayout.setItem(7, QFormLayout.FieldRole, self.verticalSpacer_3)
+
+        self.verticalLayout_3 = QVBoxLayout()
+        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
+        self.graphOptionsLabel = QLabel(self.configurationTab)
+        self.graphOptionsLabel.setObjectName(u"graphOptionsLabel")
+        self.graphOptionsLabel.setFont(font2)
+        self.graphOptionsLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.verticalLayout_3.addWidget(self.graphOptionsLabel)
+
+        self.graphRangeLayout = QHBoxLayout()
+        self.graphRangeLayout.setObjectName(u"graphRangeLayout")
+        self.graphRangeLabel = QLabel(self.configurationTab)
+        self.graphRangeLabel.setObjectName(u"graphRangeLabel")
+
+        self.graphRangeLayout.addWidget(self.graphRangeLabel)
+
+        self.graphRangeInput = QSpinBox(self.configurationTab)
+        self.graphRangeInput.setObjectName(u"graphRangeInput")
+        self.graphRangeInput.setMinimum(10)
+        self.graphRangeInput.setValue(25)
+
+        self.graphRangeLayout.addWidget(self.graphRangeInput)
+
+
+        self.verticalLayout_3.addLayout(self.graphRangeLayout)
+
+
+        self.formLayout.setLayout(4, QFormLayout.FieldRole, self.verticalLayout_3)
+
+        self.verticalSpacer_4 = QSpacerItem(20, 10, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+
+        self.formLayout.setItem(5, QFormLayout.FieldRole, self.verticalSpacer_4)
 
         self.tabWidget.addTab(self.configurationTab, "")
         self.logTab = QWidget()
@@ -564,6 +597,9 @@ class Ui_Widget(object):
 
     def retranslateUi(self, Widget):
         Widget.setWindowTitle(QCoreApplication.translate("Widget", u"Hybrid Engine Ground System UI", None))
+#if QT_CONFIG(tooltip)
+        Widget.setToolTip(QCoreApplication.translate("Widget", u"Changing this number updates the maximum number of points shown on the graphs", None))
+#endif // QT_CONFIG(tooltip)
         self.logoLabel.setText("")
         self.showPIDButton.setText(QCoreApplication.translate("Widget", u"Show PID ", None))
         self.openFileButton.setText(QCoreApplication.translate("Widget", u"Open previous data", None))
@@ -605,6 +641,8 @@ class Ui_Widget(object):
         self.tankMassThresholdButton.setText(QCoreApplication.translate("Widget", u"Add threshold marker", None))
         self.graphThresholdLabel.setText(QCoreApplication.translate("Widget", u"Graph threshold lines", None))
         self.saveConfigButton.setText(QCoreApplication.translate("Widget", u"Save configuration", None))
+        self.graphOptionsLabel.setText(QCoreApplication.translate("Widget", u"Graph options", None))
+        self.graphRangeLabel.setText(QCoreApplication.translate("Widget", u"Graph range:", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.configurationTab), QCoreApplication.translate("Widget", u"Configuration", None))
         self.exporter.setText(QCoreApplication.translate("Widget", u"Export to File", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.logTab), QCoreApplication.translate("Widget", u"Log", None))

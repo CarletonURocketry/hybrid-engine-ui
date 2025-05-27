@@ -1,6 +1,5 @@
 # This Python file uses the following encoding: utf-8
 from dataclasses import dataclass
-from pathlib import Path
 
 from PySide6.QtWidgets import QWidget, QLabel, QMessageBox
 from PySide6.QtCore import QTimer, Qt, QMutex
@@ -65,8 +64,6 @@ class PIDWindow(QWidget):
         self.setFixedSize(self.width(), self.height())
         for i in range(1, 5):
             self.value_labels[f"p{i}"] = getattr(self.ui, f"p{i}ValLabel")
-        # for i in range(1, 3):
-        #     self.value_labels[f"t{i}"] = getattr(self.ui, f"t{i}ValLabel")
 
 class MainWindow(QWidget):
     # Imports for MainWindow functionality. Helps split large file into
@@ -81,7 +78,8 @@ class MainWindow(QWidget):
         open_file_button_handler, display_previous_data
     from .logging import save_to_file, write_to_log
     from .config import load_config, save_config, add_pressure_threshold_handler, \
-    add_temperature_threshold_handler, add_tank_mass_threshold_handler, add_engine_thrust_threshold_handler
+        add_temperature_threshold_handler, add_tank_mass_threshold_handler, add_engine_thrust_threshold_handler, \
+        graph_range_change_handler
     from .csv_writer import CSVWriter
 
     def __init__(self, parent=None):
@@ -109,6 +107,7 @@ class MainWindow(QWidget):
 
         # Load config options
         self.config = None
+        self.graph_range: int = 25
         try:
             with open("config.json") as config:
                 self.load_config(config)
@@ -121,7 +120,7 @@ class MainWindow(QWidget):
             self.ui.baudRateDropdown.addItem(str(rate))
 
         # Plot data
-        self.plots = {}
+        self.plots: dict[str, PlotInfo] = {}
 
         # UDP socket
         self.padUDPSocket = QUdpSocket(self)
@@ -160,12 +159,12 @@ class MainWindow(QWidget):
         self.ui.pressurePlot.getAxis("left").setTextPen(black_pen)
         self.ui.pressurePlot.getAxis("bottom").setPen(black_pen)
         self.ui.pressurePlot.getAxis("bottom").setTextPen(black_pen)
-        self.plots["p0"] = PlotInfo(self.p0_points, self.ui.pressurePlot.plot(self.p0_points, pen=red_pen, name="p0"))
-        self.plots["p1"] = PlotInfo(self.p1_points, self.ui.pressurePlot.plot(self.p1_points, pen=green_pen, name="p1"))
-        self.plots["p2"] = PlotInfo(self.p2_points, self.ui.pressurePlot.plot(self.p2_points, pen=blue_pen, name="p2"))
-        self.plots["p3"] = PlotInfo(self.p3_points, self.ui.pressurePlot.plot(self.p3_points, pen=orange_pen, name="p3"))
-        self.plots["p4"] = PlotInfo(self.p4_points, self.ui.pressurePlot.plot(self.p4_points, pen=purple_pen, name="p4"))
-        self.plots["p5"] = PlotInfo(self.p5_points, self.ui.pressurePlot.plot(self.p5_points, pen=brown_pen, name="p5"))
+        self.plots["p0"] = PlotInfo(self.p0_points, self.ui.pressurePlot.plot(self.p0_points, pen=red_pen, name="p1"))
+        self.plots["p1"] = PlotInfo(self.p1_points, self.ui.pressurePlot.plot(self.p1_points, pen=green_pen, name="p2"))
+        self.plots["p2"] = PlotInfo(self.p2_points, self.ui.pressurePlot.plot(self.p2_points, pen=blue_pen, name="p3"))
+        self.plots["p3"] = PlotInfo(self.p3_points, self.ui.pressurePlot.plot(self.p3_points, pen=orange_pen, name="p4"))
+        self.plots["p4"] = PlotInfo(self.p4_points, self.ui.pressurePlot.plot(self.p4_points, pen=purple_pen, name="p5"))
+        self.plots["p5"] = PlotInfo(self.p5_points, self.ui.pressurePlot.plot(self.p5_points, pen=brown_pen, name="p6"))
         for marker in [self.ui.pressureThresholdList.item(x) for x in range(self.ui.pressureThresholdList.count())]:
             self.ui.pressurePlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=inf_line_pen))
 
@@ -177,10 +176,10 @@ class MainWindow(QWidget):
         self.ui.temperaturePlot.getAxis("left").setTextPen(black_pen)
         self.ui.temperaturePlot.getAxis("bottom").setPen(black_pen)
         self.ui.temperaturePlot.getAxis("bottom").setTextPen(black_pen)
-        self.plots["t0"] = PlotInfo(self.t0_points, self.ui.temperaturePlot.plot(self.t0_points, pen=red_pen, name="t0"))
-        self.plots["t1"] = PlotInfo(self.t1_points, self.ui.temperaturePlot.plot(self.t1_points, pen=green_pen, name="t1"))
-        self.plots["t2"] = PlotInfo(self.t2_points, self.ui.temperaturePlot.plot(self.t2_points, pen=blue_pen, name="t2"))
-        self.plots["t3"] = PlotInfo(self.t3_points, self.ui.temperaturePlot.plot(self.t3_points, pen=orange_pen, name="t3"))
+        self.plots["t0"] = PlotInfo(self.t0_points, self.ui.temperaturePlot.plot(self.t0_points, pen=red_pen, name="t1"))
+        self.plots["t1"] = PlotInfo(self.t1_points, self.ui.temperaturePlot.plot(self.t1_points, pen=green_pen, name="t2"))
+        self.plots["t2"] = PlotInfo(self.t2_points, self.ui.temperaturePlot.plot(self.t2_points, pen=blue_pen, name="t3"))
+        self.plots["t3"] = PlotInfo(self.t3_points, self.ui.temperaturePlot.plot(self.t3_points, pen=orange_pen, name="t4"))
         for marker in [self.ui.temperatureThresholdList.item(x) for x in range(self.ui.temperatureThresholdList.count())]:
             self.ui.temperaturePlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=inf_line_pen))
 
@@ -209,12 +208,10 @@ class MainWindow(QWidget):
             self.ui.engineThrustPlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=inf_line_pen))
 
         # QTimer to help us to filter the data, graph is updated every 25ms
-        self.timer_time = 25
-        # The time range in the graph, last 25 seconds of data is kept
-        self.time_range = 25
+        self.data_filter_interval = 25
         self.data_filter_timer = QTimer(self)
         self.data_filter_timer.timeout.connect(self.filter_data)
-        self.data_filter_timer.start(self.timer_time)
+        self.data_filter_timer.start(self.data_filter_interval)
 
         # Time that the UI will wait to receive pad state heartbeats from pad server
         # a timer that ticks every second will decrement heartbeat_timeout by 1
@@ -242,6 +239,9 @@ class MainWindow(QWidget):
         # Init valve and sensor labels
         self.init_actuator_valve_label()
         self.init_sensor_reading_label()
+
+        # Graph option handlers
+        self.ui.graphRangeInput.valueChanged.connect(self.graph_range_change_handler)
 
         # Plot threshold handlers
         self.ui.pressureThresholdButton.clicked.connect(self.add_pressure_threshold_handler)
@@ -286,7 +286,7 @@ class MainWindow(QWidget):
         self.sensors = {}
         # Temperature sensor labels
         for i in range(4):
-            self.sensors[i] = SensorLabel("T" + str(i), "0" + " °C", i, 0, self.ui.sensorLayout)
+            self.sensors[i] = SensorLabel("T" + str(i + 1), "0" + " °C", i, 0, self.ui.sensorLayout)
         
         # Tank mass & Engine thrust labels
         self.sensors[4] = SensorLabel("Tank Mass", "0" + " kg", 4, 0, self.ui.sensorLayout)
@@ -294,7 +294,7 @@ class MainWindow(QWidget):
         
         # Pressure labels
         for i in range (6, 12):
-            self.sensors[i] = SensorLabel("P" + str(i-6), "0" + " psi", i-6, 2, self.ui.sensorLayout)
+            self.sensors[i] = SensorLabel("P" + str(i-5), "0" + " psi", i-6, 2, self.ui.sensorLayout)
 
     def enable_udp_config(self):
         self.ui.udpConnectButton.setText("Create UDP connection")
@@ -302,7 +302,7 @@ class MainWindow(QWidget):
         self.ui.udpIpAddressInput.setEnabled(True)
         self.ui.udpPortInput.setEnabled(True)
 
-    # If disable_btn, button gets disabled but text does not changed
+    # If disable_btn is true, button gets disabled but text does not changed
     # used for when serial connection disabled ability to connect via udp
     # or vice versa
     def disable_udp_config(self, disable_btn: bool):
