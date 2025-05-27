@@ -78,7 +78,8 @@ class MainWindow(QWidget):
         open_file_button_handler, display_previous_data
     from .logging import save_to_file, write_to_log
     from .config import load_config, save_config, add_pressure_threshold_handler, \
-    add_temperature_threshold_handler, add_tank_mass_threshold_handler, add_engine_thrust_threshold_handler
+        add_temperature_threshold_handler, add_tank_mass_threshold_handler, add_engine_thrust_threshold_handler, \
+        graph_range_change_handler
     from .csv_writer import CSVWriter
 
     def __init__(self, parent=None):
@@ -238,6 +239,9 @@ class MainWindow(QWidget):
         # Init valve and sensor labels
         self.init_actuator_valve_label()
         self.init_sensor_reading_label()
+
+        # Graph option handlers
+        self.ui.graphRangeInput.valueChanged.connect(self.graph_range_change_handler)
 
         # Plot threshold handlers
         self.ui.pressureThresholdButton.clicked.connect(self.add_pressure_threshold_handler)
