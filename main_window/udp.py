@@ -65,6 +65,7 @@ def udp_connection_button_handler(self: "MainWindow"):
             self.update_udp_connection_display(UDPConnectionStatus.CONNECTED)
 
             self.data_csv_writer.create_csv_log()
+            self.valve_csv_writer.create_csv_log()
         else:
             self.write_to_log(f"Unable to join multicast group at IP address: {mcast_addr}, port: {mcast_port}")
     else:
@@ -123,6 +124,17 @@ def udp_receive_socket_data(self: "MainWindow"):
                 case packet_spec.TelemetryPacketSubType.THRUST:
                     packet_dict["th" + str(message.id + 1)] = message.thrust
                     self.data_csv_writer.add_timed_measurements(message.time_since_power, packet_dict)
+                case packet_spec.TelemetryPacketSubType.ARMING_STATE:
+                    packet_dict["Arming state"] = message.state.name
+                    self.valve_csv_writer.add_timed_measurements(message.time_since_power, packet_dict)
+                case packet_spec.TelemetryPacketSubType.ACT_STATE:
+                    match message.id:
+                        case 0: packet_dict["Igniter"] = message.state.name
+                        case 13: packet_dict["Quick disconnect"] = message.state.name
+                        case 14: packet_dict["Dump valve"] = message.state.name
+                        case _: packet_dict[f"XV-{message.id}"] = message.state.name
+                    self.valve_csv_writer.add_timed_measurements(message.time_since_power, packet_dict)
+
 
             #If we want to recording data
             if self.ui.recordingToggleButton.isChecked():
@@ -144,5 +156,6 @@ def udp_on_disconnected(self: "MainWindow"):
     self.enable_serial_config()
     self.update_udp_connection_display(UDPConnectionStatus.NOT_CONNECTED)
     self.data_csv_writer.flush()
+    self.valve_csv_writer.flush()
     if self.raw_data_file_out:
         self.raw_data_file_out.close()

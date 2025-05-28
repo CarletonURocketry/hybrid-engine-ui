@@ -234,8 +234,8 @@ class MainWindow(QWidget):
         # Connect toggle button for recording data
         self.ui.recordingToggleButton.toggled.connect(self.recording_toggle_button_handler)
         self.raw_data_file_out = None
-        self.data_csv_writer = self.CSVWriter(["t","p0","p1","p2","p3","p4","p5","t0","t1","t2","t3","m0","th0","status"])
-        self.valve_csv_writer = self.CSVWriter([""])
+        self.data_csv_writer = self.CSVWriter(["t","p1","p2","p3","p4","p5","p6","t1","t2","t3","t4","m1","th1","status"], 100, "data_csv")
+        self.valve_csv_writer = self.CSVWriter(["t","Arming state","Igniter","XV-1","XV-2","XV-3","XV-4","XV-5","XV-6","XV-7","XV-8","XV-9","XV-10","XV-11","XV-12","Quick disconnect","Dump valve"], 1, "valves_csv")
 
 
         # Init valve and sensor labels
