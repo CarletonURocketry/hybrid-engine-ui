@@ -32,14 +32,14 @@ def serial_connection_button_handler(self: "MainWindow"):
         self.disable_serial_config(disable_btn=False)
         self.disable_udp_config(disable_btn=True)
         self.update_serial_connection_display(SerialConnectionStatus.CONNECTED)
-        self.csv_writer.create_csv_log()
+        self.data_csv_writer.create_csv_log()
     else:
       self.serialPort.close()
       self.write_to_log("Serial connection was closed")
       self.enable_serial_config()
       self.enable_udp_config()
       self.update_serial_connection_display(SerialConnectionStatus.NOT_CONNECTED)
-      self.csv_writer.flush()
+      self.data_csv_writer.flush()
          
 def refresh_serial_button_handler(self: "MainWindow"):
    self.ui.serialPortDropdown.clear()
@@ -78,7 +78,7 @@ def serial_receive_data(self: "MainWindow"):
       self.serialTimestamp = round(self.serialTimestamp + 0.1, 2)
       packet_dict = dataclasses.asdict(parsed_packet)
       packet_dict["t"] = self.serialTimestamp
-      self.csv_writer.add_timed_measurements(packet_dict) 
+      self.data_csv_writer.add_timed_measurements(packet_dict) 
 
 # Any errors with the socket should be handled here and logged
 def serial_on_error(self: "MainWindow"):

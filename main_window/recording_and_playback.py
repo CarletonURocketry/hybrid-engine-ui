@@ -21,9 +21,9 @@ def recording_toggle_button_handler(self: "MainWindow"):
         file_name = './recording/'
         file_name += QDateTime.currentDateTime().toString("yyyy-MM-dd_HH-mm")
         file_name += '.dump'
-        self.file_out = open(file_name, "a+b")
+        self.raw_data_file_out = open(file_name, "a+b")
     else:
-        self.file_out.close()
+        self.raw_data_file_out.close()
 
 def display_previous_data(self: "MainWindow", data):
         ptr = 0

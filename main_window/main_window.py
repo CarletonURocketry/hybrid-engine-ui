@@ -231,10 +231,12 @@ class MainWindow(QWidget):
         # Open new file heandler
         self.ui.openFileButton.clicked.connect(self.open_file_button_handler)
 
-        #Connect toggle button for recording data
+        # Connect toggle button for recording data
         self.ui.recordingToggleButton.toggled.connect(self.recording_toggle_button_handler)
-        self.file_out = None
-        self.csv_writer = self.CSVWriter(["t","p0","p1","p2","p3","p4","p5","t0","t1","t2","t3","m0","th0","status"])
+        self.raw_data_file_out = None
+        self.data_csv_writer = self.CSVWriter(["t","p1","p2","p3","p4","p5","p6","t1","t2","t3","t4","m1","th1","status"], 100, "data_csv")
+        self.state_csv_writer = self.CSVWriter(["t","Arming state","Igniter","XV-1","XV-2","XV-3","XV-4","XV-5","XV-6","XV-7","XV-8","XV-9","XV-10","XV-11","XV-12","Quick disconnect","Dump valve","Continuity"], 1, "valves_csv")
+
 
         # Init valve and sensor labels
         self.init_actuator_valve_label()
@@ -257,7 +259,7 @@ class MainWindow(QWidget):
             if self.padUDPSocket.state() == QAbstractSocket.SocketState.ConnectedState:
                 self.padUDPSocket.disconnectFromHost()
                 self.padUDPSocket.waitForDisconnected()
-                self.csv_writer.flush()
+                self.data_csv_writer.flush()
 
             if self.serialPort.isOpen():
                 self.serialPort.close()

@@ -6,19 +6,20 @@ from datetime import datetime
 # I'm aware that this is a little over-engineered but this avoids any possibility of
 # data loss by swapping buffers and also organizes data nicely into csvs
 class CSVWriter:
-  def __init__(self, csv_fieldnames):
+  def __init__(self, csv_fieldnames: list[str], buffer_size: int, dir: str):
     self.dictbuffer1 = {}
     self.dictbuffer2 = {}
     self.activebuffer = self.dictbuffer1
     self.activebufferind = 1
-    self.csv_dir = Path("data_csv")
-    self.csv_out = None
     self.csv_fieldnames = csv_fieldnames
+    self.buffer_size = buffer_size
+    self.csv_dir = Path(dir)
+    self.csv_out = None
 
   def add_timed_measurements(self, time: int, sensor_readings: dict):
     # Only try to flush the buffer when receiving a new timestamp
     if str(time) not in self.activebuffer:
-      if len(self.activebuffer) >= 100:
+      if len(self.activebuffer) >= self.buffer_size:
         self.flush()
 
         if self.activebufferind == 1:        

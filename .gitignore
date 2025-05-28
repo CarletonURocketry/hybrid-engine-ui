@@ -87,3 +87,4 @@ venv
 /recording/*
 /logs/*
 /data_csv/*
+/valves_csv/*

@@ -216,23 +216,23 @@ def parse_packet_message(header: PacketHeader, message_bytes: bytes) -> PacketMe
                     time:int
                     state:int
                     time, state = struct.unpack("<IB", message_bytes)
-                    return ArmingStatePacket(state=ArmingState(state), time_since_power=time)
+                    return ArmingStatePacket(state=ArmingState(state), time_since_power=millis_to_units(time))
                 case TelemetryPacketSubType.ACT_STATE:
                     time:int
                     state:int
                     id:int
                     time, id, state = struct.unpack("<IBB", message_bytes)
-                    return ActuatorStatePacket(time_since_power=time, id=id, state=ActuatorState(state))
+                    return ActuatorStatePacket(time_since_power=millis_to_units(time), id=id, state=ActuatorState(state))
                 case TelemetryPacketSubType.WARNING:
                     time:int
                     type:int
                     time, type = struct.unpack("<IB", message_bytes)
-                    return WarningPacket(type=Warning(type), time_since_power=time)
+                    return WarningPacket(type=Warning(type), time_since_power=millis_to_units(time))
                 case TelemetryPacketSubType.CONTINUITY:
                     time:int
                     state:int
                     time, state = struct.unpack("<IB", message_bytes)
-                    return ContinuityPacket(time_since_power=time, state=ContinuityState(state))
+                    return ContinuityPacket(time_since_power=millis_to_units(time), state=ContinuityState(state))
 
 def parse_serial_packet(data: bytes, timestamp: int, default_open_valves):
     m1: int
