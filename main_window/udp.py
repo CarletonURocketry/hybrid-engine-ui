@@ -64,7 +64,7 @@ def udp_connection_button_handler(self: "MainWindow"):
             self.disable_serial_config(disable_btn=True)
             self.update_udp_connection_display(UDPConnectionStatus.CONNECTED)
 
-            self.csv_writer.create_csv_log()
+            self.data_csv_writer.create_csv_log()
         else:
             self.write_to_log(f"Unable to join multicast group at IP address: {mcast_addr}, port: {mcast_port}")
     else:
@@ -112,20 +112,21 @@ def udp_receive_socket_data(self: "MainWindow"):
             packet_dict = {}
             match header.sub_type:
                 case packet_spec.TelemetryPacketSubType.TEMPERATURE:
-                    packet_dict["t" + str(message.id)] = message.temperature
-                    self.csv_writer.add_timed_measurements(message.time_since_power, packet_dict)
+                    packet_dict["t" + str(message.id + 1)] = message.temperature
+                    self.data_csv_writer.add_timed_measurements(message.time_since_power, packet_dict)
                 case packet_spec.TelemetryPacketSubType.PRESSURE:
-                    packet_dict["p" + str(message.id)] = message.pressure
-                    self.csv_writer.add_timed_measurements(message.time_since_power, packet_dict)
+                    packet_dict["p" + str(message.id + 1)] = message.pressure
+                    self.data_csv_writer.add_timed_measurements(message.time_since_power, packet_dict)
                 case packet_spec.TelemetryPacketSubType.MASS:
-                    packet_dict["m" + str(message.id)] = message.mass 
-                    self.csv_writer.add_timed_measurements(message.time_since_power, packet_dict)
+                    packet_dict["m" + str(message.id + 1)] = message.mass 
+                    self.data_csv_writer.add_timed_measurements(message.time_since_power, packet_dict)
                 case packet_spec.TelemetryPacketSubType.THRUST:
-                    self.csv_writer.add_timed_measurements(message.time_since_power, packet_dict)
+                    packet_dict["th" + str(message.id + 1)] = message.thrust
+                    self.data_csv_writer.add_timed_measurements(message.time_since_power, packet_dict)
 
             #If we want to recording data
             if self.ui.recordingToggleButton.isChecked():
-                self.file_out.write(datagram)
+                self.raw_data_file_out.write(datagram)
 
 # Any errors with the socket should be handled here and logged
 def udp_on_error(self: "MainWindow"):
@@ -142,6 +143,6 @@ def udp_on_disconnected(self: "MainWindow"):
     self.enable_udp_config()
     self.enable_serial_config()
     self.update_udp_connection_display(UDPConnectionStatus.NOT_CONNECTED)
-    self.csv_writer.flush()
-    if self.file_out:
-        self.file_out.close()
+    self.data_csv_writer.flush()
+    if self.raw_data_file_out:
+        self.raw_data_file_out.close()
