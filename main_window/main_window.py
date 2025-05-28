@@ -217,7 +217,7 @@ class MainWindow(QWidget):
         # a timer that ticks every second will decrement heartbeat_timeout by 1
         # if it's below 0, a warning should be displayed, preferably on the main section
         # of the ui
-        self.heartbeat_timeout = 6
+        self.heartbeat_timeout = 10
         self.heartbeat_mutex = QMutex()
         self.heartbeat_interval = 1000
         self.heartbeat_timer = QTimer(self)

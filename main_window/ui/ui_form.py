@@ -28,7 +28,7 @@ class Ui_Widget(object):
     def setupUi(self, Widget):
         if not Widget.objectName():
             Widget.setObjectName(u"Widget")
-        Widget.resize(1320, 892)
+        Widget.resize(1320, 921)
         icon = QIcon()
         icon.addFile(u"logos/better_logo.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         Widget.setWindowIcon(icon)
@@ -598,7 +598,7 @@ class Ui_Widget(object):
     def retranslateUi(self, Widget):
         Widget.setWindowTitle(QCoreApplication.translate("Widget", u"Hybrid Engine Ground System UI", None))
 #if QT_CONFIG(tooltip)
-        Widget.setToolTip(QCoreApplication.translate("Widget", u"Changing this number updates the maximum number of points shown on the graphs", None))
+        Widget.setToolTip("")
 #endif // QT_CONFIG(tooltip)
         self.logoLabel.setText("")
         self.showPIDButton.setText(QCoreApplication.translate("Widget", u"Show PID ", None))
@@ -643,6 +643,9 @@ class Ui_Widget(object):
         self.saveConfigButton.setText(QCoreApplication.translate("Widget", u"Save configuration", None))
         self.graphOptionsLabel.setText(QCoreApplication.translate("Widget", u"Graph options", None))
         self.graphRangeLabel.setText(QCoreApplication.translate("Widget", u"Graph range:", None))
+#if QT_CONFIG(tooltip)
+        self.graphRangeInput.setToolTip(QCoreApplication.translate("Widget", u"Changing this number updates the maximum number of points shown on the graphs", None))
+#endif // QT_CONFIG(tooltip)
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.configurationTab), QCoreApplication.translate("Widget", u"Configuration", None))
         self.exporter.setText(QCoreApplication.translate("Widget", u"Export to File", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.logTab), QCoreApplication.translate("Widget", u"Log", None))

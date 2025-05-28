@@ -92,6 +92,9 @@ def update_arming_state(self: "MainWindow", message: packet_spec.ArmingStatePack
             self.ui.armingStateValueLabel.setStyleSheet("background-color: rgb(243, 5, 2);")
             self.ui.armingStateValueLabel.setText("5 - ARMED LAUNCH")
             
+    self.write_to_log(f"Arming state updated to {message.state}")
+    
+            
 def update_act_state(self: "MainWindow", message: packet_spec.ActuatorStatePacket):
     match message.state:
         case packet_spec.ActuatorState.OFF:
@@ -111,8 +114,6 @@ def update_act_state(self: "MainWindow", message: packet_spec.ActuatorStatePacke
         case _:
             self.write_to_log(f"XV-{message.id}: {message.state}")
 
-    self.write_to_log(f"Arming state updated to {message.state}")
-
 def update_continuity_state(self: "MainWindow", message: packet_spec.ContinuityPacket):
     match message.state:
         case packet_spec.ContinuityState.OPEN:
@@ -129,7 +130,7 @@ def filter_data(self: "MainWindow"):
 
 def reset_heartbeat_timeout(self: "MainWindow"):
     self.heartbeat_mutex.lock()
-    self.heartbeat_timeout = 6
+    self.heartbeat_timeout = 10
     self.update_udp_connection_display(self.UDPConnectionStatus.CONNECTED)
     self.heartbeat_mutex.unlock()
 
