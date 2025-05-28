@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1320</width>
-    <height>892</height>
+    <height>921</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,7 +18,7 @@
     <normaloff>logos/better_logo.png</normaloff>logos/better_logo.png</iconset>
   </property>
   <property name="toolTip">
-   <string>Changing this number updates the maximum number of points shown on the graphs</string>
+   <string/>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0">
    <property name="spacing">
@@ -839,6 +839,9 @@
            </item>
            <item>
             <widget class="QSpinBox" name="graphRangeInput">
+             <property name="toolTip">
+              <string>Changing this number updates the maximum number of points shown on the graphs</string>
+             </property>
              <property name="minimum">
               <number>10</number>
              </property>
