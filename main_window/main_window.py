@@ -62,8 +62,8 @@ class PIDWindow(QWidget):
         self.ui.setupUi(self)
         self.value_labels = {}
         self.setFixedSize(self.width(), self.height())
-        for i in range(1, 5):
-            self.value_labels[f"p{i}"] = getattr(self.ui, f"p{i}ValLabel")
+        for i in range(4):
+            self.value_labels[f"p{i}"] = getattr(self.ui, f"p{i+1}ValLabel")
 
 class MainWindow(QWidget):
     # Imports for MainWindow functionality. Helps split large file into
