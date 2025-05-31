@@ -34,10 +34,12 @@ def process_data(self: "MainWindow", header: packet_spec.PacketHeader, message: 
             pass  
 
 def turn_on_valve(self: "MainWindow", id: int):
-    self.valves[id].changeState("OPEN")
+    if id in self.config['default_open_valves']: self.valves[id].changeState("CLOSED")
+    else: self.valves[id].changeState("OPEN")
 
 def turn_off_valve(self: "MainWindow", id: int):
-    self.valves[id].changeState("CLOSED") 
+    if id in self.config['default_open_valves']: self.valves[id].changeState("OPEN")
+    else: self.valves[id].changeState("CLOSED")
 
 def change_new_reading(self: "MainWindow", id: int, newReading: str):
     self.sensors[id].changeReading(newReading)
