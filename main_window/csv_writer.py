@@ -40,10 +40,13 @@ class CSVWriter:
         writer = csv.DictWriter(file, fieldnames=self.csv_fieldnames)
         writer.writeheader()
 
-  def flush(self):
+  def flush(self, _async: bool = True):
     # Start buffer flush thread if buffer gets full
-    flush_thread = threading.Thread(target=self.__flush_dict_buffer, args=(self.activebufferind,))
-    flush_thread.start()
+    if _async:
+      flush_thread = threading.Thread(target=self.__flush_dict_buffer, args=(self.activebufferind,))
+      flush_thread.start()
+    else:
+      self.__flush_dict_buffer(self.activebufferind)
 
   def save_and_swap_csv(self, new_name: str = None):
     if new_name: self.csv_out.rename(f"{self.csv_dir}/{new_name}.csv")

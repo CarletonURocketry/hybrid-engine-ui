@@ -268,7 +268,6 @@ class MainWindow(QWidget):
 
             self.data_csv_writer.flush(_async=False)
             self.state_csv_writer.flush(_async=False)
-            print("flushing buffers")
             event.accept()
         else:
             event.ignore()
