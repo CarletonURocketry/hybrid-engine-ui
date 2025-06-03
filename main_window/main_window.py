@@ -1,7 +1,7 @@
 # This Python file uses the following encoding: utf-8
 from dataclasses import dataclass
 
-from PySide6.QtWidgets import QWidget, QLabel, QMessageBox
+from PySide6.QtWidgets import QWidget, QLabel, QMessageBox, QInputDialog
 from PySide6.QtCore import QTimer, Qt, QMutex
 from PySide6.QtNetwork import QUdpSocket, QAbstractSocket
 from PySide6.QtSerialPort import QSerialPort, QSerialPortInfo
@@ -228,7 +228,10 @@ class MainWindow(QWidget):
         self.ui.serialConnectButton.clicked.connect(self.serial_connection_button_handler)
         self.ui.serialRefreshButton.clicked.connect(self.refresh_serial_button_handler)
 
-        # Open new file heandler
+        # Save CSV button handler
+        self.ui.saveCsvButton.clicked.connect(self.save_csv_button_handler)
+
+        # Open raw data file button handler
         self.ui.openFileButton.clicked.connect(self.open_file_button_handler)
 
         # Connect toggle button for recording data
@@ -259,11 +262,12 @@ class MainWindow(QWidget):
             if self.padUDPSocket.state() == QAbstractSocket.SocketState.ConnectedState:
                 self.padUDPSocket.disconnectFromHost()
                 self.padUDPSocket.waitForDisconnected()
-                self.data_csv_writer.flush()
 
             if self.serialPort.isOpen():
                 self.serialPort.close()
 
+            self.data_csv_writer.flush(_async=False)
+            self.state_csv_writer.flush(_async=False)
             event.accept()
         else:
             event.ignore()
@@ -345,3 +349,8 @@ class MainWindow(QWidget):
             case self.SerialConnectionStatus.NOT_CONNECTED:
                 self.ui.serialConnStatusLabel.setText("Not connected")
                 self.ui.serialConnStatusLabel.setStyleSheet("background-color: rgb(0, 85, 127);")
+
+    def save_csv_button_handler(self):
+        new_name, _ = QInputDialog.getText(self, "Save CSV file", "Enter name to save CSV file as")
+        self.data_csv_writer.save_and_swap_csv(new_name)
+        self.state_csv_writer.save_and_swap_csv(new_name)

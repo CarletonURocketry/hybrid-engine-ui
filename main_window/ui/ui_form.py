@@ -68,6 +68,11 @@ class Ui_Widget(object):
 
         self.mainLayout.addWidget(self.showPIDButton)
 
+        self.saveCsvButton = QPushButton(self.telemetryTab)
+        self.saveCsvButton.setObjectName(u"saveCsvButton")
+
+        self.mainLayout.addWidget(self.saveCsvButton)
+
         self.openFileButton = QPushButton(self.telemetryTab)
         self.openFileButton.setObjectName(u"openFileButton")
 
@@ -601,8 +606,9 @@ class Ui_Widget(object):
         Widget.setToolTip("")
 #endif // QT_CONFIG(tooltip)
         self.logoLabel.setText("")
-        self.showPIDButton.setText(QCoreApplication.translate("Widget", u"Show PID ", None))
-        self.openFileButton.setText(QCoreApplication.translate("Widget", u"Open previous data", None))
+        self.showPIDButton.setText(QCoreApplication.translate("Widget", u"Open PID window", None))
+        self.saveCsvButton.setText(QCoreApplication.translate("Widget", u"Save current CSV data", None))
+        self.openFileButton.setText(QCoreApplication.translate("Widget", u"Open raw data file", None))
         self.recordingToggleButton.setText(QCoreApplication.translate("Widget", u"Recording raw data", None))
         self.udpConnLabel.setText(QCoreApplication.translate("Widget", u"UDP connection status:", None))
         self.udpConnStatusLabel.setText(QCoreApplication.translate("Widget", u"Not connected", None))
