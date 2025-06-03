@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1320</width>
-    <height>921</height>
+    <width>1375</width>
+    <height>1019</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -42,7 +42,7 @@
       <bool>false</bool>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="telemetryTab">
       <property name="autoFillBackground">
@@ -576,7 +576,119 @@
          </property>
         </spacer>
        </item>
-       <item row="6" column="0" colspan="2">
+       <item row="5" column="1">
+        <layout class="QVBoxLayout" name="sensorDisplayOptionsLayout">
+         <item>
+          <widget class="QLabel" name="sensorDisplayOptionsLabel">
+           <property name="font">
+            <font>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Sensor display options</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="numPointsAverageLayout">
+           <item>
+            <widget class="QLabel" name="numPointsAverageLabel">
+             <property name="text">
+              <string># points used for average</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSpinBox" name="numPointsAverageInput">
+             <property name="value">
+              <number>20</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+       <item row="7" column="1">
+        <spacer name="verticalSpacer_5">
+         <property name="orientation">
+          <enum>Qt::Orientation::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Policy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>10</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="8" column="1">
+        <layout class="QVBoxLayout" name="graphOptionsLayout">
+         <item>
+          <widget class="QLabel" name="graphOptionsLabel">
+           <property name="font">
+            <font>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Graph options</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="graphRangeLayout">
+           <item>
+            <widget class="QLabel" name="graphRangeLabel">
+             <property name="text">
+              <string># points on graphs:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSpinBox" name="graphRangeInput">
+             <property name="toolTip">
+              <string>Changing this number updates the maximum number of points shown on the graphs</string>
+             </property>
+             <property name="minimum">
+              <number>10</number>
+             </property>
+             <property name="value">
+              <number>25</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+       <item row="9" column="1">
+        <spacer name="verticalSpacer_4">
+         <property name="orientation">
+          <enum>Qt::Orientation::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Policy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>10</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="10" column="0" colspan="2">
         <layout class="QGridLayout" name="gridLayout">
          <item row="1" column="0">
           <layout class="QVBoxLayout" name="pressureThresholdLayot">
@@ -795,14 +907,7 @@
          </item>
         </layout>
        </item>
-       <item row="8" column="0" colspan="2">
-        <widget class="QPushButton" name="saveConfigButton">
-         <property name="text">
-          <string>Save configuration</string>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="1">
+       <item row="11" column="1">
         <spacer name="verticalSpacer_3">
          <property name="orientation">
           <enum>Qt::Orientation::Vertical</enum>
@@ -818,64 +923,12 @@
          </property>
         </spacer>
        </item>
-       <item row="4" column="1">
-        <layout class="QVBoxLayout" name="verticalLayout_3">
-         <item>
-          <widget class="QLabel" name="graphOptionsLabel">
-           <property name="font">
-            <font>
-             <bold>true</bold>
-            </font>
-           </property>
-           <property name="text">
-            <string>Graph options</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="graphRangeLayout">
-           <item>
-            <widget class="QLabel" name="graphRangeLabel">
-             <property name="text">
-              <string>Graph range:</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QSpinBox" name="graphRangeInput">
-             <property name="toolTip">
-              <string>Changing this number updates the maximum number of points shown on the graphs</string>
-             </property>
-             <property name="minimum">
-              <number>10</number>
-             </property>
-             <property name="value">
-              <number>25</number>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-        </layout>
-       </item>
-       <item row="5" column="1">
-        <spacer name="verticalSpacer_4">
-         <property name="orientation">
-          <enum>Qt::Orientation::Vertical</enum>
+       <item row="12" column="0" colspan="2">
+        <widget class="QPushButton" name="saveConfigButton">
+         <property name="text">
+          <string>Save configuration</string>
          </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::Policy::Fixed</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>10</height>
-          </size>
-         </property>
-        </spacer>
+        </widget>
        </item>
       </layout>
      </widget>

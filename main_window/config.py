@@ -22,6 +22,7 @@ def load_config(self: "MainWindow", config):
     self.ui.temperatureThresholdList.addItems([str(marker) for marker in self.config["thresholds"]["temperature"]])
     self.ui.tankMassThresholdList.addItems([str(marker) for marker in self.config["thresholds"]["tank_mass"]])
     self.ui.engineThrustThresholdList.addItems([str(marker) for marker in self.config["thresholds"]["engine_thrust"]])
+    self.points_used_for_average = self.config["points_used_for_average"]
     self.graph_range = self.config["graph_range"]
 
 def save_config(self: "MainWindow"):
@@ -73,6 +74,9 @@ def add_engine_thrust_threshold_handler(self: "MainWindow"):
         self.ui.engineThrustThresholdInput.setText("")
     else:
         self.ui.engineThrustThresholdList.takeItem(self.ui.engineThrustThresholdList.currentRow())
+
+def points_for_average_change_handler(self: "MainWindow"):
+    self.points_used_for_average = int(self.ui.numPointsAverageInput.value())
 
 def graph_range_change_handler(self: "MainWindow"):
     self.graph_range = int(self.ui.graphRangeInput.value())

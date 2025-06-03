@@ -28,7 +28,7 @@ class Ui_Widget(object):
     def setupUi(self, Widget):
         if not Widget.objectName():
             Widget.setObjectName(u"Widget")
-        Widget.resize(1320, 921)
+        Widget.resize(1375, 1019)
         icon = QIcon()
         icon.addFile(u"logos/better_logo.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         Widget.setWindowIcon(icon)
@@ -370,6 +370,71 @@ class Ui_Widget(object):
 
         self.formLayout.setItem(3, QFormLayout.FieldRole, self.verticalSpacer_2)
 
+        self.sensorDisplayOptionsLayout = QVBoxLayout()
+        self.sensorDisplayOptionsLayout.setObjectName(u"sensorDisplayOptionsLayout")
+        self.sensorDisplayOptionsLabel = QLabel(self.configurationTab)
+        self.sensorDisplayOptionsLabel.setObjectName(u"sensorDisplayOptionsLabel")
+        self.sensorDisplayOptionsLabel.setFont(font2)
+        self.sensorDisplayOptionsLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.sensorDisplayOptionsLayout.addWidget(self.sensorDisplayOptionsLabel)
+
+        self.numPointsAverageLayout = QHBoxLayout()
+        self.numPointsAverageLayout.setObjectName(u"numPointsAverageLayout")
+        self.numPointsAverageLabel = QLabel(self.configurationTab)
+        self.numPointsAverageLabel.setObjectName(u"numPointsAverageLabel")
+
+        self.numPointsAverageLayout.addWidget(self.numPointsAverageLabel)
+
+        self.numPointsAverageInput = QSpinBox(self.configurationTab)
+        self.numPointsAverageInput.setObjectName(u"numPointsAverageInput")
+        self.numPointsAverageInput.setValue(20)
+
+        self.numPointsAverageLayout.addWidget(self.numPointsAverageInput)
+
+
+        self.sensorDisplayOptionsLayout.addLayout(self.numPointsAverageLayout)
+
+
+        self.formLayout.setLayout(5, QFormLayout.FieldRole, self.sensorDisplayOptionsLayout)
+
+        self.verticalSpacer_5 = QSpacerItem(20, 10, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+
+        self.formLayout.setItem(7, QFormLayout.FieldRole, self.verticalSpacer_5)
+
+        self.graphOptionsLayout = QVBoxLayout()
+        self.graphOptionsLayout.setObjectName(u"graphOptionsLayout")
+        self.graphOptionsLabel = QLabel(self.configurationTab)
+        self.graphOptionsLabel.setObjectName(u"graphOptionsLabel")
+        self.graphOptionsLabel.setFont(font2)
+        self.graphOptionsLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.graphOptionsLayout.addWidget(self.graphOptionsLabel)
+
+        self.graphRangeLayout = QHBoxLayout()
+        self.graphRangeLayout.setObjectName(u"graphRangeLayout")
+        self.graphRangeLabel = QLabel(self.configurationTab)
+        self.graphRangeLabel.setObjectName(u"graphRangeLabel")
+
+        self.graphRangeLayout.addWidget(self.graphRangeLabel)
+
+        self.graphRangeInput = QSpinBox(self.configurationTab)
+        self.graphRangeInput.setObjectName(u"graphRangeInput")
+        self.graphRangeInput.setMinimum(10)
+        self.graphRangeInput.setValue(25)
+
+        self.graphRangeLayout.addWidget(self.graphRangeInput)
+
+
+        self.graphOptionsLayout.addLayout(self.graphRangeLayout)
+
+
+        self.formLayout.setLayout(8, QFormLayout.FieldRole, self.graphOptionsLayout)
+
+        self.verticalSpacer_4 = QSpacerItem(20, 10, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+
+        self.formLayout.setItem(9, QFormLayout.FieldRole, self.verticalSpacer_4)
+
         self.gridLayout = QGridLayout()
         self.gridLayout.setObjectName(u"gridLayout")
         self.pressureThresholdLayot = QVBoxLayout()
@@ -514,49 +579,16 @@ class Ui_Widget(object):
         self.gridLayout.addWidget(self.graphThresholdLabel, 0, 0, 1, 2)
 
 
-        self.formLayout.setLayout(6, QFormLayout.SpanningRole, self.gridLayout)
+        self.formLayout.setLayout(10, QFormLayout.SpanningRole, self.gridLayout)
+
+        self.verticalSpacer_3 = QSpacerItem(20, 10, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+
+        self.formLayout.setItem(11, QFormLayout.FieldRole, self.verticalSpacer_3)
 
         self.saveConfigButton = QPushButton(self.configurationTab)
         self.saveConfigButton.setObjectName(u"saveConfigButton")
 
-        self.formLayout.setWidget(8, QFormLayout.SpanningRole, self.saveConfigButton)
-
-        self.verticalSpacer_3 = QSpacerItem(20, 10, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
-
-        self.formLayout.setItem(7, QFormLayout.FieldRole, self.verticalSpacer_3)
-
-        self.verticalLayout_3 = QVBoxLayout()
-        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
-        self.graphOptionsLabel = QLabel(self.configurationTab)
-        self.graphOptionsLabel.setObjectName(u"graphOptionsLabel")
-        self.graphOptionsLabel.setFont(font2)
-        self.graphOptionsLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        self.verticalLayout_3.addWidget(self.graphOptionsLabel)
-
-        self.graphRangeLayout = QHBoxLayout()
-        self.graphRangeLayout.setObjectName(u"graphRangeLayout")
-        self.graphRangeLabel = QLabel(self.configurationTab)
-        self.graphRangeLabel.setObjectName(u"graphRangeLabel")
-
-        self.graphRangeLayout.addWidget(self.graphRangeLabel)
-
-        self.graphRangeInput = QSpinBox(self.configurationTab)
-        self.graphRangeInput.setObjectName(u"graphRangeInput")
-        self.graphRangeInput.setMinimum(10)
-        self.graphRangeInput.setValue(25)
-
-        self.graphRangeLayout.addWidget(self.graphRangeInput)
-
-
-        self.verticalLayout_3.addLayout(self.graphRangeLayout)
-
-
-        self.formLayout.setLayout(4, QFormLayout.FieldRole, self.verticalLayout_3)
-
-        self.verticalSpacer_4 = QSpacerItem(20, 10, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
-
-        self.formLayout.setItem(5, QFormLayout.FieldRole, self.verticalSpacer_4)
+        self.formLayout.setWidget(12, QFormLayout.SpanningRole, self.saveConfigButton)
 
         self.tabWidget.addTab(self.configurationTab, "")
         self.logTab = QWidget()
@@ -594,7 +626,7 @@ class Ui_Widget(object):
 
         self.retranslateUi(Widget)
 
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(Widget)
@@ -637,6 +669,13 @@ class Ui_Widget(object):
         self.baudRateLabel.setText(QCoreApplication.translate("Widget", u"Baud rate:", None))
         self.serialConnectButton.setText(QCoreApplication.translate("Widget", u"Connect to serial port", None))
         self.serialRefreshButton.setText(QCoreApplication.translate("Widget", u"Refresh", None))
+        self.sensorDisplayOptionsLabel.setText(QCoreApplication.translate("Widget", u"Sensor display options", None))
+        self.numPointsAverageLabel.setText(QCoreApplication.translate("Widget", u"# points used for average", None))
+        self.graphOptionsLabel.setText(QCoreApplication.translate("Widget", u"Graph options", None))
+        self.graphRangeLabel.setText(QCoreApplication.translate("Widget", u"# points on graphs:", None))
+#if QT_CONFIG(tooltip)
+        self.graphRangeInput.setToolTip(QCoreApplication.translate("Widget", u"Changing this number updates the maximum number of points shown on the graphs", None))
+#endif // QT_CONFIG(tooltip)
         self.pressureThresholdLabel.setText(QCoreApplication.translate("Widget", u"Pressure", None))
         self.pressureThresholdButton.setText(QCoreApplication.translate("Widget", u"Add/remove threshold marker", None))
         self.engineThrustThresholdLabel.setText(QCoreApplication.translate("Widget", u"Engine Thrust", None))
@@ -647,11 +686,6 @@ class Ui_Widget(object):
         self.tankMassThresholdButton.setText(QCoreApplication.translate("Widget", u"Add/remove threshold marker", None))
         self.graphThresholdLabel.setText(QCoreApplication.translate("Widget", u"Graph threshold lines", None))
         self.saveConfigButton.setText(QCoreApplication.translate("Widget", u"Save configuration", None))
-        self.graphOptionsLabel.setText(QCoreApplication.translate("Widget", u"Graph options", None))
-        self.graphRangeLabel.setText(QCoreApplication.translate("Widget", u"Graph range:", None))
-#if QT_CONFIG(tooltip)
-        self.graphRangeInput.setToolTip(QCoreApplication.translate("Widget", u"Changing this number updates the maximum number of points shown on the graphs", None))
-#endif // QT_CONFIG(tooltip)
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.configurationTab), QCoreApplication.translate("Widget", u"Configuration", None))
         self.exporter.setText(QCoreApplication.translate("Widget", u"Export to File", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.logTab), QCoreApplication.translate("Widget", u"Log", None))

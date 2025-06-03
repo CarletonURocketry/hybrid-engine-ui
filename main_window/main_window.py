@@ -79,7 +79,7 @@ class MainWindow(QWidget):
     from .logging import save_to_file, write_to_log
     from .config import load_config, save_config, add_pressure_threshold_handler, \
         add_temperature_threshold_handler, add_tank_mass_threshold_handler, add_engine_thrust_threshold_handler, \
-        graph_range_change_handler
+        graph_range_change_handler, points_for_average_change_handler
     from .csv_writer import CSVWriter
 
     def __init__(self, parent=None):
@@ -107,6 +107,7 @@ class MainWindow(QWidget):
 
         # Load config options
         self.config = None
+        self.points_used_for_average: int = 20
         self.graph_range: int = 25
         try:
             with open("config.json") as config:
@@ -244,6 +245,9 @@ class MainWindow(QWidget):
         # Init valve and sensor labels
         self.init_actuator_valve_label()
         self.init_sensor_reading_label()
+
+        # Sensor display option handlers
+        self.ui.numPointsAverageInput.valueChanged.connect(self.points_for_average_change_handler)
 
         # Graph option handlers
         self.ui.graphRangeInput.valueChanged.connect(self.graph_range_change_handler)
