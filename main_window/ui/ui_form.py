@@ -594,7 +594,7 @@ class Ui_Widget(object):
 
         self.retranslateUi(Widget)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(Widget)
@@ -638,13 +638,13 @@ class Ui_Widget(object):
         self.serialConnectButton.setText(QCoreApplication.translate("Widget", u"Connect to serial port", None))
         self.serialRefreshButton.setText(QCoreApplication.translate("Widget", u"Refresh", None))
         self.pressureThresholdLabel.setText(QCoreApplication.translate("Widget", u"Pressure", None))
-        self.pressureThresholdButton.setText(QCoreApplication.translate("Widget", u"Add threshold marker", None))
+        self.pressureThresholdButton.setText(QCoreApplication.translate("Widget", u"Add/remove threshold marker", None))
         self.engineThrustThresholdLabel.setText(QCoreApplication.translate("Widget", u"Engine Thrust", None))
-        self.engineThrustThresholdButton.setText(QCoreApplication.translate("Widget", u"Add threshold marker", None))
+        self.engineThrustThresholdButton.setText(QCoreApplication.translate("Widget", u"Add/remove threshold marker", None))
         self.temperatureThresholdLabel.setText(QCoreApplication.translate("Widget", u"Temperature", None))
-        self.temperatureThresholdButton.setText(QCoreApplication.translate("Widget", u"Add threshold marker", None))
+        self.temperatureThresholdButton.setText(QCoreApplication.translate("Widget", u"Add/remove threshold marker", None))
         self.tankMassThresholdLabel.setText(QCoreApplication.translate("Widget", u"Tank Mass", None))
-        self.tankMassThresholdButton.setText(QCoreApplication.translate("Widget", u"Add threshold marker", None))
+        self.tankMassThresholdButton.setText(QCoreApplication.translate("Widget", u"Add/remove threshold marker", None))
         self.graphThresholdLabel.setText(QCoreApplication.translate("Widget", u"Graph threshold lines", None))
         self.saveConfigButton.setText(QCoreApplication.translate("Widget", u"Save configuration", None))
         self.graphOptionsLabel.setText(QCoreApplication.translate("Widget", u"Graph options", None))

@@ -42,7 +42,7 @@
       <bool>false</bool>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="telemetryTab">
       <property name="autoFillBackground">
@@ -622,7 +622,7 @@
               </sizepolicy>
              </property>
              <property name="text">
-              <string>Add threshold marker</string>
+              <string>Add/remove threshold marker</string>
              </property>
             </widget>
            </item>
@@ -672,7 +672,7 @@
               </sizepolicy>
              </property>
              <property name="text">
-              <string>Add threshold marker</string>
+              <string>Add/remove threshold marker</string>
              </property>
             </widget>
            </item>
@@ -722,7 +722,7 @@
               </sizepolicy>
              </property>
              <property name="text">
-              <string>Add threshold marker</string>
+              <string>Add/remove threshold marker</string>
              </property>
             </widget>
            </item>
@@ -772,7 +772,7 @@
               </sizepolicy>
              </property>
              <property name="text">
-              <string>Add threshold marker</string>
+              <string>Add/remove threshold marker</string>
              </property>
             </widget>
            </item>

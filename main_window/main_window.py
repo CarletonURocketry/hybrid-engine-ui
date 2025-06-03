@@ -253,6 +253,12 @@ class MainWindow(QWidget):
         self.ui.temperatureThresholdButton.clicked.connect(self.add_temperature_threshold_handler)
         self.ui.tankMassThresholdButton.clicked.connect(self.add_tank_mass_threshold_handler)
         self.ui.engineThrustThresholdButton.clicked.connect(self.add_engine_thrust_threshold_handler)
+        # These make it so that the items in the list are unselected when entering a value
+        # helps with the remove value feature
+        self.ui.pressureThresholdInput.focusInEvent = lambda x: self.ui.pressureThresholdList.setCurrentRow(-1)
+        self.ui.temperatureThresholdInput.focusInEvent = lambda x: self.ui.temperatureThresholdList.setCurrentRow(-1)
+        self.ui.tankMassThresholdInput.focusInEvent = lambda x: self.ui.tankMassThresholdList.setCurrentRow(-1)
+        self.ui.engineThrustThresholdInput.focusInEvent = lambda x: self.ui.engineThrustThresholdList.setCurrentRow(-1)
         self.ui.saveConfigButton.clicked.connect(self.save_config)
 
     # Handles when the window is closed, have to make sure to disconnect the TCP socket
