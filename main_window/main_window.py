@@ -62,7 +62,7 @@ class PIDWindow(QWidget):
         self.ui.setupUi(self)
         self.value_labels = {}
         self.setFixedSize(self.width(), self.height())
-        for i in range(4):
+        for i in range(5):
             self.value_labels[f"p{i}"] = getattr(self.ui, f"p{i+1}ValLabel")
 
 class MainWindow(QWidget):
@@ -79,7 +79,7 @@ class MainWindow(QWidget):
     from .logging import save_to_file, write_to_log
     from .config import load_config, save_config, add_pressure_threshold_handler, \
         add_temperature_threshold_handler, add_tank_mass_threshold_handler, add_engine_thrust_threshold_handler, \
-        graph_range_change_handler
+        graph_range_change_handler, points_for_average_change_handler
     from .csv_writer import CSVWriter
 
     def __init__(self, parent=None):
@@ -105,8 +105,16 @@ class MainWindow(QWidget):
         self.tank_mass_points = np.empty((0,2))
         self.engine_thrust_points = np.empty((0,2))
 
+        self.annoyProp = QMessageBox()
+        self.annoyProp.setWindowTitle("We love avionics so much! 💖")
+        self.annoyProp.setText("Enter tip amount:")
+        self.annoyProp.addButton("25%", QMessageBox.ButtonRole.AcceptRole)
+        self.annoyProp.addButton("35%", QMessageBox.ButtonRole.AcceptRole)
+        self.annoyProp.addButton("50%", QMessageBox.ButtonRole.AcceptRole)
+
         # Load config options
         self.config = None
+        self.points_used_for_average: int = 20
         self.graph_range: int = 25
         try:
             with open("config.json") as config:
@@ -245,6 +253,9 @@ class MainWindow(QWidget):
         self.init_actuator_valve_label()
         self.init_sensor_reading_label()
 
+        # Sensor display option handlers
+        self.ui.numPointsAverageInput.valueChanged.connect(self.points_for_average_change_handler)
+
         # Graph option handlers
         self.ui.graphRangeInput.valueChanged.connect(self.graph_range_change_handler)
 
@@ -253,6 +264,12 @@ class MainWindow(QWidget):
         self.ui.temperatureThresholdButton.clicked.connect(self.add_temperature_threshold_handler)
         self.ui.tankMassThresholdButton.clicked.connect(self.add_tank_mass_threshold_handler)
         self.ui.engineThrustThresholdButton.clicked.connect(self.add_engine_thrust_threshold_handler)
+        # These make it so that the items in the list are unselected when entering a value
+        # helps with the remove value feature
+        self.ui.pressureThresholdInput.focusInEvent = lambda x: self.ui.pressureThresholdList.setCurrentRow(-1)
+        self.ui.temperatureThresholdInput.focusInEvent = lambda x: self.ui.temperatureThresholdList.setCurrentRow(-1)
+        self.ui.tankMassThresholdInput.focusInEvent = lambda x: self.ui.tankMassThresholdList.setCurrentRow(-1)
+        self.ui.engineThrustThresholdInput.focusInEvent = lambda x: self.ui.engineThrustThresholdList.setCurrentRow(-1)
         self.ui.saveConfigButton.clicked.connect(self.save_config)
 
     # Handles when the window is closed, have to make sure to disconnect the TCP socket
@@ -279,10 +296,11 @@ class MainWindow(QWidget):
         self.valves = {}
         self.valves[0] = TelemetryLabel("Igniter", "CLOSED", 0, 2, self.ui.valveGrid)
         self.valves[13] = TelemetryLabel("Quick Disconnect", "CLOSED", 0, 0, self.ui.valveGrid)
-        self.valves[14] =  TelemetryLabel("Dump valve", "CLOSED", 0, 4, self.ui.valveGrid)
+        self.valves[14] =  TelemetryLabel("XV-3 (dump valve)", "CLOSED", 0, 4, self.ui.valveGrid)
         for i in range(1, 13):
             initial_state = "OPEN" if i in self.config['default_open_valves'] else "CLOSED"
             label = f"XV-{str(i)}"
+            if i == 3: label += " (unused)"
             if i == 5: label += " (fire valve)"
             #There will be three label at each row, therefore divide by three, add 1 to skip the first row of valves
             #Row timed 2 because there will be two label for state and for the name

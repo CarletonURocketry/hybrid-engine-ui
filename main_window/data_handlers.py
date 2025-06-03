@@ -23,7 +23,10 @@ def process_data(self: "MainWindow", header: packet_spec.PacketHeader, message: 
             self.update_arming_state(message)
             if reset_heartbeat: self.reset_heartbeat_timeout()
         case packet_spec.TelemetryPacketSubType.ACT_STATE:
-            self.update_act_state(message)
+            if message.id == 3 and message.state == packet_spec.ActuatorState.ON:
+                self.annoyProp.show()
+            else:
+                self.update_act_state(message)
             if reset_heartbeat: self.reset_heartbeat_timeout()
         case packet_spec.TelemetryPacketSubType.WARNING:
             # Write warning to logs maybe?
@@ -57,24 +60,24 @@ def plot_point(self: "MainWindow", header: packet_spec.PacketHeader, message: pa
                     temperatureId:str = "t" + str(message.id)
                     plots[temperatureId].points = np.append(plots[temperatureId].points, np.array([[message.time_since_power, message.temperature]]), axis=0)
                     plots[temperatureId].data_line.setData(plots[temperatureId].points)
-                    if temperatureId in value_labels: value_labels[temperatureId].setText(f"{message.temperature} °C")
-                    change_new_reading(self, message.id, str(message.temperature) + " °C") #array id for temp label is 0 - 3
+                    if temperatureId in value_labels: value_labels[temperatureId].setText(f"{round(np.mean(plots[temperatureId].points[-(self.points_used_for_average):, 1]), 2)} °C")
+                    change_new_reading(self, message.id, f"{round(np.mean(plots[temperatureId].points[-(self.points_used_for_average):, 1]), 2)} °C") #array id for temp label is 0 - 3
                 case packet_spec.TelemetryPacketSubType.PRESSURE:
                     pressureId:str = "p" + str(message.id)
                     plots[pressureId].points = np.append(plots[pressureId].points, np.array([[message.time_since_power, message.pressure]]), axis=0)
                     plots[pressureId].data_line.setData(plots[pressureId].points)
-                    if pressureId in value_labels: value_labels[pressureId].setText(f"{message.pressure} psi")
-                    change_new_reading(self, message.id + 6, str(message.pressure) + " psi") #array id for pressure label is 5 - 8
+                    if pressureId in value_labels: value_labels[pressureId].setText(f"{round(np.mean(plots[pressureId].points[-(self.points_used_for_average):, 1]), 2)} psi")
+                    change_new_reading(self, message.id + 6, f"{round(np.mean(plots[pressureId].points[-(self.points_used_for_average):, 1]), 2)} psi") #array id for pressure label is 5 - 8
                 case packet_spec.TelemetryPacketSubType.MASS:
                     massId:str = "m" + str(message.id)
                     plots[massId].points = np.append(plots[massId].points, np.array([[message.time_since_power, message.mass]]), axis=0)
                     plots[massId].data_line.setData(plots[massId].points)
-                    change_new_reading(self, 4, str(message.mass) + " kg")
+                    change_new_reading(self, 4, f"{round(np.mean(plots[massId].points[-(self.points_used_for_average):, 1]), 2)} kg")
                 case packet_spec.TelemetryPacketSubType.THRUST:
                     thrustId:str = "th" + str(message.id)
                     plots[thrustId].points = np.append(plots[thrustId].points, np.array([[message.time_since_power, message.thrust]]), axis=0)
                     plots[thrustId].data_line.setData(plots[thrustId].points)
-                    change_new_reading(self, 5, str(message.thrust) + " N")
+                    change_new_reading(self, 5, f"{round(np.mean(plots[thrustId].points[-(self.points_used_for_average):, 1]), 2)} N")
 
 def update_arming_state(self: "MainWindow", message: packet_spec.ArmingStatePacket):
     match message.state:
@@ -127,7 +130,7 @@ def filter_data(self: "MainWindow"):
     for key in self.plots:
         if self.plots[key].points.size == 0:
             continue
-        self.plots[key].points = self.plots[key].points[-(self.graph_range):]
+        self.plots[key].points = self.plots[key].points[-(self.graph_range - 1):]
         self.plots[key].data_line.setData(self.plots[key].points)
 
 def reset_heartbeat_timeout(self: "MainWindow"):

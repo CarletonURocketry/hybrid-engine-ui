@@ -22,6 +22,7 @@ def load_config(self: "MainWindow", config):
     self.ui.temperatureThresholdList.addItems([str(marker) for marker in self.config["thresholds"]["temperature"]])
     self.ui.tankMassThresholdList.addItems([str(marker) for marker in self.config["thresholds"]["tank_mass"]])
     self.ui.engineThrustThresholdList.addItems([str(marker) for marker in self.config["thresholds"]["engine_thrust"]])
+    self.points_used_for_average = self.config["points_used_for_average"]
     self.graph_range = self.config["graph_range"]
 
 def save_config(self: "MainWindow"):
@@ -39,28 +40,43 @@ def save_config(self: "MainWindow"):
         json.dump(new_config, config_file, indent=4)
 
 def add_pressure_threshold_handler(self: "MainWindow"):
-    new_marker = self.ui.pressureThresholdInput.text()
-    self.ui.pressureThresholdList.addItem(str(float(new_marker)))
-    self.ui.pressurePlot.addItem(InfiniteLine(float(new_marker), angle=0, pen=black_pen))
-    self.ui.pressureThresholdInput.setText("")
+    if self.ui.pressureThresholdList.currentRow() == -1:
+        new_marker = self.ui.pressureThresholdInput.text()
+        self.ui.pressureThresholdList.addItem(str(float(new_marker)))
+        self.ui.pressurePlot.addItem(InfiniteLine(float(new_marker), angle=0, pen=black_pen))
+        self.ui.pressureThresholdInput.setText("")
+    else:
+        self.ui.pressureThresholdList.takeItem(self.ui.pressureThresholdList.currentRow())
     
 def add_temperature_threshold_handler(self: "MainWindow"):
-    new_marker = self.ui.temperatureThresholdInput.text()
-    self.ui.temperatureThresholdList.addItem(str(float(new_marker)))
-    self.ui.temperaturePlot.addItem(InfiniteLine(float(new_marker), angle=0, pen=black_pen))
-    self.ui.temperatureThresholdInput.setText("")
+    if self.ui.temperatureThresholdList.currentRow() == -1:
+        new_marker = self.ui.temperatureThresholdInput.text()
+        self.ui.temperatureThresholdList.addItem(str(float(new_marker)))
+        self.ui.temperaturePlot.addItem(InfiniteLine(float(new_marker), angle=0, pen=black_pen))
+        self.ui.temperatureThresholdInput.setText("")
+    else:
+        self.ui.temperatureThresholdList.takeItem(self.ui.temperatureThresholdList.currentRow())
 
 def add_tank_mass_threshold_handler(self: "MainWindow"):
-    new_marker = self.ui.tankMassThresholdInput.text()
-    self.ui.tankMassThresholdList.addItem(str(float(new_marker)))
-    self.ui.tankMassPlot.addItem(InfiniteLine(float(new_marker), angle=0, pen=black_pen))
-    self.ui.tankMassThresholdInput.setText("")
+    if self.ui.tankMassThresholdList.currentRow() == -1:
+        new_marker = self.ui.tankMassThresholdInput.text()
+        self.ui.tankMassThresholdList.addItem(str(float(new_marker)))
+        self.ui.tankMassPlot.addItem(InfiniteLine(float(new_marker), angle=0, pen=black_pen))
+        self.ui.tankMassThresholdInput.setText("")
+    else:
+        self.ui.tankMassThresholdList.takeItem(self.ui.tankMassThresholdList.currentRow())
 
 def add_engine_thrust_threshold_handler(self: "MainWindow"):
-    new_marker = self.ui.engineThrustThresholdInput.text()
-    self.ui.engineThrustThresholdList.addItem(str(float(new_marker)))
-    self.ui.engineThrustPlot.addItem(InfiniteLine(float(new_marker), angle=0, pen=black_pen))
-    self.ui.engineThrustThresholdInput.setText("")
+    if self.ui.engineThrustThresholdList.currentRow() == -1:
+        new_marker = self.ui.engineThrustThresholdInput.text()
+        self.ui.engineThrustThresholdList.addItem(str(float(new_marker)))
+        self.ui.engineThrustPlot.addItem(InfiniteLine(float(new_marker), angle=0, pen=black_pen))
+        self.ui.engineThrustThresholdInput.setText("")
+    else:
+        self.ui.engineThrustThresholdList.takeItem(self.ui.engineThrustThresholdList.currentRow())
+
+def points_for_average_change_handler(self: "MainWindow"):
+    self.points_used_for_average = int(self.ui.numPointsAverageInput.value())
 
 def graph_range_change_handler(self: "MainWindow"):
     self.graph_range = int(self.ui.graphRangeInput.value())
