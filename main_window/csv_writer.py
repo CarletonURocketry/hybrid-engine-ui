@@ -49,7 +49,8 @@ class CSVWriter:
       self.__flush_dict_buffer(self.activebufferind)
 
   def save_and_swap_csv(self, new_name: str = None):
-    if new_name: self.csv_out.rename(f"{self.csv_dir}/{new_name}.csv")
+    if new_name: 
+      self.csv_out = self.csv_out.rename(f"{self.csv_dir}/{new_name}.csv")
     
     if self.activebufferind == 1:        
       self.activebuffer = self.dictbuffer2
@@ -62,6 +63,8 @@ class CSVWriter:
       self.activebufferind = 2
     elif self.activebufferind == 2:
       self.activebufferind = 1
+
+    self.create_csv_log()
 
   # Should not be called outside of flush
   def __flush_dict_buffer(self, bufferind):
