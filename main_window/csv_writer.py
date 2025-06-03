@@ -42,11 +42,12 @@ class CSVWriter:
 
   def flush(self, _async: bool = True):
     # Start buffer flush thread if buffer gets full
-    if _async:
-      flush_thread = threading.Thread(target=self.__flush_dict_buffer, args=(self.activebufferind,))
-      flush_thread.start()
-    else:
-      self.__flush_dict_buffer(self.activebufferind)
+    if self.csv_out:
+      if _async:
+        flush_thread = threading.Thread(target=self.__flush_dict_buffer, args=(self.activebufferind,))
+        flush_thread.start()
+      else:
+        self.__flush_dict_buffer(self.activebufferind)
 
   def save_and_swap_csv(self, new_name: str = None):
     if new_name: 
