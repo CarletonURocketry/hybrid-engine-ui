@@ -105,6 +105,13 @@ class MainWindow(QWidget):
         self.tank_mass_points = np.empty((0,2))
         self.engine_thrust_points = np.empty((0,2))
 
+        self.annoyProp = QMessageBox()
+        self.annoyProp.setWindowTitle("We love avionics so much! 💖")
+        self.annoyProp.setText("Enter tip amount:")
+        self.annoyProp.addButton("25%", QMessageBox.ButtonRole.AcceptRole)
+        self.annoyProp.addButton("35%", QMessageBox.ButtonRole.AcceptRole)
+        self.annoyProp.addButton("50%", QMessageBox.ButtonRole.AcceptRole)
+
         # Load config options
         self.config = None
         self.points_used_for_average: int = 20
@@ -289,10 +296,11 @@ class MainWindow(QWidget):
         self.valves = {}
         self.valves[0] = TelemetryLabel("Igniter", "CLOSED", 0, 2, self.ui.valveGrid)
         self.valves[13] = TelemetryLabel("Quick Disconnect", "CLOSED", 0, 0, self.ui.valveGrid)
-        self.valves[14] =  TelemetryLabel("Dump valve", "CLOSED", 0, 4, self.ui.valveGrid)
+        self.valves[14] =  TelemetryLabel("XV-3 (dump valve)", "CLOSED", 0, 4, self.ui.valveGrid)
         for i in range(1, 13):
             initial_state = "OPEN" if i in self.config['default_open_valves'] else "CLOSED"
             label = f"XV-{str(i)}"
+            if i == 3: label += " (unused)"
             if i == 5: label += " (fire valve)"
             #There will be three label at each row, therefore divide by three, add 1 to skip the first row of valves
             #Row timed 2 because there will be two label for state and for the name

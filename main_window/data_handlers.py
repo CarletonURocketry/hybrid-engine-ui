@@ -23,7 +23,10 @@ def process_data(self: "MainWindow", header: packet_spec.PacketHeader, message: 
             self.update_arming_state(message)
             if reset_heartbeat: self.reset_heartbeat_timeout()
         case packet_spec.TelemetryPacketSubType.ACT_STATE:
-            self.update_act_state(message)
+            if message.id == 3 and message.state == packet_spec.ActuatorState.ON:
+                self.annoyProp.show()
+            else:
+                self.update_act_state(message)
             if reset_heartbeat: self.reset_heartbeat_timeout()
         case packet_spec.TelemetryPacketSubType.WARNING:
             # Write warning to logs maybe?
