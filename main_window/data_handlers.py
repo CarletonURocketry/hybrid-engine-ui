@@ -19,6 +19,7 @@ def process_data(self: "MainWindow", header: packet_spec.PacketHeader, message: 
         | packet_spec.TelemetryPacketSubType.MASS \
         | packet_spec.TelemetryPacketSubType.THRUST:
             self.plot_point(header, message)
+            if reset_heartbeat: self.reset_heartbeat_timeout()
         case packet_spec.TelemetryPacketSubType.ARMING_STATE:
             self.update_arming_state(message)
             if reset_heartbeat: self.reset_heartbeat_timeout()
@@ -33,6 +34,7 @@ def process_data(self: "MainWindow", header: packet_spec.PacketHeader, message: 
             pass
         case packet_spec.TelemetryPacketSubType.CONTINUITY:
             self.update_continuity_state(message)
+            if reset_heartbeat: self.reset_heartbeat_timeout()
         case _:
             pass  
 
@@ -122,9 +124,9 @@ def update_act_state(self: "MainWindow", message: packet_spec.ActuatorStatePacke
 def update_continuity_state(self: "MainWindow", message: packet_spec.ContinuityPacket):
     match message.state:
         case packet_spec.ContinuityState.OPEN:
-            self.ui.continuityValueLabel.setText("OPEN")
+            self.ui.continuityValueLabel.setText("NOT CONTINUOUS")
         case packet_spec.ContinuityState.CLOSED:
-            self.ui.continuityValueLabel.setText("CLOSED")
+            self.ui.continuityValueLabel.setText("CONTINUOUS")
 
 def filter_data(self: "MainWindow"):
     for key in self.plots:
