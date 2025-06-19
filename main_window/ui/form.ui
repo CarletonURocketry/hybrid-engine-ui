@@ -139,7 +139,7 @@
                     </font>
                    </property>
                    <property name="text">
-                    <string>UDP connection status:</string>
+                    <string>Pad server:</string>
                    </property>
                   </widget>
                  </item>
@@ -174,7 +174,7 @@
                     </font>
                    </property>
                    <property name="text">
-                    <string>TCP connection status</string>
+                    <string>Control client:</string>
                    </property>
                   </widget>
                  </item>
@@ -205,8 +205,11 @@
                      <pointsize>14</pointsize>
                     </font>
                    </property>
+                   <property name="toolTip">
+                    <string>Deprecated</string>
+                   </property>
                    <property name="text">
-                    <string>Serial connection status:</string>
+                    <string>Serial:</string>
                    </property>
                   </widget>
                  </item>
