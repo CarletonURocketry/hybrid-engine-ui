@@ -64,15 +64,14 @@ class ContinuityState(Enum):
     CLOSED = 1
 
 class SerialConnectionStatus(Enum):
-  CONNECTED = 1,
+  CONNECTED = 1
   NOT_CONNECTED = 2
 
 class IPConnectionStatus(Enum):
-    CONNECTED = 0
-    RECONNECTING = 1
-    DISCONNECTED = 2
-    CONNECTION_LOST = 3,
-    NOT_CONNECTED = 4
+    CONNECTED = 0 # Connected
+    RECONNECTING = 1 # Had connection, trying to restablish
+    DISCONNECTED = 2 # Had connection, lost it
+    NOT_CONNECTED = 3 # Not yet connected
 
 @dataclass
 class PacketHeader:
@@ -169,7 +168,7 @@ def packet_message_bytes_length(header: PacketHeader) -> int:
                     return 9
                 case TelemetryPacketSubType.ACT_STATE:
                     return 6
-                case TelemetryPacketSubType.ARMING_STATE | TelemetryPacketSubType.WARNING | TelemetryPacketSubType.CONTINUITY:
+                case TelemetryPacketSubType.ARMING_STATE | TelemetryPacketSubType.WARNING | TelemetryPacketSubType.CONTINUITY | TelemetryPacketSubType.CONN_STATUS:
                     return 5
 
 def parse_packet_message(header: PacketHeader, message_bytes: bytes) -> PacketMessage:
