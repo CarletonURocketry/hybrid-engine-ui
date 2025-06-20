@@ -48,7 +48,7 @@ def udp_connection_button_handler(self: "MainWindow"):
             self.write_to_log(f"Port '{mcast_port}' is invalid")
             return
 
-        if self.join_multicast_group(mcast_addr, mcast_port):
+        if join_multicast_group(self, mcast_addr, mcast_port):
             self.write_to_log(f"Successfully connected to {mcast_addr}:{mcast_port}")
 
             self.reset_heartbeat_timeout()

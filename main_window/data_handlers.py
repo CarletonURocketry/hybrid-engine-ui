@@ -21,19 +21,19 @@ def process_data(self: "MainWindow", header: packet_spec.PacketHeader, message: 
             self.plot_point(header, message)
             if reset_heartbeat: self.reset_heartbeat_timeout()
         case packet_spec.TelemetryPacketSubType.ARMING_STATE:
-            self.update_arming_state(message)
+            update_arming_state(self, message)
             if reset_heartbeat: self.reset_heartbeat_timeout()
         case packet_spec.TelemetryPacketSubType.ACT_STATE:
             if message.id == 3 and message.state == packet_spec.ActuatorState.ON:
                 self.annoyProp.show()
             else:
-                self.update_act_state(message)
+                update_act_state(self, message)
             if reset_heartbeat: self.reset_heartbeat_timeout()
         case packet_spec.TelemetryPacketSubType.WARNING:
             # Write warning to logs maybe?
             pass
         case packet_spec.TelemetryPacketSubType.CONTINUITY:
-            self.update_continuity_state(message)
+            update_continuity_state(self, message)
             if reset_heartbeat: self.reset_heartbeat_timeout()
         case packet_spec.TelemetryPacketSubType.CONN_STATUS:
             # This is the only place where control_client status should be updated
@@ -105,7 +105,7 @@ def update_arming_state(self: "MainWindow", message: packet_spec.ArmingStatePack
             
     self.write_to_log(f"Arming state updated to {message.state}")
 
-def update_pad_server_display(self, status: packet_spec.IPConnectionStatus):
+def update_pad_server_display(self: "MainWindow", status: packet_spec.IPConnectionStatus):
     match status:
         case packet_spec.IPConnectionStatus.CONNECTED:
             self.ui.udpConnStatusLabel.setText("Connected")
@@ -117,7 +117,7 @@ def update_pad_server_display(self, status: packet_spec.IPConnectionStatus):
             self.ui.udpConnStatusLabel.setText("Not connected")
             self.ui.udpConnStatusLabel.setStyleSheet("background-color: rgb(0, 85, 127);")
 
-def update_control_client_display(self, status: packet_spec.IPConnectionStatus):
+def update_control_client_display(self: "MainWindow", status: packet_spec.IPConnectionStatus):
     match status:
         case packet_spec.IPConnectionStatus.CONNECTED:
             self.ui.ccConnStatusLabel.setText("Connected")
@@ -132,7 +132,7 @@ def update_control_client_display(self, status: packet_spec.IPConnectionStatus):
             self.ui.ccConnStatusLabel.setText("Not connected")
             self.ui.ccConnStatusLabel.setStyleSheet("background-color: rgb(0, 85, 127);")
 
-def update_serial_connection_display(self, status: packet_spec.SerialConnectionStatus):
+def update_serial_connection_display(self: "MainWindow", status: packet_spec.SerialConnectionStatus):
     match status:
         case packet_spec.SerialConnectionStatus.CONNECTED:                
             self.ui.serialConnStatusLabel.setText("Connected")
@@ -144,9 +144,9 @@ def update_serial_connection_display(self, status: packet_spec.SerialConnectionS
 def update_act_state(self: "MainWindow", message: packet_spec.ActuatorStatePacket):
     match message.state:
         case packet_spec.ActuatorState.OFF:
-            self.turn_off_valve(message.id)
+            turn_off_valve(self, message.id)
         case packet_spec.ActuatorState.ON:
-            self.turn_on_valve(message.id)
+            turn_on_valve(self, message.id)
             
     match message.id:
         case 0:

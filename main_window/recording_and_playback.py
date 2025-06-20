@@ -46,5 +46,5 @@ def open_file_button_handler(self: "MainWindow"):
             self.write_to_log(f"Reading data from {file_path}")
             with open(file_path, 'rb') as file:
                 data = file.read()
-                self.display_previous_data(data)
+                display_previous_data(self, data)
             self.write_to_log("Data loaded")

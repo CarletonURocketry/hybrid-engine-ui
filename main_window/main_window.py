@@ -68,15 +68,14 @@ class PIDWindow(QWidget):
 class MainWindow(QWidget):
     # Imports for MainWindow functionality. Helps split large file into
     # smaller modules containing related functionality
-    from .udp import udp_connection_button_handler, join_multicast_group, \
-        udp_receive_socket_data, udp_on_disconnected, udp_on_error
+    from .udp import udp_connection_button_handler, udp_receive_socket_data, \
+        udp_on_disconnected, udp_on_error
     from .serial import serial_connection_button_handler, \
         refresh_serial_button_handler, serial_receive_data, serial_on_error
-    from .data_handlers import plot_point, filter_data, update_arming_state, update_serial_connection_display, \
-        update_pad_server_display, update_control_client_display, update_act_state, update_continuity_state, process_data, turn_off_valve, \
-        turn_on_valve, decrease_heartbeat, reset_heartbeat_timeout
-    from .recording_and_playback import recording_toggle_button_handler, \
-        open_file_button_handler, display_previous_data
+    from .data_handlers import plot_point, filter_data, update_serial_connection_display, \
+        update_pad_server_display, update_control_client_display, process_data, decrease_heartbeat, \
+        reset_heartbeat_timeout
+    from .recording_and_playback import recording_toggle_button_handler, open_file_button_handler
     from .logging import save_to_file, write_to_log
     from .config import load_config, save_config, add_pressure_threshold_handler, \
         add_temperature_threshold_handler, add_tank_mass_threshold_handler, add_engine_thrust_threshold_handler, \
