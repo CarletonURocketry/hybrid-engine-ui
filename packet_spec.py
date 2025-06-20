@@ -31,6 +31,7 @@ class TelemetryPacketSubType(Enum):
     ACT_STATE = 5
     WARNING = 6
     CONTINUITY = 7
+    CONN_STATUS = 8
 
 class ActuationResponse(Enum):
     ACT_OK = 0
@@ -61,6 +62,13 @@ class Warning(Enum):
 class ContinuityState(Enum):
     OPEN = 0
     CLOSED = 1
+
+class ConnectionStatus(Enum):
+    CONNECTED = 0
+    RECONNECTING = 1
+    DISCONNECTED = 2
+    CONNECTION_LOST = 3,
+    NOT_CONNECTED = 4
 
 @dataclass
 class PacketHeader:
@@ -125,6 +133,10 @@ class WarningPacket(PacketMessage):
 @dataclass
 class ContinuityPacket(PacketMessage):
     state: ContinuityState
+
+@dataclass
+class ConnectionStatusPacket(PacketMessage):
+    status: ConnectionStatus
 
 @dataclass
 class SerialDataPacket():
@@ -213,26 +225,31 @@ def parse_packet_message(header: PacketHeader, message_bytes: bytes) -> PacketMe
                     time, thrust, id = struct.unpack("<IIB", message_bytes)
                     return ThrustPacket(thrust=thrust, id=id, time_since_power=millis_to_units(time))
                 case TelemetryPacketSubType.ARMING_STATE:
-                    time:int
-                    state:int
+                    time: int
+                    state: int
                     time, state = struct.unpack("<IB", message_bytes)
                     return ArmingStatePacket(state=ArmingState(state), time_since_power=millis_to_units(time))
                 case TelemetryPacketSubType.ACT_STATE:
-                    time:int
-                    state:int
-                    id:int
+                    time: int
+                    state: int
+                    id: int
                     time, id, state = struct.unpack("<IBB", message_bytes)
                     return ActuatorStatePacket(time_since_power=millis_to_units(time), id=id, state=ActuatorState(state))
                 case TelemetryPacketSubType.WARNING:
-                    time:int
-                    type:int
+                    time: int
+                    type: int
                     time, type = struct.unpack("<IB", message_bytes)
                     return WarningPacket(type=Warning(type), time_since_power=millis_to_units(time))
                 case TelemetryPacketSubType.CONTINUITY:
-                    time:int
-                    state:int
+                    time: int
+                    state: int
                     time, state = struct.unpack("<IB", message_bytes)
                     return ContinuityPacket(time_since_power=millis_to_units(time), state=ContinuityState(state))
+                case TelemetryPacketSubType.CONN_STATUS:
+                    time: int
+                    status: int
+                    time, status =  struct.unpack("<IB", message_bytes)
+                    return ConnectionStatusPacket(time_since_power=millis_to_units(time), status=ConnectionStatus(status))
 
 def parse_serial_packet(data: bytes, timestamp: int, default_open_valves):
     m1: int
