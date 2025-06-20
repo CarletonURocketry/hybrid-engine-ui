@@ -63,7 +63,11 @@ class ContinuityState(Enum):
     OPEN = 0
     CLOSED = 1
 
-class ConnectionStatus(Enum):
+class SerialConnectionStatus(Enum):
+  CONNECTED = 1,
+  NOT_CONNECTED = 2
+
+class IPConnectionStatus(Enum):
     CONNECTED = 0
     RECONNECTING = 1
     DISCONNECTED = 2
@@ -136,7 +140,7 @@ class ContinuityPacket(PacketMessage):
 
 @dataclass
 class ConnectionStatusPacket(PacketMessage):
-    status: ConnectionStatus
+    status: IPConnectionStatus
 
 @dataclass
 class SerialDataPacket():
@@ -249,7 +253,7 @@ def parse_packet_message(header: PacketHeader, message_bytes: bytes) -> PacketMe
                     time: int
                     status: int
                     time, status =  struct.unpack("<IB", message_bytes)
-                    return ConnectionStatusPacket(time_since_power=millis_to_units(time), status=ConnectionStatus(status))
+                    return ConnectionStatusPacket(time_since_power=millis_to_units(time), status=IPConnectionStatus(status))
 
 def parse_serial_packet(data: bytes, timestamp: int, default_open_valves):
     m1: int

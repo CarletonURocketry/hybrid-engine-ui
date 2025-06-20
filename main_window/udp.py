@@ -8,7 +8,6 @@ imported by main_window.py
 import ipaddress
 from typing import TYPE_CHECKING
 from enum import Enum
-import csv
 
 from PySide6.QtNetwork import QAbstractSocket, QHostAddress, QNetworkInterface
 from PySide6.QtWebEngineWidgets import QWebEngineView
@@ -19,11 +18,6 @@ import packet_spec
 # I love Python
 if TYPE_CHECKING:
     from main_window import MainWindow
-
-class UDPConnectionStatus(Enum):
-    CONNECTED = 0,
-    CONNECTION_LOST = 1,
-    NOT_CONNECTED = 2
 
 def udp_connection_button_handler(self: "MainWindow"):
     if self.padUDPSocket.state() == QAbstractSocket.SocketState.UnconnectedState:
@@ -62,7 +56,7 @@ def udp_connection_button_handler(self: "MainWindow"):
 
             self.disable_udp_config(disable_btn=False)
             self.disable_serial_config(disable_btn=True)
-            self.update_udp_connection_display(UDPConnectionStatus.CONNECTED)
+            self.update_pad_server_display(packet_spec.IPConnectionStatus.CONNECTED)
 
             self.data_csv_writer.create_csv_log()
             self.state_csv_writer.create_csv_log()
@@ -156,7 +150,7 @@ def udp_on_disconnected(self: "MainWindow"):
     self.reset_heartbeat_timeout()
     self.enable_udp_config()
     self.enable_serial_config()
-    self.update_udp_connection_display(UDPConnectionStatus.NOT_CONNECTED)
+    self.update_pad_server_display(packet_spec.IPConnectionStatus.NOT_CONNECTED)
     self.data_csv_writer.flush()
     self.state_csv_writer.flush()
     if self.raw_data_file_out:
