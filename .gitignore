@@ -81,6 +81,7 @@ __pycache__
 /dist
 
 # PySide6-deploy
+deployment
 pysidedeploy.spec
 
 # Virtual environments
