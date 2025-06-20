@@ -80,6 +80,9 @@ __pycache__
 /build
 /dist
 
+# PySide6-deploy
+pysidedeploy.spec
+
 # Virtual environments
 .qtcreator
 venv
