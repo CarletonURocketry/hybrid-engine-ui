@@ -19,9 +19,6 @@ import packet_spec
 if TYPE_CHECKING:
     from main_window import MainWindow
 
-class SerialConnectionStatus(Enum):
-  CONNECTED = 1,
-  NOT_CONNECTED = 2
 
 def serial_connection_button_handler(self: "MainWindow"):
     if not self.serialPort.isOpen():
@@ -31,14 +28,14 @@ def serial_connection_button_handler(self: "MainWindow"):
         self.write_to_log(f"Opened serial connection on port {self.serialPort.portName()} (baud rate: {self.serialPort.baudRate()})")
         self.disable_serial_config(disable_btn=False)
         self.disable_udp_config(disable_btn=True)
-        self.update_serial_connection_display(SerialConnectionStatus.CONNECTED)
+        self.update_serial_connection_display(packet_spec.SerialConnectionStatus.CONNECTED)
         self.data_csv_writer.create_csv_log()
     else:
       self.serialPort.close()
       self.write_to_log("Serial connection was closed")
       self.enable_serial_config()
       self.enable_udp_config()
-      self.update_serial_connection_display(SerialConnectionStatus.NOT_CONNECTED)
+      self.update_serial_connection_display(packet_spec.SerialConnectionStatus.NOT_CONNECTED)
       self.data_csv_writer.flush()
          
 def refresh_serial_button_handler(self: "MainWindow"):
@@ -87,4 +84,4 @@ def serial_on_error(self: "MainWindow"):
      self.serialPort.close()
      self.enable_serial_config()
      self.enable_udp_config()
-     self.update_serial_connection_display(SerialConnectionStatus.NOT_CONNECTED)
+     self.update_serial_connection_display(packet_spec.SerialConnectionStatus.NOT_CONNECTED)

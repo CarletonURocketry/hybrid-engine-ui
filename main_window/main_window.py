@@ -68,12 +68,13 @@ class PIDWindow(QWidget):
 class MainWindow(QWidget):
     # Imports for MainWindow functionality. Helps split large file into
     # smaller modules containing related functionality
-    from .udp import UDPConnectionStatus, udp_connection_button_handler, join_multicast_group, \
+    from .udp import udp_connection_button_handler, join_multicast_group, \
         udp_receive_socket_data, udp_on_disconnected, udp_on_error
-    from .serial import SerialConnectionStatus, serial_connection_button_handler, \
+    from .serial import serial_connection_button_handler, \
         refresh_serial_button_handler, serial_receive_data, serial_on_error
-    from .data_handlers import plot_point, filter_data, update_arming_state, update_act_state, update_continuity_state, \
-        process_data, turn_off_valve, turn_on_valve, decrease_heartbeat, reset_heartbeat_timeout
+    from .data_handlers import plot_point, filter_data, update_arming_state, update_serial_connection_display, \
+        update_pad_server_display, update_control_client_display, update_act_state, update_continuity_state, process_data, turn_off_valve, \
+        turn_on_valve, decrease_heartbeat, reset_heartbeat_timeout
     from .recording_and_playback import recording_toggle_button_handler, \
         open_file_button_handler, display_previous_data
     from .logging import save_to_file, write_to_log
@@ -335,18 +336,6 @@ class MainWindow(QWidget):
         self.ui.udpIpAddressInput.setEnabled(False)
         self.ui.udpPortInput.setEnabled(False)
 
-    def update_udp_connection_display(self, status: UDPConnectionStatus):
-        match status:
-            case self.UDPConnectionStatus.CONNECTED:
-                self.ui.udpConnStatusLabel.setText("Connected")
-                self.ui.udpConnStatusLabel.setStyleSheet("background-color: rgb(0, 255, 0);")
-            case self.UDPConnectionStatus.CONNECTION_LOST:
-                self.ui.udpConnStatusLabel.setText("Connection lost")
-                self.ui.udpConnStatusLabel.setStyleSheet("background-color: rgb(255, 80, 80);")
-            case self.UDPConnectionStatus.NOT_CONNECTED:
-                self.ui.udpConnStatusLabel.setText("Not connected")
-                self.ui.udpConnStatusLabel.setStyleSheet("background-color: rgb(0, 85, 127);")
-
     def enable_serial_config(self):
         self.ui.serialConnectButton.setText("Connect to serial port")
         self.ui.serialConnectButton.setEnabled(True)
@@ -358,15 +347,6 @@ class MainWindow(QWidget):
         else: self.ui.serialConnectButton.setText("Close serial connection")
         self.ui.serialPortDropdown.setEnabled(False)
         self.ui.baudRateDropdown.setEnabled(False)
-
-    def update_serial_connection_display(self, status: SerialConnectionStatus):
-        match status:
-            case self.SerialConnectionStatus.CONNECTED:                
-                self.ui.serialConnStatusLabel.setText("Connected")
-                self.ui.serialConnStatusLabel.setStyleSheet("background-color: rgb(0, 255, 0);")
-            case self.SerialConnectionStatus.NOT_CONNECTED:
-                self.ui.serialConnStatusLabel.setText("Not connected")
-                self.ui.serialConnStatusLabel.setStyleSheet("background-color: rgb(0, 85, 127);")
 
     def save_csv_button_handler(self):
         new_name, _ = QInputDialog.getText(self, "Save CSV file", "Enter name to save CSV file as")
