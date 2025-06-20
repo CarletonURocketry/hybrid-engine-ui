@@ -28,7 +28,7 @@ class Ui_Widget(object):
     def setupUi(self, Widget):
         if not Widget.objectName():
             Widget.setObjectName(u"Widget")
-        Widget.resize(1306, 899)
+        Widget.resize(1375, 1019)
         icon = QIcon()
         icon.addFile(u"logos/better_logo.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         Widget.setWindowIcon(icon)
@@ -123,18 +123,19 @@ class Ui_Widget(object):
 
         self.horizontalLayout_3 = QHBoxLayout()
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
-        self.label_2 = QLabel(self.telemetryTab)
-        self.label_2.setObjectName(u"label_2")
-        self.label_2.setFont(font)
+        self.ccConnLabel = QLabel(self.telemetryTab)
+        self.ccConnLabel.setObjectName(u"ccConnLabel")
+        self.ccConnLabel.setFont(font)
 
-        self.horizontalLayout_3.addWidget(self.label_2)
+        self.horizontalLayout_3.addWidget(self.ccConnLabel)
 
-        self.label = QLabel(self.telemetryTab)
-        self.label.setObjectName(u"label")
-        self.label.setFont(font1)
-        self.label.setStyleSheet(u"background-color: rgb(0, 85, 127);")
+        self.ccConnStatusLabel = QLabel(self.telemetryTab)
+        self.ccConnStatusLabel.setObjectName(u"ccConnStatusLabel")
+        self.ccConnStatusLabel.setFont(font1)
+        self.ccConnStatusLabel.setStyleSheet(u"background-color: rgb(0, 85, 127);")
+        self.ccConnStatusLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.horizontalLayout_3.addWidget(self.label)
+        self.horizontalLayout_3.addWidget(self.ccConnStatusLabel)
 
 
         self.horizontalLayout_6.addLayout(self.horizontalLayout_3)
@@ -672,8 +673,8 @@ class Ui_Widget(object):
         self.recordingToggleButton.setText(QCoreApplication.translate("Widget", u"Recording raw data", None))
         self.udpConnLabel.setText(QCoreApplication.translate("Widget", u"Pad server:", None))
         self.udpConnStatusLabel.setText(QCoreApplication.translate("Widget", u"Not connected", None))
-        self.label_2.setText(QCoreApplication.translate("Widget", u"Control client:", None))
-        self.label.setText(QCoreApplication.translate("Widget", u"Not connected", None))
+        self.ccConnLabel.setText(QCoreApplication.translate("Widget", u"Control client:", None))
+        self.ccConnStatusLabel.setText(QCoreApplication.translate("Widget", u"Not connected", None))
 #if QT_CONFIG(tooltip)
         self.serialConnLabel.setToolTip(QCoreApplication.translate("Widget", u"Deprecated", None))
 #endif // QT_CONFIG(tooltip)

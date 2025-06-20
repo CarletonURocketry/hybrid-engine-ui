@@ -73,7 +73,7 @@ class MainWindow(QWidget):
     from .serial import serial_connection_button_handler, \
         refresh_serial_button_handler, serial_receive_data, serial_on_error
     from .data_handlers import plot_point, filter_data, update_arming_state, update_serial_connection_display, \
-        update_pad_server_display, update_act_state, update_continuity_state, process_data, turn_off_valve, \
+        update_pad_server_display, update_control_client_display, update_act_state, update_continuity_state, process_data, turn_off_valve, \
         turn_on_valve, decrease_heartbeat, reset_heartbeat_timeout
     from .recording_and_playback import recording_toggle_button_handler, \
         open_file_button_handler, display_previous_data

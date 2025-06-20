@@ -36,7 +36,9 @@ def process_data(self: "MainWindow", header: packet_spec.PacketHeader, message: 
             self.update_continuity_state(message)
             if reset_heartbeat: self.reset_heartbeat_timeout()
         case packet_spec.TelemetryPacketSubType.CONN_STATUS:
-            pass
+            # This is the only place where control_client status should be updated
+            self.update_control_client_display(message.status)
+            if reset_heartbeat: self.reset_heartbeat_timeout()
         case _:
             pass  
 
@@ -108,12 +110,27 @@ def update_pad_server_display(self, status: packet_spec.IPConnectionStatus):
         case packet_spec.IPConnectionStatus.CONNECTED:
             self.ui.udpConnStatusLabel.setText("Connected")
             self.ui.udpConnStatusLabel.setStyleSheet("background-color: rgb(0, 255, 0);")
-        case packet_spec.IPConnectionStatus.CONNECTION_LOST:
+        case packet_spec.IPConnectionStatus.DISCONNECTED:
             self.ui.udpConnStatusLabel.setText("Connection lost")
             self.ui.udpConnStatusLabel.setStyleSheet("background-color: rgb(255, 80, 80);")
         case packet_spec.IPConnectionStatus.NOT_CONNECTED:
             self.ui.udpConnStatusLabel.setText("Not connected")
             self.ui.udpConnStatusLabel.setStyleSheet("background-color: rgb(0, 85, 127);")
+
+def update_control_client_display(self, status: packet_spec.IPConnectionStatus):
+    match status:
+        case packet_spec.IPConnectionStatus.CONNECTED:
+            self.ui.ccConnStatusLabel.setText("Connected")
+            self.ui.ccConnStatusLabel.setStyleSheet("background-color: rgb(0, 255, 0);")
+        case packet_spec.IPConnectionStatus.RECONNECTING:
+            self.ui.ccConnStatusLabel.setText("Reconnecting")
+            self.ui.ccConnStatusLabel.setStyleSheet("background-color: rgb(255, 128, 0);")
+        case packet_spec.IPConnectionStatus.DISCONNECTED:
+            self.ui.ccConnStatusLabel.setText("Connection lost")
+            self.ui.ccConnStatusLabel.setStyleSheet("background-color: rgb(255, 80, 80);")
+        case packet_spec.IPConnectionStatus.NOT_CONNECTED:
+            self.ui.ccConnStatusLabel.setText("Not connected")
+            self.ui.ccConnStatusLabel.setStyleSheet("background-color: rgb(0, 85, 127);")
 
 def update_serial_connection_display(self, status: packet_spec.SerialConnectionStatus):
     match status:
@@ -161,13 +178,18 @@ def filter_data(self: "MainWindow"):
 def reset_heartbeat_timeout(self: "MainWindow"):
     self.heartbeat_mutex.lock()
     self.heartbeat_timeout = 10
+
+    # Only update pad_server whenever heartbeat is received
     self.update_pad_server_display(packet_spec.IPConnectionStatus.CONNECTED)
     self.heartbeat_mutex.unlock()
 
 def decrease_heartbeat(self: "MainWindow"):
     self.heartbeat_mutex.lock()
     self.heartbeat_timeout -= 1
+
+    # If the heartbeat timer runs out, consider that both the pad server and control client are disconnected
     if self.heartbeat_timeout <= 0:
-        self.update_pad_server_display(packet_spec.IPConnectionStatus.CONNECTION_LOST)
+        self.update_pad_server_display(packet_spec.IPConnectionStatus.DISCONNECTED)
+        self.update_control_client_display(packet_spec.IPConnectionStatus.DISCONNECTED)
         self.write_to_log(f"Heartbeat not found for {abs(self.heartbeat_timeout) + 1} seconds")
     self.heartbeat_mutex.unlock()

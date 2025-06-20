@@ -151,6 +151,7 @@ def udp_on_disconnected(self: "MainWindow"):
     self.enable_udp_config()
     self.enable_serial_config()
     self.update_pad_server_display(packet_spec.IPConnectionStatus.NOT_CONNECTED)
+    self.update_control_client_display(packet_spec.IPConnectionStatus.NOT_CONNECTED)
     self.data_csv_writer.flush()
     self.state_csv_writer.flush()
     if self.raw_data_file_out:
