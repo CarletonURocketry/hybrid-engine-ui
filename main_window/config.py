@@ -35,7 +35,7 @@ def save_config(self: "MainWindow"):
     new_config["thresholds"]["temperature"] = [float(self.ui.temperatureThresholdList.item(x).text()) for x in range(self.ui.temperatureThresholdList.count())]
     new_config["thresholds"]["tank_mass"] = [float(self.ui.tankMassThresholdList.item(x).text()) for x in range(self.ui.tankMassThresholdList.count())]
     new_config["thresholds"]["engine_thrust"] = [float(self.ui.engineThrustThresholdList.item(x).text()) for x in range(self.ui.engineThrustThresholdList.count())]
-    self.config["points_used_for_average"] = self.points_used_for_average
+    new_config["points_used_for_average"] = self.points_used_for_average
     new_config["graph_range"] = self.graph_range
     with open('config.json', 'w') as config_file:
         json.dump(new_config, config_file, indent=4)
