@@ -280,6 +280,7 @@ class Ui_Widget(object):
         self.multicastConfigLabel = QLabel(self.connectionTab)
         self.multicastConfigLabel.setObjectName(u"multicastConfigLabel")
         font2 = QFont()
+        font2.setPointSize(10)
         font2.setBold(True)
         self.multicastConfigLabel.setFont(font2)
         self.multicastConfigLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -408,9 +409,9 @@ class Ui_Widget(object):
         self.formLayout_2.setLabelAlignment(Qt.AlignmentFlag.AlignCenter)
         self.formLayout_2.setFormAlignment(Qt.AlignmentFlag.AlignCenter)
         self.formLayout_2.setVerticalSpacing(20)
-        self.formLayout_2.setContentsMargins(450, -1, 450, -1)
+        self.formLayout_2.setContentsMargins(400, -1, 400, -1)
         self.sensorDisplayOptionsLayout = QVBoxLayout()
-        self.sensorDisplayOptionsLayout.setSpacing(15)
+        self.sensorDisplayOptionsLayout.setSpacing(10)
         self.sensorDisplayOptionsLayout.setObjectName(u"sensorDisplayOptionsLayout")
         self.sensorDisplayOptionsLabel = QLabel(self.displayOptionsTab)
         self.sensorDisplayOptionsLabel.setObjectName(u"sensorDisplayOptionsLabel")
@@ -493,11 +494,8 @@ class Ui_Widget(object):
 
         self.graphOptionsLayout.addLayout(self.graphRangeLayout)
 
-
-        self.formLayout_2.setLayout(1, QFormLayout.SpanningRole, self.graphOptionsLayout)
-
-        self.graphThresholdLinesLayout = QGridLayout()
-        self.graphThresholdLinesLayout.setObjectName(u"graphThresholdLinesLayout")
+        self.graphOptionsLayout_2 = QGridLayout()
+        self.graphOptionsLayout_2.setObjectName(u"graphOptionsLayout_2")
         self.tankMassThresholdLayout = QVBoxLayout()
         self.tankMassThresholdLayout.setObjectName(u"tankMassThresholdLayout")
         self.tankMassThresholdLabel = QLabel(self.displayOptionsTab)
@@ -531,39 +529,7 @@ class Ui_Widget(object):
         self.tankMassThresholdLayout.addWidget(self.tankMassThresholdButton)
 
 
-        self.graphThresholdLinesLayout.addLayout(self.tankMassThresholdLayout, 2, 0, 1, 1)
-
-        self.temperatureThresholdLayout = QVBoxLayout()
-        self.temperatureThresholdLayout.setObjectName(u"temperatureThresholdLayout")
-        self.temperatureThresholdLabel = QLabel(self.displayOptionsTab)
-        self.temperatureThresholdLabel.setObjectName(u"temperatureThresholdLabel")
-
-        self.temperatureThresholdLayout.addWidget(self.temperatureThresholdLabel)
-
-        self.temperatureThresholdList = QListWidget(self.displayOptionsTab)
-        self.temperatureThresholdList.setObjectName(u"temperatureThresholdList")
-        sizePolicy3.setHeightForWidth(self.temperatureThresholdList.sizePolicy().hasHeightForWidth())
-        self.temperatureThresholdList.setSizePolicy(sizePolicy3)
-        self.temperatureThresholdList.setMaximumSize(QSize(16777215, 75))
-
-        self.temperatureThresholdLayout.addWidget(self.temperatureThresholdList)
-
-        self.temperatureThresholdInput = QLineEdit(self.displayOptionsTab)
-        self.temperatureThresholdInput.setObjectName(u"temperatureThresholdInput")
-        sizePolicy3.setHeightForWidth(self.temperatureThresholdInput.sizePolicy().hasHeightForWidth())
-        self.temperatureThresholdInput.setSizePolicy(sizePolicy3)
-
-        self.temperatureThresholdLayout.addWidget(self.temperatureThresholdInput)
-
-        self.temperatureThresholdButton = QPushButton(self.displayOptionsTab)
-        self.temperatureThresholdButton.setObjectName(u"temperatureThresholdButton")
-        sizePolicy3.setHeightForWidth(self.temperatureThresholdButton.sizePolicy().hasHeightForWidth())
-        self.temperatureThresholdButton.setSizePolicy(sizePolicy3)
-
-        self.temperatureThresholdLayout.addWidget(self.temperatureThresholdButton)
-
-
-        self.graphThresholdLinesLayout.addLayout(self.temperatureThresholdLayout, 1, 1, 1, 1)
+        self.graphOptionsLayout_2.addLayout(self.tankMassThresholdLayout, 1, 0, 1, 1)
 
         self.engineThrustThreshold = QVBoxLayout()
         self.engineThrustThreshold.setObjectName(u"engineThrustThreshold")
@@ -595,14 +561,138 @@ class Ui_Widget(object):
         self.engineThrustThreshold.addWidget(self.engineThrustThresholdButton)
 
 
-        self.graphThresholdLinesLayout.addLayout(self.engineThrustThreshold, 2, 1, 1, 1)
+        self.graphOptionsLayout_2.addLayout(self.engineThrustThreshold, 1, 1, 1, 1)
 
-        self.pressureThresholdLayot = QVBoxLayout()
-        self.pressureThresholdLayot.setObjectName(u"pressureThresholdLayot")
+        self.temperatureGraphOptionsLayout = QVBoxLayout()
+        self.temperatureGraphOptionsLayout.setSpacing(4)
+        self.temperatureGraphOptionsLayout.setObjectName(u"temperatureGraphOptionsLayout")
+        self.temperatureThresholdLabel = QLabel(self.displayOptionsTab)
+        self.temperatureThresholdLabel.setObjectName(u"temperatureThresholdLabel")
+        font3 = QFont()
+        font3.setBold(True)
+        self.temperatureThresholdLabel.setFont(font3)
+        self.temperatureThresholdLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.temperatureGraphOptionsLayout.addWidget(self.temperatureThresholdLabel)
+
+        self.label_2 = QLabel(self.displayOptionsTab)
+        self.label_2.setObjectName(u"label_2")
+        font4 = QFont()
+        font4.setUnderline(True)
+        self.label_2.setFont(font4)
+
+        self.temperatureGraphOptionsLayout.addWidget(self.label_2)
+
+        self.horizontalLayout_4 = QHBoxLayout()
+        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
+        self.horizontalLayout_4.setContentsMargins(-1, -1, -1, 3)
+        self.radioButton_4 = QRadioButton(self.displayOptionsTab)
+        self.radioButton_4.setObjectName(u"radioButton_4")
+        font5 = QFont()
+        font5.setPointSize(8)
+        self.radioButton_4.setFont(font5)
+        self.radioButton_4.setStyleSheet(u"margin: 1px 2px")
+
+        self.horizontalLayout_4.addWidget(self.radioButton_4)
+
+        self.radioButton_3 = QRadioButton(self.displayOptionsTab)
+        self.radioButton_3.setObjectName(u"radioButton_3")
+        self.radioButton_3.setFont(font5)
+        self.radioButton_3.setStyleSheet(u"margin: 1px 2px")
+
+        self.horizontalLayout_4.addWidget(self.radioButton_3)
+
+        self.label_4 = QLabel(self.displayOptionsTab)
+        self.label_4.setObjectName(u"label_4")
+        self.label_4.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+
+        self.horizontalLayout_4.addWidget(self.label_4)
+
+        self.spinBox_2 = QSpinBox(self.displayOptionsTab)
+        self.spinBox_2.setObjectName(u"spinBox_2")
+
+        self.horizontalLayout_4.addWidget(self.spinBox_2)
+
+
+        self.temperatureGraphOptionsLayout.addLayout(self.horizontalLayout_4)
+
+        self.temperatureThresholdList = QListWidget(self.displayOptionsTab)
+        self.temperatureThresholdList.setObjectName(u"temperatureThresholdList")
+        sizePolicy3.setHeightForWidth(self.temperatureThresholdList.sizePolicy().hasHeightForWidth())
+        self.temperatureThresholdList.setSizePolicy(sizePolicy3)
+        self.temperatureThresholdList.setMaximumSize(QSize(16777215, 75))
+
+        self.temperatureGraphOptionsLayout.addWidget(self.temperatureThresholdList)
+
+        self.temperatureThresholdInput = QLineEdit(self.displayOptionsTab)
+        self.temperatureThresholdInput.setObjectName(u"temperatureThresholdInput")
+        sizePolicy3.setHeightForWidth(self.temperatureThresholdInput.sizePolicy().hasHeightForWidth())
+        self.temperatureThresholdInput.setSizePolicy(sizePolicy3)
+
+        self.temperatureGraphOptionsLayout.addWidget(self.temperatureThresholdInput)
+
+        self.temperatureThresholdButton = QPushButton(self.displayOptionsTab)
+        self.temperatureThresholdButton.setObjectName(u"temperatureThresholdButton")
+        sizePolicy3.setHeightForWidth(self.temperatureThresholdButton.sizePolicy().hasHeightForWidth())
+        self.temperatureThresholdButton.setSizePolicy(sizePolicy3)
+
+        self.temperatureGraphOptionsLayout.addWidget(self.temperatureThresholdButton)
+
+
+        self.graphOptionsLayout_2.addLayout(self.temperatureGraphOptionsLayout, 0, 1, 1, 1)
+
+        self.pressureGraphOptionsLayout = QVBoxLayout()
+        self.pressureGraphOptionsLayout.setSpacing(4)
+        self.pressureGraphOptionsLayout.setObjectName(u"pressureGraphOptionsLayout")
         self.pressureThresholdLabel = QLabel(self.displayOptionsTab)
         self.pressureThresholdLabel.setObjectName(u"pressureThresholdLabel")
+        font6 = QFont()
+        font6.setPointSize(9)
+        font6.setBold(True)
+        self.pressureThresholdLabel.setFont(font6)
+        self.pressureThresholdLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.pressureThresholdLayot.addWidget(self.pressureThresholdLabel)
+        self.pressureGraphOptionsLayout.addWidget(self.pressureThresholdLabel)
+
+        self.label = QLabel(self.displayOptionsTab)
+        self.label.setObjectName(u"label")
+        font7 = QFont()
+        font7.setItalic(False)
+        font7.setUnderline(True)
+        self.label.setFont(font7)
+
+        self.pressureGraphOptionsLayout.addWidget(self.label)
+
+        self.horizontalLayout_2 = QHBoxLayout()
+        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.horizontalLayout_2.setContentsMargins(-1, -1, -1, 3)
+        self.radioButton_2 = QRadioButton(self.displayOptionsTab)
+        self.radioButton_2.setObjectName(u"radioButton_2")
+        self.radioButton_2.setFont(font5)
+        self.radioButton_2.setStyleSheet(u"margin: 1px 2px")
+
+        self.horizontalLayout_2.addWidget(self.radioButton_2)
+
+        self.radioButton = QRadioButton(self.displayOptionsTab)
+        self.radioButton.setObjectName(u"radioButton")
+        self.radioButton.setFont(font5)
+        self.radioButton.setStyleSheet(u"margin: 1px 2px")
+
+        self.horizontalLayout_2.addWidget(self.radioButton)
+
+        self.label_3 = QLabel(self.displayOptionsTab)
+        self.label_3.setObjectName(u"label_3")
+        self.label_3.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+
+        self.horizontalLayout_2.addWidget(self.label_3)
+
+        self.spinBox = QSpinBox(self.displayOptionsTab)
+        self.spinBox.setObjectName(u"spinBox")
+
+        self.horizontalLayout_2.addWidget(self.spinBox)
+
+
+        self.pressureGraphOptionsLayout.addLayout(self.horizontalLayout_2)
 
         self.pressureThresholdList = QListWidget(self.displayOptionsTab)
         self.pressureThresholdList.setObjectName(u"pressureThresholdList")
@@ -613,34 +703,30 @@ class Ui_Widget(object):
         self.pressureThresholdList.setSizePolicy(sizePolicy4)
         self.pressureThresholdList.setMaximumSize(QSize(16777215, 75))
 
-        self.pressureThresholdLayot.addWidget(self.pressureThresholdList)
+        self.pressureGraphOptionsLayout.addWidget(self.pressureThresholdList)
 
         self.pressureThresholdInput = QLineEdit(self.displayOptionsTab)
         self.pressureThresholdInput.setObjectName(u"pressureThresholdInput")
         sizePolicy3.setHeightForWidth(self.pressureThresholdInput.sizePolicy().hasHeightForWidth())
         self.pressureThresholdInput.setSizePolicy(sizePolicy3)
 
-        self.pressureThresholdLayot.addWidget(self.pressureThresholdInput)
+        self.pressureGraphOptionsLayout.addWidget(self.pressureThresholdInput)
 
         self.pressureThresholdButton = QPushButton(self.displayOptionsTab)
         self.pressureThresholdButton.setObjectName(u"pressureThresholdButton")
         sizePolicy3.setHeightForWidth(self.pressureThresholdButton.sizePolicy().hasHeightForWidth())
         self.pressureThresholdButton.setSizePolicy(sizePolicy3)
 
-        self.pressureThresholdLayot.addWidget(self.pressureThresholdButton)
+        self.pressureGraphOptionsLayout.addWidget(self.pressureThresholdButton)
 
 
-        self.graphThresholdLinesLayout.addLayout(self.pressureThresholdLayot, 1, 0, 1, 1)
-
-        self.graphThresholdLabel = QLabel(self.displayOptionsTab)
-        self.graphThresholdLabel.setObjectName(u"graphThresholdLabel")
-        self.graphThresholdLabel.setFont(font2)
-        self.graphThresholdLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        self.graphThresholdLinesLayout.addWidget(self.graphThresholdLabel, 0, 0, 1, 2)
+        self.graphOptionsLayout_2.addLayout(self.pressureGraphOptionsLayout, 0, 0, 1, 1)
 
 
-        self.formLayout_2.setLayout(2, QFormLayout.SpanningRole, self.graphThresholdLinesLayout)
+        self.graphOptionsLayout.addLayout(self.graphOptionsLayout_2)
+
+
+        self.formLayout_2.setLayout(1, QFormLayout.SpanningRole, self.graphOptionsLayout)
 
         self.tabWidget.addTab(self.displayOptionsTab, "")
         self.logTab = QWidget()
@@ -752,13 +838,21 @@ class Ui_Widget(object):
 #endif // QT_CONFIG(tooltip)
         self.tankMassThresholdLabel.setText(QCoreApplication.translate("Widget", u"Tank Mass", None))
         self.tankMassThresholdButton.setText(QCoreApplication.translate("Widget", u"Add/remove threshold marker", None))
-        self.temperatureThresholdLabel.setText(QCoreApplication.translate("Widget", u"Temperature", None))
-        self.temperatureThresholdButton.setText(QCoreApplication.translate("Widget", u"Add/remove threshold marker", None))
         self.engineThrustThresholdLabel.setText(QCoreApplication.translate("Widget", u"Engine Thrust", None))
         self.engineThrustThresholdButton.setText(QCoreApplication.translate("Widget", u"Add/remove threshold marker", None))
+        self.temperatureThresholdLabel.setText(QCoreApplication.translate("Widget", u"Temperature", None))
+        self.label_2.setText(QCoreApplication.translate("Widget", u"Data display mode:", None))
+        self.radioButton_4.setText(QCoreApplication.translate("Widget", u"Last X packets", None))
+        self.radioButton_3.setText(QCoreApplication.translate("Widget", u"Packets in last X seconds", None))
+        self.label_4.setText(QCoreApplication.translate("Widget", u"X:", None))
+        self.temperatureThresholdButton.setText(QCoreApplication.translate("Widget", u"Add/remove threshold marker", None))
         self.pressureThresholdLabel.setText(QCoreApplication.translate("Widget", u"Pressure", None))
+        self.label.setText(QCoreApplication.translate("Widget", u"Data display mode:", None))
+        self.radioButton_2.setText(QCoreApplication.translate("Widget", u"Last X points", None))
+        self.radioButton.setText(QCoreApplication.translate("Widget", u"Points in last X seconds", None))
+        self.label_3.setText(QCoreApplication.translate("Widget", u"X:", None))
+        self.spinBox.setSuffix("")
         self.pressureThresholdButton.setText(QCoreApplication.translate("Widget", u"Add/remove threshold marker", None))
-        self.graphThresholdLabel.setText(QCoreApplication.translate("Widget", u"Graph threshold lines", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.displayOptionsTab), QCoreApplication.translate("Widget", u"Display && System Configuration", None))
 #if QT_CONFIG(tooltip)
         self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.displayOptionsTab), QCoreApplication.translate("Widget", u"Configure display and system options", None))
