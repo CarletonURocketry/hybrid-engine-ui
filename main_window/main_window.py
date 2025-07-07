@@ -222,7 +222,6 @@ class MainWindow(QWidget):
         self.data_filter_interval = 25
         self.data_filter_timer = QTimer(self)
         self.data_filter_timer.timeout.connect(self.filter_data)
-        self.data_filter_timer.start(self.data_filter_interval)
 
         # Time that the UI will wait to receive pad state heartbeats from pad server
         # a timer that ticks every second will decrement heartbeat_timeout by 1
@@ -258,6 +257,7 @@ class MainWindow(QWidget):
 
         # Sensor display option handlers
         self.ui.numPointsAverageInput.valueChanged.connect(self.points_for_average_change_handler)
+        self.ui.defaultOpenValvesButton.clicked.connect(self.add_default_open_valve_handler)
 
         # Graph option handlers
         self.ui.graphRangeInput.valueChanged.connect(self.graph_range_change_handler)
@@ -269,11 +269,12 @@ class MainWindow(QWidget):
         self.ui.engineThrustThresholdButton.clicked.connect(self.add_engine_thrust_threshold_handler)
         # These make it so that the items in the list are unselected when entering a value
         # helps with the remove value feature
+        self.ui.defaultOpenValvesInput.focusInEvent = lambda x: self.ui.defaultOpenValvesList.setCurrentRow(-1)
         self.ui.pressureThresholdInput.focusInEvent = lambda x: self.ui.pressureThresholdList.setCurrentRow(-1)
         self.ui.temperatureThresholdInput.focusInEvent = lambda x: self.ui.temperatureThresholdList.setCurrentRow(-1)
         self.ui.tankMassThresholdInput.focusInEvent = lambda x: self.ui.tankMassThresholdList.setCurrentRow(-1)
         self.ui.engineThrustThresholdInput.focusInEvent = lambda x: self.ui.engineThrustThresholdList.setCurrentRow(-1)
-        self.ui.saveConfigButton.clicked.connect(self.save_config)
+        self.ui.saveConnConfigButton.clicked.connect(self.save_config)
 
     # Handles when the window is closed, have to make sure to disconnect the TCP socket
     def closeEvent(self, event):
