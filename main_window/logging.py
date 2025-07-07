@@ -8,6 +8,7 @@ import pathlib
 import csv
 from typing import TYPE_CHECKING
 
+from PySide6.QtWidgets import QMessageBox
 from PySide6.QtCore import QDateTime
 
 if TYPE_CHECKING:
@@ -27,4 +28,9 @@ def save_to_file(self: "MainWindow"):
 def write_to_log(self: "MainWindow", msg: str):
     cur_date_time = QDateTime.currentDateTime().toString("yyyy-MM-dd - HH:mm:ss")
     self.ui.logOutput.append(f"[{cur_date_time}]: {msg}")
-    
+
+def display_popup(self: "MainWindow", icon: QMessageBox.Icon, title: str, msg: str):
+    self.popup.setIcon(icon)
+    self.popup.setWindowTitle(title)
+    self.popup.setText(msg)
+    self.popup.show()

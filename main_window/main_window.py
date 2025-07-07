@@ -76,8 +76,8 @@ class MainWindow(QWidget):
         update_pad_server_display, update_control_client_display, process_data, decrease_heartbeat, \
         reset_heartbeat_timeout
     from .recording_and_playback import recording_toggle_button_handler, open_file_button_handler
-    from .logging import save_to_file, write_to_log
-    from .config import load_config, save_config, add_pressure_threshold_handler, \
+    from .logging import save_to_file, write_to_log, display_popup
+    from .config import load_config, save_config, add_default_open_valve_handler, add_pressure_threshold_handler, \
         add_temperature_threshold_handler, add_tank_mass_threshold_handler, add_engine_thrust_threshold_handler, \
         graph_range_change_handler, points_for_average_change_handler
     from .csv_writer import CSVWriter
@@ -104,6 +104,9 @@ class MainWindow(QWidget):
         self.t3_points = np.empty((0,2))
         self.tank_mass_points = np.empty((0,2))
         self.engine_thrust_points = np.empty((0,2))
+
+        self.popup = QMessageBox()
+        self.popup.addButton("Ok", QMessageBox.ButtonRole.AcceptRole)
 
         self.annoyProp = QMessageBox()
         self.annoyProp.setWindowTitle("We love avionics so much! 💖")
