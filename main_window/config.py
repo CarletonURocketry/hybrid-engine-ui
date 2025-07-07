@@ -62,40 +62,52 @@ def add_default_open_valve_handler(self: "MainWindow"):
         self.display_popup(QMessageBox.Icon.Critical, "Action failed", f"Adding default open valve failed\n{str(e)}")
 
 def add_pressure_threshold_handler(self: "MainWindow"):
-    if self.ui.pressureThresholdList.currentRow() == -1:
-        new_marker = self.ui.pressureThresholdInput.text()
-        self.ui.pressureThresholdList.addItem(str(float(new_marker)))
-        self.ui.pressurePlot.addItem(InfiniteLine(float(new_marker), angle=0, pen=black_pen))
-        self.ui.pressureThresholdInput.setText("")
-    else:
-        self.ui.pressureThresholdList.takeItem(self.ui.pressureThresholdList.currentRow())
-    
+    try:
+        if self.ui.pressureThresholdList.currentRow() == -1:
+            new_marker = self.ui.pressureThresholdInput.text()
+            self.ui.pressureThresholdList.addItem(str(float(new_marker)))
+            self.ui.pressurePlot.addItem(InfiniteLine(float(new_marker), angle=0, pen=black_pen))
+            self.ui.pressureThresholdInput.setText("")
+        else:
+            self.ui.pressureThresholdList.takeItem(self.ui.pressureThresholdList.currentRow())
+    except Exception as e:
+        self.display_popup(QMessageBox.Icon.Critical, "Action failed", f"Adding pressure threshold marker failed\n{str(e)}")
+
 def add_temperature_threshold_handler(self: "MainWindow"):
-    if self.ui.temperatureThresholdList.currentRow() == -1:
-        new_marker = self.ui.temperatureThresholdInput.text()
-        self.ui.temperatureThresholdList.addItem(str(float(new_marker)))
-        self.ui.temperaturePlot.addItem(InfiniteLine(float(new_marker), angle=0, pen=black_pen))
-        self.ui.temperatureThresholdInput.setText("")
-    else:
-        self.ui.temperatureThresholdList.takeItem(self.ui.temperatureThresholdList.currentRow())
+    try:
+        if self.ui.temperatureThresholdList.currentRow() == -1:
+            new_marker = self.ui.temperatureThresholdInput.text()
+            self.ui.temperatureThresholdList.addItem(str(float(new_marker)))
+            self.ui.temperaturePlot.addItem(InfiniteLine(float(new_marker), angle=0, pen=black_pen))
+            self.ui.temperatureThresholdInput.setText("")
+        else:
+            self.ui.temperatureThresholdList.takeItem(self.ui.temperatureThresholdList.currentRow())
+    except Exception as e:
+        self.display_popup(QMessageBox.Icon.Critical, "Action failed", f"Adding temperature threshold marker failed\n{str(e)}")
 
 def add_tank_mass_threshold_handler(self: "MainWindow"):
-    if self.ui.tankMassThresholdList.currentRow() == -1:
-        new_marker = self.ui.tankMassThresholdInput.text()
-        self.ui.tankMassThresholdList.addItem(str(float(new_marker)))
-        self.ui.tankMassPlot.addItem(InfiniteLine(float(new_marker), angle=0, pen=black_pen))
-        self.ui.tankMassThresholdInput.setText("")
-    else:
-        self.ui.tankMassThresholdList.takeItem(self.ui.tankMassThresholdList.currentRow())
+    try:
+        if self.ui.tankMassThresholdList.currentRow() == -1:
+            new_marker = self.ui.tankMassThresholdInput.text()
+            self.ui.tankMassThresholdList.addItem(str(float(new_marker)))
+            self.ui.tankMassPlot.addItem(InfiniteLine(float(new_marker), angle=0, pen=black_pen))
+            self.ui.tankMassThresholdInput.setText("")
+        else:
+            self.ui.tankMassThresholdList.takeItem(self.ui.tankMassThresholdList.currentRow())
+    except Exception as e:
+        self.display_popup(QMessageBox.Icon.Critical, "Action failed", f"Adding tank mass threshold marker failed\n{str(e)}")
 
 def add_engine_thrust_threshold_handler(self: "MainWindow"):
-    if self.ui.engineThrustThresholdList.currentRow() == -1:
-        new_marker = self.ui.engineThrustThresholdInput.text()
-        self.ui.engineThrustThresholdList.addItem(str(float(new_marker)))
-        self.ui.engineThrustPlot.addItem(InfiniteLine(float(new_marker), angle=0, pen=black_pen))
-        self.ui.engineThrustThresholdInput.setText("")
-    else:
-        self.ui.engineThrustThresholdList.takeItem(self.ui.engineThrustThresholdList.currentRow())
+    try:
+        if self.ui.engineThrustThresholdList.currentRow() == -1:
+            new_marker = self.ui.engineThrustThresholdInput.text()
+            self.ui.engineThrustThresholdList.addItem(str(float(new_marker)))
+            self.ui.engineThrustPlot.addItem(InfiniteLine(float(new_marker), angle=0, pen=black_pen))
+            self.ui.engineThrustThresholdInput.setText("")
+        else:
+            self.ui.engineThrustThresholdList.takeItem(self.ui.engineThrustThresholdList.currentRow())
+    except Exception as e:
+        self.display_popup(QMessageBox.Icon.Critical, "Action failed", f"Adding engine thrust threshold marker failed\n{str(e)}")
 
 def points_for_average_change_handler(self: "MainWindow"):
     self.points_used_for_average = int(self.ui.numPointsAverageInput.value())
