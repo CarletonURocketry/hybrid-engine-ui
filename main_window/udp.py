@@ -146,6 +146,7 @@ def udp_on_error(self: "MainWindow"):
 # Any disconnection event should be handled here and logged
 def udp_on_disconnected(self: "MainWindow"):
     self.write_to_log("Socket connection was closed")
+    self.data_filter_timer.stop()
     self.heartbeat_timer.stop()
     self.reset_heartbeat_timeout()
     self.enable_udp_config()
