@@ -19,13 +19,37 @@ def load_config(self: "MainWindow", config):
     self.config = json.load(config)
     self.ui.udpIpAddressInput.setText(self.config["multicast_options"]["address"])
     self.ui.udpPortInput.setText(self.config["multicast_options"]["port"])
-    self.points_used_for_average = self.config["points_used_for_average"]
-    self.ui.defaultOpenValvesList.addItems([str(valve) for valve in self.config["default_open_valves"]])
-    self.ui.pressureThresholdList.addItems([str(marker) for marker in self.config["thresholds"]["pressure"]])
-    self.ui.temperatureThresholdList.addItems([str(marker) for marker in self.config["thresholds"]["temperature"]])
-    self.ui.tankMassThresholdList.addItems([str(marker) for marker in self.config["thresholds"]["tank_mass"]])
-    self.ui.engineThrustThresholdList.addItems([str(marker) for marker in self.config["thresholds"]["engine_thrust"]])
-    self.graph_range = self.config["graph_range"]
+    
+    self.points_used_for_average = self.config["sensor_and_valve_options"]["points_used_for_average"]
+    self.ui.defaultOpenValvesList.addItems([str(valve) for valve in self.config["sensor_and_valve_options"]["default_open_valves"]])
+    
+    if self.config["graph_options"]["pressure"]["data_display_mode"] == "points":
+        self.ui.pressureLastXPointsRB.setChecked(True)
+    elif self.config["graph_options"]["pressure"]["data_display_mode"] == "seconds":
+        self.ui.pressureLastXSecsRB.setChecked(True)
+    self.ui.pressureXSB.setValue(self.config["graph_options"]["pressure"]["X"])
+    self.ui.pressureThresholdList.addItems([str(marker) for marker in self.config["graph_options"]["pressure"]["thresholds"]])
+    
+    if self.config["graph_options"]["temperature"]["data_display_mode"] == "points":
+        self.ui.temperatureLastXPointsRB.setChecked(True)
+    elif self.config["graph_options"]["temperature"]["data_display_mode"] == "seconds":
+        self.ui.temperatureLastXSecsRB.setChecked(True)
+    self.ui.temperatureXSB.setValue(self.config["graph_options"]["temperature"]["X"])
+    self.ui.temperatureThresholdList.addItems([str(marker) for marker in self.config["graph_options"]["temperature"]["thresholds"]])
+    
+    if self.config["graph_options"]["tank_mass"]["data_display_mode"] == "points":
+        self.ui.tankMassLastXPointsRB.setChecked(True)
+    elif self.config["graph_options"]["tank_mass"]["data_display_mode"] == "seconds":
+        self.ui.tankMassLastXSecsRB.setChecked(True)
+    self.ui.tankMassXSB.setValue(self.config["graph_options"]["tank_mass"]["X"])
+    self.ui.tankMassThresholdList.addItems([str(marker) for marker in self.config["graph_options"]["tank_mass"]["thresholds"]])
+    
+    if self.config["graph_options"]["engine_thrust"]["data_display_mode"] == "points":
+        self.ui.engineThrustLastXPointsRB.setChecked(True)
+    elif self.config["graph_options"]["engine_thrust"]["data_display_mode"] == "seconds":
+        self.ui.engineThrustLastXSecsRB.setChecked(True)
+    self.ui.engineThrustXSB.setValue(self.config["graph_options"]["engine_thrust"]["X"])
+    self.ui.engineThrustThresholdList.addItems([str(marker) for marker in self.config["graph_options"]["engine_thrust"]["thresholds"]])
 
 def save_config(self: "MainWindow"):
     try:
