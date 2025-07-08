@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1377</width>
-    <height>797</height>
+    <width>1569</width>
+    <height>925</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -741,42 +741,85 @@
           </widget>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="graphRangeLayout">
-           <item>
-            <widget class="QLabel" name="graphRangeLabel">
-             <property name="text">
-              <string># points on graphs:</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QSpinBox" name="graphRangeInput">
-             <property name="toolTip">
-              <string>Changing this number updates the maximum number of points shown on the graphs</string>
-             </property>
-             <property name="minimum">
-              <number>10</number>
-             </property>
-             <property name="value">
-              <number>25</number>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
           <layout class="QGridLayout" name="graphOptionsLayout_2">
            <item row="1" column="0">
             <layout class="QVBoxLayout" name="tankMassThresholdLayout">
+             <property name="spacing">
+              <number>4</number>
+             </property>
              <item>
               <widget class="QLabel" name="tankMassThresholdLabel">
+               <property name="font">
+                <font>
+                 <bold>true</bold>
+                </font>
+               </property>
                <property name="text">
                 <string>Tank Mass</string>
                </property>
+               <property name="alignment">
+                <set>Qt::AlignmentFlag::AlignCenter</set>
+               </property>
               </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="tankMassDataDisplayLabel">
+               <property name="font">
+                <font>
+                 <underline>true</underline>
+                </font>
+               </property>
+               <property name="text">
+                <string>Data display mode:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="tankMassDataDisplayLayout">
+               <item>
+                <widget class="QRadioButton" name="tankMassLastXPointsRB">
+                 <property name="font">
+                  <font>
+                   <pointsize>8</pointsize>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">margin: 1px 2px</string>
+                 </property>
+                 <property name="text">
+                  <string>Last X points</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QRadioButton" name="tankMassLastXSecsRB">
+                 <property name="font">
+                  <font>
+                   <pointsize>8</pointsize>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">margin: 1px 2px</string>
+                 </property>
+                 <property name="text">
+                  <string>Points in last X seconds</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="tankMassXLabel">
+                 <property name="text">
+                  <string>X:</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QSpinBox" name="tankMassXSB"/>
+               </item>
+              </layout>
              </item>
              <item>
               <widget class="QListWidget" name="tankMassThresholdList">
@@ -821,12 +864,82 @@
            </item>
            <item row="1" column="1">
             <layout class="QVBoxLayout" name="engineThrustThreshold">
+             <property name="spacing">
+              <number>4</number>
+             </property>
              <item>
               <widget class="QLabel" name="engineThrustThresholdLabel">
+               <property name="font">
+                <font>
+                 <bold>true</bold>
+                </font>
+               </property>
                <property name="text">
                 <string>Engine Thrust</string>
                </property>
+               <property name="alignment">
+                <set>Qt::AlignmentFlag::AlignCenter</set>
+               </property>
               </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="engineThrustDataDisplayLabel">
+               <property name="font">
+                <font>
+                 <underline>true</underline>
+                </font>
+               </property>
+               <property name="text">
+                <string>Data display mode:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="engineThrustDataDisplayLayout">
+               <item>
+                <widget class="QRadioButton" name="engineThrustLastXPointsRB">
+                 <property name="font">
+                  <font>
+                   <pointsize>8</pointsize>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">margin: 1px 2px</string>
+                 </property>
+                 <property name="text">
+                  <string>Last X points</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QRadioButton" name="engineThrustLastXSecsRB">
+                 <property name="font">
+                  <font>
+                   <pointsize>8</pointsize>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">margin: 1px 2px</string>
+                 </property>
+                 <property name="text">
+                  <string>Points in last X seconds</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="engineThrustXLabel">
+                 <property name="text">
+                  <string>X:</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QSpinBox" name="engineThrustXSB"/>
+               </item>
+              </layout>
              </item>
              <item>
               <widget class="QListWidget" name="engineThrustThresholdList">
@@ -890,7 +1003,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="label_2">
+              <widget class="QLabel" name="temperatureDataDisplayLabel">
                <property name="font">
                 <font>
                  <underline>true</underline>
@@ -902,12 +1015,12 @@
               </widget>
              </item>
              <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_4">
+              <layout class="QHBoxLayout" name="temperatureDataDisplayLayout">
                <property name="bottomMargin">
                 <number>3</number>
                </property>
                <item>
-                <widget class="QRadioButton" name="radioButton_4">
+                <widget class="QRadioButton" name="temperatureLastXPointsRB">
                  <property name="font">
                   <font>
                    <pointsize>8</pointsize>
@@ -922,7 +1035,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QRadioButton" name="radioButton_3">
+                <widget class="QRadioButton" name="temperatureLastXSecsRB">
                  <property name="font">
                   <font>
                    <pointsize>8</pointsize>
@@ -937,7 +1050,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QLabel" name="label_4">
+                <widget class="QLabel" name="temperatureXLabel">
                  <property name="text">
                   <string>X:</string>
                  </property>
@@ -947,7 +1060,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QSpinBox" name="spinBox_2"/>
+                <widget class="QSpinBox" name="temperatureXSB"/>
                </item>
               </layout>
              </item>
@@ -1014,7 +1127,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="label">
+              <widget class="QLabel" name="pressureDataDisplayLabel">
                <property name="font">
                 <font>
                  <italic>false</italic>
@@ -1027,12 +1140,12 @@
               </widget>
              </item>
              <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_2">
+              <layout class="QHBoxLayout" name="pressureDataDisplayLayout">
                <property name="bottomMargin">
                 <number>3</number>
                </property>
                <item>
-                <widget class="QRadioButton" name="radioButton_2">
+                <widget class="QRadioButton" name="pressureLastXPointsRB">
                  <property name="font">
                   <font>
                    <pointsize>8</pointsize>
@@ -1047,7 +1160,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QRadioButton" name="radioButton">
+                <widget class="QRadioButton" name="pressureLastXSecsRB">
                  <property name="font">
                   <font>
                    <pointsize>8</pointsize>
@@ -1062,7 +1175,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QLabel" name="label_3">
+                <widget class="QLabel" name="pressureXLabel">
                  <property name="text">
                   <string>X:</string>
                  </property>
@@ -1072,7 +1185,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QSpinBox" name="spinBox">
+                <widget class="QSpinBox" name="pressureXSB">
                  <property name="suffix">
                   <string/>
                  </property>
@@ -1124,6 +1237,13 @@
           </layout>
          </item>
         </layout>
+       </item>
+       <item row="2" column="1">
+        <widget class="QPushButton" name="pushButton">
+         <property name="text">
+          <string>PushButton</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
