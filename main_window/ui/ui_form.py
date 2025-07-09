@@ -15,11 +15,11 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QComboBox, QFormLayout, QGridLayout,
-    QHBoxLayout, QLabel, QLineEdit, QListWidget,
-    QListWidgetItem, QPushButton, QRadioButton, QSizePolicy,
-    QSpinBox, QTabWidget, QTextBrowser, QVBoxLayout,
-    QWidget)
+from PySide6.QtWidgets import (QApplication, QButtonGroup, QComboBox, QFormLayout,
+    QGridLayout, QHBoxLayout, QLabel, QLineEdit,
+    QListWidget, QListWidgetItem, QPushButton, QRadioButton,
+    QSizePolicy, QSpinBox, QTabWidget, QTextBrowser,
+    QVBoxLayout, QWidget)
 
 from pyqtgraph import PlotWidget
 from . import rc_resources
@@ -501,6 +501,9 @@ class Ui_Widget(object):
         self.tankMassDataDisplayLayout = QHBoxLayout()
         self.tankMassDataDisplayLayout.setObjectName(u"tankMassDataDisplayLayout")
         self.tankMassLastXPointsRB = QRadioButton(self.displayOptionsTab)
+        self.tankMassDisplayButtonGroup = QButtonGroup(Widget)
+        self.tankMassDisplayButtonGroup.setObjectName(u"tankMassDisplayButtonGroup")
+        self.tankMassDisplayButtonGroup.addButton(self.tankMassLastXPointsRB)
         self.tankMassLastXPointsRB.setObjectName(u"tankMassLastXPointsRB")
         font5 = QFont()
         font5.setPointSize(8)
@@ -510,6 +513,7 @@ class Ui_Widget(object):
         self.tankMassDataDisplayLayout.addWidget(self.tankMassLastXPointsRB)
 
         self.tankMassLastXSecsRB = QRadioButton(self.displayOptionsTab)
+        self.tankMassDisplayButtonGroup.addButton(self.tankMassLastXSecsRB)
         self.tankMassLastXSecsRB.setObjectName(u"tankMassLastXSecsRB")
         self.tankMassLastXSecsRB.setFont(font5)
         self.tankMassLastXSecsRB.setStyleSheet(u"margin: 1px 2px")
@@ -524,6 +528,8 @@ class Ui_Widget(object):
 
         self.tankMassXSB = QSpinBox(self.displayOptionsTab)
         self.tankMassXSB.setObjectName(u"tankMassXSB")
+        self.tankMassXSB.setMinimum(1)
+        self.tankMassXSB.setMaximum(200)
 
         self.tankMassDataDisplayLayout.addWidget(self.tankMassXSB)
 
@@ -577,6 +583,9 @@ class Ui_Widget(object):
         self.engineThrustDataDisplayLayout = QHBoxLayout()
         self.engineThrustDataDisplayLayout.setObjectName(u"engineThrustDataDisplayLayout")
         self.engineThrustLastXPointsRB = QRadioButton(self.displayOptionsTab)
+        self.engineThrustDisplayButtonGroup = QButtonGroup(Widget)
+        self.engineThrustDisplayButtonGroup.setObjectName(u"engineThrustDisplayButtonGroup")
+        self.engineThrustDisplayButtonGroup.addButton(self.engineThrustLastXPointsRB)
         self.engineThrustLastXPointsRB.setObjectName(u"engineThrustLastXPointsRB")
         self.engineThrustLastXPointsRB.setFont(font5)
         self.engineThrustLastXPointsRB.setStyleSheet(u"margin: 1px 2px")
@@ -584,6 +593,7 @@ class Ui_Widget(object):
         self.engineThrustDataDisplayLayout.addWidget(self.engineThrustLastXPointsRB)
 
         self.engineThrustLastXSecsRB = QRadioButton(self.displayOptionsTab)
+        self.engineThrustDisplayButtonGroup.addButton(self.engineThrustLastXSecsRB)
         self.engineThrustLastXSecsRB.setObjectName(u"engineThrustLastXSecsRB")
         self.engineThrustLastXSecsRB.setFont(font5)
         self.engineThrustLastXSecsRB.setStyleSheet(u"margin: 1px 2px")
@@ -598,6 +608,8 @@ class Ui_Widget(object):
 
         self.engineThrustXSB = QSpinBox(self.displayOptionsTab)
         self.engineThrustXSB.setObjectName(u"engineThrustXSB")
+        self.engineThrustXSB.setMinimum(1)
+        self.engineThrustXSB.setMaximum(200)
 
         self.engineThrustDataDisplayLayout.addWidget(self.engineThrustXSB)
 
@@ -649,6 +661,9 @@ class Ui_Widget(object):
         self.temperatureDataDisplayLayout.setObjectName(u"temperatureDataDisplayLayout")
         self.temperatureDataDisplayLayout.setContentsMargins(-1, -1, -1, 3)
         self.temperatureLastXPointsRB = QRadioButton(self.displayOptionsTab)
+        self.temperatureDisplayButtonGroup = QButtonGroup(Widget)
+        self.temperatureDisplayButtonGroup.setObjectName(u"temperatureDisplayButtonGroup")
+        self.temperatureDisplayButtonGroup.addButton(self.temperatureLastXPointsRB)
         self.temperatureLastXPointsRB.setObjectName(u"temperatureLastXPointsRB")
         self.temperatureLastXPointsRB.setFont(font5)
         self.temperatureLastXPointsRB.setStyleSheet(u"margin: 1px 2px")
@@ -656,6 +671,7 @@ class Ui_Widget(object):
         self.temperatureDataDisplayLayout.addWidget(self.temperatureLastXPointsRB)
 
         self.temperatureLastXSecsRB = QRadioButton(self.displayOptionsTab)
+        self.temperatureDisplayButtonGroup.addButton(self.temperatureLastXSecsRB)
         self.temperatureLastXSecsRB.setObjectName(u"temperatureLastXSecsRB")
         self.temperatureLastXSecsRB.setFont(font5)
         self.temperatureLastXSecsRB.setStyleSheet(u"margin: 1px 2px")
@@ -670,6 +686,8 @@ class Ui_Widget(object):
 
         self.temperatureXSB = QSpinBox(self.displayOptionsTab)
         self.temperatureXSB.setObjectName(u"temperatureXSB")
+        self.temperatureXSB.setMinimum(1)
+        self.temperatureXSB.setMaximum(200)
 
         self.temperatureDataDisplayLayout.addWidget(self.temperatureXSB)
 
@@ -727,6 +745,9 @@ class Ui_Widget(object):
         self.pressureDataDisplayLayout.setObjectName(u"pressureDataDisplayLayout")
         self.pressureDataDisplayLayout.setContentsMargins(-1, -1, -1, 3)
         self.pressureLastXPointsRB = QRadioButton(self.displayOptionsTab)
+        self.pressureDisplayButtonGroup = QButtonGroup(Widget)
+        self.pressureDisplayButtonGroup.setObjectName(u"pressureDisplayButtonGroup")
+        self.pressureDisplayButtonGroup.addButton(self.pressureLastXPointsRB)
         self.pressureLastXPointsRB.setObjectName(u"pressureLastXPointsRB")
         self.pressureLastXPointsRB.setFont(font5)
         self.pressureLastXPointsRB.setStyleSheet(u"margin: 1px 2px")
@@ -734,6 +755,7 @@ class Ui_Widget(object):
         self.pressureDataDisplayLayout.addWidget(self.pressureLastXPointsRB)
 
         self.pressureLastXSecsRB = QRadioButton(self.displayOptionsTab)
+        self.pressureDisplayButtonGroup.addButton(self.pressureLastXSecsRB)
         self.pressureLastXSecsRB.setObjectName(u"pressureLastXSecsRB")
         self.pressureLastXSecsRB.setFont(font5)
         self.pressureLastXSecsRB.setStyleSheet(u"margin: 1px 2px")
@@ -748,6 +770,8 @@ class Ui_Widget(object):
 
         self.pressureXSB = QSpinBox(self.displayOptionsTab)
         self.pressureXSB.setObjectName(u"pressureXSB")
+        self.pressureXSB.setMinimum(1)
+        self.pressureXSB.setMaximum(200)
 
         self.pressureDataDisplayLayout.addWidget(self.pressureXSB)
 
@@ -788,10 +812,10 @@ class Ui_Widget(object):
 
         self.formLayout_2.setLayout(1, QFormLayout.SpanningRole, self.graphOptionsLayout)
 
-        self.pushButton = QPushButton(self.displayOptionsTab)
-        self.pushButton.setObjectName(u"pushButton")
+        self.saveDisplayConfigButton = QPushButton(self.displayOptionsTab)
+        self.saveDisplayConfigButton.setObjectName(u"saveDisplayConfigButton")
 
-        self.formLayout_2.setWidget(2, QFormLayout.FieldRole, self.pushButton)
+        self.formLayout_2.setWidget(2, QFormLayout.FieldRole, self.saveDisplayConfigButton)
 
         self.tabWidget.addTab(self.displayOptionsTab, "")
         self.logTab = QWidget()
@@ -830,7 +854,7 @@ class Ui_Widget(object):
 
         self.retranslateUi(Widget)
 
-        self.tabWidget.setCurrentIndex(2)
+        self.tabWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(Widget)
@@ -884,7 +908,7 @@ class Ui_Widget(object):
         self.baudRateLabel.setText(QCoreApplication.translate("Widget", u"Baud rate:", None))
         self.serialConnectButton.setText(QCoreApplication.translate("Widget", u"Connect to serial port", None))
         self.serialRefreshButton.setText(QCoreApplication.translate("Widget", u"Refresh", None))
-        self.saveConnConfigButton.setText(QCoreApplication.translate("Widget", u"Save default connection options", None))
+        self.saveConnConfigButton.setText(QCoreApplication.translate("Widget", u"Save default connection configuration", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.connectionTab), QCoreApplication.translate("Widget", u"Connection", None))
 #if QT_CONFIG(tooltip)
         self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.connectionTab), QCoreApplication.translate("Widget", u"Setup multicat or serial connection", None))
@@ -922,8 +946,8 @@ class Ui_Widget(object):
         self.pressureXLabel.setText(QCoreApplication.translate("Widget", u"X:", None))
         self.pressureXSB.setSuffix("")
         self.pressureThresholdButton.setText(QCoreApplication.translate("Widget", u"Add/remove threshold marker", None))
-        self.pushButton.setText(QCoreApplication.translate("Widget", u"PushButton", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.displayOptionsTab), QCoreApplication.translate("Widget", u"Display && System Configuration", None))
+        self.saveDisplayConfigButton.setText(QCoreApplication.translate("Widget", u"Save default display configuration", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.displayOptionsTab), QCoreApplication.translate("Widget", u"Display Configuration", None))
 #if QT_CONFIG(tooltip)
         self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.displayOptionsTab), QCoreApplication.translate("Widget", u"Configure display and system options", None))
 #endif // QT_CONFIG(tooltip)

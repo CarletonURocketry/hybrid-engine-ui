@@ -42,7 +42,7 @@
       <bool>false</bool>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="telemetryTab">
       <property name="autoFillBackground">
@@ -613,7 +613,7 @@
        <item row="4" column="0" colspan="2">
         <widget class="QPushButton" name="saveConnConfigButton">
          <property name="text">
-          <string>Save default connection options</string>
+          <string>Save default connection configuration</string>
          </property>
         </widget>
        </item>
@@ -624,7 +624,7 @@
        <bool>true</bool>
       </property>
       <attribute name="title">
-       <string>Display &amp;&amp; System Configuration</string>
+       <string>Display Configuration</string>
       </attribute>
       <attribute name="toolTip">
        <string>Configure display and system options</string>
@@ -789,6 +789,9 @@
                  <property name="text">
                   <string>Last X points</string>
                  </property>
+                 <attribute name="buttonGroup">
+                  <string notr="true">tankMassDisplayButtonGroup</string>
+                 </attribute>
                 </widget>
                </item>
                <item>
@@ -804,6 +807,9 @@
                  <property name="text">
                   <string>Points in last X seconds</string>
                  </property>
+                 <attribute name="buttonGroup">
+                  <string notr="true">tankMassDisplayButtonGroup</string>
+                 </attribute>
                 </widget>
                </item>
                <item>
@@ -817,7 +823,14 @@
                 </widget>
                </item>
                <item>
-                <widget class="QSpinBox" name="tankMassXSB"/>
+                <widget class="QSpinBox" name="tankMassXSB">
+                 <property name="minimum">
+                  <number>1</number>
+                 </property>
+                 <property name="maximum">
+                  <number>200</number>
+                 </property>
+                </widget>
                </item>
               </layout>
              </item>
@@ -909,6 +922,9 @@
                  <property name="text">
                   <string>Last X points</string>
                  </property>
+                 <attribute name="buttonGroup">
+                  <string notr="true">engineThrustDisplayButtonGroup</string>
+                 </attribute>
                 </widget>
                </item>
                <item>
@@ -924,6 +940,9 @@
                  <property name="text">
                   <string>Points in last X seconds</string>
                  </property>
+                 <attribute name="buttonGroup">
+                  <string notr="true">engineThrustDisplayButtonGroup</string>
+                 </attribute>
                 </widget>
                </item>
                <item>
@@ -937,7 +956,14 @@
                 </widget>
                </item>
                <item>
-                <widget class="QSpinBox" name="engineThrustXSB"/>
+                <widget class="QSpinBox" name="engineThrustXSB">
+                 <property name="minimum">
+                  <number>1</number>
+                 </property>
+                 <property name="maximum">
+                  <number>200</number>
+                 </property>
+                </widget>
                </item>
               </layout>
              </item>
@@ -1032,6 +1058,9 @@
                  <property name="text">
                   <string>Last X packets</string>
                  </property>
+                 <attribute name="buttonGroup">
+                  <string notr="true">temperatureDisplayButtonGroup</string>
+                 </attribute>
                 </widget>
                </item>
                <item>
@@ -1047,6 +1076,9 @@
                  <property name="text">
                   <string>Packets in last X seconds</string>
                  </property>
+                 <attribute name="buttonGroup">
+                  <string notr="true">temperatureDisplayButtonGroup</string>
+                 </attribute>
                 </widget>
                </item>
                <item>
@@ -1060,7 +1092,14 @@
                 </widget>
                </item>
                <item>
-                <widget class="QSpinBox" name="temperatureXSB"/>
+                <widget class="QSpinBox" name="temperatureXSB">
+                 <property name="minimum">
+                  <number>1</number>
+                 </property>
+                 <property name="maximum">
+                  <number>200</number>
+                 </property>
+                </widget>
                </item>
               </layout>
              </item>
@@ -1157,6 +1196,9 @@
                  <property name="text">
                   <string>Last X points</string>
                  </property>
+                 <attribute name="buttonGroup">
+                  <string notr="true">pressureDisplayButtonGroup</string>
+                 </attribute>
                 </widget>
                </item>
                <item>
@@ -1172,6 +1214,9 @@
                  <property name="text">
                   <string>Points in last X seconds</string>
                  </property>
+                 <attribute name="buttonGroup">
+                  <string notr="true">pressureDisplayButtonGroup</string>
+                 </attribute>
                 </widget>
                </item>
                <item>
@@ -1188,6 +1233,12 @@
                 <widget class="QSpinBox" name="pressureXSB">
                  <property name="suffix">
                   <string/>
+                 </property>
+                 <property name="minimum">
+                  <number>1</number>
+                 </property>
+                 <property name="maximum">
+                  <number>200</number>
                  </property>
                 </widget>
                </item>
@@ -1239,9 +1290,9 @@
         </layout>
        </item>
        <item row="2" column="1">
-        <widget class="QPushButton" name="pushButton">
+        <widget class="QPushButton" name="saveDisplayConfigButton">
          <property name="text">
-          <string>PushButton</string>
+          <string>Save default display configuration</string>
          </property>
         </widget>
        </item>
@@ -1312,4 +1363,10 @@
   <include location="resources.qrc"/>
  </resources>
  <connections/>
+ <buttongroups>
+  <buttongroup name="pressureDisplayButtonGroup"/>
+  <buttongroup name="temperatureDisplayButtonGroup"/>
+  <buttongroup name="tankMassDisplayButtonGroup"/>
+  <buttongroup name="engineThrustDisplayButtonGroup"/>
+ </buttongroups>
 </ui>
