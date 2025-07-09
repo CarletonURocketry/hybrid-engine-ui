@@ -52,6 +52,7 @@ def udp_connection_button_handler(self: "MainWindow"):
             self.write_to_log(f"Successfully connected to {mcast_addr}:{mcast_port}")
 
             self.reset_heartbeat_timeout()
+            self.data_filter_timer.start(self.data_filter_interval)
             self.heartbeat_timer.start(self.heartbeat_interval)
 
             self.disable_udp_config(disable_btn=False)
@@ -146,6 +147,7 @@ def udp_on_error(self: "MainWindow"):
 # Any disconnection event should be handled here and logged
 def udp_on_disconnected(self: "MainWindow"):
     self.write_to_log("Socket connection was closed")
+    self.data_filter_timer.stop()
     self.heartbeat_timer.stop()
     self.reset_heartbeat_timeout()
     self.enable_udp_config()

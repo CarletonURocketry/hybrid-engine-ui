@@ -15,10 +15,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QComboBox, QFormLayout, QGridLayout,
-    QHBoxLayout, QLabel, QLineEdit, QListWidget,
-    QListWidgetItem, QPushButton, QRadioButton, QSizePolicy,
-    QSpacerItem, QSpinBox, QTabWidget, QTextBrowser,
+from PySide6.QtWidgets import (QApplication, QButtonGroup, QComboBox, QFormLayout,
+    QGridLayout, QHBoxLayout, QLabel, QLineEdit,
+    QListWidget, QListWidgetItem, QPushButton, QRadioButton,
+    QSizePolicy, QSpinBox, QTabWidget, QTextBrowser,
     QVBoxLayout, QWidget)
 
 from pyqtgraph import PlotWidget
@@ -28,7 +28,7 @@ class Ui_Widget(object):
     def setupUi(self, Widget):
         if not Widget.objectName():
             Widget.setObjectName(u"Widget")
-        Widget.resize(1375, 1019)
+        Widget.resize(1569, 925)
         icon = QIcon()
         icon.addFile(u"logos/better_logo.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         Widget.setWindowIcon(icon)
@@ -263,21 +263,24 @@ class Ui_Widget(object):
         self.verticalLayout.addLayout(self.plotLayout)
 
         self.tabWidget.addTab(self.telemetryTab, "")
-        self.configurationTab = QWidget()
-        self.configurationTab.setObjectName(u"configurationTab")
-        self.configurationTab.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
-        self.configurationTab.setAutoFillBackground(True)
-        self.formLayout = QFormLayout(self.configurationTab)
+        self.connectionTab = QWidget()
+        self.connectionTab.setObjectName(u"connectionTab")
+        self.connectionTab.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
+        self.connectionTab.setAutoFillBackground(True)
+        self.formLayout = QFormLayout(self.connectionTab)
         self.formLayout.setObjectName(u"formLayout")
         self.formLayout.setRowWrapPolicy(QFormLayout.RowWrapPolicy.DontWrapRows)
         self.formLayout.setLabelAlignment(Qt.AlignmentFlag.AlignCenter)
         self.formLayout.setFormAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.formLayout.setVerticalSpacing(20)
         self.formLayout.setContentsMargins(450, 0, 450, 10)
         self.connectionLayout = QVBoxLayout()
+        self.connectionLayout.setSpacing(10)
         self.connectionLayout.setObjectName(u"connectionLayout")
-        self.multicastConfigLabel = QLabel(self.configurationTab)
+        self.multicastConfigLabel = QLabel(self.connectionTab)
         self.multicastConfigLabel.setObjectName(u"multicastConfigLabel")
         font2 = QFont()
+        font2.setPointSize(10)
         font2.setBold(True)
         self.multicastConfigLabel.setFont(font2)
         self.multicastConfigLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -286,12 +289,12 @@ class Ui_Widget(object):
 
         self.addressLayout = QHBoxLayout()
         self.addressLayout.setObjectName(u"addressLayout")
-        self.udpIpAddressLabel = QLabel(self.configurationTab)
+        self.udpIpAddressLabel = QLabel(self.connectionTab)
         self.udpIpAddressLabel.setObjectName(u"udpIpAddressLabel")
 
         self.addressLayout.addWidget(self.udpIpAddressLabel)
 
-        self.udpIpAddressInput = QLineEdit(self.configurationTab)
+        self.udpIpAddressInput = QLineEdit(self.connectionTab)
         self.udpIpAddressInput.setObjectName(u"udpIpAddressInput")
         sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
         sizePolicy2.setHorizontalStretch(0)
@@ -306,13 +309,13 @@ class Ui_Widget(object):
 
         self.portLayout = QHBoxLayout()
         self.portLayout.setObjectName(u"portLayout")
-        self.udpPortLabel = QLabel(self.configurationTab)
+        self.udpPortLabel = QLabel(self.connectionTab)
         self.udpPortLabel.setObjectName(u"udpPortLabel")
         self.udpPortLabel.setMinimumSize(QSize(85, 0))
 
         self.portLayout.addWidget(self.udpPortLabel)
 
-        self.udpPortInput = QLineEdit(self.configurationTab)
+        self.udpPortInput = QLineEdit(self.connectionTab)
         self.udpPortInput.setObjectName(u"udpPortInput")
         sizePolicy2.setHeightForWidth(self.udpPortInput.sizePolicy().hasHeightForWidth())
         self.udpPortInput.setSizePolicy(sizePolicy2)
@@ -323,7 +326,7 @@ class Ui_Widget(object):
 
         self.connectionLayout.addLayout(self.portLayout)
 
-        self.udpConnectButton = QPushButton(self.configurationTab)
+        self.udpConnectButton = QPushButton(self.connectionTab)
         self.udpConnectButton.setObjectName(u"udpConnectButton")
         self.udpConnectButton.setStyleSheet(u"")
 
@@ -332,13 +335,10 @@ class Ui_Widget(object):
 
         self.formLayout.setLayout(0, QFormLayout.SpanningRole, self.connectionLayout)
 
-        self.verticalSpacer = QSpacerItem(20, 10, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
-
-        self.formLayout.setItem(1, QFormLayout.SpanningRole, self.verticalSpacer)
-
         self.serialLayout = QVBoxLayout()
+        self.serialLayout.setSpacing(10)
         self.serialLayout.setObjectName(u"serialLayout")
-        self.serialConfigLabel = QLabel(self.configurationTab)
+        self.serialConfigLabel = QLabel(self.connectionTab)
         self.serialConfigLabel.setObjectName(u"serialConfigLabel")
         self.serialConfigLabel.setFont(font2)
         self.serialConfigLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -347,12 +347,12 @@ class Ui_Widget(object):
 
         self.serialPortSelectLayout = QHBoxLayout()
         self.serialPortSelectLayout.setObjectName(u"serialPortSelectLayout")
-        self.serialPortLabel = QLabel(self.configurationTab)
+        self.serialPortLabel = QLabel(self.connectionTab)
         self.serialPortLabel.setObjectName(u"serialPortLabel")
 
         self.serialPortSelectLayout.addWidget(self.serialPortLabel)
 
-        self.serialPortDropdown = QComboBox(self.configurationTab)
+        self.serialPortDropdown = QComboBox(self.connectionTab)
         self.serialPortDropdown.setObjectName(u"serialPortDropdown")
 
         self.serialPortSelectLayout.addWidget(self.serialPortDropdown)
@@ -362,12 +362,12 @@ class Ui_Widget(object):
 
         self.serialBaudRateLayout = QHBoxLayout()
         self.serialBaudRateLayout.setObjectName(u"serialBaudRateLayout")
-        self.baudRateLabel = QLabel(self.configurationTab)
+        self.baudRateLabel = QLabel(self.connectionTab)
         self.baudRateLabel.setObjectName(u"baudRateLabel")
 
         self.serialBaudRateLayout.addWidget(self.baudRateLabel)
 
-        self.baudRateDropdown = QComboBox(self.configurationTab)
+        self.baudRateDropdown = QComboBox(self.connectionTab)
         self.baudRateDropdown.setObjectName(u"baudRateDropdown")
 
         self.serialBaudRateLayout.addWidget(self.baudRateDropdown)
@@ -377,13 +377,13 @@ class Ui_Widget(object):
 
         self.serialConnectLayout = QHBoxLayout()
         self.serialConnectLayout.setObjectName(u"serialConnectLayout")
-        self.serialConnectButton = QPushButton(self.configurationTab)
+        self.serialConnectButton = QPushButton(self.connectionTab)
         self.serialConnectButton.setObjectName(u"serialConnectButton")
         self.serialConnectButton.setStyleSheet(u"")
 
         self.serialConnectLayout.addWidget(self.serialConnectButton)
 
-        self.serialRefreshButton = QPushButton(self.configurationTab)
+        self.serialRefreshButton = QPushButton(self.connectionTab)
         self.serialRefreshButton.setObjectName(u"serialRefreshButton")
 
         self.serialConnectLayout.addWidget(self.serialRefreshButton)
@@ -393,15 +393,27 @@ class Ui_Widget(object):
         self.serialLayout.addLayout(self.serialConnectLayout)
 
 
-        self.formLayout.setLayout(2, QFormLayout.SpanningRole, self.serialLayout)
+        self.formLayout.setLayout(1, QFormLayout.SpanningRole, self.serialLayout)
 
-        self.verticalSpacer_2 = QSpacerItem(20, 10, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+        self.saveConnConfigButton = QPushButton(self.connectionTab)
+        self.saveConnConfigButton.setObjectName(u"saveConnConfigButton")
 
-        self.formLayout.setItem(3, QFormLayout.FieldRole, self.verticalSpacer_2)
+        self.formLayout.setWidget(4, QFormLayout.SpanningRole, self.saveConnConfigButton)
 
+        self.tabWidget.addTab(self.connectionTab, "")
+        self.displayOptionsTab = QWidget()
+        self.displayOptionsTab.setObjectName(u"displayOptionsTab")
+        self.displayOptionsTab.setAutoFillBackground(True)
+        self.formLayout_2 = QFormLayout(self.displayOptionsTab)
+        self.formLayout_2.setObjectName(u"formLayout_2")
+        self.formLayout_2.setLabelAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.formLayout_2.setFormAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.formLayout_2.setVerticalSpacing(20)
+        self.formLayout_2.setContentsMargins(400, -1, 400, -1)
         self.sensorDisplayOptionsLayout = QVBoxLayout()
+        self.sensorDisplayOptionsLayout.setSpacing(10)
         self.sensorDisplayOptionsLayout.setObjectName(u"sensorDisplayOptionsLayout")
-        self.sensorDisplayOptionsLabel = QLabel(self.configurationTab)
+        self.sensorDisplayOptionsLabel = QLabel(self.displayOptionsTab)
         self.sensorDisplayOptionsLabel.setObjectName(u"sensorDisplayOptionsLabel")
         self.sensorDisplayOptionsLabel.setFont(font2)
         self.sensorDisplayOptionsLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -410,12 +422,13 @@ class Ui_Widget(object):
 
         self.numPointsAverageLayout = QHBoxLayout()
         self.numPointsAverageLayout.setObjectName(u"numPointsAverageLayout")
-        self.numPointsAverageLabel = QLabel(self.configurationTab)
+        self.numPointsAverageLabel = QLabel(self.displayOptionsTab)
         self.numPointsAverageLabel.setObjectName(u"numPointsAverageLabel")
+        self.numPointsAverageLabel.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
 
         self.numPointsAverageLayout.addWidget(self.numPointsAverageLabel)
 
-        self.numPointsAverageInput = QSpinBox(self.configurationTab)
+        self.numPointsAverageInput = QSpinBox(self.displayOptionsTab)
         self.numPointsAverageInput.setObjectName(u"numPointsAverageInput")
         self.numPointsAverageInput.setValue(20)
 
@@ -424,204 +437,390 @@ class Ui_Widget(object):
 
         self.sensorDisplayOptionsLayout.addLayout(self.numPointsAverageLayout)
 
+        self.defaultOpenValvesLayout = QVBoxLayout()
+        self.defaultOpenValvesLayout.setObjectName(u"defaultOpenValvesLayout")
+        self.defaultOpenValveslabel = QLabel(self.displayOptionsTab)
+        self.defaultOpenValveslabel.setObjectName(u"defaultOpenValveslabel")
+        self.defaultOpenValveslabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.formLayout.setLayout(5, QFormLayout.FieldRole, self.sensorDisplayOptionsLayout)
+        self.defaultOpenValvesLayout.addWidget(self.defaultOpenValveslabel)
 
-        self.verticalSpacer_5 = QSpacerItem(20, 10, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+        self.defaultOpenValvesList = QListWidget(self.displayOptionsTab)
+        self.defaultOpenValvesList.setObjectName(u"defaultOpenValvesList")
 
-        self.formLayout.setItem(7, QFormLayout.FieldRole, self.verticalSpacer_5)
+        self.defaultOpenValvesLayout.addWidget(self.defaultOpenValvesList)
+
+        self.defaultOpenValvesInput = QLineEdit(self.displayOptionsTab)
+        self.defaultOpenValvesInput.setObjectName(u"defaultOpenValvesInput")
+
+        self.defaultOpenValvesLayout.addWidget(self.defaultOpenValvesInput)
+
+        self.defaultOpenValvesButton = QPushButton(self.displayOptionsTab)
+        self.defaultOpenValvesButton.setObjectName(u"defaultOpenValvesButton")
+
+        self.defaultOpenValvesLayout.addWidget(self.defaultOpenValvesButton)
+
+
+        self.sensorDisplayOptionsLayout.addLayout(self.defaultOpenValvesLayout)
+
+
+        self.formLayout_2.setLayout(0, QFormLayout.SpanningRole, self.sensorDisplayOptionsLayout)
 
         self.graphOptionsLayout = QVBoxLayout()
+        self.graphOptionsLayout.setSpacing(15)
         self.graphOptionsLayout.setObjectName(u"graphOptionsLayout")
-        self.graphOptionsLabel = QLabel(self.configurationTab)
+        self.graphOptionsLabel = QLabel(self.displayOptionsTab)
         self.graphOptionsLabel.setObjectName(u"graphOptionsLabel")
         self.graphOptionsLabel.setFont(font2)
         self.graphOptionsLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.graphOptionsLayout.addWidget(self.graphOptionsLabel)
 
-        self.graphRangeLayout = QHBoxLayout()
-        self.graphRangeLayout.setObjectName(u"graphRangeLayout")
-        self.graphRangeLabel = QLabel(self.configurationTab)
-        self.graphRangeLabel.setObjectName(u"graphRangeLabel")
-
-        self.graphRangeLayout.addWidget(self.graphRangeLabel)
-
-        self.graphRangeInput = QSpinBox(self.configurationTab)
-        self.graphRangeInput.setObjectName(u"graphRangeInput")
-        self.graphRangeInput.setMinimum(10)
-        self.graphRangeInput.setValue(25)
-
-        self.graphRangeLayout.addWidget(self.graphRangeInput)
-
-
-        self.graphOptionsLayout.addLayout(self.graphRangeLayout)
-
-
-        self.formLayout.setLayout(8, QFormLayout.FieldRole, self.graphOptionsLayout)
-
-        self.verticalSpacer_4 = QSpacerItem(20, 10, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
-
-        self.formLayout.setItem(9, QFormLayout.FieldRole, self.verticalSpacer_4)
-
-        self.gridLayout = QGridLayout()
-        self.gridLayout.setObjectName(u"gridLayout")
-        self.pressureThresholdLayot = QVBoxLayout()
-        self.pressureThresholdLayot.setObjectName(u"pressureThresholdLayot")
-        self.pressureThresholdLabel = QLabel(self.configurationTab)
-        self.pressureThresholdLabel.setObjectName(u"pressureThresholdLabel")
-
-        self.pressureThresholdLayot.addWidget(self.pressureThresholdLabel)
-
-        self.pressureThresholdList = QListWidget(self.configurationTab)
-        self.pressureThresholdList.setObjectName(u"pressureThresholdList")
-        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
-        sizePolicy3.setHorizontalStretch(0)
-        sizePolicy3.setVerticalStretch(0)
-        sizePolicy3.setHeightForWidth(self.pressureThresholdList.sizePolicy().hasHeightForWidth())
-        self.pressureThresholdList.setSizePolicy(sizePolicy3)
-        self.pressureThresholdList.setMaximumSize(QSize(16777215, 75))
-
-        self.pressureThresholdLayot.addWidget(self.pressureThresholdList)
-
-        self.pressureThresholdInput = QLineEdit(self.configurationTab)
-        self.pressureThresholdInput.setObjectName(u"pressureThresholdInput")
-        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
-        sizePolicy4.setHorizontalStretch(0)
-        sizePolicy4.setVerticalStretch(0)
-        sizePolicy4.setHeightForWidth(self.pressureThresholdInput.sizePolicy().hasHeightForWidth())
-        self.pressureThresholdInput.setSizePolicy(sizePolicy4)
-
-        self.pressureThresholdLayot.addWidget(self.pressureThresholdInput)
-
-        self.pressureThresholdButton = QPushButton(self.configurationTab)
-        self.pressureThresholdButton.setObjectName(u"pressureThresholdButton")
-        sizePolicy4.setHeightForWidth(self.pressureThresholdButton.sizePolicy().hasHeightForWidth())
-        self.pressureThresholdButton.setSizePolicy(sizePolicy4)
-
-        self.pressureThresholdLayot.addWidget(self.pressureThresholdButton)
-
-
-        self.gridLayout.addLayout(self.pressureThresholdLayot, 1, 0, 1, 1)
-
-        self.engineThrustThreshold = QVBoxLayout()
-        self.engineThrustThreshold.setObjectName(u"engineThrustThreshold")
-        self.engineThrustThresholdLabel = QLabel(self.configurationTab)
-        self.engineThrustThresholdLabel.setObjectName(u"engineThrustThresholdLabel")
-
-        self.engineThrustThreshold.addWidget(self.engineThrustThresholdLabel)
-
-        self.engineThrustThresholdList = QListWidget(self.configurationTab)
-        self.engineThrustThresholdList.setObjectName(u"engineThrustThresholdList")
-        sizePolicy4.setHeightForWidth(self.engineThrustThresholdList.sizePolicy().hasHeightForWidth())
-        self.engineThrustThresholdList.setSizePolicy(sizePolicy4)
-        self.engineThrustThresholdList.setMaximumSize(QSize(16777215, 75))
-
-        self.engineThrustThreshold.addWidget(self.engineThrustThresholdList)
-
-        self.engineThrustThresholdInput = QLineEdit(self.configurationTab)
-        self.engineThrustThresholdInput.setObjectName(u"engineThrustThresholdInput")
-        sizePolicy4.setHeightForWidth(self.engineThrustThresholdInput.sizePolicy().hasHeightForWidth())
-        self.engineThrustThresholdInput.setSizePolicy(sizePolicy4)
-
-        self.engineThrustThreshold.addWidget(self.engineThrustThresholdInput)
-
-        self.engineThrustThresholdButton = QPushButton(self.configurationTab)
-        self.engineThrustThresholdButton.setObjectName(u"engineThrustThresholdButton")
-        sizePolicy4.setHeightForWidth(self.engineThrustThresholdButton.sizePolicy().hasHeightForWidth())
-        self.engineThrustThresholdButton.setSizePolicy(sizePolicy4)
-
-        self.engineThrustThreshold.addWidget(self.engineThrustThresholdButton)
-
-
-        self.gridLayout.addLayout(self.engineThrustThreshold, 2, 1, 1, 1)
-
-        self.temperatureThresholdLayout = QVBoxLayout()
-        self.temperatureThresholdLayout.setObjectName(u"temperatureThresholdLayout")
-        self.temperatureThresholdLabel = QLabel(self.configurationTab)
-        self.temperatureThresholdLabel.setObjectName(u"temperatureThresholdLabel")
-
-        self.temperatureThresholdLayout.addWidget(self.temperatureThresholdLabel)
-
-        self.temperatureThresholdList = QListWidget(self.configurationTab)
-        self.temperatureThresholdList.setObjectName(u"temperatureThresholdList")
-        sizePolicy4.setHeightForWidth(self.temperatureThresholdList.sizePolicy().hasHeightForWidth())
-        self.temperatureThresholdList.setSizePolicy(sizePolicy4)
-        self.temperatureThresholdList.setMaximumSize(QSize(16777215, 75))
-
-        self.temperatureThresholdLayout.addWidget(self.temperatureThresholdList)
-
-        self.temperatureThresholdInput = QLineEdit(self.configurationTab)
-        self.temperatureThresholdInput.setObjectName(u"temperatureThresholdInput")
-        sizePolicy4.setHeightForWidth(self.temperatureThresholdInput.sizePolicy().hasHeightForWidth())
-        self.temperatureThresholdInput.setSizePolicy(sizePolicy4)
-
-        self.temperatureThresholdLayout.addWidget(self.temperatureThresholdInput)
-
-        self.temperatureThresholdButton = QPushButton(self.configurationTab)
-        self.temperatureThresholdButton.setObjectName(u"temperatureThresholdButton")
-        sizePolicy4.setHeightForWidth(self.temperatureThresholdButton.sizePolicy().hasHeightForWidth())
-        self.temperatureThresholdButton.setSizePolicy(sizePolicy4)
-
-        self.temperatureThresholdLayout.addWidget(self.temperatureThresholdButton)
-
-
-        self.gridLayout.addLayout(self.temperatureThresholdLayout, 1, 1, 1, 1)
-
+        self.graphOptionsLayout_2 = QGridLayout()
+        self.graphOptionsLayout_2.setObjectName(u"graphOptionsLayout_2")
         self.tankMassThresholdLayout = QVBoxLayout()
+        self.tankMassThresholdLayout.setSpacing(4)
         self.tankMassThresholdLayout.setObjectName(u"tankMassThresholdLayout")
-        self.tankMassThresholdLabel = QLabel(self.configurationTab)
+        self.tankMassThresholdLabel = QLabel(self.displayOptionsTab)
         self.tankMassThresholdLabel.setObjectName(u"tankMassThresholdLabel")
+        font3 = QFont()
+        font3.setBold(True)
+        self.tankMassThresholdLabel.setFont(font3)
+        self.tankMassThresholdLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.tankMassThresholdLayout.addWidget(self.tankMassThresholdLabel)
 
-        self.tankMassThresholdList = QListWidget(self.configurationTab)
+        self.tankMassDataDisplayLabel = QLabel(self.displayOptionsTab)
+        self.tankMassDataDisplayLabel.setObjectName(u"tankMassDataDisplayLabel")
+        font4 = QFont()
+        font4.setUnderline(True)
+        self.tankMassDataDisplayLabel.setFont(font4)
+
+        self.tankMassThresholdLayout.addWidget(self.tankMassDataDisplayLabel)
+
+        self.tankMassDataDisplayLayout = QHBoxLayout()
+        self.tankMassDataDisplayLayout.setObjectName(u"tankMassDataDisplayLayout")
+        self.tankMassLastXPointsRB = QRadioButton(self.displayOptionsTab)
+        self.tankMassDisplayButtonGroup = QButtonGroup(Widget)
+        self.tankMassDisplayButtonGroup.setObjectName(u"tankMassDisplayButtonGroup")
+        self.tankMassDisplayButtonGroup.addButton(self.tankMassLastXPointsRB)
+        self.tankMassLastXPointsRB.setObjectName(u"tankMassLastXPointsRB")
+        font5 = QFont()
+        font5.setPointSize(8)
+        self.tankMassLastXPointsRB.setFont(font5)
+        self.tankMassLastXPointsRB.setStyleSheet(u"margin: 1px 2px")
+
+        self.tankMassDataDisplayLayout.addWidget(self.tankMassLastXPointsRB)
+
+        self.tankMassLastXSecsRB = QRadioButton(self.displayOptionsTab)
+        self.tankMassDisplayButtonGroup.addButton(self.tankMassLastXSecsRB)
+        self.tankMassLastXSecsRB.setObjectName(u"tankMassLastXSecsRB")
+        self.tankMassLastXSecsRB.setFont(font5)
+        self.tankMassLastXSecsRB.setStyleSheet(u"margin: 1px 2px")
+
+        self.tankMassDataDisplayLayout.addWidget(self.tankMassLastXSecsRB)
+
+        self.tankMassXLabel = QLabel(self.displayOptionsTab)
+        self.tankMassXLabel.setObjectName(u"tankMassXLabel")
+        self.tankMassXLabel.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+
+        self.tankMassDataDisplayLayout.addWidget(self.tankMassXLabel)
+
+        self.tankMassXSB = QSpinBox(self.displayOptionsTab)
+        self.tankMassXSB.setObjectName(u"tankMassXSB")
+        self.tankMassXSB.setMinimum(1)
+        self.tankMassXSB.setMaximum(200)
+
+        self.tankMassDataDisplayLayout.addWidget(self.tankMassXSB)
+
+
+        self.tankMassThresholdLayout.addLayout(self.tankMassDataDisplayLayout)
+
+        self.tankMassThresholdList = QListWidget(self.displayOptionsTab)
         self.tankMassThresholdList.setObjectName(u"tankMassThresholdList")
-        sizePolicy4.setHeightForWidth(self.tankMassThresholdList.sizePolicy().hasHeightForWidth())
-        self.tankMassThresholdList.setSizePolicy(sizePolicy4)
+        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        sizePolicy3.setHorizontalStretch(0)
+        sizePolicy3.setVerticalStretch(0)
+        sizePolicy3.setHeightForWidth(self.tankMassThresholdList.sizePolicy().hasHeightForWidth())
+        self.tankMassThresholdList.setSizePolicy(sizePolicy3)
         self.tankMassThresholdList.setMaximumSize(QSize(16777215, 75))
 
         self.tankMassThresholdLayout.addWidget(self.tankMassThresholdList)
 
-        self.tankMassThresholdInput = QLineEdit(self.configurationTab)
+        self.tankMassThresholdInput = QLineEdit(self.displayOptionsTab)
         self.tankMassThresholdInput.setObjectName(u"tankMassThresholdInput")
-        sizePolicy4.setHeightForWidth(self.tankMassThresholdInput.sizePolicy().hasHeightForWidth())
-        self.tankMassThresholdInput.setSizePolicy(sizePolicy4)
+        sizePolicy3.setHeightForWidth(self.tankMassThresholdInput.sizePolicy().hasHeightForWidth())
+        self.tankMassThresholdInput.setSizePolicy(sizePolicy3)
 
         self.tankMassThresholdLayout.addWidget(self.tankMassThresholdInput)
 
-        self.tankMassThresholdButton = QPushButton(self.configurationTab)
+        self.tankMassThresholdButton = QPushButton(self.displayOptionsTab)
         self.tankMassThresholdButton.setObjectName(u"tankMassThresholdButton")
-        sizePolicy4.setHeightForWidth(self.tankMassThresholdButton.sizePolicy().hasHeightForWidth())
-        self.tankMassThresholdButton.setSizePolicy(sizePolicy4)
+        sizePolicy3.setHeightForWidth(self.tankMassThresholdButton.sizePolicy().hasHeightForWidth())
+        self.tankMassThresholdButton.setSizePolicy(sizePolicy3)
 
         self.tankMassThresholdLayout.addWidget(self.tankMassThresholdButton)
 
 
-        self.gridLayout.addLayout(self.tankMassThresholdLayout, 2, 0, 1, 1)
+        self.graphOptionsLayout_2.addLayout(self.tankMassThresholdLayout, 1, 0, 1, 1)
 
-        self.graphThresholdLabel = QLabel(self.configurationTab)
-        self.graphThresholdLabel.setObjectName(u"graphThresholdLabel")
-        self.graphThresholdLabel.setFont(font2)
-        self.graphThresholdLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.engineThrustThreshold = QVBoxLayout()
+        self.engineThrustThreshold.setSpacing(4)
+        self.engineThrustThreshold.setObjectName(u"engineThrustThreshold")
+        self.engineThrustThresholdLabel = QLabel(self.displayOptionsTab)
+        self.engineThrustThresholdLabel.setObjectName(u"engineThrustThresholdLabel")
+        self.engineThrustThresholdLabel.setFont(font3)
+        self.engineThrustThresholdLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.gridLayout.addWidget(self.graphThresholdLabel, 0, 0, 1, 2)
+        self.engineThrustThreshold.addWidget(self.engineThrustThresholdLabel)
+
+        self.engineThrustDataDisplayLabel = QLabel(self.displayOptionsTab)
+        self.engineThrustDataDisplayLabel.setObjectName(u"engineThrustDataDisplayLabel")
+        self.engineThrustDataDisplayLabel.setFont(font4)
+
+        self.engineThrustThreshold.addWidget(self.engineThrustDataDisplayLabel)
+
+        self.engineThrustDataDisplayLayout = QHBoxLayout()
+        self.engineThrustDataDisplayLayout.setObjectName(u"engineThrustDataDisplayLayout")
+        self.engineThrustLastXPointsRB = QRadioButton(self.displayOptionsTab)
+        self.engineThrustDisplayButtonGroup = QButtonGroup(Widget)
+        self.engineThrustDisplayButtonGroup.setObjectName(u"engineThrustDisplayButtonGroup")
+        self.engineThrustDisplayButtonGroup.addButton(self.engineThrustLastXPointsRB)
+        self.engineThrustLastXPointsRB.setObjectName(u"engineThrustLastXPointsRB")
+        self.engineThrustLastXPointsRB.setFont(font5)
+        self.engineThrustLastXPointsRB.setStyleSheet(u"margin: 1px 2px")
+
+        self.engineThrustDataDisplayLayout.addWidget(self.engineThrustLastXPointsRB)
+
+        self.engineThrustLastXSecsRB = QRadioButton(self.displayOptionsTab)
+        self.engineThrustDisplayButtonGroup.addButton(self.engineThrustLastXSecsRB)
+        self.engineThrustLastXSecsRB.setObjectName(u"engineThrustLastXSecsRB")
+        self.engineThrustLastXSecsRB.setFont(font5)
+        self.engineThrustLastXSecsRB.setStyleSheet(u"margin: 1px 2px")
+
+        self.engineThrustDataDisplayLayout.addWidget(self.engineThrustLastXSecsRB)
+
+        self.engineThrustXLabel = QLabel(self.displayOptionsTab)
+        self.engineThrustXLabel.setObjectName(u"engineThrustXLabel")
+        self.engineThrustXLabel.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+
+        self.engineThrustDataDisplayLayout.addWidget(self.engineThrustXLabel)
+
+        self.engineThrustXSB = QSpinBox(self.displayOptionsTab)
+        self.engineThrustXSB.setObjectName(u"engineThrustXSB")
+        self.engineThrustXSB.setMinimum(1)
+        self.engineThrustXSB.setMaximum(200)
+
+        self.engineThrustDataDisplayLayout.addWidget(self.engineThrustXSB)
 
 
-        self.formLayout.setLayout(10, QFormLayout.SpanningRole, self.gridLayout)
+        self.engineThrustThreshold.addLayout(self.engineThrustDataDisplayLayout)
 
-        self.verticalSpacer_3 = QSpacerItem(20, 10, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+        self.engineThrustThresholdList = QListWidget(self.displayOptionsTab)
+        self.engineThrustThresholdList.setObjectName(u"engineThrustThresholdList")
+        sizePolicy3.setHeightForWidth(self.engineThrustThresholdList.sizePolicy().hasHeightForWidth())
+        self.engineThrustThresholdList.setSizePolicy(sizePolicy3)
+        self.engineThrustThresholdList.setMaximumSize(QSize(16777215, 75))
 
-        self.formLayout.setItem(11, QFormLayout.FieldRole, self.verticalSpacer_3)
+        self.engineThrustThreshold.addWidget(self.engineThrustThresholdList)
 
-        self.saveConfigButton = QPushButton(self.configurationTab)
-        self.saveConfigButton.setObjectName(u"saveConfigButton")
+        self.engineThrustThresholdInput = QLineEdit(self.displayOptionsTab)
+        self.engineThrustThresholdInput.setObjectName(u"engineThrustThresholdInput")
+        sizePolicy3.setHeightForWidth(self.engineThrustThresholdInput.sizePolicy().hasHeightForWidth())
+        self.engineThrustThresholdInput.setSizePolicy(sizePolicy3)
 
-        self.formLayout.setWidget(12, QFormLayout.SpanningRole, self.saveConfigButton)
+        self.engineThrustThreshold.addWidget(self.engineThrustThresholdInput)
 
-        self.tabWidget.addTab(self.configurationTab, "")
+        self.engineThrustThresholdButton = QPushButton(self.displayOptionsTab)
+        self.engineThrustThresholdButton.setObjectName(u"engineThrustThresholdButton")
+        sizePolicy3.setHeightForWidth(self.engineThrustThresholdButton.sizePolicy().hasHeightForWidth())
+        self.engineThrustThresholdButton.setSizePolicy(sizePolicy3)
+
+        self.engineThrustThreshold.addWidget(self.engineThrustThresholdButton)
+
+
+        self.graphOptionsLayout_2.addLayout(self.engineThrustThreshold, 1, 1, 1, 1)
+
+        self.temperatureGraphOptionsLayout = QVBoxLayout()
+        self.temperatureGraphOptionsLayout.setSpacing(4)
+        self.temperatureGraphOptionsLayout.setObjectName(u"temperatureGraphOptionsLayout")
+        self.temperatureThresholdLabel = QLabel(self.displayOptionsTab)
+        self.temperatureThresholdLabel.setObjectName(u"temperatureThresholdLabel")
+        self.temperatureThresholdLabel.setFont(font3)
+        self.temperatureThresholdLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.temperatureGraphOptionsLayout.addWidget(self.temperatureThresholdLabel)
+
+        self.temperatureDataDisplayLabel = QLabel(self.displayOptionsTab)
+        self.temperatureDataDisplayLabel.setObjectName(u"temperatureDataDisplayLabel")
+        self.temperatureDataDisplayLabel.setFont(font4)
+
+        self.temperatureGraphOptionsLayout.addWidget(self.temperatureDataDisplayLabel)
+
+        self.temperatureDataDisplayLayout = QHBoxLayout()
+        self.temperatureDataDisplayLayout.setObjectName(u"temperatureDataDisplayLayout")
+        self.temperatureDataDisplayLayout.setContentsMargins(-1, -1, -1, 3)
+        self.temperatureLastXPointsRB = QRadioButton(self.displayOptionsTab)
+        self.temperatureDisplayButtonGroup = QButtonGroup(Widget)
+        self.temperatureDisplayButtonGroup.setObjectName(u"temperatureDisplayButtonGroup")
+        self.temperatureDisplayButtonGroup.addButton(self.temperatureLastXPointsRB)
+        self.temperatureLastXPointsRB.setObjectName(u"temperatureLastXPointsRB")
+        self.temperatureLastXPointsRB.setFont(font5)
+        self.temperatureLastXPointsRB.setStyleSheet(u"margin: 1px 2px")
+
+        self.temperatureDataDisplayLayout.addWidget(self.temperatureLastXPointsRB)
+
+        self.temperatureLastXSecsRB = QRadioButton(self.displayOptionsTab)
+        self.temperatureDisplayButtonGroup.addButton(self.temperatureLastXSecsRB)
+        self.temperatureLastXSecsRB.setObjectName(u"temperatureLastXSecsRB")
+        self.temperatureLastXSecsRB.setFont(font5)
+        self.temperatureLastXSecsRB.setStyleSheet(u"margin: 1px 2px")
+
+        self.temperatureDataDisplayLayout.addWidget(self.temperatureLastXSecsRB)
+
+        self.temperatureXLabel = QLabel(self.displayOptionsTab)
+        self.temperatureXLabel.setObjectName(u"temperatureXLabel")
+        self.temperatureXLabel.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+
+        self.temperatureDataDisplayLayout.addWidget(self.temperatureXLabel)
+
+        self.temperatureXSB = QSpinBox(self.displayOptionsTab)
+        self.temperatureXSB.setObjectName(u"temperatureXSB")
+        self.temperatureXSB.setMinimum(1)
+        self.temperatureXSB.setMaximum(200)
+
+        self.temperatureDataDisplayLayout.addWidget(self.temperatureXSB)
+
+
+        self.temperatureGraphOptionsLayout.addLayout(self.temperatureDataDisplayLayout)
+
+        self.temperatureThresholdList = QListWidget(self.displayOptionsTab)
+        self.temperatureThresholdList.setObjectName(u"temperatureThresholdList")
+        sizePolicy3.setHeightForWidth(self.temperatureThresholdList.sizePolicy().hasHeightForWidth())
+        self.temperatureThresholdList.setSizePolicy(sizePolicy3)
+        self.temperatureThresholdList.setMaximumSize(QSize(16777215, 75))
+
+        self.temperatureGraphOptionsLayout.addWidget(self.temperatureThresholdList)
+
+        self.temperatureThresholdInput = QLineEdit(self.displayOptionsTab)
+        self.temperatureThresholdInput.setObjectName(u"temperatureThresholdInput")
+        sizePolicy3.setHeightForWidth(self.temperatureThresholdInput.sizePolicy().hasHeightForWidth())
+        self.temperatureThresholdInput.setSizePolicy(sizePolicy3)
+
+        self.temperatureGraphOptionsLayout.addWidget(self.temperatureThresholdInput)
+
+        self.temperatureThresholdButton = QPushButton(self.displayOptionsTab)
+        self.temperatureThresholdButton.setObjectName(u"temperatureThresholdButton")
+        sizePolicy3.setHeightForWidth(self.temperatureThresholdButton.sizePolicy().hasHeightForWidth())
+        self.temperatureThresholdButton.setSizePolicy(sizePolicy3)
+
+        self.temperatureGraphOptionsLayout.addWidget(self.temperatureThresholdButton)
+
+
+        self.graphOptionsLayout_2.addLayout(self.temperatureGraphOptionsLayout, 0, 1, 1, 1)
+
+        self.pressureGraphOptionsLayout = QVBoxLayout()
+        self.pressureGraphOptionsLayout.setSpacing(4)
+        self.pressureGraphOptionsLayout.setObjectName(u"pressureGraphOptionsLayout")
+        self.pressureThresholdLabel = QLabel(self.displayOptionsTab)
+        self.pressureThresholdLabel.setObjectName(u"pressureThresholdLabel")
+        font6 = QFont()
+        font6.setPointSize(9)
+        font6.setBold(True)
+        self.pressureThresholdLabel.setFont(font6)
+        self.pressureThresholdLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.pressureGraphOptionsLayout.addWidget(self.pressureThresholdLabel)
+
+        self.pressureDataDisplayLabel = QLabel(self.displayOptionsTab)
+        self.pressureDataDisplayLabel.setObjectName(u"pressureDataDisplayLabel")
+        font7 = QFont()
+        font7.setItalic(False)
+        font7.setUnderline(True)
+        self.pressureDataDisplayLabel.setFont(font7)
+
+        self.pressureGraphOptionsLayout.addWidget(self.pressureDataDisplayLabel)
+
+        self.pressureDataDisplayLayout = QHBoxLayout()
+        self.pressureDataDisplayLayout.setObjectName(u"pressureDataDisplayLayout")
+        self.pressureDataDisplayLayout.setContentsMargins(-1, -1, -1, 3)
+        self.pressureLastXPointsRB = QRadioButton(self.displayOptionsTab)
+        self.pressureDisplayButtonGroup = QButtonGroup(Widget)
+        self.pressureDisplayButtonGroup.setObjectName(u"pressureDisplayButtonGroup")
+        self.pressureDisplayButtonGroup.addButton(self.pressureLastXPointsRB)
+        self.pressureLastXPointsRB.setObjectName(u"pressureLastXPointsRB")
+        self.pressureLastXPointsRB.setFont(font5)
+        self.pressureLastXPointsRB.setStyleSheet(u"margin: 1px 2px")
+
+        self.pressureDataDisplayLayout.addWidget(self.pressureLastXPointsRB)
+
+        self.pressureLastXSecsRB = QRadioButton(self.displayOptionsTab)
+        self.pressureDisplayButtonGroup.addButton(self.pressureLastXSecsRB)
+        self.pressureLastXSecsRB.setObjectName(u"pressureLastXSecsRB")
+        self.pressureLastXSecsRB.setFont(font5)
+        self.pressureLastXSecsRB.setStyleSheet(u"margin: 1px 2px")
+
+        self.pressureDataDisplayLayout.addWidget(self.pressureLastXSecsRB)
+
+        self.pressureXLabel = QLabel(self.displayOptionsTab)
+        self.pressureXLabel.setObjectName(u"pressureXLabel")
+        self.pressureXLabel.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+
+        self.pressureDataDisplayLayout.addWidget(self.pressureXLabel)
+
+        self.pressureXSB = QSpinBox(self.displayOptionsTab)
+        self.pressureXSB.setObjectName(u"pressureXSB")
+        self.pressureXSB.setMinimum(1)
+        self.pressureXSB.setMaximum(200)
+
+        self.pressureDataDisplayLayout.addWidget(self.pressureXSB)
+
+
+        self.pressureGraphOptionsLayout.addLayout(self.pressureDataDisplayLayout)
+
+        self.pressureThresholdList = QListWidget(self.displayOptionsTab)
+        self.pressureThresholdList.setObjectName(u"pressureThresholdList")
+        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
+        sizePolicy4.setHorizontalStretch(0)
+        sizePolicy4.setVerticalStretch(0)
+        sizePolicy4.setHeightForWidth(self.pressureThresholdList.sizePolicy().hasHeightForWidth())
+        self.pressureThresholdList.setSizePolicy(sizePolicy4)
+        self.pressureThresholdList.setMaximumSize(QSize(16777215, 75))
+
+        self.pressureGraphOptionsLayout.addWidget(self.pressureThresholdList)
+
+        self.pressureThresholdInput = QLineEdit(self.displayOptionsTab)
+        self.pressureThresholdInput.setObjectName(u"pressureThresholdInput")
+        sizePolicy3.setHeightForWidth(self.pressureThresholdInput.sizePolicy().hasHeightForWidth())
+        self.pressureThresholdInput.setSizePolicy(sizePolicy3)
+
+        self.pressureGraphOptionsLayout.addWidget(self.pressureThresholdInput)
+
+        self.pressureThresholdButton = QPushButton(self.displayOptionsTab)
+        self.pressureThresholdButton.setObjectName(u"pressureThresholdButton")
+        sizePolicy3.setHeightForWidth(self.pressureThresholdButton.sizePolicy().hasHeightForWidth())
+        self.pressureThresholdButton.setSizePolicy(sizePolicy3)
+
+        self.pressureGraphOptionsLayout.addWidget(self.pressureThresholdButton)
+
+
+        self.graphOptionsLayout_2.addLayout(self.pressureGraphOptionsLayout, 0, 0, 1, 1)
+
+
+        self.graphOptionsLayout.addLayout(self.graphOptionsLayout_2)
+
+
+        self.formLayout_2.setLayout(1, QFormLayout.SpanningRole, self.graphOptionsLayout)
+
+        self.saveDisplayConfigButton = QPushButton(self.displayOptionsTab)
+        self.saveDisplayConfigButton.setObjectName(u"saveDisplayConfigButton")
+
+        self.formLayout_2.setWidget(2, QFormLayout.FieldRole, self.saveDisplayConfigButton)
+
+        self.tabWidget.addTab(self.displayOptionsTab, "")
         self.logTab = QWidget()
         self.logTab.setObjectName(u"logTab")
+        self.logTab.setAutoFillBackground(True)
         self.verticalLayout_5 = QVBoxLayout(self.logTab)
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
         self.verticalLayout_6 = QVBoxLayout()
@@ -685,6 +884,9 @@ class Ui_Widget(object):
         self.continuityLabel.setText(QCoreApplication.translate("Widget", u"Continuity State:", None))
         self.continuityValueLabel.setText(QCoreApplication.translate("Widget", u"N/A", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.telemetryTab), QCoreApplication.translate("Widget", u"Telemetry", None))
+#if QT_CONFIG(tooltip)
+        self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.telemetryTab), QCoreApplication.translate("Widget", u"Main telemetry view", None))
+#endif // QT_CONFIG(tooltip)
         self.multicastConfigLabel.setText(QCoreApplication.translate("Widget", u"Multicast configuration", None))
 #if QT_CONFIG(tooltip)
         self.udpIpAddressLabel.setToolTip(QCoreApplication.translate("Widget", u"Address of multicast group", None))
@@ -697,31 +899,70 @@ class Ui_Widget(object):
         self.udpConnectButton.setText(QCoreApplication.translate("Widget", u"Join multicast group", None))
         self.serialConfigLabel.setText(QCoreApplication.translate("Widget", u"Serial configuration", None))
 #if QT_CONFIG(tooltip)
-        self.serialPortLabel.setToolTip(QCoreApplication.translate("Widget", u"Enter ipconfig in terminal to see interfaces", None))
+        self.serialPortLabel.setToolTip(QCoreApplication.translate("Widget", u"Serial device identifier", None))
 #endif // QT_CONFIG(tooltip)
         self.serialPortLabel.setText(QCoreApplication.translate("Widget", u"Serial port:", None))
+#if QT_CONFIG(tooltip)
+        self.baudRateLabel.setToolTip(QCoreApplication.translate("Widget", u"Baud rate of serial device", None))
+#endif // QT_CONFIG(tooltip)
         self.baudRateLabel.setText(QCoreApplication.translate("Widget", u"Baud rate:", None))
         self.serialConnectButton.setText(QCoreApplication.translate("Widget", u"Connect to serial port", None))
         self.serialRefreshButton.setText(QCoreApplication.translate("Widget", u"Refresh", None))
-        self.sensorDisplayOptionsLabel.setText(QCoreApplication.translate("Widget", u"Sensor display options", None))
-        self.numPointsAverageLabel.setText(QCoreApplication.translate("Widget", u"# points used for average", None))
-        self.graphOptionsLabel.setText(QCoreApplication.translate("Widget", u"Graph options", None))
-        self.graphRangeLabel.setText(QCoreApplication.translate("Widget", u"# points on graphs:", None))
+        self.saveConnConfigButton.setText(QCoreApplication.translate("Widget", u"Save default connection configuration", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.connectionTab), QCoreApplication.translate("Widget", u"Connection", None))
 #if QT_CONFIG(tooltip)
-        self.graphRangeInput.setToolTip(QCoreApplication.translate("Widget", u"Changing this number updates the maximum number of points shown on the graphs", None))
+        self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.connectionTab), QCoreApplication.translate("Widget", u"Setup multicat or serial connection", None))
 #endif // QT_CONFIG(tooltip)
-        self.pressureThresholdLabel.setText(QCoreApplication.translate("Widget", u"Pressure", None))
-        self.pressureThresholdButton.setText(QCoreApplication.translate("Widget", u"Add/remove threshold marker", None))
+        self.sensorDisplayOptionsLabel.setText(QCoreApplication.translate("Widget", u"Sensors & valves display options", None))
+#if QT_CONFIG(tooltip)
+        self.numPointsAverageLabel.setToolTip(QCoreApplication.translate("Widget", u"Number of most recent measurements to use when calculating an average", None))
+#endif // QT_CONFIG(tooltip)
+        self.numPointsAverageLabel.setText(QCoreApplication.translate("Widget", u"# points used for average", None))
+        self.defaultOpenValveslabel.setText(QCoreApplication.translate("Widget", u"Valves open by default", None))
+        self.defaultOpenValvesButton.setText(QCoreApplication.translate("Widget", u"Add/remove valve", None))
+        self.graphOptionsLabel.setText(QCoreApplication.translate("Widget", u"Graph options", None))
+        self.tankMassThresholdLabel.setText(QCoreApplication.translate("Widget", u"Tank Mass", None))
+        self.tankMassDataDisplayLabel.setText(QCoreApplication.translate("Widget", u"Data display mode:", None))
+        self.tankMassLastXPointsRB.setText(QCoreApplication.translate("Widget", u"Last X points", None))
+        self.tankMassLastXPointsRB.setProperty(u"type", QCoreApplication.translate("Widget", u"POINTS", None))
+        self.tankMassLastXSecsRB.setText(QCoreApplication.translate("Widget", u"Points in last X seconds", None))
+        self.tankMassLastXSecsRB.setProperty(u"type", QCoreApplication.translate("Widget", u"SECONDS", None))
+        self.tankMassXLabel.setText(QCoreApplication.translate("Widget", u"X:", None))
+        self.tankMassThresholdButton.setText(QCoreApplication.translate("Widget", u"Add/remove threshold marker", None))
         self.engineThrustThresholdLabel.setText(QCoreApplication.translate("Widget", u"Engine Thrust", None))
+        self.engineThrustDataDisplayLabel.setText(QCoreApplication.translate("Widget", u"Data display mode:", None))
+        self.engineThrustLastXPointsRB.setText(QCoreApplication.translate("Widget", u"Last X points", None))
+        self.engineThrustLastXPointsRB.setProperty(u"type", QCoreApplication.translate("Widget", u"POINTS", None))
+        self.engineThrustLastXSecsRB.setText(QCoreApplication.translate("Widget", u"Points in last X seconds", None))
+        self.engineThrustLastXSecsRB.setProperty(u"type", QCoreApplication.translate("Widget", u"SECONDS", None))
+        self.engineThrustXLabel.setText(QCoreApplication.translate("Widget", u"X:", None))
         self.engineThrustThresholdButton.setText(QCoreApplication.translate("Widget", u"Add/remove threshold marker", None))
         self.temperatureThresholdLabel.setText(QCoreApplication.translate("Widget", u"Temperature", None))
+        self.temperatureDataDisplayLabel.setText(QCoreApplication.translate("Widget", u"Data display mode:", None))
+        self.temperatureLastXPointsRB.setText(QCoreApplication.translate("Widget", u"Last X packets", None))
+        self.temperatureLastXPointsRB.setProperty(u"type", QCoreApplication.translate("Widget", u"POINTS", None))
+        self.temperatureLastXSecsRB.setText(QCoreApplication.translate("Widget", u"Packets in last X seconds", None))
+        self.temperatureLastXSecsRB.setProperty(u"type", QCoreApplication.translate("Widget", u"SECONDS", None))
+        self.temperatureXLabel.setText(QCoreApplication.translate("Widget", u"X:", None))
         self.temperatureThresholdButton.setText(QCoreApplication.translate("Widget", u"Add/remove threshold marker", None))
-        self.tankMassThresholdLabel.setText(QCoreApplication.translate("Widget", u"Tank Mass", None))
-        self.tankMassThresholdButton.setText(QCoreApplication.translate("Widget", u"Add/remove threshold marker", None))
-        self.graphThresholdLabel.setText(QCoreApplication.translate("Widget", u"Graph threshold lines", None))
-        self.saveConfigButton.setText(QCoreApplication.translate("Widget", u"Save configuration", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.configurationTab), QCoreApplication.translate("Widget", u"Configuration", None))
+        self.pressureThresholdLabel.setText(QCoreApplication.translate("Widget", u"Pressure", None))
+        self.pressureDataDisplayLabel.setText(QCoreApplication.translate("Widget", u"Data display mode:", None))
+        self.pressureLastXPointsRB.setText(QCoreApplication.translate("Widget", u"Last X points", None))
+        self.pressureLastXPointsRB.setProperty(u"type", QCoreApplication.translate("Widget", u"POINTS", None))
+        self.pressureLastXSecsRB.setText(QCoreApplication.translate("Widget", u"Points in last X seconds", None))
+        self.pressureLastXSecsRB.setProperty(u"type", QCoreApplication.translate("Widget", u"SECONDS", None))
+        self.pressureXLabel.setText(QCoreApplication.translate("Widget", u"X:", None))
+        self.pressureXSB.setSuffix("")
+        self.pressureThresholdButton.setText(QCoreApplication.translate("Widget", u"Add/remove threshold marker", None))
+        self.saveDisplayConfigButton.setText(QCoreApplication.translate("Widget", u"Save default display configuration", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.displayOptionsTab), QCoreApplication.translate("Widget", u"Display Configuration", None))
+#if QT_CONFIG(tooltip)
+        self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.displayOptionsTab), QCoreApplication.translate("Widget", u"Configure display and system options", None))
+#endif // QT_CONFIG(tooltip)
         self.exporter.setText(QCoreApplication.translate("Widget", u"Export to File", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.logTab), QCoreApplication.translate("Widget", u"Log", None))
+#if QT_CONFIG(tooltip)
+        self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.logTab), QCoreApplication.translate("Widget", u"Logs", None))
+#endif // QT_CONFIG(tooltip)
     # retranslateUi
 

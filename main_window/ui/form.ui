@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1375</width>
-    <height>1019</height>
+    <width>1569</width>
+    <height>925</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -50,6 +50,9 @@
       </property>
       <attribute name="title">
        <string>Telemetry</string>
+      </attribute>
+      <attribute name="toolTip">
+       <string>Main telemetry view</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
@@ -401,7 +404,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="configurationTab">
+     <widget class="QWidget" name="connectionTab">
       <property name="layoutDirection">
        <enum>Qt::LayoutDirection::LeftToRight</enum>
       </property>
@@ -409,7 +412,10 @@
        <bool>true</bool>
       </property>
       <attribute name="title">
-       <string>Configuration</string>
+       <string>Connection</string>
+      </attribute>
+      <attribute name="toolTip">
+       <string>Setup multicat or serial connection</string>
       </attribute>
       <layout class="QFormLayout" name="formLayout">
        <property name="rowWrapPolicy">
@@ -420,6 +426,9 @@
        </property>
        <property name="formAlignment">
         <set>Qt::AlignmentFlag::AlignCenter</set>
+       </property>
+       <property name="verticalSpacing">
+        <number>20</number>
        </property>
        <property name="leftMargin">
         <number>450</number>
@@ -435,10 +444,14 @@
        </property>
        <item row="0" column="0" colspan="2">
         <layout class="QVBoxLayout" name="connectionLayout">
+         <property name="spacing">
+          <number>10</number>
+         </property>
          <item>
           <widget class="QLabel" name="multicastConfigLabel">
            <property name="font">
             <font>
+             <pointsize>10</pointsize>
              <bold>true</bold>
             </font>
            </property>
@@ -520,27 +533,15 @@
         </layout>
        </item>
        <item row="1" column="0" colspan="2">
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Orientation::Vertical</enum>
-         </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::Policy::Fixed</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>10</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="2" column="0" colspan="2">
         <layout class="QVBoxLayout" name="serialLayout">
+         <property name="spacing">
+          <number>10</number>
+         </property>
          <item>
           <widget class="QLabel" name="serialConfigLabel">
            <property name="font">
             <font>
+             <pointsize>10</pointsize>
              <bold>true</bold>
             </font>
            </property>
@@ -557,7 +558,7 @@
            <item>
             <widget class="QLabel" name="serialPortLabel">
              <property name="toolTip">
-              <string>Enter ipconfig in terminal to see interfaces</string>
+              <string>Serial device identifier</string>
              </property>
              <property name="text">
               <string>Serial port:</string>
@@ -573,6 +574,9 @@
           <layout class="QHBoxLayout" name="serialBaudRateLayout">
            <item>
             <widget class="QLabel" name="baudRateLabel">
+             <property name="toolTip">
+              <string>Baud rate of serial device</string>
+             </property>
              <property name="text">
               <string>Baud rate:</string>
              </property>
@@ -606,33 +610,56 @@
          </item>
         </layout>
        </item>
-       <item row="3" column="1">
-        <spacer name="verticalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Orientation::Vertical</enum>
+       <item row="4" column="0" colspan="2">
+        <widget class="QPushButton" name="saveConnConfigButton">
+         <property name="text">
+          <string>Save default connection configuration</string>
          </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::Policy::Fixed</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>10</height>
-          </size>
-         </property>
-        </spacer>
+        </widget>
        </item>
-       <item row="5" column="1">
+      </layout>
+     </widget>
+     <widget class="QWidget" name="displayOptionsTab">
+      <property name="autoFillBackground">
+       <bool>true</bool>
+      </property>
+      <attribute name="title">
+       <string>Display Configuration</string>
+      </attribute>
+      <attribute name="toolTip">
+       <string>Configure display and system options</string>
+      </attribute>
+      <layout class="QFormLayout" name="formLayout_2">
+       <property name="labelAlignment">
+        <set>Qt::AlignmentFlag::AlignCenter</set>
+       </property>
+       <property name="formAlignment">
+        <set>Qt::AlignmentFlag::AlignCenter</set>
+       </property>
+       <property name="verticalSpacing">
+        <number>20</number>
+       </property>
+       <property name="leftMargin">
+        <number>400</number>
+       </property>
+       <property name="rightMargin">
+        <number>400</number>
+       </property>
+       <item row="0" column="0" colspan="2">
         <layout class="QVBoxLayout" name="sensorDisplayOptionsLayout">
+         <property name="spacing">
+          <number>10</number>
+         </property>
          <item>
           <widget class="QLabel" name="sensorDisplayOptionsLabel">
            <property name="font">
             <font>
+             <pointsize>10</pointsize>
              <bold>true</bold>
             </font>
            </property>
            <property name="text">
-            <string>Sensor display options</string>
+            <string>Sensors &amp; valves display options</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -643,8 +670,14 @@
           <layout class="QHBoxLayout" name="numPointsAverageLayout">
            <item>
             <widget class="QLabel" name="numPointsAverageLabel">
+             <property name="toolTip">
+              <string>Number of most recent measurements to use when calculating an average</string>
+             </property>
              <property name="text">
               <string># points used for average</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
              </property>
             </widget>
            </item>
@@ -657,30 +690,45 @@
            </item>
           </layout>
          </item>
+         <item>
+          <layout class="QVBoxLayout" name="defaultOpenValvesLayout">
+           <item>
+            <widget class="QLabel" name="defaultOpenValveslabel">
+             <property name="text">
+              <string>Valves open by default</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignmentFlag::AlignCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QListWidget" name="defaultOpenValvesList"/>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="defaultOpenValvesInput"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="defaultOpenValvesButton">
+             <property name="text">
+              <string>Add/remove valve</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
         </layout>
        </item>
-       <item row="7" column="1">
-        <spacer name="verticalSpacer_5">
-         <property name="orientation">
-          <enum>Qt::Orientation::Vertical</enum>
-         </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::Policy::Fixed</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>10</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="8" column="1">
+       <item row="1" column="0" colspan="2">
         <layout class="QVBoxLayout" name="graphOptionsLayout">
+         <property name="spacing">
+          <number>15</number>
+         </property>
          <item>
           <widget class="QLabel" name="graphOptionsLabel">
            <property name="font">
             <font>
+             <pointsize>10</pointsize>
              <bold>true</bold>
             </font>
            </property>
@@ -693,294 +741,596 @@
           </widget>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="graphRangeLayout">
-           <item>
-            <widget class="QLabel" name="graphRangeLabel">
-             <property name="text">
-              <string># points on graphs:</string>
+          <layout class="QGridLayout" name="graphOptionsLayout_2">
+           <item row="1" column="0">
+            <layout class="QVBoxLayout" name="tankMassThresholdLayout">
+             <property name="spacing">
+              <number>4</number>
              </property>
-            </widget>
+             <item>
+              <widget class="QLabel" name="tankMassThresholdLabel">
+               <property name="font">
+                <font>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>Tank Mass</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignmentFlag::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="tankMassDataDisplayLabel">
+               <property name="font">
+                <font>
+                 <underline>true</underline>
+                </font>
+               </property>
+               <property name="text">
+                <string>Data display mode:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="tankMassDataDisplayLayout">
+               <item>
+                <widget class="QRadioButton" name="tankMassLastXPointsRB">
+                 <property name="font">
+                  <font>
+                   <pointsize>8</pointsize>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">margin: 1px 2px</string>
+                 </property>
+                 <property name="text">
+                  <string>Last X points</string>
+                 </property>
+                 <property name="type" stdset="0">
+                  <string>POINTS</string>
+                 </property>
+                 <attribute name="buttonGroup">
+                  <string notr="true">tankMassDisplayButtonGroup</string>
+                 </attribute>
+                </widget>
+               </item>
+               <item>
+                <widget class="QRadioButton" name="tankMassLastXSecsRB">
+                 <property name="font">
+                  <font>
+                   <pointsize>8</pointsize>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">margin: 1px 2px</string>
+                 </property>
+                 <property name="text">
+                  <string>Points in last X seconds</string>
+                 </property>
+                 <property name="type" stdset="0">
+                  <string>SECONDS</string>
+                 </property>
+                 <attribute name="buttonGroup">
+                  <string notr="true">tankMassDisplayButtonGroup</string>
+                 </attribute>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="tankMassXLabel">
+                 <property name="text">
+                  <string>X:</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QSpinBox" name="tankMassXSB">
+                 <property name="minimum">
+                  <number>1</number>
+                 </property>
+                 <property name="maximum">
+                  <number>200</number>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <widget class="QListWidget" name="tankMassThresholdList">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>75</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="tankMassThresholdInput">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="tankMassThresholdButton">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Add/remove threshold marker</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
-           <item>
-            <widget class="QSpinBox" name="graphRangeInput">
-             <property name="toolTip">
-              <string>Changing this number updates the maximum number of points shown on the graphs</string>
+           <item row="1" column="1">
+            <layout class="QVBoxLayout" name="engineThrustThreshold">
+             <property name="spacing">
+              <number>4</number>
              </property>
-             <property name="minimum">
-              <number>10</number>
+             <item>
+              <widget class="QLabel" name="engineThrustThresholdLabel">
+               <property name="font">
+                <font>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>Engine Thrust</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignmentFlag::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="engineThrustDataDisplayLabel">
+               <property name="font">
+                <font>
+                 <underline>true</underline>
+                </font>
+               </property>
+               <property name="text">
+                <string>Data display mode:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="engineThrustDataDisplayLayout">
+               <item>
+                <widget class="QRadioButton" name="engineThrustLastXPointsRB">
+                 <property name="font">
+                  <font>
+                   <pointsize>8</pointsize>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">margin: 1px 2px</string>
+                 </property>
+                 <property name="text">
+                  <string>Last X points</string>
+                 </property>
+                 <property name="type" stdset="0">
+                  <string>POINTS</string>
+                 </property>
+                 <attribute name="buttonGroup">
+                  <string notr="true">engineThrustDisplayButtonGroup</string>
+                 </attribute>
+                </widget>
+               </item>
+               <item>
+                <widget class="QRadioButton" name="engineThrustLastXSecsRB">
+                 <property name="font">
+                  <font>
+                   <pointsize>8</pointsize>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">margin: 1px 2px</string>
+                 </property>
+                 <property name="text">
+                  <string>Points in last X seconds</string>
+                 </property>
+                 <property name="type" stdset="0">
+                  <string>SECONDS</string>
+                 </property>
+                 <attribute name="buttonGroup">
+                  <string notr="true">engineThrustDisplayButtonGroup</string>
+                 </attribute>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="engineThrustXLabel">
+                 <property name="text">
+                  <string>X:</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QSpinBox" name="engineThrustXSB">
+                 <property name="minimum">
+                  <number>1</number>
+                 </property>
+                 <property name="maximum">
+                  <number>200</number>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <widget class="QListWidget" name="engineThrustThresholdList">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>75</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="engineThrustThresholdInput">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="engineThrustThresholdButton">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Add/remove threshold marker</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="0" column="1">
+            <layout class="QVBoxLayout" name="temperatureGraphOptionsLayout">
+             <property name="spacing">
+              <number>4</number>
              </property>
-             <property name="value">
-              <number>25</number>
+             <item>
+              <widget class="QLabel" name="temperatureThresholdLabel">
+               <property name="font">
+                <font>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>Temperature</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignmentFlag::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="temperatureDataDisplayLabel">
+               <property name="font">
+                <font>
+                 <underline>true</underline>
+                </font>
+               </property>
+               <property name="text">
+                <string>Data display mode:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="temperatureDataDisplayLayout">
+               <property name="bottomMargin">
+                <number>3</number>
+               </property>
+               <item>
+                <widget class="QRadioButton" name="temperatureLastXPointsRB">
+                 <property name="font">
+                  <font>
+                   <pointsize>8</pointsize>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">margin: 1px 2px</string>
+                 </property>
+                 <property name="text">
+                  <string>Last X packets</string>
+                 </property>
+                 <property name="type" stdset="0">
+                  <string>POINTS</string>
+                 </property>
+                 <attribute name="buttonGroup">
+                  <string notr="true">temperatureDisplayButtonGroup</string>
+                 </attribute>
+                </widget>
+               </item>
+               <item>
+                <widget class="QRadioButton" name="temperatureLastXSecsRB">
+                 <property name="font">
+                  <font>
+                   <pointsize>8</pointsize>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">margin: 1px 2px</string>
+                 </property>
+                 <property name="text">
+                  <string>Packets in last X seconds</string>
+                 </property>
+                 <property name="type" stdset="0">
+                  <string>SECONDS</string>
+                 </property>
+                 <attribute name="buttonGroup">
+                  <string notr="true">temperatureDisplayButtonGroup</string>
+                 </attribute>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="temperatureXLabel">
+                 <property name="text">
+                  <string>X:</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QSpinBox" name="temperatureXSB">
+                 <property name="minimum">
+                  <number>1</number>
+                 </property>
+                 <property name="maximum">
+                  <number>200</number>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <widget class="QListWidget" name="temperatureThresholdList">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>75</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="temperatureThresholdInput">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="temperatureThresholdButton">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Add/remove threshold marker</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="0" column="0">
+            <layout class="QVBoxLayout" name="pressureGraphOptionsLayout">
+             <property name="spacing">
+              <number>4</number>
              </property>
-            </widget>
+             <item>
+              <widget class="QLabel" name="pressureThresholdLabel">
+               <property name="font">
+                <font>
+                 <pointsize>9</pointsize>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>Pressure</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignmentFlag::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="pressureDataDisplayLabel">
+               <property name="font">
+                <font>
+                 <italic>false</italic>
+                 <underline>true</underline>
+                </font>
+               </property>
+               <property name="text">
+                <string>Data display mode:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="pressureDataDisplayLayout">
+               <property name="bottomMargin">
+                <number>3</number>
+               </property>
+               <item>
+                <widget class="QRadioButton" name="pressureLastXPointsRB">
+                 <property name="font">
+                  <font>
+                   <pointsize>8</pointsize>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">margin: 1px 2px</string>
+                 </property>
+                 <property name="text">
+                  <string>Last X points</string>
+                 </property>
+                 <property name="type" stdset="0">
+                  <string>POINTS</string>
+                 </property>
+                 <attribute name="buttonGroup">
+                  <string notr="true">pressureDisplayButtonGroup</string>
+                 </attribute>
+                </widget>
+               </item>
+               <item>
+                <widget class="QRadioButton" name="pressureLastXSecsRB">
+                 <property name="font">
+                  <font>
+                   <pointsize>8</pointsize>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">margin: 1px 2px</string>
+                 </property>
+                 <property name="text">
+                  <string>Points in last X seconds</string>
+                 </property>
+                 <property name="type" stdset="0">
+                  <string>SECONDS</string>
+                 </property>
+                 <attribute name="buttonGroup">
+                  <string notr="true">pressureDisplayButtonGroup</string>
+                 </attribute>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="pressureXLabel">
+                 <property name="text">
+                  <string>X:</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QSpinBox" name="pressureXSB">
+                 <property name="suffix">
+                  <string/>
+                 </property>
+                 <property name="minimum">
+                  <number>1</number>
+                 </property>
+                 <property name="maximum">
+                  <number>200</number>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <widget class="QListWidget" name="pressureThresholdList">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>75</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="pressureThresholdInput">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pressureThresholdButton">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Add/remove threshold marker</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
           </layout>
          </item>
         </layout>
        </item>
-       <item row="9" column="1">
-        <spacer name="verticalSpacer_4">
-         <property name="orientation">
-          <enum>Qt::Orientation::Vertical</enum>
-         </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::Policy::Fixed</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>10</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="10" column="0" colspan="2">
-        <layout class="QGridLayout" name="gridLayout">
-         <item row="1" column="0">
-          <layout class="QVBoxLayout" name="pressureThresholdLayot">
-           <item>
-            <widget class="QLabel" name="pressureThresholdLabel">
-             <property name="text">
-              <string>Pressure</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QListWidget" name="pressureThresholdList">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>16777215</width>
-               <height>75</height>
-              </size>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="pressureThresholdInput">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="pressureThresholdButton">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>Add/remove threshold marker</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item row="2" column="1">
-          <layout class="QVBoxLayout" name="engineThrustThreshold">
-           <item>
-            <widget class="QLabel" name="engineThrustThresholdLabel">
-             <property name="text">
-              <string>Engine Thrust</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QListWidget" name="engineThrustThresholdList">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>16777215</width>
-               <height>75</height>
-              </size>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="engineThrustThresholdInput">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="engineThrustThresholdButton">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>Add/remove threshold marker</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item row="1" column="1">
-          <layout class="QVBoxLayout" name="temperatureThresholdLayout">
-           <item>
-            <widget class="QLabel" name="temperatureThresholdLabel">
-             <property name="text">
-              <string>Temperature</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QListWidget" name="temperatureThresholdList">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>16777215</width>
-               <height>75</height>
-              </size>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="temperatureThresholdInput">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="temperatureThresholdButton">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>Add/remove threshold marker</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item row="2" column="0">
-          <layout class="QVBoxLayout" name="tankMassThresholdLayout">
-           <item>
-            <widget class="QLabel" name="tankMassThresholdLabel">
-             <property name="text">
-              <string>Tank Mass</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QListWidget" name="tankMassThresholdList">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>16777215</width>
-               <height>75</height>
-              </size>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="tankMassThresholdInput">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="tankMassThresholdButton">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>Add/remove threshold marker</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item row="0" column="0" colspan="2">
-          <widget class="QLabel" name="graphThresholdLabel">
-           <property name="font">
-            <font>
-             <bold>true</bold>
-            </font>
-           </property>
-           <property name="text">
-            <string>Graph threshold lines</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignCenter</set>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item row="11" column="1">
-        <spacer name="verticalSpacer_3">
-         <property name="orientation">
-          <enum>Qt::Orientation::Vertical</enum>
-         </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::Policy::Fixed</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>10</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="12" column="0" colspan="2">
-        <widget class="QPushButton" name="saveConfigButton">
+       <item row="2" column="1">
+        <widget class="QPushButton" name="saveDisplayConfigButton">
          <property name="text">
-          <string>Save configuration</string>
+          <string>Save default display configuration</string>
          </property>
         </widget>
        </item>
       </layout>
      </widget>
      <widget class="QWidget" name="logTab">
+      <property name="autoFillBackground">
+       <bool>true</bool>
+      </property>
       <attribute name="title">
        <string>Log</string>
+      </attribute>
+      <attribute name="toolTip">
+       <string>Logs</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_5">
        <item>
@@ -1037,4 +1387,10 @@
   <include location="resources.qrc"/>
  </resources>
  <connections/>
+ <buttongroups>
+  <buttongroup name="pressureDisplayButtonGroup"/>
+  <buttongroup name="temperatureDisplayButtonGroup"/>
+  <buttongroup name="tankMassDisplayButtonGroup"/>
+  <buttongroup name="engineThrustDisplayButtonGroup"/>
+ </buttongroups>
 </ui>

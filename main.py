@@ -1,6 +1,7 @@
 import sys
 import ctypes
 
+from PySide6.QtCore import Qt
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication
 
@@ -13,5 +14,6 @@ if __name__ == "__main__":
     app.setWindowIcon(QIcon("hampter.ico"))
     main_window = MainWindow()
     main_window.setWindowIcon(QIcon("hampter.ico"))
+    main_window.setWindowState(Qt.WindowState.WindowMaximized)
     main_window.show()
     sys.exit(app.exec())
