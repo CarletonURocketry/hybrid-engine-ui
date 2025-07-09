@@ -21,18 +21,18 @@ class TelemetryLabel:
         self.qName.setStyleSheet("font-size: 17px")
         self.qName.setMinimumWidth(150)
         if self.qState.text() == "OPEN":
-            self.qState.setStyleSheet("background-color: rgb(0, 255, 0); font-weight: bold; font-size: 20px;")
+            self.qState.setStyleSheet("background-color: rgb(0, 255, 0); font-weight: bold; font-size: 20px; color: black;")
         else:
-            self.qState.setStyleSheet("background-color: rgb(255, 80, 80); font-weight: bold; font-size: 20px;")
+            self.qState.setStyleSheet("background-color: rgb(255, 80, 80); font-weight: bold; font-size: 20px; color: black;")
         self.qName.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignVCenter)
         self.qState.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
     def changeState(self, newState):
         self.qState.setText(newState)
         if newState == "OPEN":
-            self.qState.setStyleSheet("background-color: rgb(0, 255, 0); font-weight: bold; font-size: 20px;")
+            self.qState.setStyleSheet("background-color: rgb(0, 255, 0); font-weight: bold; font-size: 20px; color: black;")
         else:
-            self.qState.setStyleSheet("background-color: rgb(255, 80, 80); font-weight: bold; font-size: 20px;")
+            self.qState.setStyleSheet("background-color: rgb(255, 80, 80); font-weight: bold; font-size: 20px; color: black;")
 
 class SensorLabel:
     def __init__(self, name, reading, row, column, parentGrid):
@@ -67,7 +67,7 @@ class MainWindow(QWidget):
         refresh_serial_button_handler, serial_receive_data, serial_on_error
     from .data_handlers import plot_point, filter_data, update_serial_connection_display, \
         update_pad_server_display, update_control_client_display, process_data, decrease_heartbeat, \
-        reset_heartbeat_timeout, calculate_new_average
+        reset_heartbeat_timeout, calculate_new_average, update_arming_state, update_continuity_state
     from .recording_and_playback import recording_toggle_button_handler, open_file_button_handler
     from .logging import save_to_file, write_to_log, display_popup
     from .config import load_config, save_config, add_default_open_valve_handler, pressure_data_display_change_handler, \

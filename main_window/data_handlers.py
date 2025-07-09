@@ -95,20 +95,23 @@ def plot_point(self: "MainWindow", header: packet_spec.PacketHeader, message: pa
 def update_arming_state(self: "MainWindow", message: packet_spec.ArmingStatePacket):
     match message.state:
         case packet_spec.ArmingState.ARMED_PAD:
-            self.ui.armingStateValueLabel.setStyleSheet("background-color: rgb(6, 171, 82);")
             self.ui.armingStateValueLabel.setText("1 - ARMED PAD")
+            self.ui.armingStateValueLabel.setStyleSheet("background-color: rgb(6, 171, 82); color: black;")
         case packet_spec.ArmingState.ARMED_VALVES:
-            self.ui.armingStateValueLabel.setStyleSheet("background-color: rgb(174, 58, 239);")
             self.ui.armingStateValueLabel.setText("2 - ARMED VALVES")
+            self.ui.armingStateValueLabel.setStyleSheet("background-color: rgb(174, 58, 239); color: white;")
         case packet_spec.ArmingState.ARMED_IGNITION:
-            self.ui.armingStateValueLabel.setStyleSheet("background-color: rgb(4, 110, 192);")
             self.ui.armingStateValueLabel.setText("3 - ARMED IGNITION")
+            self.ui.armingStateValueLabel.setStyleSheet("background-color: rgb(4, 110, 192); color: white;")
         case packet_spec.ArmingState.ARMED_DISCONNECTED:
-            self.ui.armingStateValueLabel.setStyleSheet("background-color: rgb(252, 193, 0);")
             self.ui.armingStateValueLabel.setText("4 - ARMED DISCONNECTED")
+            self.ui.armingStateValueLabel.setStyleSheet("background-color: rgb(252, 193, 0); color: black;")
         case packet_spec.ArmingState.ARMED_LAUNCH:
-            self.ui.armingStateValueLabel.setStyleSheet("background-color: rgb(243, 5, 2);")
             self.ui.armingStateValueLabel.setText("5 - ARMED LAUNCH")
+            self.ui.armingStateValueLabel.setStyleSheet("background-color: rgb(243, 5, 2); color: white;")
+        case packet_spec.ArmingState.NOT_AVAILABLE:
+            self.ui.armingStateValueLabel.setText("N/A")
+            self.ui.armingStateValueLabel.setStyleSheet("background-color: rgb(0, 85, 127); color: white;")
             
     self.write_to_log(f"Arming state updated to {message.state}")
 
@@ -116,37 +119,37 @@ def update_pad_server_display(self: "MainWindow", status: packet_spec.IPConnecti
     match status:
         case packet_spec.IPConnectionStatus.CONNECTED:
             self.ui.udpConnStatusLabel.setText("Connected")
-            self.ui.udpConnStatusLabel.setStyleSheet("background-color: rgb(0, 255, 0);")
+            self.ui.udpConnStatusLabel.setStyleSheet("background-color: rgb(0, 255, 0); color: black;")
         case packet_spec.IPConnectionStatus.DISCONNECTED:
             self.ui.udpConnStatusLabel.setText("Connection lost")
-            self.ui.udpConnStatusLabel.setStyleSheet("background-color: rgb(255, 80, 80);")
+            self.ui.udpConnStatusLabel.setStyleSheet("background-color: rgb(255, 80, 80); color: black;")
         case packet_spec.IPConnectionStatus.NOT_CONNECTED:
             self.ui.udpConnStatusLabel.setText("Not connected")
-            self.ui.udpConnStatusLabel.setStyleSheet("background-color: rgb(0, 85, 127);")
+            self.ui.udpConnStatusLabel.setStyleSheet("background-color: rgb(0, 85, 127); color: white;")
 
 def update_control_client_display(self: "MainWindow", status: packet_spec.IPConnectionStatus):
     match status:
         case packet_spec.IPConnectionStatus.CONNECTED:
             self.ui.ccConnStatusLabel.setText("Connected")
-            self.ui.ccConnStatusLabel.setStyleSheet("background-color: rgb(0, 255, 0);")
+            self.ui.ccConnStatusLabel.setStyleSheet("background-color: rgb(0, 255, 0); color: black;")
         case packet_spec.IPConnectionStatus.RECONNECTING:
             self.ui.ccConnStatusLabel.setText("Reconnecting")
-            self.ui.ccConnStatusLabel.setStyleSheet("background-color: rgb(255, 128, 0);")
+            self.ui.ccConnStatusLabel.setStyleSheet("background-color: rgb(255, 128, 0); color: black;")
         case packet_spec.IPConnectionStatus.DISCONNECTED:
             self.ui.ccConnStatusLabel.setText("Connection lost")
-            self.ui.ccConnStatusLabel.setStyleSheet("background-color: rgb(255, 80, 80);")
+            self.ui.ccConnStatusLabel.setStyleSheet("background-color: rgb(255, 80, 80); color: black;")
         case packet_spec.IPConnectionStatus.NOT_CONNECTED:
             self.ui.ccConnStatusLabel.setText("Not connected")
-            self.ui.ccConnStatusLabel.setStyleSheet("background-color: rgb(0, 85, 127);")
+            self.ui.ccConnStatusLabel.setStyleSheet("background-color: rgb(0, 85, 127); color: white")
 
 def update_serial_connection_display(self: "MainWindow", status: packet_spec.SerialConnectionStatus):
     match status:
         case packet_spec.SerialConnectionStatus.CONNECTED:                
             self.ui.serialConnStatusLabel.setText("Connected")
-            self.ui.serialConnStatusLabel.setStyleSheet("background-color: rgb(0, 255, 0);")
+            self.ui.serialConnStatusLabel.setStyleSheet("background-color: rgb(0, 255, 0); color: black;")
         case packet_spec.SerialConnectionStatus.NOT_CONNECTED:
             self.ui.serialConnStatusLabel.setText("Not connected")
-            self.ui.serialConnStatusLabel.setStyleSheet("background-color: rgb(0, 85, 127);")
+            self.ui.serialConnStatusLabel.setStyleSheet("background-color: rgb(0, 85, 127); color: white;")
 
 def update_act_state(self: "MainWindow", message: packet_spec.ActuatorStatePacket):
     match message.state:
@@ -171,8 +174,13 @@ def update_continuity_state(self: "MainWindow", message: packet_spec.ContinuityP
     match message.state:
         case packet_spec.ContinuityState.OPEN:
             self.ui.continuityValueLabel.setText("NOT CONTINUOUS")
+            self.ui.continuityValueLabel.setStyleSheet("background-color: rgb(255, 80, 80); color: black;")
         case packet_spec.ContinuityState.CLOSED:
             self.ui.continuityValueLabel.setText("CONTINUOUS")
+            self.ui.continuityValueLabel.setStyleSheet("background-color: rgb(0, 255, 0); color: black;")
+        case packet_spec.ContinuityState.NOT_AVAILABLE:
+            self.ui.continuityValueLabel.setText("N/A")
+            self.ui.continuityValueLabel.setStyleSheet("background-color: rgb(0, 85, 127); color: white;")
 
 def filter_data(self: "MainWindow"):
     for key in self.plots:
