@@ -53,6 +53,9 @@ def turn_off_valve(self: "MainWindow", id: int):
 def change_new_reading(self: "MainWindow", id: int, newReading: str):
     self.sensors[id].changeReading(newReading)
 
+def calculate_new_average(self: "MainWindow", old_average: float, new_point: float):
+    return (old_average * self.points_used_for_average) + (new_point * (1 - self.points_used_for_average))
+
 def plot_point(self: "MainWindow", header: packet_spec.PacketHeader, message: packet_spec.PacketMessage):
     plots = self.plots
     value_labels = self.pid_window.value_labels
@@ -66,24 +69,28 @@ def plot_point(self: "MainWindow", header: packet_spec.PacketHeader, message: pa
                     temperatureId:str = "t" + str(message.id)
                     plots[temperatureId].points = np.append(plots[temperatureId].points, np.array([[message.time_since_power, message.temperature]]), axis=0)
                     plots[temperatureId].data_line.setData(plots[temperatureId].points)
-                    if temperatureId in value_labels: value_labels[temperatureId].setText(f"{round(np.mean(plots[temperatureId].points[-(self.points_used_for_average):, 1]), 2)} °C")
-                    change_new_reading(self, message.id, f"{round(np.mean(plots[temperatureId].points[-(self.points_used_for_average):, 1]), 2)} °C") #array id for temp label is 0 - 3
+                    plots[temperatureId].running_average = self.calculate_new_average(plots[temperatureId].running_average, message.temperature)
+                    if temperatureId in value_labels: value_labels[temperatureId].setText(f"{round(plots[temperatureId].running_average, 2)} °C")
+                    change_new_reading(self, message.id, f"{round(plots[temperatureId].running_average, 2)} °C") #array id for temp label is 0 - 3
                 case packet_spec.TelemetryPacketSubType.PRESSURE:
                     pressureId:str = "p" + str(message.id)
                     plots[pressureId].points = np.append(plots[pressureId].points, np.array([[message.time_since_power, message.pressure]]), axis=0)
                     plots[pressureId].data_line.setData(plots[pressureId].points)
-                    if pressureId in value_labels: value_labels[pressureId].setText(f"{round(np.mean(plots[pressureId].points[-(self.points_used_for_average):, 1]), 2)} psi")
-                    change_new_reading(self, message.id + 6, f"{round(np.mean(plots[pressureId].points[-(self.points_used_for_average):, 1]), 2)} psi") #array id for pressure label is 5 - 8
+                    plots[pressureId].running_average = self.calculate_new_average(plots[pressureId].running_average, message.pressure)
+                    if pressureId in value_labels: value_labels[pressureId].setText(f"{round(plots[pressureId].running_average, 2)} psi")
+                    change_new_reading(self, message.id + 6, f"{round(plots[pressureId].running_average, 2)} psi") #array id for pressure label is 5 - 8
                 case packet_spec.TelemetryPacketSubType.MASS:
                     massId:str = "m" + str(message.id)
                     plots[massId].points = np.append(plots[massId].points, np.array([[message.time_since_power, message.mass]]), axis=0)
                     plots[massId].data_line.setData(plots[massId].points)
-                    change_new_reading(self, 4, f"{round(np.mean(plots[massId].points[-(self.points_used_for_average):, 1]), 2)} kg")
+                    plots[massId].running_average = self.calculate_new_average(plots[massId].running_average, message.mass)
+                    change_new_reading(self, 4, f"{round(plots[massId].running_average, 2)} kg")
                 case packet_spec.TelemetryPacketSubType.THRUST:
                     thrustId:str = "th" + str(message.id)
                     plots[thrustId].points = np.append(plots[thrustId].points, np.array([[message.time_since_power, message.thrust]]), axis=0)
                     plots[thrustId].data_line.setData(plots[thrustId].points)
-                    change_new_reading(self, 5, f"{round(np.mean(plots[thrustId].points[-(self.points_used_for_average):, 1]), 2)} N")
+                    plots[thrustId].running_average = self.calculate_new_average(plots[thrustId].running_average, message.thrust)
+                    change_new_reading(self, 5, f"{round(plots[thrustId].running_average, 2)} N")
 
 def update_arming_state(self: "MainWindow", message: packet_spec.ArmingStatePacket):
     match message.state:

@@ -10,6 +10,7 @@ class PlotDataDisplayMode(Enum):
 
 @dataclass
 class PlotInfo:
+    running_average: int
     points: np.array
     data_line: PlotDataItem
     data_display_mode: PlotDataDisplayMode
