@@ -9,13 +9,8 @@ from pyqtgraph import mkPen, PlotDataItem, InfiniteLine, QtCore
 import numpy as np
 
 from .ui import Ui_Widget, Ui_PIDWindow
-
-points = np.empty((0,2))
-
-@dataclass
-class PlotInfo:
-    points: np.array
-    data_line: PlotDataItem
+from .csv_writer import CSVWriter
+from .plot_info import PlotDataDisplayMode, PlotInfo
 
 class TelemetryLabel:
     def __init__(self, name, state, row, column, parentGrid):
@@ -170,12 +165,30 @@ class MainWindow(QWidget):
         self.ui.pressurePlot.getAxis("left").setTextPen(black_pen)
         self.ui.pressurePlot.getAxis("bottom").setPen(black_pen)
         self.ui.pressurePlot.getAxis("bottom").setTextPen(black_pen)
-        self.plots["p0"] = PlotInfo(self.p0_points, self.ui.pressurePlot.plot(self.p0_points, pen=red_pen, name="p1"))
-        self.plots["p1"] = PlotInfo(self.p1_points, self.ui.pressurePlot.plot(self.p1_points, pen=green_pen, name="p2"))
-        self.plots["p2"] = PlotInfo(self.p2_points, self.ui.pressurePlot.plot(self.p2_points, pen=blue_pen, name="p3"))
-        self.plots["p3"] = PlotInfo(self.p3_points, self.ui.pressurePlot.plot(self.p3_points, pen=orange_pen, name="p4"))
-        self.plots["p4"] = PlotInfo(self.p4_points, self.ui.pressurePlot.plot(self.p4_points, pen=purple_pen, name="p5"))
-        self.plots["p5"] = PlotInfo(self.p5_points, self.ui.pressurePlot.plot(self.p5_points, pen=brown_pen, name="p6"))
+        self.plots["p0"] = PlotInfo(self.p0_points,
+                                    self.ui.pressurePlot.plot(self.p0_points, pen=red_pen, name="p1"),
+                                    PlotDataDisplayMode[self.config["graph_options"]["pressure"]["data_display_mode"].upper()],
+                                    self.config["graph_options"]["pressure"]["X"])
+        self.plots["p1"] = PlotInfo(self.p1_points,
+                                    self.ui.pressurePlot.plot(self.p1_points, pen=green_pen, name="p2"),
+                                    PlotDataDisplayMode[self.config["graph_options"]["pressure"]["data_display_mode"].upper()],
+                                    self.config["graph_options"]["pressure"]["X"])
+        self.plots["p2"] = PlotInfo(self.p2_points,
+                                    self.ui.pressurePlot.plot(self.p2_points, pen=blue_pen, name="p3"),
+                                    PlotDataDisplayMode[self.config["graph_options"]["pressure"]["data_display_mode"].upper()],
+                                    self.config["graph_options"]["pressure"]["X"])
+        self.plots["p3"] = PlotInfo(self.p3_points,
+                                    self.ui.pressurePlot.plot(self.p3_points, pen=orange_pen, name="p4"),
+                                    PlotDataDisplayMode[self.config["graph_options"]["pressure"]["data_display_mode"].upper()],
+                                    self.config["graph_options"]["pressure"]["X"])
+        self.plots["p4"] = PlotInfo(self.p4_points,
+                                    self.ui.pressurePlot.plot(self.p4_points, pen=purple_pen, name="p5"),
+                                    PlotDataDisplayMode[self.config["graph_options"]["pressure"]["data_display_mode"].upper()],
+                                    self.config["graph_options"]["pressure"]["X"])
+        self.plots["p5"] = PlotInfo(self.p5_points,
+                                    self.ui.pressurePlot.plot(self.p5_points, pen=brown_pen, name="p6"),
+                                    PlotDataDisplayMode[self.config["graph_options"]["pressure"]["data_display_mode"].upper()],
+                                    self.config["graph_options"]["pressure"]["X"])
         for marker in [self.ui.pressureThresholdList.item(x) for x in range(self.ui.pressureThresholdList.count())]:
             self.ui.pressurePlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=inf_line_pen))
 
@@ -187,10 +200,22 @@ class MainWindow(QWidget):
         self.ui.temperaturePlot.getAxis("left").setTextPen(black_pen)
         self.ui.temperaturePlot.getAxis("bottom").setPen(black_pen)
         self.ui.temperaturePlot.getAxis("bottom").setTextPen(black_pen)
-        self.plots["t0"] = PlotInfo(self.t0_points, self.ui.temperaturePlot.plot(self.t0_points, pen=red_pen, name="t1"))
-        self.plots["t1"] = PlotInfo(self.t1_points, self.ui.temperaturePlot.plot(self.t1_points, pen=green_pen, name="t2"))
-        self.plots["t2"] = PlotInfo(self.t2_points, self.ui.temperaturePlot.plot(self.t2_points, pen=blue_pen, name="t3"))
-        self.plots["t3"] = PlotInfo(self.t3_points, self.ui.temperaturePlot.plot(self.t3_points, pen=orange_pen, name="t4"))
+        self.plots["t0"] = PlotInfo(self.t0_points,
+                                    self.ui.temperaturePlot.plot(self.t0_points, pen=red_pen, name="t1"),
+                                    PlotDataDisplayMode[self.config["graph_options"]["temperature"]["data_display_mode"].upper()],
+                                    self.config["graph_options"]["temperature"]["X"])
+        self.plots["t1"] = PlotInfo(self.t1_points,
+                                    self.ui.temperaturePlot.plot(self.t1_points, pen=green_pen, name="t2"),
+                                    PlotDataDisplayMode[self.config["graph_options"]["temperature"]["data_display_mode"].upper()],
+                                    self.config["graph_options"]["temperature"]["X"])
+        self.plots["t2"] = PlotInfo(self.t2_points,
+                                    self.ui.temperaturePlot.plot(self.t2_points, pen=blue_pen, name="t3"),
+                                    PlotDataDisplayMode[self.config["graph_options"]["temperature"]["data_display_mode"].upper()],
+                                    self.config["graph_options"]["temperature"]["X"])
+        self.plots["t3"] = PlotInfo(self.t3_points,
+                                    self.ui.temperaturePlot.plot(self.t3_points, pen=orange_pen, name="t4"),
+                                    PlotDataDisplayMode[self.config["graph_options"]["temperature"]["data_display_mode"].upper()],
+                                    self.config["graph_options"]["temperature"]["X"])
         for marker in [self.ui.temperatureThresholdList.item(x) for x in range(self.ui.temperatureThresholdList.count())]:
             self.ui.temperaturePlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=inf_line_pen))
 
@@ -202,7 +227,10 @@ class MainWindow(QWidget):
         self.ui.tankMassPlot.getAxis("left").setTextPen(black_pen)
         self.ui.tankMassPlot.getAxis("bottom").setPen(black_pen)
         self.ui.tankMassPlot.getAxis("bottom").setTextPen(black_pen)
-        self.plots["m0"] = PlotInfo(self.tank_mass_points, self.ui.tankMassPlot.plot(self.tank_mass_points, pen=red_pen))
+        self.plots["m0"] = PlotInfo(self.tank_mass_points,
+                                    self.ui.tankMassPlot.plot(self.tank_mass_points, pen=red_pen),
+                                    PlotDataDisplayMode[self.config["graph_options"]["tank_mass"]["data_display_mode"].upper()],
+                                    self.config["graph_options"]["tank_mass"]["X"])
         for marker in [self.ui.tankMassThresholdList.item(x) for x in range(self.ui.tankMassThresholdList.count())]:
             self.ui.tankMassPlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=inf_line_pen))
 
@@ -214,7 +242,10 @@ class MainWindow(QWidget):
         self.ui.engineThrustPlot.getAxis("left").setTextPen(black_pen)
         self.ui.engineThrustPlot.getAxis("bottom").setPen(black_pen)
         self.ui.engineThrustPlot.getAxis("bottom").setTextPen(black_pen)
-        self.plots["th0"] = PlotInfo(self.engine_thrust_points, self.ui.engineThrustPlot.plot(self.engine_thrust_points, pen=red_pen))
+        self.plots["th0"] = PlotInfo(self.engine_thrust_points,
+                                     self.ui.engineThrustPlot.plot(self.engine_thrust_points, pen=red_pen),
+                                     PlotDataDisplayMode[self.config["graph_options"]["engine_thrust"]["data_display_mode"].upper()],
+                                    self.config["graph_options"]["engine_thrust"]["X"])
         for marker in [self.ui.engineThrustThresholdList.item(x) for x in range(self.ui.engineThrustThresholdList.count())]:
             self.ui.engineThrustPlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=inf_line_pen))
 
@@ -234,6 +265,8 @@ class MainWindow(QWidget):
         self.heartbeat_timer.timeout.connect(self.decrease_heartbeat)
 
         # Button handlers
+
+        # Connection button handlers
         self.ui.udpConnectButton.clicked.connect(self.udp_connection_button_handler)
         self.ui.serialConnectButton.clicked.connect(self.serial_connection_button_handler)
         self.ui.serialRefreshButton.clicked.connect(self.refresh_serial_button_handler)
@@ -247,9 +280,8 @@ class MainWindow(QWidget):
         # Connect toggle button for recording data
         self.ui.recordingToggleButton.toggled.connect(self.recording_toggle_button_handler)
         self.raw_data_file_out = None
-        self.data_csv_writer = self.CSVWriter(["t","p1","p2","p3","p4","p5","p6","t1","t2","t3","t4","m1","th1","status","Continuity"], 100, "data_csv")
-        self.state_csv_writer = self.CSVWriter(["t","Arming state","Igniter","XV-1","XV-2","XV-3","XV-4","XV-5","XV-6","XV-7","XV-8","XV-9","XV-10","XV-11","XV-12","Quick disconnect","Dump valve","Continuity"], 1, "valves_csv")
-
+        self.data_csv_writer = CSVWriter(["t","p1","p2","p3","p4","p5","p6","t1","t2","t3","t4","m1","th1","status","Continuity"], 100, "data_csv")
+        self.state_csv_writer = CSVWriter(["t","Arming state","Igniter","XV-1","XV-2","XV-3","XV-4","XV-5","XV-6","XV-7","XV-8","XV-9","XV-10","XV-11","XV-12","Quick disconnect","Dump valve","Continuity"], 1, "valves_csv")
 
         # Init valve and sensor labels
         self.init_actuator_valve_label()
