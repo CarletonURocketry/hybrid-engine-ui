@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1569</width>
+    <width>1585</width>
     <height>925</height>
    </rect>
   </property>
@@ -42,7 +42,7 @@
       <bool>false</bool>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="telemetryTab">
       <property name="autoFillBackground">
@@ -671,10 +671,10 @@
            <item>
             <widget class="QLabel" name="numPointsAverageLabel">
              <property name="toolTip">
-              <string>Number of most recent measurements to use when calculating an average</string>
+              <string>Value to be set as α when calculating new average</string>
              </property>
              <property name="text">
-              <string># points used for average</string>
+              <string>Moving average previous value weight (α)</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
@@ -682,9 +682,22 @@
             </widget>
            </item>
            <item>
-            <widget class="QSpinBox" name="numPointsAverageInput">
+            <widget class="QDoubleSpinBox" name="numPointsAverageInput">
+             <property name="toolTip">
+              <string>Formula for calculating average:
+New average = Old average * α + New value * (1-α)</string>
+             </property>
+             <property name="minimum">
+              <double>0.010000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>0.990000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.010000000000000</double>
+             </property>
              <property name="value">
-              <number>20</number>
+              <double>0.800000000000000</double>
              </property>
             </widget>
            </item>
@@ -1388,9 +1401,9 @@
  </resources>
  <connections/>
  <buttongroups>
-  <buttongroup name="pressureDisplayButtonGroup"/>
-  <buttongroup name="temperatureDisplayButtonGroup"/>
-  <buttongroup name="tankMassDisplayButtonGroup"/>
   <buttongroup name="engineThrustDisplayButtonGroup"/>
+  <buttongroup name="tankMassDisplayButtonGroup"/>
+  <buttongroup name="temperatureDisplayButtonGroup"/>
+  <buttongroup name="pressureDisplayButtonGroup"/>
  </buttongroups>
 </ui>

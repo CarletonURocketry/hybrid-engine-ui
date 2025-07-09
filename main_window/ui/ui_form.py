@@ -15,11 +15,11 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QButtonGroup, QComboBox, QFormLayout,
-    QGridLayout, QHBoxLayout, QLabel, QLineEdit,
-    QListWidget, QListWidgetItem, QPushButton, QRadioButton,
-    QSizePolicy, QSpinBox, QTabWidget, QTextBrowser,
-    QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QButtonGroup, QComboBox, QDoubleSpinBox,
+    QFormLayout, QGridLayout, QHBoxLayout, QLabel,
+    QLineEdit, QListWidget, QListWidgetItem, QPushButton,
+    QRadioButton, QSizePolicy, QSpinBox, QTabWidget,
+    QTextBrowser, QVBoxLayout, QWidget)
 
 from pyqtgraph import PlotWidget
 from . import rc_resources
@@ -28,7 +28,7 @@ class Ui_Widget(object):
     def setupUi(self, Widget):
         if not Widget.objectName():
             Widget.setObjectName(u"Widget")
-        Widget.resize(1569, 925)
+        Widget.resize(1585, 925)
         icon = QIcon()
         icon.addFile(u"logos/better_logo.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         Widget.setWindowIcon(icon)
@@ -428,9 +428,12 @@ class Ui_Widget(object):
 
         self.numPointsAverageLayout.addWidget(self.numPointsAverageLabel)
 
-        self.numPointsAverageInput = QSpinBox(self.displayOptionsTab)
+        self.numPointsAverageInput = QDoubleSpinBox(self.displayOptionsTab)
         self.numPointsAverageInput.setObjectName(u"numPointsAverageInput")
-        self.numPointsAverageInput.setValue(20)
+        self.numPointsAverageInput.setMinimum(0.010000000000000)
+        self.numPointsAverageInput.setMaximum(0.990000000000000)
+        self.numPointsAverageInput.setSingleStep(0.010000000000000)
+        self.numPointsAverageInput.setValue(0.800000000000000)
 
         self.numPointsAverageLayout.addWidget(self.numPointsAverageInput)
 
@@ -854,7 +857,7 @@ class Ui_Widget(object):
 
         self.retranslateUi(Widget)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(2)
 
 
         QMetaObject.connectSlotsByName(Widget)
@@ -915,9 +918,13 @@ class Ui_Widget(object):
 #endif // QT_CONFIG(tooltip)
         self.sensorDisplayOptionsLabel.setText(QCoreApplication.translate("Widget", u"Sensors & valves display options", None))
 #if QT_CONFIG(tooltip)
-        self.numPointsAverageLabel.setToolTip(QCoreApplication.translate("Widget", u"Number of most recent measurements to use when calculating an average", None))
+        self.numPointsAverageLabel.setToolTip(QCoreApplication.translate("Widget", u"Value to be set as \u03b1 when calculating new average", None))
 #endif // QT_CONFIG(tooltip)
-        self.numPointsAverageLabel.setText(QCoreApplication.translate("Widget", u"# points used for average", None))
+        self.numPointsAverageLabel.setText(QCoreApplication.translate("Widget", u"Moving average previous value weight (\u03b1)", None))
+#if QT_CONFIG(tooltip)
+        self.numPointsAverageInput.setToolTip(QCoreApplication.translate("Widget", u"Formula for calculating average:\n"
+"New average = Old average * \u03b1 + New value * (1-\u03b1)", None))
+#endif // QT_CONFIG(tooltip)
         self.defaultOpenValveslabel.setText(QCoreApplication.translate("Widget", u"Valves open by default", None))
         self.defaultOpenValvesButton.setText(QCoreApplication.translate("Widget", u"Add/remove valve", None))
         self.graphOptionsLabel.setText(QCoreApplication.translate("Widget", u"Graph options", None))
