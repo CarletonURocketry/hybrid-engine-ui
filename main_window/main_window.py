@@ -72,10 +72,11 @@ class MainWindow(QWidget):
         reset_heartbeat_timeout
     from .recording_and_playback import recording_toggle_button_handler, open_file_button_handler
     from .logging import save_to_file, write_to_log, display_popup
-    from .config import load_config, save_config, add_default_open_valve_handler, add_pressure_threshold_handler, \
-        add_temperature_threshold_handler, add_tank_mass_threshold_handler, add_engine_thrust_threshold_handler, \
-        graph_range_change_handler, points_for_average_change_handler
-    from .csv_writer import CSVWriter
+    from .config import load_config, save_config, add_default_open_valve_handler, pressure_data_display_change_handler, \
+        pressure_x_val_change_handler, temperature_data_display_change_handler, temperature_x_val_change_handler, \
+        tank_mass_data_display_change_handler, tank_mass_x_val_change_handler, engine_thrust_data_display_change_handler, \
+        engine_thrust_x_val_change_handler, add_pressure_threshold_handler,add_temperature_threshold_handler, add_tank_mass_threshold_handler, \
+        add_engine_thrust_threshold_handler, points_for_average_change_handler
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -119,6 +120,7 @@ class MainWindow(QWidget):
                 self.load_config(config)
         except FileNotFoundError:
             self.write_to_log("config.json not found")
+            self.display_popup(QMessageBox.Icon.Critical, "Couldn't load config", "config.json not found")
 
         for port in QSerialPortInfo.availablePorts():
             self.ui.serialPortDropdown.addItem(port.portName())
@@ -292,7 +294,17 @@ class MainWindow(QWidget):
         self.ui.defaultOpenValvesButton.clicked.connect(self.add_default_open_valve_handler)
 
         # Graph option handlers
-        self.ui.graphRangeInput.valueChanged.connect(self.graph_range_change_handler)
+        self.ui.pressureDisplayButtonGroup.buttonClicked.connect(self.pressure_data_display_change_handler)
+        self.ui.pressureXSB.valueChanged.connect(self.pressure_x_val_change_handler)
+        
+        self.ui.temperatureDisplayButtonGroup.buttonClicked.connect(self.temperature_data_display_change_handler)
+        self.ui.temperatureXSB.valueChanged.connect(self.temperature_x_val_change_handler)
+
+        self.ui.tankMassDisplayButtonGroup.buttonClicked.connect(self.tank_mass_data_display_change_handler)
+        self.ui.tankMassXSB.valueChanged.connect(self.tank_mass_x_val_change_handler)
+
+        self.ui.engineThrustDisplayButtonGroup.buttonClicked.connect(self.engine_thrust_data_display_change_handler)
+        self.ui.engineThrustXSB.valueChanged.connect(self.engine_thrust_x_val_change_handler)
 
         # Plot threshold handlers
         self.ui.pressureThresholdButton.clicked.connect(self.add_pressure_threshold_handler)
@@ -334,7 +346,7 @@ class MainWindow(QWidget):
         self.valves[13] = TelemetryLabel("Quick Disconnect", "CLOSED", 0, 0, self.ui.valveGrid)
         self.valves[14] =  TelemetryLabel("XV-3 (dump valve)", "CLOSED", 0, 4, self.ui.valveGrid)
         for i in range(1, 13):
-            initial_state = "OPEN" if i in self.config['default_open_valves'] else "CLOSED"
+            initial_state = "OPEN" if i in self.config["sensor_and_valve_options"]["default_open_valves"] else "CLOSED"
             label = f"XV-{str(i)}"
             if i == 3: label += " (unused)"
             if i == 5: label += " (fire valve)"

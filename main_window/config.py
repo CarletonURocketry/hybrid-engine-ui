@@ -10,6 +10,8 @@ from typing import TYPE_CHECKING
 from PySide6.QtWidgets import QMessageBox
 from pyqtgraph import mkPen, InfiniteLine
 
+from .plot_info import PlotDataDisplayMode
+
 if TYPE_CHECKING:
     from main_window import MainWindow
 
@@ -97,11 +99,11 @@ def save_config(self: "MainWindow"):
         
         with open('config.json', 'w') as config_file:
             json.dump(new_config, config_file, indent=2)
-        self.display_popup(QMessageBox.Icon.Information, "Configuration saved", "Saved configuration")
         self.write_to_log("Saved configuration")
+        self.display_popup(QMessageBox.Icon.Information, "Configuration saved", "Saved configuration")
     except Exception as e:
-        self.display_popup(QMessageBox.Icon.Warning, "Configuration save failed", "Could not save configuration")
         self.write_to_log("Could not save configuration")
+        self.display_popup(QMessageBox.Icon.Warning, "Configuration save failed", "Could not save configuration")
 
 def points_for_average_change_handler(self: "MainWindow"):
     self.points_used_for_average = int(self.ui.numPointsAverageInput.value())
@@ -117,6 +119,38 @@ def add_default_open_valve_handler(self: "MainWindow"):
             self.ui.defaultOpenValvesList.takeItem(self.ui.defaultOpenValvesList.currentRow())
     except Exception as e:
         self.display_popup(QMessageBox.Icon.Critical, "Action failed", f"Adding default open valve failed\n{str(e)}")
+
+def pressure_data_display_change_handler(self: "MainWindow", button):
+    for plot in ["p0", "p1", "p2", "p3", "p4", "p5"]:
+        self.plots[plot].data_display_mode = PlotDataDisplayMode[button.property("type")]
+
+def pressure_x_val_change_handler(self: "MainWindow", value: int):
+    for plot in ["p0", "p1", "p2", "p3", "p4", "p5"]:
+        self.plots[plot].x_val = value
+
+def temperature_data_display_change_handler(self: "MainWindow", button):
+    for plot in ["t0", "t1", "t2", "t3"]:
+        self.plots[plot].data_display_mode = PlotDataDisplayMode[button.property("type")]
+
+def temperature_x_val_change_handler(self: "MainWindow", value: int):
+    for plot in ["t0", "t1", "t2", "t3"]:
+        self.plots[plot].x_val = value
+
+def tank_mass_data_display_change_handler(self: "MainWindow", button):
+    for plot in ["m0"]:
+        self.plots[plot].data_display_mode = PlotDataDisplayMode[button.property("type")]
+
+def tank_mass_x_val_change_handler(self: "MainWindow", value: int):
+    for plot in ["m0"]:
+        self.plots[plot].x_val = value
+
+def engine_thrust_data_display_change_handler(self: "MainWindow", button):
+    for plot in ["th0"]:
+        self.plots[plot].data_display_mode = PlotDataDisplayMode[button.property("type")]
+
+def engine_thrust_x_val_change_handler(self: "MainWindow", value: int):
+    for plot in ["th0"]:
+        self.plots[plot].x_val = value
 
 def add_pressure_threshold_handler(self: "MainWindow"):
     try:
@@ -165,6 +199,3 @@ def add_engine_thrust_threshold_handler(self: "MainWindow"):
             self.ui.engineThrustThresholdList.takeItem(self.ui.engineThrustThresholdList.currentRow())
     except Exception as e:
         self.display_popup(QMessageBox.Icon.Critical, "Action failed", f"Adding engine thrust threshold marker failed\n{str(e)}")
-
-# def graph_range_change_handler(self: "MainWindow"):
-#     self.graph_range = int(self.ui.graphRangeInput.value())

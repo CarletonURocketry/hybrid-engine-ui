@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 import numpy as np
 
 import packet_spec
+from .plot_info import PlotDataDisplayMode
 
 if TYPE_CHECKING:
     from main_window import MainWindow
@@ -36,18 +37,17 @@ def process_data(self: "MainWindow", header: packet_spec.PacketHeader, message: 
             update_continuity_state(self, message)
             if reset_heartbeat: self.reset_heartbeat_timeout()
         case packet_spec.TelemetryPacketSubType.CONN_STATUS:
-            # This is the only place where control_client status should be updated
             self.update_control_client_display(message.status)
             if reset_heartbeat: self.reset_heartbeat_timeout()
         case _:
             pass  
 
 def turn_on_valve(self: "MainWindow", id: int):
-    if id in self.config['default_open_valves']: self.valves[id].changeState("CLOSED")
+    if id in self.config["sensor_and_valve_options"]["default_open_valves"]: self.valves[id].changeState("CLOSED")
     else: self.valves[id].changeState("OPEN")
 
 def turn_off_valve(self: "MainWindow", id: int):
-    if id in self.config['default_open_valves']: self.valves[id].changeState("OPEN")
+    if id in self.config["sensor_and_valve_options"]["default_open_valves"]: self.valves[id].changeState("OPEN")
     else: self.valves[id].changeState("CLOSED")
 
 def change_new_reading(self: "MainWindow", id: int, newReading: str):
@@ -171,7 +171,13 @@ def filter_data(self: "MainWindow"):
     for key in self.plots:
         if self.plots[key].points.size == 0:
             continue
-        self.plots[key].points = self.plots[key].points[-(self.graph_range - 1):]
+        match(self.plots[key].data_display_mode):
+            case PlotDataDisplayMode.POINTS:
+                self.plots[key].points = self.plots[key].points[-(self.plots[key].x_val - 1):]
+            case PlotDataDisplayMode.SECONDS:
+                min_time: int = self.plots[key].points[:,0].max() - self.plots[key].x_val
+                if key == "p0": print(min_time, self.plots[key].points[:,0].max())
+                self.plots[key].points = self.plots[key].points[self.plots[key].points[:,0] >= min_time]
         self.plots[key].data_line.setData(self.plots[key].points)
 
 # Heartbeats only supported for IP connections

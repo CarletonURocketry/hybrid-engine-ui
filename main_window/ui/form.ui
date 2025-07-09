@@ -789,6 +789,9 @@
                  <property name="text">
                   <string>Last X points</string>
                  </property>
+                 <property name="type" stdset="0">
+                  <string>POINTS</string>
+                 </property>
                  <attribute name="buttonGroup">
                   <string notr="true">tankMassDisplayButtonGroup</string>
                  </attribute>
@@ -806,6 +809,9 @@
                  </property>
                  <property name="text">
                   <string>Points in last X seconds</string>
+                 </property>
+                 <property name="type" stdset="0">
+                  <string>SECONDS</string>
                  </property>
                  <attribute name="buttonGroup">
                   <string notr="true">tankMassDisplayButtonGroup</string>
@@ -922,6 +928,9 @@
                  <property name="text">
                   <string>Last X points</string>
                  </property>
+                 <property name="type" stdset="0">
+                  <string>POINTS</string>
+                 </property>
                  <attribute name="buttonGroup">
                   <string notr="true">engineThrustDisplayButtonGroup</string>
                  </attribute>
@@ -939,6 +948,9 @@
                  </property>
                  <property name="text">
                   <string>Points in last X seconds</string>
+                 </property>
+                 <property name="type" stdset="0">
+                  <string>SECONDS</string>
                  </property>
                  <attribute name="buttonGroup">
                   <string notr="true">engineThrustDisplayButtonGroup</string>
@@ -1058,6 +1070,9 @@
                  <property name="text">
                   <string>Last X packets</string>
                  </property>
+                 <property name="type" stdset="0">
+                  <string>POINTS</string>
+                 </property>
                  <attribute name="buttonGroup">
                   <string notr="true">temperatureDisplayButtonGroup</string>
                  </attribute>
@@ -1075,6 +1090,9 @@
                  </property>
                  <property name="text">
                   <string>Packets in last X seconds</string>
+                 </property>
+                 <property name="type" stdset="0">
+                  <string>SECONDS</string>
                  </property>
                  <attribute name="buttonGroup">
                   <string notr="true">temperatureDisplayButtonGroup</string>
@@ -1196,6 +1214,9 @@
                  <property name="text">
                   <string>Last X points</string>
                  </property>
+                 <property name="type" stdset="0">
+                  <string>POINTS</string>
+                 </property>
                  <attribute name="buttonGroup">
                   <string notr="true">pressureDisplayButtonGroup</string>
                  </attribute>
@@ -1213,6 +1234,9 @@
                  </property>
                  <property name="text">
                   <string>Points in last X seconds</string>
+                 </property>
+                 <property name="type" stdset="0">
+                  <string>SECONDS</string>
                  </property>
                  <attribute name="buttonGroup">
                   <string notr="true">pressureDisplayButtonGroup</string>
