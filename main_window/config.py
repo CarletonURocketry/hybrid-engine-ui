@@ -57,14 +57,44 @@ def save_config(self: "MainWindow"):
         new_config["multicast_options"] = {}
         new_config["multicast_options"]["address"] = self.ui.udpIpAddressInput.text()
         new_config["multicast_options"]["port"] = self.ui.udpPortInput.text()
-        new_config["points_used_for_average"] = self.points_used_for_average
-        new_config["default_open_valves"] = [int(self.ui.defaultOpenValvesList.item(x).text()) for x in range(self.ui.defaultOpenValvesList.count())]
-        new_config["thresholds"] = {}
-        new_config["thresholds"]["pressure"] = [float(self.ui.pressureThresholdList.item(x).text()) for x in range(self.ui.pressureThresholdList.count())]
-        new_config["thresholds"]["temperature"] = [float(self.ui.temperatureThresholdList.item(x).text()) for x in range(self.ui.temperatureThresholdList.count())]
-        new_config["thresholds"]["tank_mass"] = [float(self.ui.tankMassThresholdList.item(x).text()) for x in range(self.ui.tankMassThresholdList.count())]
-        new_config["thresholds"]["engine_thrust"] = [float(self.ui.engineThrustThresholdList.item(x).text()) for x in range(self.ui.engineThrustThresholdList.count())]
-        new_config["graph_range"] = self.graph_range
+
+        new_config["sensor_and_valve_options"] = {}
+        new_config["sensor_and_valve_options"]["points_used_for_average"] = self.points_used_for_average
+        new_config["sensor_and_valve_options"]["default_open_valves"] = [int(self.ui.defaultOpenValvesList.item(x).text()) for x in range(self.ui.defaultOpenValvesList.count())]
+
+        new_config["graph_options"] = {}
+        new_config["graph_options"]["pressure"] = {}
+        if self.ui.pressureLastXPointsRB.isChecked():
+            new_config["graph_options"]["pressure"]["data_display_mode"] = "points"
+        elif self.ui.pressureLastXSecsRB.isChecked():
+            new_config["graph_options"]["pressure"]["data_display_mode"] = "seconds"
+        new_config["graph_options"]["pressure"]["X"] = self.ui.pressureXSB.value()
+        new_config["graph_options"]["pressure"]["thresholds"] = [float(self.ui.pressureThresholdList.item(x).text()) for x in range(self.ui.pressureThresholdList.count())]
+        
+        new_config["graph_options"]["temperature"] = {}
+        if self.ui.temperatureLastXPointsRB.isChecked():
+            new_config["graph_options"]["temperature"]["data_display_mode"] = "points"
+        elif self.ui.temperatureLastXSecsRB.isChecked():
+            new_config["graph_options"]["temperature"]["data_display_mode"] = "seconds"
+        new_config["graph_options"]["temperature"]["X"] = self.ui.temperatureXSB.value()
+        new_config["graph_options"]["temperature"]["thresholds"] = [float(self.ui.temperatureThresholdList.item(x).text()) for x in range(self.ui.temperatureThresholdList.count())]
+
+        new_config["graph_options"]["tank_mass"] = {}
+        if self.ui.tankMassLastXPointsRB.isChecked():
+            new_config["graph_options"]["tank_mass"]["data_display_mode"] = "points"
+        elif self.ui.tankMassLastXSecsRB.isChecked():
+            new_config["graph_options"]["tank_mass"]["data_display_mode"] = "seconds"
+        new_config["graph_options"]["tank_mass"]["X"] = self.ui.tankMassXSB.value()
+        new_config["graph_options"]["tank_mass"]["thresholds"] = [float(self.ui.tankMassThresholdList.item(x).text()) for x in range(self.ui.tankMassThresholdList.count())]
+        
+        new_config["graph_options"]["engine_thrust"] = {}
+        if self.ui.engineThrustLastXPointsRB.isChecked():
+            new_config["graph_options"]["engine_thrust"]["data_display_mode"] = "points"
+        elif self.ui.engineThrustLastXSecsRB.isChecked():
+            new_config["graph_options"]["engine_thrust"]["data_display_mode"] = "seconds"
+        new_config["graph_options"]["engine_thrust"]["X"] = self.ui.engineThrustXSB.value()
+        new_config["graph_options"]["engine_thrust"]["thresholds"] = [float(self.ui.engineThrustThresholdList.item(x).text()) for x in range(self.ui.engineThrustThresholdList.count())]
+        
         with open('config.json', 'w') as config_file:
             json.dump(new_config, config_file, indent=2)
         self.display_popup(QMessageBox.Icon.Information, "Configuration saved", "Saved configuration")
@@ -72,6 +102,9 @@ def save_config(self: "MainWindow"):
     except Exception as e:
         self.display_popup(QMessageBox.Icon.Warning, "Configuration save failed", "Could not save configuration")
         self.write_to_log("Could not save configuration")
+
+def points_for_average_change_handler(self: "MainWindow"):
+    self.points_used_for_average = int(self.ui.numPointsAverageInput.value())
 
 def add_default_open_valve_handler(self: "MainWindow"):
     try:
@@ -133,8 +166,5 @@ def add_engine_thrust_threshold_handler(self: "MainWindow"):
     except Exception as e:
         self.display_popup(QMessageBox.Icon.Critical, "Action failed", f"Adding engine thrust threshold marker failed\n{str(e)}")
 
-def points_for_average_change_handler(self: "MainWindow"):
-    self.points_used_for_average = int(self.ui.numPointsAverageInput.value())
-
-def graph_range_change_handler(self: "MainWindow"):
-    self.graph_range = int(self.ui.graphRangeInput.value())
+# def graph_range_change_handler(self: "MainWindow"):
+#     self.graph_range = int(self.ui.graphRangeInput.value())

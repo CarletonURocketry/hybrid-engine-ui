@@ -3,7 +3,7 @@
     "address": "239.100.110.210",
     "port": "50002"
   },
-  "sensor_and_valve_options":{
+  "sensor_and_valve_options": {
     "points_used_for_average": 20,
     "default_open_valves": [
       4
@@ -13,17 +13,24 @@
     "pressure": {
       "data_display_mode": "seconds",
       "X": 10,
-      "thresholds": [830.0, 1000.0]
+      "thresholds": [
+        830.0,
+        1000.0
+      ]
     },
     "temperature": {
       "data_display_mode": "seconds",
       "X": 10,
-      "thresholds": [20.0]
+      "thresholds": [
+        20.0
+      ]
     },
     "tank_mass": {
       "data_display_mode": "seconds",
       "X": 10,
-      "thresholds": [3.5]
+      "thresholds": [
+        3.5
+      ]
     },
     "engine_thrust": {
       "data_display_mode": "seconds",
