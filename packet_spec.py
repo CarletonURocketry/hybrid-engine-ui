@@ -50,6 +50,7 @@ class ArmingState(Enum):
     ARMED_IGNITION = 2
     ARMED_DISCONNECTED = 3
     ARMED_LAUNCH = 4
+    NOT_AVAILABLE = 5
 
 class ActuatorState(Enum):
     OFF = 0
@@ -62,6 +63,7 @@ class Warning(Enum):
 class ContinuityState(Enum):
     OPEN = 0
     CLOSED = 1
+    NOT_AVAILABLE = 2
 
 class SerialConnectionStatus(Enum):
   CONNECTED = 1

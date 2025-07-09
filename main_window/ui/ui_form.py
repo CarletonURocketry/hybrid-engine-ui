@@ -113,7 +113,7 @@ class Ui_Widget(object):
         font1.setPointSize(15)
         font1.setWeight(QFont.DemiBold)
         self.udpConnStatusLabel.setFont(font1)
-        self.udpConnStatusLabel.setStyleSheet(u"background-color: rgb(0, 85, 127);")
+        self.udpConnStatusLabel.setStyleSheet(u"background-color: rgb(0, 85, 127); color: white;")
         self.udpConnStatusLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.udpConnLabelsLayout.addWidget(self.udpConnStatusLabel)
@@ -132,7 +132,7 @@ class Ui_Widget(object):
         self.ccConnStatusLabel = QLabel(self.telemetryTab)
         self.ccConnStatusLabel.setObjectName(u"ccConnStatusLabel")
         self.ccConnStatusLabel.setFont(font1)
-        self.ccConnStatusLabel.setStyleSheet(u"background-color: rgb(0, 85, 127);")
+        self.ccConnStatusLabel.setStyleSheet(u"background-color: rgb(0, 85, 127); color: white;")
         self.ccConnStatusLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout_3.addWidget(self.ccConnStatusLabel)
@@ -151,7 +151,7 @@ class Ui_Widget(object):
         self.serialConnStatusLabel = QLabel(self.telemetryTab)
         self.serialConnStatusLabel.setObjectName(u"serialConnStatusLabel")
         self.serialConnStatusLabel.setFont(font1)
-        self.serialConnStatusLabel.setStyleSheet(u"background-color: rgb(0, 85, 127);")
+        self.serialConnStatusLabel.setStyleSheet(u"background-color: rgb(0, 85, 127); color: white;")
         self.serialConnStatusLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.serialConnLabelsLayout.addWidget(self.serialConnStatusLabel)
@@ -175,7 +175,7 @@ class Ui_Widget(object):
         self.armingStateValueLabel = QLabel(self.telemetryTab)
         self.armingStateValueLabel.setObjectName(u"armingStateValueLabel")
         self.armingStateValueLabel.setFont(font1)
-        self.armingStateValueLabel.setStyleSheet(u"background-color: rgb(0, 85, 127);")
+        self.armingStateValueLabel.setStyleSheet(u"background-color: rgb(0, 85, 127); color: white;")
         self.armingStateValueLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.armingStateLabelsLayout.addWidget(self.armingStateValueLabel)
@@ -194,7 +194,7 @@ class Ui_Widget(object):
         self.continuityValueLabel = QLabel(self.telemetryTab)
         self.continuityValueLabel.setObjectName(u"continuityValueLabel")
         self.continuityValueLabel.setFont(font1)
-        self.continuityValueLabel.setStyleSheet(u"background-color: rgb(0, 85, 127);")
+        self.continuityValueLabel.setStyleSheet(u"background-color: rgb(0, 85, 127); color: white;")
         self.continuityValueLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.continuityLabelsLayout.addWidget(self.continuityValueLabel)
@@ -857,7 +857,7 @@ class Ui_Widget(object):
 
         self.retranslateUi(Widget)
 
-        self.tabWidget.setCurrentIndex(2)
+        self.tabWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(Widget)
