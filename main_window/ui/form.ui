@@ -42,7 +42,7 @@
       <bool>false</bool>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="telemetryTab">
       <property name="autoFillBackground">
@@ -155,7 +155,7 @@
                     </font>
                    </property>
                    <property name="styleSheet">
-                    <string notr="true">background-color: rgb(0, 85, 127);</string>
+                    <string notr="true">background-color: rgb(0, 85, 127); color: white;</string>
                    </property>
                    <property name="text">
                     <string>Not connected</string>
@@ -190,7 +190,7 @@
                     </font>
                    </property>
                    <property name="styleSheet">
-                    <string notr="true">background-color: rgb(0, 85, 127);</string>
+                    <string notr="true">background-color: rgb(0, 85, 127); color: white;</string>
                    </property>
                    <property name="text">
                     <string>Not connected</string>
@@ -228,7 +228,7 @@
                     </font>
                    </property>
                    <property name="styleSheet">
-                    <string notr="true">background-color: rgb(0, 85, 127);</string>
+                    <string notr="true">background-color: rgb(0, 85, 127); color: white;</string>
                    </property>
                    <property name="text">
                     <string>Not connected</string>
@@ -267,7 +267,7 @@
                     </font>
                    </property>
                    <property name="styleSheet">
-                    <string notr="true">background-color: rgb(0, 85, 127);</string>
+                    <string notr="true">background-color: rgb(0, 85, 127); color: white;</string>
                    </property>
                    <property name="text">
                     <string>N/A</string>
@@ -302,7 +302,7 @@
                     </font>
                    </property>
                    <property name="styleSheet">
-                    <string notr="true">background-color: rgb(0, 85, 127);</string>
+                    <string notr="true">background-color: rgb(0, 85, 127); color: white;</string>
                    </property>
                    <property name="text">
                     <string>N/A</string>
