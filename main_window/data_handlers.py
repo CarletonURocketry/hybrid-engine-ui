@@ -135,10 +135,10 @@ def update_control_client_display(self: "MainWindow", status: packet_spec.IPConn
             self.ui.ccConnStatusLabel.setStyleSheet("background-color: rgb(0, 255, 0); color: black;")
         case packet_spec.IPConnectionStatus.RECONNECTING:
             self.ui.ccConnStatusLabel.setText("Reconnecting")
-            self.disconnect_status_timer.start()
+            self.disconnect_status_timer.start(self.disconnect_status_interval)
         case packet_spec.IPConnectionStatus.DISCONNECTED:
             self.ui.ccConnStatusLabel.setText("Connection lost")
-            self.disconnect_status_timer.start()
+            self.disconnect_status_timer.start(self.disconnect_status_interval)
         case packet_spec.IPConnectionStatus.NOT_CONNECTED:
             self.disconnect_status_timer.stop()
             self.ui.ccConnStatusLabel.setText("Not connected")
