@@ -130,15 +130,17 @@ def update_pad_server_display(self: "MainWindow", status: packet_spec.IPConnecti
 def update_control_client_display(self: "MainWindow", status: packet_spec.IPConnectionStatus):
     match status:
         case packet_spec.IPConnectionStatus.CONNECTED:
+            self.disconnect_status_timer.stop()
             self.ui.ccConnStatusLabel.setText("Connected")
             self.ui.ccConnStatusLabel.setStyleSheet("background-color: rgb(0, 255, 0); color: black;")
         case packet_spec.IPConnectionStatus.RECONNECTING:
             self.ui.ccConnStatusLabel.setText("Reconnecting")
-            self.ui.ccConnStatusLabel.setStyleSheet("background-color: rgb(255, 128, 0); color: black;")
+            self.disconnect_status_timer.start(self.disconnect_status_interval)
         case packet_spec.IPConnectionStatus.DISCONNECTED:
             self.ui.ccConnStatusLabel.setText("Connection lost")
-            self.ui.ccConnStatusLabel.setStyleSheet("background-color: rgb(255, 80, 80); color: black;")
+            self.disconnect_status_timer.start(self.disconnect_status_interval)
         case packet_spec.IPConnectionStatus.NOT_CONNECTED:
+            self.disconnect_status_timer.stop()
             self.ui.ccConnStatusLabel.setText("Not connected")
             self.ui.ccConnStatusLabel.setStyleSheet("background-color: rgb(0, 85, 127); color: white")
 
@@ -213,3 +215,10 @@ def decrease_heartbeat(self: "MainWindow"):
         self.update_control_client_display(packet_spec.IPConnectionStatus.DISCONNECTED)
         self.write_to_log(f"Heartbeat not found for {abs(self.heartbeat_timeout) + 1} seconds")
     self.heartbeat_mutex.unlock()
+
+def flash_disconnect_label(self: "MainWindow"):
+    if self.disconnect_count % 2 == 0:
+        self.ui.ccConnStatusLabel.setStyleSheet("background-color: rgb(255, 80, 80); color: black;")
+    else:
+        self.ui.ccConnStatusLabel.setStyleSheet("background-color: rgb(0, 255, 255); color: white;")
+    self.disconnect_count += 1
