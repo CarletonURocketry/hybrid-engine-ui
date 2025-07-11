@@ -120,9 +120,10 @@ def add_default_open_valve_handler(self: "MainWindow"):
     try:
         if self.ui.defaultOpenValvesList.currentRow() == -1:
             new_valve = self.ui.defaultOpenValvesInput.text()
-            self.config["default_open_valves"].append(int(new_valve))
+            self.config["sensor_and_valve_options"]["default_open_valves"].append(int(new_valve))
             self.ui.defaultOpenValvesList.addItem(str(int(new_valve)))
             self.ui.defaultOpenValvesInput.setText("")
+            self.init_actuator_valve_label()
         else:
             self.ui.defaultOpenValvesList.takeItem(self.ui.defaultOpenValvesList.currentRow())
     except Exception as e:

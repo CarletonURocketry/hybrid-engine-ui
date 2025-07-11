@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1585</width>
-    <height>925</height>
+    <height>962</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -1453,14 +1453,14 @@ New average = Old average * α + New value * (1-α)</string>
  </resources>
  <connections/>
  <buttongroups>
-  <buttongroup name="tankMassDisplayButtonGroup"/>
-  <buttongroup name="engineThrustDisplayButtonGroup"/>
-  <buttongroup name="temperatureDisplayButtonGroup"/>
   <buttongroup name="pressureDisplayButtonGroup"/>
   <buttongroup name="pidWindowButtonGroup">
    <property name="type" stdset="0">
     <string>static_fire</string>
    </property>
   </buttongroup>
+  <buttongroup name="temperatureDisplayButtonGroup"/>
+  <buttongroup name="engineThrustDisplayButtonGroup"/>
+  <buttongroup name="tankMassDisplayButtonGroup"/>
  </buttongroups>
 </ui>
