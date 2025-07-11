@@ -64,7 +64,7 @@ def serial_receive_data(self: "MainWindow"):
     if self.serialPort.bytesAvailable() >= 28:
       # Parse data
       data = bytes(self.serialPort.read(28))
-      parsed_packet, parsed_data = packet_spec.parse_serial_packet(data, self.serialTimestamp, self.config['default_open_valves'])
+      parsed_packet, parsed_data = packet_spec.parse_serial_packet(data, self.serialTimestamp, self.config["sensor_and_valve_options"]["default_open_valves"])
 
       # Add to graph
       for datum in parsed_data:

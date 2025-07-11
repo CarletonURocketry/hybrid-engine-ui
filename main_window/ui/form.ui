@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1585</width>
-    <height>925</height>
+    <height>962</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -674,7 +674,7 @@
               <string>Value to be set as α when calculating new average</string>
              </property>
              <property name="text">
-              <string>Moving average previous value weight (α)</string>
+              <string>Moving average previous value weight (α):</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
@@ -699,6 +699,46 @@ New average = Old average * α + New value * (1-α)</string>
              <property name="value">
               <double>0.800000000000000</double>
              </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="pidDiagramOptionLayout">
+           <item>
+            <widget class="QLabel" name="pidDiagramOptionLabel">
+             <property name="text">
+              <string>PID diagram:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="pidDiagramColdFlowOption">
+             <property name="text">
+              <string>Cold flow</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+             <property name="type" stdset="0">
+              <string>cold_flow</string>
+             </property>
+             <attribute name="buttonGroup">
+              <string notr="true">pidWindowButtonGroup</string>
+             </attribute>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="pidDiagramStaticFireOption">
+             <property name="text">
+              <string>Static fire</string>
+             </property>
+             <property name="type" stdset="0">
+              <string>static_fire</string>
+             </property>
+             <attribute name="buttonGroup">
+              <string notr="true">pidWindowButtonGroup</string>
+             </attribute>
             </widget>
            </item>
           </layout>
@@ -801,6 +841,9 @@ New average = Old average * α + New value * (1-α)</string>
                  </property>
                  <property name="text">
                   <string>Last X points</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
                  </property>
                  <property name="type" stdset="0">
                   <string>POINTS</string>
@@ -940,6 +983,9 @@ New average = Old average * α + New value * (1-α)</string>
                  </property>
                  <property name="text">
                   <string>Last X points</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
                  </property>
                  <property name="type" stdset="0">
                   <string>POINTS</string>
@@ -1082,6 +1128,9 @@ New average = Old average * α + New value * (1-α)</string>
                  </property>
                  <property name="text">
                   <string>Last X packets</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
                  </property>
                  <property name="type" stdset="0">
                   <string>POINTS</string>
@@ -1226,6 +1275,9 @@ New average = Old average * α + New value * (1-α)</string>
                  </property>
                  <property name="text">
                   <string>Last X points</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
                  </property>
                  <property name="type" stdset="0">
                   <string>POINTS</string>
@@ -1401,9 +1453,14 @@ New average = Old average * α + New value * (1-α)</string>
  </resources>
  <connections/>
  <buttongroups>
+  <buttongroup name="pressureDisplayButtonGroup"/>
+  <buttongroup name="pidWindowButtonGroup">
+   <property name="type" stdset="0">
+    <string>static_fire</string>
+   </property>
+  </buttongroup>
+  <buttongroup name="temperatureDisplayButtonGroup"/>
   <buttongroup name="engineThrustDisplayButtonGroup"/>
   <buttongroup name="tankMassDisplayButtonGroup"/>
-  <buttongroup name="temperatureDisplayButtonGroup"/>
-  <buttongroup name="pressureDisplayButtonGroup"/>
  </buttongroups>
 </ui>

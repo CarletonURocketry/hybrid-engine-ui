@@ -28,7 +28,7 @@ class Ui_Widget(object):
     def setupUi(self, Widget):
         if not Widget.objectName():
             Widget.setObjectName(u"Widget")
-        Widget.resize(1585, 925)
+        Widget.resize(1585, 962)
         icon = QIcon()
         icon.addFile(u"logos/better_logo.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         Widget.setWindowIcon(icon)
@@ -440,6 +440,31 @@ class Ui_Widget(object):
 
         self.sensorDisplayOptionsLayout.addLayout(self.numPointsAverageLayout)
 
+        self.pidDiagramOptionLayout = QHBoxLayout()
+        self.pidDiagramOptionLayout.setObjectName(u"pidDiagramOptionLayout")
+        self.pidDiagramOptionLabel = QLabel(self.displayOptionsTab)
+        self.pidDiagramOptionLabel.setObjectName(u"pidDiagramOptionLabel")
+
+        self.pidDiagramOptionLayout.addWidget(self.pidDiagramOptionLabel)
+
+        self.pidDiagramColdFlowOption = QRadioButton(self.displayOptionsTab)
+        self.pidWindowButtonGroup = QButtonGroup(Widget)
+        self.pidWindowButtonGroup.setObjectName(u"pidWindowButtonGroup")
+        self.pidWindowButtonGroup.addButton(self.pidDiagramColdFlowOption)
+        self.pidDiagramColdFlowOption.setObjectName(u"pidDiagramColdFlowOption")
+        self.pidDiagramColdFlowOption.setChecked(True)
+
+        self.pidDiagramOptionLayout.addWidget(self.pidDiagramColdFlowOption)
+
+        self.pidDiagramStaticFireOption = QRadioButton(self.displayOptionsTab)
+        self.pidWindowButtonGroup.addButton(self.pidDiagramStaticFireOption)
+        self.pidDiagramStaticFireOption.setObjectName(u"pidDiagramStaticFireOption")
+
+        self.pidDiagramOptionLayout.addWidget(self.pidDiagramStaticFireOption)
+
+
+        self.sensorDisplayOptionsLayout.addLayout(self.pidDiagramOptionLayout)
+
         self.defaultOpenValvesLayout = QVBoxLayout()
         self.defaultOpenValvesLayout.setObjectName(u"defaultOpenValvesLayout")
         self.defaultOpenValveslabel = QLabel(self.displayOptionsTab)
@@ -512,6 +537,7 @@ class Ui_Widget(object):
         font5.setPointSize(8)
         self.tankMassLastXPointsRB.setFont(font5)
         self.tankMassLastXPointsRB.setStyleSheet(u"margin: 1px 2px")
+        self.tankMassLastXPointsRB.setChecked(True)
 
         self.tankMassDataDisplayLayout.addWidget(self.tankMassLastXPointsRB)
 
@@ -592,6 +618,7 @@ class Ui_Widget(object):
         self.engineThrustLastXPointsRB.setObjectName(u"engineThrustLastXPointsRB")
         self.engineThrustLastXPointsRB.setFont(font5)
         self.engineThrustLastXPointsRB.setStyleSheet(u"margin: 1px 2px")
+        self.engineThrustLastXPointsRB.setChecked(True)
 
         self.engineThrustDataDisplayLayout.addWidget(self.engineThrustLastXPointsRB)
 
@@ -670,6 +697,7 @@ class Ui_Widget(object):
         self.temperatureLastXPointsRB.setObjectName(u"temperatureLastXPointsRB")
         self.temperatureLastXPointsRB.setFont(font5)
         self.temperatureLastXPointsRB.setStyleSheet(u"margin: 1px 2px")
+        self.temperatureLastXPointsRB.setChecked(True)
 
         self.temperatureDataDisplayLayout.addWidget(self.temperatureLastXPointsRB)
 
@@ -754,6 +782,7 @@ class Ui_Widget(object):
         self.pressureLastXPointsRB.setObjectName(u"pressureLastXPointsRB")
         self.pressureLastXPointsRB.setFont(font5)
         self.pressureLastXPointsRB.setStyleSheet(u"margin: 1px 2px")
+        self.pressureLastXPointsRB.setChecked(True)
 
         self.pressureDataDisplayLayout.addWidget(self.pressureLastXPointsRB)
 
@@ -920,11 +949,17 @@ class Ui_Widget(object):
 #if QT_CONFIG(tooltip)
         self.numPointsAverageLabel.setToolTip(QCoreApplication.translate("Widget", u"Value to be set as \u03b1 when calculating new average", None))
 #endif // QT_CONFIG(tooltip)
-        self.numPointsAverageLabel.setText(QCoreApplication.translate("Widget", u"Moving average previous value weight (\u03b1)", None))
+        self.numPointsAverageLabel.setText(QCoreApplication.translate("Widget", u"Moving average previous value weight (\u03b1):", None))
 #if QT_CONFIG(tooltip)
         self.numPointsAverageInput.setToolTip(QCoreApplication.translate("Widget", u"Formula for calculating average:\n"
 "New average = Old average * \u03b1 + New value * (1-\u03b1)", None))
 #endif // QT_CONFIG(tooltip)
+        self.pidDiagramOptionLabel.setText(QCoreApplication.translate("Widget", u"PID diagram:", None))
+        self.pidWindowButtonGroup.setProperty(u"type", QCoreApplication.translate("Widget", u"static_fire", None))
+        self.pidDiagramColdFlowOption.setText(QCoreApplication.translate("Widget", u"Cold flow", None))
+        self.pidDiagramColdFlowOption.setProperty(u"type", QCoreApplication.translate("Widget", u"cold_flow", None))
+        self.pidDiagramStaticFireOption.setText(QCoreApplication.translate("Widget", u"Static fire", None))
+        self.pidDiagramStaticFireOption.setProperty(u"type", QCoreApplication.translate("Widget", u"static_fire", None))
         self.defaultOpenValveslabel.setText(QCoreApplication.translate("Widget", u"Valves open by default", None))
         self.defaultOpenValvesButton.setText(QCoreApplication.translate("Widget", u"Add/remove valve", None))
         self.graphOptionsLabel.setText(QCoreApplication.translate("Widget", u"Graph options", None))

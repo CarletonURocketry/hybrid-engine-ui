@@ -3,6 +3,7 @@ from PySide6.QtWidgets import QWidget, QLabel, QMessageBox, QInputDialog
 from PySide6.QtCore import QTimer, Qt, QMutex
 from PySide6.QtNetwork import QUdpSocket, QAbstractSocket
 from PySide6.QtSerialPort import QSerialPort, QSerialPortInfo
+from PySide6.QtGui import QPixmap
 from pyqtgraph import mkPen, InfiniteLine, QtCore
 import numpy as np
 
@@ -55,8 +56,156 @@ class PIDWindow(QWidget):
         self.ui.setupUi(self)
         self.value_labels = {}
         self.setFixedSize(self.width(), self.height())
+        self.window_config = {
+            "cold_flow": {
+                "pixmap": QPixmap(u":/diagrams/diagrams/Cold Flow 27-05-2025.png"),
+                "label_font": 12,
+                "val_label_font": 10,
+                "p1Label": {"x": 229, "y": 339, "width": 49, "height": 50},
+                "p1ValLabel": {
+                    "x": 238,
+                    "y": 369,
+                    "width": 111,
+                    "height": 41,
+                },
+                "p2Label": {
+                    "x": 240,
+                    "y": 126,
+                    "width": 49,
+                    "height": 20,
+                },
+                "p2ValLabel": {
+                    "x": 267,
+                    "y": 112,
+                    "width": 81,
+                    "height": 51,
+                },
+                "p3Label": {
+                    "x": 601,
+                    "y": 30,
+                    "width": 49,
+                    "height": 20,
+                },
+                "p3ValLabel": {
+                    "x": 628,
+                    "y": 23,
+                    "width": 91,
+                    "height": 51,
+                },
+                "p4Label": {
+                    "x": 533,
+                    "y": 401,
+                    "width": 49,
+                    "height": 16,
+                },
+                "p4ValLabel": {
+                    "x": 561,
+                    "y": 385,
+                    "width": 91,
+                    "height": 51,
+                },
+                "p5Label": {
+                    "x": 701,
+                    "y": 405,
+                    "width": 49,
+                    "height": 21,
+                },
+                "p5ValLabel": {
+                    "x": 728,
+                    "y": 404,
+                    "width": 91,
+                    "height": 51,
+                },
+            },
+            "static_fire": {
+                "pixmap": QPixmap(u":/diagrams/diagrams/static fire pid-1.png"),
+                "label_font": 12,
+                "val_label_font": 11,
+                "p1Label": {
+                    "x": 210,
+                    "y": 352,
+                    "width": 49,
+                    "height": 50,
+                },
+                "p1ValLabel": {
+                    "x": 228,
+                    "y": 379,
+                    "width": 111,
+                    "height": 41,
+                },
+                "p2Label": {
+                    "x": 218,
+                    "y": 150,
+                    "width": 49,
+                    "height": 20,
+                },
+                "p2ValLabel": {
+                    "x": 245,
+                    "y": 136,
+                    "width": 81,
+                    "height": 51,
+                },
+                "p3Label": {
+                    "x": 495,
+                    "y": 60,
+                    "width": 49,
+                    "height": 20,
+                },
+                "p3ValLabel": {
+                    "x": 522,
+                    "y": 46,
+                    "width": 91,
+                    "height": 51,
+                },
+                "p4Label": {
+                    "x": 690,
+                    "y": 297,
+                    "width": 49,
+                    "height": 16,
+                },
+                "p4ValLabel": {
+                    "x": 706,
+                    "y": 304,
+                    "width": 91,
+                    "height": 51,
+                },
+                "p5Label": {
+                    "x": 694,
+                    "y": 380,
+                    "width": 49,
+                    "height": 21,
+                },
+                "p5ValLabel": {
+                    "x": 707,
+                    "y": 342,
+                    "width": 91,
+                    "height": 51,
+                },
+            },
+        }
         for i in range(5):
             self.value_labels[f"p{i}"] = getattr(self.ui, f"p{i+1}ValLabel")
+
+    def change_diagram(self, button, toggled):
+        if not toggled: return
+        display_type = button.property("type")
+        self.ui.diagramLabel.setPixmap(self.window_config[display_type]["pixmap"])
+        for i in range(5):
+            getattr(self.ui, f"p{i+1}Label").setGeometry(
+                self.window_config[display_type][f"p{i+1}Label"]["x"],
+                self.window_config[display_type][f"p{i+1}Label"]["y"],
+                self.window_config[display_type][f"p{i+1}Label"]["width"],
+                self.window_config[display_type][f"p{i+1}Label"]["height"]
+            )
+            getattr(self.ui, f"p{i+1}Label").setStyleSheet(f"color: rgb(0, 0, 0);\nfont: 700 {self.window_config[display_type]["label_font"]}pt 'Segoe UI';")
+            getattr(self.ui, f"p{i+1}ValLabel").setGeometry(
+                self.window_config[display_type][f"p{i+1}ValLabel"]["x"],
+                self.window_config[display_type][f"p{i+1}ValLabel"]["y"],
+                self.window_config[display_type][f"p{i+1}ValLabel"]["width"],
+                self.window_config[display_type][f"p{i+1}ValLabel"]["height"]
+            )           
+            getattr(self.ui, f"p{i+1}ValLabel").setStyleSheet(f"color: rgb(0, 0, 0);\nfont: 700 {self.window_config["cold_flow"]["val_label_font"]}pt 'Segoe UI';")
+
 
 class MainWindow(QWidget):
     # Imports for MainWindow functionality. Helps split large file into
@@ -308,6 +457,7 @@ class MainWindow(QWidget):
         # Sensor display option handlers
         self.ui.numPointsAverageInput.valueChanged.connect(self.points_for_average_change_handler)
         self.ui.defaultOpenValvesButton.clicked.connect(self.add_default_open_valve_handler)
+        self.ui.pidWindowButtonGroup.buttonToggled.connect(self.pid_window.change_diagram)
 
         # Graph option handlers
         self.ui.pressureDisplayButtonGroup.buttonClicked.connect(self.pressure_data_display_change_handler)
@@ -353,6 +503,7 @@ class MainWindow(QWidget):
 
             self.data_csv_writer.flush(_async=False)
             self.state_csv_writer.flush(_async=False)
+            self.pid_window.close()
             event.accept()
         else:
             event.ignore()

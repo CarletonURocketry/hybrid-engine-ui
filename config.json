@@ -4,10 +4,11 @@
     "port": "50002"
   },
   "sensor_and_valve_options": {
-    "points_used_for_average": 0.80,
+    "points_used_for_average": 0.8,
     "default_open_valves": [
       4
-    ]
+    ],
+    "pid_diagram": "static_fire"
   },
   "graph_options": {
     "pressure": {
