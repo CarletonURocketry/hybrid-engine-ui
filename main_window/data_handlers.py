@@ -42,6 +42,35 @@ def process_data(self: "MainWindow", header: packet_spec.PacketHeader, message: 
         case _:
             pass  
 
+def log_data_to_csv(self: "MainWindow", header: packet_spec.PacketHeader, message: packet_spec.PacketMessage):
+    packet_dict = {}
+    match header.sub_type:
+        case packet_spec.TelemetryPacketSubType.TEMPERATURE:
+            packet_dict["t" + str(message.id + 1)] = message.temperature
+            self.data_csv_writer.add_timed_measurements(message.time_since_power, packet_dict)
+        case packet_spec.TelemetryPacketSubType.PRESSURE:
+            packet_dict["p" + str(message.id + 1)] = message.pressure
+            self.data_csv_writer.add_timed_measurements(message.time_since_power, packet_dict)
+        case packet_spec.TelemetryPacketSubType.MASS:
+            packet_dict["m" + str(message.id + 1)] = message.mass 
+            self.data_csv_writer.add_timed_measurements(message.time_since_power, packet_dict)
+        case packet_spec.TelemetryPacketSubType.THRUST:
+            packet_dict["th" + str(message.id + 1)] = message.thrust
+            self.data_csv_writer.add_timed_measurements(message.time_since_power, packet_dict)
+        case packet_spec.TelemetryPacketSubType.ARMING_STATE:
+            packet_dict["Arming state"] = message.state.name
+            self.state_csv_writer.add_timed_measurements(message.time_since_power, packet_dict)
+        case packet_spec.TelemetryPacketSubType.ACT_STATE:
+            match message.id:
+                case 0: packet_dict["Igniter"] = message.state.name
+                case 13: packet_dict["Quick disconnect"] = message.state.name
+                case 14: packet_dict["Dump valve"] = message.state.name
+                case _: packet_dict[f"XV-{message.id}"] = message.state.name
+            self.state_csv_writer.add_timed_measurements(message.time_since_power, packet_dict)
+        case packet_spec.TelemetryPacketSubType.CONTINUITY:
+            packet_dict["Continuity"] = message.state.name
+            self.data_csv_writer.add_timed_measurements(message.time_since_power, packet_dict)
+
 def turn_on_valve(self: "MainWindow", id: int):
     if id in self.config["sensor_and_valve_options"]["default_open_valves"]: self.valves[id].changeState("CLOSED")
     else: self.valves[id].changeState("OPEN")

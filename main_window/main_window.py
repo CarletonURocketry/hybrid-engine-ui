@@ -217,7 +217,7 @@ class MainWindow(QWidget):
     from .data_handlers import plot_point, filter_data, update_serial_connection_display, \
         update_pad_server_display, update_control_client_display, process_data, decrease_heartbeat, \
         reset_heartbeat_timeout, calculate_new_average, update_arming_state, update_continuity_state, \
-        flash_disconnect_label
+        flash_disconnect_label, log_data_to_csv
     from .recording_and_playback import recording_toggle_button_handler, open_file_button_handler
     from .logging import save_to_file, write_to_log, display_popup
     from .config import load_config, save_config, add_default_open_valve_handler, pressure_data_display_change_handler, \
