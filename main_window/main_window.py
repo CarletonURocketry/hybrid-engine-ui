@@ -186,7 +186,8 @@ class PIDWindow(QWidget):
         for i in range(5):
             self.value_labels[f"p{i}"] = getattr(self.ui, f"p{i+1}ValLabel")
 
-    def change_diagram(self, button):
+    def change_diagram(self, button, toggled):
+        if not toggled: return
         display_type = button.property("type")
         self.ui.diagramLabel.setPixmap(self.window_config[display_type]["pixmap"])
         for i in range(5):
@@ -456,7 +457,7 @@ class MainWindow(QWidget):
         # Sensor display option handlers
         self.ui.numPointsAverageInput.valueChanged.connect(self.points_for_average_change_handler)
         self.ui.defaultOpenValvesButton.clicked.connect(self.add_default_open_valve_handler)
-        self.ui.pidWindowButtonGroup.buttonClicked.connect(self.pid_window.change_diagram)
+        self.ui.pidWindowButtonGroup.buttonToggled.connect(self.pid_window.change_diagram)
 
         # Graph option handlers
         self.ui.pressureDisplayButtonGroup.buttonClicked.connect(self.pressure_data_display_change_handler)

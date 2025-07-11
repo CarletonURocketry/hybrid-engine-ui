@@ -24,7 +24,11 @@ def load_config(self: "MainWindow", config):
     
     self.points_used_for_average = self.config["sensor_and_valve_options"]["points_used_for_average"]
     self.ui.defaultOpenValvesList.addItems([str(valve) for valve in self.config["sensor_and_valve_options"]["default_open_valves"]])
-    
+    if self.config["sensor_and_valve_options"]["pid_diagram"] == "cold_flow":
+        self.ui.pidDiagramColdFlowOption.setChecked(True)
+    elif self.config["sensor_and_valve_options"]["pid_diagram"] == "static_fire":
+        self.ui.pidDiagramStaticFireOption.setChecked(True)
+
     if self.config["graph_options"]["pressure"]["data_display_mode"] == "points":
         self.ui.pressureLastXPointsRB.setChecked(True)
     elif self.config["graph_options"]["pressure"]["data_display_mode"] == "seconds":
@@ -63,6 +67,10 @@ def save_config(self: "MainWindow"):
         new_config["sensor_and_valve_options"] = {}
         new_config["sensor_and_valve_options"]["points_used_for_average"] = self.points_used_for_average
         new_config["sensor_and_valve_options"]["default_open_valves"] = [int(self.ui.defaultOpenValvesList.item(x).text()) for x in range(self.ui.defaultOpenValvesList.count())]
+        if self.ui.pidDiagramColdFlowOption.isChecked():
+            new_config["sensor_and_valve_options"]["pid_diagram"] = "cold_flow"
+        elif self.ui.pidDiagramStaticFireOption.isChecked():
+            new_config["sensor_and_valve_options"]["pid_diagram"] = "static_fire"
 
         new_config["graph_options"] = {}
         new_config["graph_options"]["pressure"] = {}

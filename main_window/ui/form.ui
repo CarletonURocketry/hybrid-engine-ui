@@ -704,18 +704,21 @@ New average = Old average * α + New value * (1-α)</string>
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <layout class="QHBoxLayout" name="pidDiagramOptionLayout">
            <item>
-            <widget class="QLabel" name="label">
+            <widget class="QLabel" name="pidDiagramOptionLabel">
              <property name="text">
               <string>PID diagram:</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QRadioButton" name="radioButton_2">
+            <widget class="QRadioButton" name="pidDiagramColdFlowOption">
              <property name="text">
               <string>Cold flow</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
              </property>
              <property name="type" stdset="0">
               <string>cold_flow</string>
@@ -726,7 +729,7 @@ New average = Old average * α + New value * (1-α)</string>
             </widget>
            </item>
            <item>
-            <widget class="QRadioButton" name="radioButton">
+            <widget class="QRadioButton" name="pidDiagramStaticFireOption">
              <property name="text">
               <string>Static fire</string>
              </property>
@@ -838,6 +841,9 @@ New average = Old average * α + New value * (1-α)</string>
                  </property>
                  <property name="text">
                   <string>Last X points</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
                  </property>
                  <property name="type" stdset="0">
                   <string>POINTS</string>
@@ -977,6 +983,9 @@ New average = Old average * α + New value * (1-α)</string>
                  </property>
                  <property name="text">
                   <string>Last X points</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
                  </property>
                  <property name="type" stdset="0">
                   <string>POINTS</string>
@@ -1119,6 +1128,9 @@ New average = Old average * α + New value * (1-α)</string>
                  </property>
                  <property name="text">
                   <string>Last X packets</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
                  </property>
                  <property name="type" stdset="0">
                   <string>POINTS</string>
@@ -1263,6 +1275,9 @@ New average = Old average * α + New value * (1-α)</string>
                  </property>
                  <property name="text">
                   <string>Last X points</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
                  </property>
                  <property name="type" stdset="0">
                   <string>POINTS</string>
