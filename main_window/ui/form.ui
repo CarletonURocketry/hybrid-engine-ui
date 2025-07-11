@@ -674,7 +674,7 @@
               <string>Value to be set as α when calculating new average</string>
              </property>
              <property name="text">
-              <string>Moving average previous value weight (α)</string>
+              <string>Moving average previous value weight (α):</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
@@ -699,6 +699,43 @@ New average = Old average * α + New value * (1-α)</string>
              <property name="value">
               <double>0.800000000000000</double>
              </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <item>
+            <widget class="QLabel" name="label">
+             <property name="text">
+              <string>PID diagram:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="radioButton_2">
+             <property name="text">
+              <string>Cold flow</string>
+             </property>
+             <property name="type" stdset="0">
+              <string>cold_flow</string>
+             </property>
+             <attribute name="buttonGroup">
+              <string notr="true">pidWindowButtonGroup</string>
+             </attribute>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="radioButton">
+             <property name="text">
+              <string>Static fire</string>
+             </property>
+             <property name="type" stdset="0">
+              <string>static_fire</string>
+             </property>
+             <attribute name="buttonGroup">
+              <string notr="true">pidWindowButtonGroup</string>
+             </attribute>
             </widget>
            </item>
           </layout>
@@ -1401,9 +1438,14 @@ New average = Old average * α + New value * (1-α)</string>
  </resources>
  <connections/>
  <buttongroups>
-  <buttongroup name="engineThrustDisplayButtonGroup"/>
   <buttongroup name="tankMassDisplayButtonGroup"/>
+  <buttongroup name="engineThrustDisplayButtonGroup"/>
   <buttongroup name="temperatureDisplayButtonGroup"/>
   <buttongroup name="pressureDisplayButtonGroup"/>
+  <buttongroup name="pidWindowButtonGroup">
+   <property name="type" stdset="0">
+    <string>static_fire</string>
+   </property>
+  </buttongroup>
  </buttongroups>
 </ui>

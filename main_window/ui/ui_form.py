@@ -440,6 +440,30 @@ class Ui_Widget(object):
 
         self.sensorDisplayOptionsLayout.addLayout(self.numPointsAverageLayout)
 
+        self.horizontalLayout_2 = QHBoxLayout()
+        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.label = QLabel(self.displayOptionsTab)
+        self.label.setObjectName(u"label")
+
+        self.horizontalLayout_2.addWidget(self.label)
+
+        self.radioButton_2 = QRadioButton(self.displayOptionsTab)
+        self.pidWindowButtonGroup = QButtonGroup(Widget)
+        self.pidWindowButtonGroup.setObjectName(u"pidWindowButtonGroup")
+        self.pidWindowButtonGroup.addButton(self.radioButton_2)
+        self.radioButton_2.setObjectName(u"radioButton_2")
+
+        self.horizontalLayout_2.addWidget(self.radioButton_2)
+
+        self.radioButton = QRadioButton(self.displayOptionsTab)
+        self.pidWindowButtonGroup.addButton(self.radioButton)
+        self.radioButton.setObjectName(u"radioButton")
+
+        self.horizontalLayout_2.addWidget(self.radioButton)
+
+
+        self.sensorDisplayOptionsLayout.addLayout(self.horizontalLayout_2)
+
         self.defaultOpenValvesLayout = QVBoxLayout()
         self.defaultOpenValvesLayout.setObjectName(u"defaultOpenValvesLayout")
         self.defaultOpenValveslabel = QLabel(self.displayOptionsTab)
@@ -920,11 +944,17 @@ class Ui_Widget(object):
 #if QT_CONFIG(tooltip)
         self.numPointsAverageLabel.setToolTip(QCoreApplication.translate("Widget", u"Value to be set as \u03b1 when calculating new average", None))
 #endif // QT_CONFIG(tooltip)
-        self.numPointsAverageLabel.setText(QCoreApplication.translate("Widget", u"Moving average previous value weight (\u03b1)", None))
+        self.numPointsAverageLabel.setText(QCoreApplication.translate("Widget", u"Moving average previous value weight (\u03b1):", None))
 #if QT_CONFIG(tooltip)
         self.numPointsAverageInput.setToolTip(QCoreApplication.translate("Widget", u"Formula for calculating average:\n"
 "New average = Old average * \u03b1 + New value * (1-\u03b1)", None))
 #endif // QT_CONFIG(tooltip)
+        self.label.setText(QCoreApplication.translate("Widget", u"PID diagram:", None))
+        self.pidWindowButtonGroup.setProperty(u"type", QCoreApplication.translate("Widget", u"static_fire", None))
+        self.radioButton_2.setText(QCoreApplication.translate("Widget", u"Cold flow", None))
+        self.radioButton_2.setProperty(u"type", QCoreApplication.translate("Widget", u"cold_flow", None))
+        self.radioButton.setText(QCoreApplication.translate("Widget", u"Static fire", None))
+        self.radioButton.setProperty(u"type", QCoreApplication.translate("Widget", u"static_fire", None))
         self.defaultOpenValveslabel.setText(QCoreApplication.translate("Widget", u"Valves open by default", None))
         self.defaultOpenValvesButton.setText(QCoreApplication.translate("Widget", u"Add/remove valve", None))
         self.graphOptionsLabel.setText(QCoreApplication.translate("Widget", u"Graph options", None))
