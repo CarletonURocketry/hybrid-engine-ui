@@ -6,6 +6,7 @@ data points and updating label text. Should only be imported by main_window.py
 from typing import TYPE_CHECKING
 
 import numpy as np
+from PySide6.QtCore import Qt, Signal, QObject, Slot, QTimer, Qt, QMutex
 
 import packet_spec
 from .plot_info import PlotDataDisplayMode
@@ -13,34 +14,93 @@ from .plot_info import PlotDataDisplayMode
 if TYPE_CHECKING:
     from main_window import MainWindow
 
-def process_data(self: "MainWindow", header: packet_spec.PacketHeader, message: packet_spec.PacketMessage, reset_heartbeat=True):
-    match header.sub_type:
-        case packet_spec.TelemetryPacketSubType.TEMPERATURE \
-        | packet_spec.TelemetryPacketSubType.PRESSURE \
-        | packet_spec.TelemetryPacketSubType.MASS \
-        | packet_spec.TelemetryPacketSubType.THRUST:
-            self.plot_point(header, message)
-            if reset_heartbeat: self.reset_heartbeat_timeout()
-        case packet_spec.TelemetryPacketSubType.ARMING_STATE:
-            update_arming_state(self, message)
-            if reset_heartbeat: self.reset_heartbeat_timeout()
-        case packet_spec.TelemetryPacketSubType.ACT_STATE:
-            if message.id == 3 and message.state == packet_spec.ActuatorState.ON:
-                self.annoyProp.show()
-            else:
-                update_act_state(self, message)
-            if reset_heartbeat: self.reset_heartbeat_timeout()
-        case packet_spec.TelemetryPacketSubType.WARNING:
-            # Write warning to logs maybe?
-            pass
-        case packet_spec.TelemetryPacketSubType.CONTINUITY:
-            update_continuity_state(self, message)
-            if reset_heartbeat: self.reset_heartbeat_timeout()
-        case packet_spec.TelemetryPacketSubType.CONN_STATUS:
-            self.update_control_client_display(message.status)
-            if reset_heartbeat: self.reset_heartbeat_timeout()
-        case _:
-            pass  
+class DataHandler(QObject):
+
+    def __init__(self, main_window: MainWindow, parent = None):
+        self.main_window = main_window
+    
+    def calculate_new_average(self, old_average: float, new_point: float):
+        return (old_average * self.main_window.points_used_for_average) + (new_point * (1 - self.main_window.points_used_for_average))
+
+    def process_data(self, header: packet_spec.PacketHeader, message: packet_spec.PacketMessage, reset_heartbeat=True):
+        match header.sub_type:
+            case packet_spec.TelemetryPacketSubType.TEMPERATURE \
+            | packet_spec.TelemetryPacketSubType.PRESSURE \
+            | packet_spec.TelemetryPacketSubType.MASS \
+            | packet_spec.TelemetryPacketSubType.THRUST:
+                self.plot_point(header, message)
+                self.update_label(header, message)
+                if reset_heartbeat: self.reset_heartbeat_timeout()
+            case packet_spec.TelemetryPacketSubType.ARMING_STATE:
+                update_arming_state(self, message)
+                if reset_heartbeat: self.reset_heartbeat_timeout()
+            case packet_spec.TelemetryPacketSubType.ACT_STATE:
+                if message.id == 3 and message.state == packet_spec.ActuatorState.ON:
+                    self.main_window.annoy_prop.show()
+                else:
+                    update_act_state(self, message)
+                if reset_heartbeat: self.reset_heartbeat_timeout()
+            case packet_spec.TelemetryPacketSubType.WARNING:
+                # Write warning to logs maybe?
+                pass
+            case packet_spec.TelemetryPacketSubType.CONTINUITY:
+                update_continuity_state(self, message)
+                if reset_heartbeat: self.reset_heartbeat_timeout()
+            case packet_spec.TelemetryPacketSubType.CONN_STATUS:
+                self.update_control_client_display(message.status)
+                if reset_heartbeat: self.reset_heartbeat_timeout()
+            case _:
+                pass  
+            
+    def plot_point(self, header: packet_spec.PacketHeader, message: packet_spec.PacketMessage):
+        plot_data = self.main_window.plot_data
+        match header.type:
+            case packet_spec.PacketType.CONTROL:
+                # Cannot reach since the we only receive telemetry data
+                pass
+            case packet_spec.PacketType.TELEMETRY:
+                match header.sub_type:
+                    case packet_spec.TelemetryPacketSubType.TEMPERATURE:
+                        temperatureId:str = "t" + str(message.id)
+                        plot_data[temperatureId].points = np.append(plot_data[temperatureId].points, np.array([[message.time_since_power, message.temperature]]), axis=0)
+                        plot_data[temperatureId].data_line.setData(plot_data[temperatureId].points)
+                    case packet_spec.TelemetryPacketSubType.PRESSURE:
+                        pressureId:str = "p" + str(message.id)
+                        plot_data[pressureId].points = np.append(plot_data[pressureId].points, np.array([[message.time_since_power, message.pressure]]), axis=0)
+                        plot_data[pressureId].data_line.setData(plot_data[pressureId].points)
+                    case packet_spec.TelemetryPacketSubType.MASS:
+                        massId:str = "m" + str(message.id)
+                        plot_data[massId].points = np.append(plot_data[massId].points, np.array([[message.time_since_power, message.mass]]), axis=0)
+                        plot_data[massId].data_line.setData(plot_data[massId].points)
+                    case packet_spec.TelemetryPacketSubType.THRUST:
+                        thrustId:str = "th" + str(message.id)
+                        plot_data[thrustId].points = np.append(plot_data[thrustId].points, np.array([[message.time_since_power, message.thrust]]), axis=0)
+                        plot_data[thrustId].data_line.setData(plot_data[thrustId].points)
+
+    def update_label(self, header: packet_spec.PacketHeader, message: packet_spec.PacketMessage):
+        plot_data = self.main_window.plot_data
+        value_labels = self.main_window.pid_window.value_labels
+        match header.sub_type:
+            case packet_spec.TelemetryPacketSubType.TEMPERATURE:
+                temperatureId:str = "t" + str(message.id)
+                plot_data[temperatureId].running_average = self.calculate_new_average(plot_data[temperatureId].running_average, message.temperature)
+                if temperatureId in value_labels: value_labels[temperatureId].setText(f"{round(plot_data[temperatureId].running_average, 2)} °C")
+                change_new_reading(self, message.id, f"{round(plot_data[temperatureId].running_average, 2)} °C") #array id for temp label is 0 - 3
+            case packet_spec.TelemetryPacketSubType.PRESSURE:
+                pressureId:str = "p" + str(message.id)
+                plot_data[pressureId].running_average = self.calculate_new_average(plot_data[pressureId].running_average, message.pressure)
+                if pressureId in value_labels: value_labels[pressureId].setText(f"{round(plot_data[pressureId].running_average, 2)} psi")
+                change_new_reading(self, message.id + 6, f"{round(plot_data[pressureId].running_average, 2)} psi") #array id for pressure label is 5 - 8
+            case packet_spec.TelemetryPacketSubType.MASS:
+                massId:str = "m" + str(message.id)
+                plot_data[massId].running_average = self.calculate_new_average(plot_data[massId].running_average, message.mass)
+                change_new_reading(self, 4, f"{round(plot_data[massId].running_average, 2)} kg")
+            case packet_spec.TelemetryPacketSubType.THRUST:
+                thrustId:str = "th" + str(message.id)
+                plot_data[thrustId].running_average = self.calculate_new_average(plot_data[thrustId].running_average, message.thrust)
+                change_new_reading(self, 5, f"{round(plot_data[thrustId].running_average, 2)} N")
+            case packet_spec.TelemetryPacketSubType.ACT_STATE:
+                pass
 
 def turn_on_valve(self: "MainWindow", id: int):
     if id in self.config["sensor_and_valve_options"]["default_open_valves"]: self.valves[id].changeState("CLOSED")
@@ -52,45 +112,6 @@ def turn_off_valve(self: "MainWindow", id: int):
 
 def change_new_reading(self: "MainWindow", id: int, newReading: str):
     self.sensors[id].changeReading(newReading)
-
-def calculate_new_average(self: "MainWindow", old_average: float, new_point: float):
-    return (old_average * self.points_used_for_average) + (new_point * (1 - self.points_used_for_average))
-
-def plot_point(self: "MainWindow", header: packet_spec.PacketHeader, message: packet_spec.PacketMessage):
-    plots = self.plots
-    value_labels = self.pid_window.value_labels
-    match header.type:
-        case packet_spec.PacketType.CONTROL:
-            # Cannot reach since the we only receive telemetry data
-            pass
-        case packet_spec.PacketType.TELEMETRY:
-            match header.sub_type:
-                case packet_spec.TelemetryPacketSubType.TEMPERATURE:
-                    temperatureId:str = "t" + str(message.id)
-                    plots[temperatureId].points = np.append(plots[temperatureId].points, np.array([[message.time_since_power, message.temperature]]), axis=0)
-                    plots[temperatureId].data_line.setData(plots[temperatureId].points)
-                    plots[temperatureId].running_average = self.calculate_new_average(plots[temperatureId].running_average, message.temperature)
-                    if temperatureId in value_labels: value_labels[temperatureId].setText(f"{round(plots[temperatureId].running_average, 2)} °C")
-                    change_new_reading(self, message.id, f"{round(plots[temperatureId].running_average, 2)} °C") #array id for temp label is 0 - 3
-                case packet_spec.TelemetryPacketSubType.PRESSURE:
-                    pressureId:str = "p" + str(message.id)
-                    plots[pressureId].points = np.append(plots[pressureId].points, np.array([[message.time_since_power, message.pressure]]), axis=0)
-                    plots[pressureId].data_line.setData(plots[pressureId].points)
-                    plots[pressureId].running_average = self.calculate_new_average(plots[pressureId].running_average, message.pressure)
-                    if pressureId in value_labels: value_labels[pressureId].setText(f"{round(plots[pressureId].running_average, 2)} psi")
-                    change_new_reading(self, message.id + 6, f"{round(plots[pressureId].running_average, 2)} psi") #array id for pressure label is 5 - 8
-                case packet_spec.TelemetryPacketSubType.MASS:
-                    massId:str = "m" + str(message.id)
-                    plots[massId].points = np.append(plots[massId].points, np.array([[message.time_since_power, message.mass]]), axis=0)
-                    plots[massId].data_line.setData(plots[massId].points)
-                    plots[massId].running_average = self.calculate_new_average(plots[massId].running_average, message.mass)
-                    change_new_reading(self, 4, f"{round(plots[massId].running_average, 2)} kg")
-                case packet_spec.TelemetryPacketSubType.THRUST:
-                    thrustId:str = "th" + str(message.id)
-                    plots[thrustId].points = np.append(plots[thrustId].points, np.array([[message.time_since_power, message.thrust]]), axis=0)
-                    plots[thrustId].data_line.setData(plots[thrustId].points)
-                    plots[thrustId].running_average = self.calculate_new_average(plots[thrustId].running_average, message.thrust)
-                    change_new_reading(self, 5, f"{round(plots[thrustId].running_average, 2)} N")
 
 def update_arming_state(self: "MainWindow", message: packet_spec.ArmingStatePacket):
     match message.state:
@@ -185,16 +206,16 @@ def update_continuity_state(self: "MainWindow", message: packet_spec.ContinuityP
             self.ui.continuityValueLabel.setStyleSheet("background-color: rgb(0, 85, 127); color: white;")
 
 def filter_data(self: "MainWindow"):
-    for key in self.plots:
-        if self.plots[key].points.size == 0:
+    for key in self.plot_data:
+        if self.plot_data[key].points.size == 0:
             continue
-        match(self.plots[key].data_display_mode):
+        match(self.plot_data[key].data_display_mode):
             case PlotDataDisplayMode.POINTS:
-                self.plots[key].points = self.plots[key].points[-(self.plots[key].x_val - 1):]
+                self.plot_data[key].points = self.plot_data[key].points[-(self.plot_data[key].x_val - 1):]
             case PlotDataDisplayMode.SECONDS:
-                min_time: int = self.plots[key].points[:,0].max() - self.plots[key].x_val
-                self.plots[key].points = self.plots[key].points[self.plots[key].points[:,0] >= min_time]
-        self.plots[key].data_line.setData(self.plots[key].points)
+                min_time: int = self.plot_data[key].points[:,0].max() - self.plot_data[key].x_val
+                self.plot_data[key].points = self.plot_data[key].points[self.plot_data[key].points[:,0] >= min_time]
+        self.plot_data[key].data_line.setData(self.plot_data[key].points)
 
 # Heartbeats only supported for IP connections
 def reset_heartbeat_timeout(self: "MainWindow"):

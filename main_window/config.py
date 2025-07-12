@@ -131,35 +131,35 @@ def add_default_open_valve_handler(self: "MainWindow"):
 
 def pressure_data_display_change_handler(self: "MainWindow", button):
     for plot in ["p0", "p1", "p2", "p3", "p4", "p5"]:
-        self.plots[plot].data_display_mode = PlotDataDisplayMode[button.property("type")]
+        self.plot_data[plot].data_display_mode = PlotDataDisplayMode[button.property("type")]
 
 def pressure_x_val_change_handler(self: "MainWindow", value: int):
     for plot in ["p0", "p1", "p2", "p3", "p4", "p5"]:
-        self.plots[plot].x_val = value
+        self.plot_data[plot].x_val = value
 
 def temperature_data_display_change_handler(self: "MainWindow", button):
     for plot in ["t0", "t1", "t2", "t3"]:
-        self.plots[plot].data_display_mode = PlotDataDisplayMode[button.property("type")]
+        self.plot_data[plot].data_display_mode = PlotDataDisplayMode[button.property("type")]
 
 def temperature_x_val_change_handler(self: "MainWindow", value: int):
     for plot in ["t0", "t1", "t2", "t3"]:
-        self.plots[plot].x_val = value
+        self.plot_data[plot].x_val = value
 
 def tank_mass_data_display_change_handler(self: "MainWindow", button):
     for plot in ["m0"]:
-        self.plots[plot].data_display_mode = PlotDataDisplayMode[button.property("type")]
+        self.plot_data[plot].data_display_mode = PlotDataDisplayMode[button.property("type")]
 
 def tank_mass_x_val_change_handler(self: "MainWindow", value: int):
     for plot in ["m0"]:
-        self.plots[plot].x_val = value
+        self.plot_data[plot].x_val = value
 
 def engine_thrust_data_display_change_handler(self: "MainWindow", button):
     for plot in ["th0"]:
-        self.plots[plot].data_display_mode = PlotDataDisplayMode[button.property("type")]
+        self.plot_data[plot].data_display_mode = PlotDataDisplayMode[button.property("type")]
 
 def engine_thrust_x_val_change_handler(self: "MainWindow", value: int):
     for plot in ["th0"]:
-        self.plots[plot].x_val = value
+        self.plot_data[plot].x_val = value
 
 def add_pressure_threshold_handler(self: "MainWindow"):
     try:

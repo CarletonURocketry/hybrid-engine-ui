@@ -7,9 +7,11 @@ from PySide6.QtGui import QPixmap
 from pyqtgraph import mkPen, InfiniteLine, QtCore
 import numpy as np
 
-from .ui import Ui_Widget, Ui_PIDWindow
-from .csv_writer import CSVWriter
-from .plot_info import PlotDataDisplayMode, PlotInfo
+from ui import Ui_Widget, Ui_PIDWindow
+from csv_writer import CSVWriter
+from plot_info import PlotDataDisplayMode, PlotInfo
+from timer_controller import TimerController
+from .logging import LogManager
 
 class TelemetryLabel:
     def __init__(self, name, state, row, column, parentGrid):
@@ -235,6 +237,10 @@ class MainWindow(QWidget):
         self.pid_window = PIDWindow()
         self.ui.showPIDButton.clicked.connect(self.open_pid_window)
 
+        self.log_manager = LogManager()
+        self.timer_controller = TimerController()
+        self.timer_controller.write_to_log_s.connect(self.log_manager.write_to_log)
+
         # Point numpy arrays for temperature, pressure and mass
         self.p0_points = np.empty((0,2))
         self.p1_points = np.empty((0,2))
@@ -252,12 +258,12 @@ class MainWindow(QWidget):
         self.popup = QMessageBox()
         self.popup.addButton("Ok", QMessageBox.ButtonRole.AcceptRole)
 
-        self.annoyProp = QMessageBox()
-        self.annoyProp.setWindowTitle("We love avionics so much! 💖")
-        self.annoyProp.setText("Enter tip amount:")
-        self.annoyProp.addButton("25%", QMessageBox.ButtonRole.AcceptRole)
-        self.annoyProp.addButton("35%", QMessageBox.ButtonRole.AcceptRole)
-        self.annoyProp.addButton("50%", QMessageBox.ButtonRole.AcceptRole)
+        self.annoy_prop = QMessageBox()
+        self.annoy_prop.setWindowTitle("We love avionics so much! 💖")
+        self.annoy_prop.setText("Enter tip amount:")
+        self.annoy_prop.addButton("25%", QMessageBox.ButtonRole.AcceptRole)
+        self.annoy_prop.addButton("35%", QMessageBox.ButtonRole.AcceptRole)
+        self.annoy_prop.addButton("50%", QMessageBox.ButtonRole.AcceptRole)
 
         # Load config options
         self.config = None
@@ -275,7 +281,7 @@ class MainWindow(QWidget):
             self.ui.baudRateDropdown.addItem(str(rate))
 
         # Plot data
-        self.plots: dict[str, PlotInfo] = {}
+        self.plot_data: dict[str, PlotInfo] = {}
 
         # UDP socket
         self.padUDPSocket = QUdpSocket(self)
@@ -314,32 +320,32 @@ class MainWindow(QWidget):
         self.ui.pressurePlot.getAxis("left").setTextPen(black_pen)
         self.ui.pressurePlot.getAxis("bottom").setPen(black_pen)
         self.ui.pressurePlot.getAxis("bottom").setTextPen(black_pen)
-        self.plots["p0"] = PlotInfo(0,
+        self.plot_data["p0"] = PlotInfo(0,
                                     self.p0_points,
                                     self.ui.pressurePlot.plot(self.p0_points, pen=red_pen, name="p1"),
                                     PlotDataDisplayMode[self.config["graph_options"]["pressure"]["data_display_mode"].upper()],
                                     self.config["graph_options"]["pressure"]["X"])
-        self.plots["p1"] = PlotInfo(0,
+        self.plot_data["p1"] = PlotInfo(0,
                                     self.p1_points,
                                     self.ui.pressurePlot.plot(self.p1_points, pen=green_pen, name="p2"),
                                     PlotDataDisplayMode[self.config["graph_options"]["pressure"]["data_display_mode"].upper()],
                                     self.config["graph_options"]["pressure"]["X"])
-        self.plots["p2"] = PlotInfo(0,
+        self.plot_data["p2"] = PlotInfo(0,
                                     self.p2_points,
                                     self.ui.pressurePlot.plot(self.p2_points, pen=blue_pen, name="p3"),
                                     PlotDataDisplayMode[self.config["graph_options"]["pressure"]["data_display_mode"].upper()],
                                     self.config["graph_options"]["pressure"]["X"])
-        self.plots["p3"] = PlotInfo(0,
+        self.plot_data["p3"] = PlotInfo(0,
                                     self.p3_points,
                                     self.ui.pressurePlot.plot(self.p3_points, pen=orange_pen, name="p4"),
                                     PlotDataDisplayMode[self.config["graph_options"]["pressure"]["data_display_mode"].upper()],
                                     self.config["graph_options"]["pressure"]["X"])
-        self.plots["p4"] = PlotInfo(0,
+        self.plot_data["p4"] = PlotInfo(0,
                                     self.p4_points,
                                     self.ui.pressurePlot.plot(self.p4_points, pen=purple_pen, name="p5"),
                                     PlotDataDisplayMode[self.config["graph_options"]["pressure"]["data_display_mode"].upper()],
                                     self.config["graph_options"]["pressure"]["X"])
-        self.plots["p5"] = PlotInfo(0,
+        self.plot_data["p5"] = PlotInfo(0,
                                     self.p5_points,
                                     self.ui.pressurePlot.plot(self.p5_points, pen=brown_pen, name="p6"),
                                     PlotDataDisplayMode[self.config["graph_options"]["pressure"]["data_display_mode"].upper()],
@@ -355,22 +361,22 @@ class MainWindow(QWidget):
         self.ui.temperaturePlot.getAxis("left").setTextPen(black_pen)
         self.ui.temperaturePlot.getAxis("bottom").setPen(black_pen)
         self.ui.temperaturePlot.getAxis("bottom").setTextPen(black_pen)
-        self.plots["t0"] = PlotInfo(0,
+        self.plot_data["t0"] = PlotInfo(0,
                                     self.t0_points,
                                     self.ui.temperaturePlot.plot(self.t0_points, pen=red_pen, name="t1"),
                                     PlotDataDisplayMode[self.config["graph_options"]["temperature"]["data_display_mode"].upper()],
                                     self.config["graph_options"]["temperature"]["X"])
-        self.plots["t1"] = PlotInfo(0,
+        self.plot_data["t1"] = PlotInfo(0,
                                     self.t1_points,
                                     self.ui.temperaturePlot.plot(self.t1_points, pen=green_pen, name="t2"),
                                     PlotDataDisplayMode[self.config["graph_options"]["temperature"]["data_display_mode"].upper()],
                                     self.config["graph_options"]["temperature"]["X"])
-        self.plots["t2"] = PlotInfo(0,
+        self.plot_data["t2"] = PlotInfo(0,
                                     self.t2_points,
                                     self.ui.temperaturePlot.plot(self.t2_points, pen=blue_pen, name="t3"),
                                     PlotDataDisplayMode[self.config["graph_options"]["temperature"]["data_display_mode"].upper()],
                                     self.config["graph_options"]["temperature"]["X"])
-        self.plots["t3"] = PlotInfo(0,
+        self.plot_data["t3"] = PlotInfo(0,
                                     self.t3_points,
                                     self.ui.temperaturePlot.plot(self.t3_points, pen=orange_pen, name="t4"),
                                     PlotDataDisplayMode[self.config["graph_options"]["temperature"]["data_display_mode"].upper()],
@@ -386,7 +392,7 @@ class MainWindow(QWidget):
         self.ui.tankMassPlot.getAxis("left").setTextPen(black_pen)
         self.ui.tankMassPlot.getAxis("bottom").setPen(black_pen)
         self.ui.tankMassPlot.getAxis("bottom").setTextPen(black_pen)
-        self.plots["m0"] = PlotInfo(0,
+        self.plot_data["m0"] = PlotInfo(0,
                                     self.tank_mass_points,
                                     self.ui.tankMassPlot.plot(self.tank_mass_points, pen=red_pen),
                                     PlotDataDisplayMode[self.config["graph_options"]["tank_mass"]["data_display_mode"].upper()],
@@ -402,7 +408,7 @@ class MainWindow(QWidget):
         self.ui.engineThrustPlot.getAxis("left").setTextPen(black_pen)
         self.ui.engineThrustPlot.getAxis("bottom").setPen(black_pen)
         self.ui.engineThrustPlot.getAxis("bottom").setTextPen(black_pen)
-        self.plots["th0"] = PlotInfo(0,
+        self.plot_data["th0"] = PlotInfo(0,
                                     self.engine_thrust_points,
                                      self.ui.engineThrustPlot.plot(self.engine_thrust_points, pen=red_pen),
                                      PlotDataDisplayMode[self.config["graph_options"]["engine_thrust"]["data_display_mode"].upper()],
