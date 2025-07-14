@@ -11,45 +11,8 @@ from ui import Ui_Widget, Ui_PIDWindow
 from csv_writer import CSVWriter
 from plot_info import PlotDataDisplayMode, PlotInfo
 from timer_controller import TimerController
+from labels import *
 from .logging import LogManager
-
-class TelemetryLabel:
-    def __init__(self, name, state, row, column, parentGrid):
-        self.row = row
-        self.column = column
-        self.qName = QLabel(name)
-        self.qState = QLabel(state)
-        parentGrid.addWidget(self.qName, row, column)
-        parentGrid.addWidget(self.qState, row, column + 1)
-        self.qName.setStyleSheet("font-size: 17px")
-        self.qName.setMinimumWidth(150)
-        if self.qState.text() == "OPEN":
-            self.qState.setStyleSheet("background-color: rgb(0, 255, 0); font-weight: bold; font-size: 20px; color: black;")
-        else:
-            self.qState.setStyleSheet("background-color: rgb(255, 80, 80); font-weight: bold; font-size: 20px; color: black;")
-        self.qName.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignVCenter)
-        self.qState.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-    def changeState(self, newState):
-        self.qState.setText(newState)
-        if newState == "OPEN":
-            self.qState.setStyleSheet("background-color: rgb(0, 255, 0); font-weight: bold; font-size: 20px; color: black;")
-        else:
-            self.qState.setStyleSheet("background-color: rgb(255, 80, 80); font-weight: bold; font-size: 20px; color: black;")
-
-class SensorLabel:
-    def __init__(self, name, reading, row, column, parentGrid):
-        self.row = row
-        self.column = column
-        self.qName = QLabel(name)
-        self.qReading = QLabel(reading)
-        parentGrid.addWidget(self.qName, row, column)
-        parentGrid.addWidget(self.qReading, row, column + 1)
-        self.qName.setStyleSheet("font-size: 17px")
-        self.qReading.setStyleSheet("font-size: 17px; font-weight: bold")
-
-    def changeReading(self, newReading):
-        self.qReading.setText(newReading)
 
 class PIDWindow(QWidget):
     def __init__(self):
@@ -459,6 +422,7 @@ class MainWindow(QWidget):
         # Init valve and sensor labels
         self.init_actuator_valve_label()
         self.init_sensor_reading_label()
+        self.init_connection_status_labels()
 
         # Sensor display option handlers
         self.ui.numPointsAverageInput.valueChanged.connect(self.points_for_average_change_handler)
@@ -544,6 +508,12 @@ class MainWindow(QWidget):
         # Pressure labels
         for i in range (6, 12):
             self.sensors[i] = SensorLabel("P" + str(i-5), "0" + " psi", i-6, 2, self.ui.sensorLayout)
+
+    def init_connection_status_labels(self):
+        self.conn_status_labels = {}
+        self.conn_status_labels["pad_server"] = ConnectionStatusLabel(self.ui.udpConnStatusLabel)
+        self.conn_status_labels["control_client"] = ConnectionStatusLabel(self.ui.ccConnStatusLabel)
+        self.conn_status_labels["serial"] = ConnectionStatusLabel(self.ui.serialConnStatusLabel)
 
     def enable_udp_config(self):
         self.ui.udpConnectButton.setText("Create UDP connection")
