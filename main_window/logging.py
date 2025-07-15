@@ -17,11 +17,11 @@ if TYPE_CHECKING:
 
 class LogManager(QObject):
 
-    def __init__(self, main_window: MainWindow, parent = None):
+    def __init__(self, main_window, parent = None):
         self.main_window = main_window
 
     #Creates a file or overwrites existing one, and writes the text in the logOutput into the file
-    @Slot
+    @Slot()
     def save_to_file(self):
         pathlib.Path('recording').mkdir(parents=True, exist_ok=True)
         file_name = './recording/'
@@ -32,12 +32,12 @@ class LogManager(QObject):
         f.close()
         self.write_to_log(f"Exported logs to {file_name}")
 
-    @Slot
+    @Slot(str)
     def write_to_log(self, msg: str):
         cur_date_time = QDateTime.currentDateTime().toString("yyyy-MM-dd - HH:mm:ss")
         self.main_window.ui.logOutput.append(f"[{cur_date_time}]: {msg}")
 
-    @Slot
+    @Slot()
     def display_popup(self: "MainWindow", icon: QMessageBox.Icon, title: str, msg: str):
         self.popup.setIcon(icon)
         self.popup.setWindowTitle(title)

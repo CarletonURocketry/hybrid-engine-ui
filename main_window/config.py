@@ -22,7 +22,7 @@ def load_config(self: "MainWindow", config):
     self.ui.udpIpAddressInput.setText(self.config["multicast_options"]["address"])
     self.ui.udpPortInput.setText(self.config["multicast_options"]["port"])
     
-    self.points_used_for_average = self.config["sensor_and_valve_options"]["points_used_for_average"]
+    # self.points_used_for_average = self.config["sensor_and_valve_options"]["points_used_for_average"]
     self.ui.defaultOpenValvesList.addItems([str(valve) for valve in self.config["sensor_and_valve_options"]["default_open_valves"]])
     if self.config["sensor_and_valve_options"]["pid_diagram"] == "cold_flow":
         self.ui.pidDiagramColdFlowOption.setChecked(True)

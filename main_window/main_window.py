@@ -7,11 +7,14 @@ from PySide6.QtGui import QPixmap
 from pyqtgraph import mkPen, InfiniteLine, QtCore
 import numpy as np
 
-from ui import Ui_Widget, Ui_PIDWindow
-from csv_writer import CSVWriter
-from plot_info import PlotDataDisplayMode, PlotInfo
-from timer_controller import TimerController
-from labels import *
+from .ui import Ui_Widget, Ui_PIDWindow
+from .ui_manager import UIManager
+from .udp import UDPController
+from .data_handlers import DataHandler
+from .csv_writer import CSVWriter
+from .plot_info import PlotDataDisplayMode, PlotInfo
+from .timer_controller import TimerController
+from .labels import *
 from .logging import LogManager
 
 class PIDWindow(QWidget):
@@ -171,20 +174,19 @@ class PIDWindow(QWidget):
             )           
             getattr(self.ui, f"p{i+1}ValLabel").setStyleSheet(f"color: rgb(0, 0, 0);\nfont: 700 {self.window_config["cold_flow"]["val_label_font"]}pt 'Segoe UI';")
 
-
 class MainWindow(QWidget):
     # Imports for MainWindow functionality. Helps split large file into
     # smaller modules containing related functionality
-    from .udp import udp_connection_button_handler, udp_receive_socket_data, \
-        udp_on_disconnected, udp_on_error
+    # from .udp import udp_connection_button_handler, udp_receive_socket_data, \
+    #     udp_on_disconnected, udp_on_error
     from .serial import serial_connection_button_handler, \
         refresh_serial_button_handler, serial_receive_data, serial_on_error
-    from .data_handlers import plot_point, filter_data, update_serial_connection_display, \
-        update_pad_server_display, update_control_client_display, process_data, decrease_heartbeat, \
-        reset_heartbeat_timeout, calculate_new_average, update_arming_state, update_continuity_state, \
-        flash_disconnect_label
+    # from .data_handlers import plot_point, filter_data, update_serial_connection_display, \
+    #     update_pad_server_display, update_control_client_display, process_data, decrease_heartbeat, \
+    #     reset_heartbeat_timeout, calculate_new_average, update_arming_state, update_continuity_state, \
+    #     flash_disconnect_label
     from .recording_and_playback import recording_toggle_button_handler, open_file_button_handler
-    from .logging import save_to_file, write_to_log, display_popup
+    # from .logging import save_to_file, write_to_log, display_popup
     from .config import load_config, save_config, add_default_open_valve_handler, pressure_data_display_change_handler, \
         pressure_x_val_change_handler, temperature_data_display_change_handler, temperature_x_val_change_handler, \
         tank_mass_data_display_change_handler, tank_mass_x_val_change_handler, engine_thrust_data_display_change_handler, \
@@ -195,6 +197,8 @@ class MainWindow(QWidget):
         super().__init__(parent)
         self.ui = Ui_Widget()
         self.ui.setupUi(self)
+
+        
 
         # Load config options
         self.config = None
@@ -218,7 +222,7 @@ class MainWindow(QWidget):
         self.pid_window = PIDWindow()
         self.ui.showPIDButton.clicked.connect(self.open_pid_window)
 
-        self.log_manager = LogManager()
+        self.log_manager = LogManager(self)
         self.timer_controller = TimerController()
         self.timer_controller.write_to_log_s.connect(self.log_manager.write_to_log)
 
@@ -232,9 +236,16 @@ class MainWindow(QWidget):
         self.annoy_prop.addButton("35%", QMessageBox.ButtonRole.AcceptRole)
         self.annoy_prop.addButton("50%", QMessageBox.ButtonRole.AcceptRole)
 
-        self.padUDPSocket.readyRead.connect(self.udp_receive_socket_data)
-        self.padUDPSocket.disconnected.connect(self.udp_on_disconnected)
-        self.padUDPSocket.errorOccurred.connect(self.udp_on_error)
+        for port in QSerialPortInfo.availablePorts():
+            self.ui.serialPortDropdown.addItem(port.portName())
+        for rate in QSerialPortInfo.standardBaudRates():
+            self.ui.baudRateDropdown.addItem(str(rate))
+
+        # UDP socket
+        # self.padUDPSocket = QUdpSocket(self)
+        # self.padUDPSocket.readyRead.connect(self.udp_receive_socket_data)
+        # self.padUDPSocket.disconnected.connect(self.udp_on_disconnected)
+        # self.padUDPSocket.errorOccurred.connect(self.udp_on_error)
 
         # Serial
         self.serialPort = QSerialPort(self)
@@ -243,7 +254,7 @@ class MainWindow(QWidget):
         self.serialPort.errorOccurred.connect(self.serial_on_error)
         
         # Export to File button
-        self.ui.exporter.clicked.connect(self.save_to_file)
+        # self.ui.exporter.clicked.connect(self.save_to_file)
 
         self.udp_controller = UDPController()
         self.ui_manager = UIManager(self.sensors, self.valves, self.conn_status_labels, self.hybrid_state_labels, self.plot_data)
@@ -263,8 +274,8 @@ class MainWindow(QWidget):
         self.udp_controller.multicast_group_joined.connect(self.timer_controller.reset_heartbeat_timer)
         self.udp_controller.multicast_group_joined.connect(self.timer_controller.start_data_filter_timer)
         self.udp_controller.multicast_group_joined.connect(self.timer_controller.start_heartbeat_timer)
-        
         self.udp_controller.multicast_group_joined.connect(lambda: self.ui_manager.update_ps_conn_status_label(packet_spec.IPConnectionStatus.CONNECTED))
+        
         self.udp_controller.parsed_packet_ready.connect(self.data_handler.process_packet)
         self.udp_controller.log_ready.connect(self.log_manager.write_to_log)
 
@@ -540,142 +551,6 @@ class MainWindow(QWidget):
                                     self.config["graph_options"]["engine_thrust"]["X"])
         for marker in [self.ui.engineThrustThresholdList.item(x) for x in range(self.ui.engineThrustThresholdList.count())]:
             self.ui.engineThrustPlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=inf_line_pen))
-
-        # QTimer to help us to filter the data, graph is updated every 25ms
-        self.data_filter_interval = 25
-        self.data_filter_timer = QTimer(self)
-        self.data_filter_timer.timeout.connect(self.filter_data)
-
-        # Time that the UI will wait to receive pad state heartbeats from pad server
-        # a timer that ticks every second will decrement heartbeat_timeout by 1
-        # if it's below 0, a warning should be displayed, preferably on the main section
-        # of the ui
-        self.heartbeat_timeout = 10
-        self.heartbeat_mutex = QMutex()
-        self.heartbeat_interval = 1000
-        self.heartbeat_timer = QTimer(self)
-        self.heartbeat_timer.timeout.connect(self.decrease_heartbeat)
-
-        # QTimer to flash the connection status label
-        self.disconnect_status_interval = 500
-        self.disconnect_count = 0
-        self.disconnect_status_timer = QTimer(self)
-        self.disconnect_status_timer.timeout.connect(self.flash_disconnect_label)
-
-        # Button handlers
-
-        # Connection button handlers
-        self.ui.udpConnectButton.clicked.connect(self.udp_connection_button_handler)
-        self.ui.serialConnectButton.clicked.connect(self.serial_connection_button_handler)
-        self.ui.serialRefreshButton.clicked.connect(self.refresh_serial_button_handler)
-
-        # Save CSV button handler
-        self.ui.saveCsvButton.clicked.connect(self.save_csv_button_handler)
-
-        # Open raw data file button handler
-        self.ui.openFileButton.clicked.connect(self.open_file_button_handler)
-
-        # Connect toggle button for recording data
-        self.ui.recordingToggleButton.toggled.connect(self.recording_toggle_button_handler)
-        self.raw_data_file_out = None
-        self.data_csv_writer = CSVWriter(["t","p1","p2","p3","p4","p5","p6","t1","t2","t3","t4","m1","th1","status","Continuity"], 100, "data_csv")
-        self.state_csv_writer = CSVWriter(["t","Arming state","Igniter","XV-1","XV-2","XV-3","XV-4","XV-5","XV-6","XV-7","XV-8","XV-9","XV-10","XV-11","XV-12","Quick disconnect","Dump valve","Continuity"], 1, "valves_csv")
-
-        # Init valve and sensor labels
-        self.init_actuator_valve_label()
-        self.init_sensor_reading_label()
-        self.init_connection_status_labels()
-
-        # Sensor display option handlers
-        self.ui.numPointsAverageInput.valueChanged.connect(self.points_for_average_change_handler)
-        self.ui.defaultOpenValvesButton.clicked.connect(self.add_default_open_valve_handler)
-        self.ui.pidWindowButtonGroup.buttonToggled.connect(self.pid_window.change_diagram)
-
-        # Graph option handlers
-        self.ui.pressureDisplayButtonGroup.buttonClicked.connect(self.pressure_data_display_change_handler)
-        self.ui.pressureXSB.valueChanged.connect(self.pressure_x_val_change_handler)
-        
-        self.ui.temperatureDisplayButtonGroup.buttonClicked.connect(self.temperature_data_display_change_handler)
-        self.ui.temperatureXSB.valueChanged.connect(self.temperature_x_val_change_handler)
-
-        self.ui.tankMassDisplayButtonGroup.buttonClicked.connect(self.tank_mass_data_display_change_handler)
-        self.ui.tankMassXSB.valueChanged.connect(self.tank_mass_x_val_change_handler)
-
-        self.ui.engineThrustDisplayButtonGroup.buttonClicked.connect(self.engine_thrust_data_display_change_handler)
-        self.ui.engineThrustXSB.valueChanged.connect(self.engine_thrust_x_val_change_handler)
-
-        # Plot threshold handlers
-        self.ui.pressureThresholdButton.clicked.connect(self.add_pressure_threshold_handler)
-        self.ui.temperatureThresholdButton.clicked.connect(self.add_temperature_threshold_handler)
-        self.ui.tankMassThresholdButton.clicked.connect(self.add_tank_mass_threshold_handler)
-        self.ui.engineThrustThresholdButton.clicked.connect(self.add_engine_thrust_threshold_handler)
-
-        # These make it so that the items in the list are unselected when entering a value
-        # helps with the remove value feature
-        self.ui.defaultOpenValvesInput.focusInEvent = lambda x: self.ui.defaultOpenValvesList.setCurrentRow(-1)
-        self.ui.pressureThresholdInput.focusInEvent = lambda x: self.ui.pressureThresholdList.setCurrentRow(-1)
-        self.ui.temperatureThresholdInput.focusInEvent = lambda x: self.ui.temperatureThresholdList.setCurrentRow(-1)
-        self.ui.tankMassThresholdInput.focusInEvent = lambda x: self.ui.tankMassThresholdList.setCurrentRow(-1)
-        self.ui.engineThrustThresholdInput.focusInEvent = lambda x: self.ui.engineThrustThresholdList.setCurrentRow(-1)
-        
-        # Save config handlers
-        self.ui.saveConnConfigButton.clicked.connect(self.save_config)
-        self.ui.saveDisplayConfigButton.clicked.connect(self.save_config)
-
-    # Handles when the window is closed, have to make sure to disconnect the TCP socket
-    def closeEvent(self, event):
-        confirm = QMessageBox.question(self, "Close application", "Are you sure you want to close the application?", QMessageBox.Yes | QMessageBox.No)
-        if confirm == QMessageBox.StandardButton.Yes:
-            if self.padUDPSocket.state() == QAbstractSocket.SocketState.ConnectedState:
-                self.padUDPSocket.disconnectFromHost()
-                self.padUDPSocket.waitForDisconnected()
-
-            if self.serialPort.isOpen():
-                self.serialPort.close()
-
-            self.data_csv_writer.flush(_async=False)
-            self.state_csv_writer.flush(_async=False)
-            self.pid_window.close()
-            event.accept()
-        else:
-            event.ignore()
-
-    def open_pid_window(self):
-        self.pid_window.show()
-
-    def init_actuator_valve_label(self):
-        self.valves = {}
-        self.valves[0] = TelemetryLabel("Igniter", "CLOSED", 0, 2, self.ui.valveGrid)
-        self.valves[13] = TelemetryLabel("Quick Disconnect", "CLOSED", 0, 0, self.ui.valveGrid)
-        self.valves[14] =  TelemetryLabel("XV-3 (dump valve)", "CLOSED", 0, 4, self.ui.valveGrid)
-        for i in range(1, 13):
-            initial_state = "OPEN" if i in self.config["sensor_and_valve_options"]["default_open_valves"] else "CLOSED"
-            label = f"XV-{str(i)}"
-            if i == 3: label += " (unused)"
-            if i == 5: label += " (fire valve)"
-            #There will be three label at each row, therefore divide by three, add 1 to skip the first row of valves
-            #Row timed 2 because there will be two label for state and for the name
-            self.valves[i] = TelemetryLabel(label, initial_state, ((i - 1)// 3) + 1 , ((i - 1) % 3) * 2, self.ui.valveGrid)
-
-    def init_sensor_reading_label(self):
-        self.sensors = {}
-        # Temperature sensor labels
-        for i in range(4):
-            self.sensors[i] = SensorLabel("T" + str(i + 1), "0" + " °C", i, 0, self.ui.sensorLayout)
-        
-        # Tank mass & Engine thrust labels
-        self.sensors[4] = SensorLabel("Tank Mass", "0" + " kg", 4, 0, self.ui.sensorLayout)
-        self.sensors[5] = SensorLabel("Engine Thrust", "0" + " N", 5, 0, self.ui.sensorLayout)
-        
-        # Pressure labels
-        for i in range (6, 12):
-            self.sensors[i] = SensorLabel("P" + str(i-5), "0" + " psi", i-6, 2, self.ui.sensorLayout)
-
-    def init_connection_status_labels(self):
-        self.conn_status_labels = {}
-        self.conn_status_labels["pad_server"] = ConnectionStatusLabel(self.ui.udpConnStatusLabel)
-        self.conn_status_labels["control_client"] = ConnectionStatusLabel(self.ui.ccConnStatusLabel)
-        self.conn_status_labels["serial"] = ConnectionStatusLabel(self.ui.serialConnStatusLabel)
 
     def enable_udp_config(self):
         self.ui.udpConnectButton.setText("Create UDP connection")
