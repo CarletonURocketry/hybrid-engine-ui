@@ -13,6 +13,9 @@ from .plot_info import PlotDataDisplayMode
 if TYPE_CHECKING:
     from main_window import MainWindow
 
+act_states = [packet_spec.ActuatorState.OFF] * 15
+arm_state = packet_spec.ArmingState.ARMED_PAD
+
 def process_data(self: "MainWindow", header: packet_spec.PacketHeader, message: packet_spec.PacketMessage, reset_heartbeat=True):
     match header.sub_type:
         case packet_spec.TelemetryPacketSubType.TEMPERATURE \
@@ -93,6 +96,7 @@ def plot_point(self: "MainWindow", header: packet_spec.PacketHeader, message: pa
                     change_new_reading(self, 5, f"{round(plots[thrustId].running_average, 2)} N")
 
 def update_arming_state(self: "MainWindow", new_state: packet_spec.ArmingState):
+    global arm_state
     match new_state:
         case packet_spec.ArmingState.ARMED_PAD:
             self.ui.armingStateValueLabel.setText("1 - ARMED PAD")
@@ -112,8 +116,10 @@ def update_arming_state(self: "MainWindow", new_state: packet_spec.ArmingState):
         case packet_spec.ArmingState.NOT_AVAILABLE:
             self.ui.armingStateValueLabel.setText("N/A")
             self.ui.armingStateValueLabel.setStyleSheet("background-color: rgb(0, 85, 127); color: white;")
-            
-    self.write_to_log(f"Arming state updated to {new_state}")
+    
+    if arm_state != new_state:
+        arm_state = new_state
+        self.write_to_log(f"Arming state updated to {new_state}")
 
 def update_pad_server_display(self: "MainWindow", status: packet_spec.IPConnectionStatus):
     match status:
@@ -160,17 +166,17 @@ def update_act_state(self: "MainWindow", id: int, new_state: packet_spec.Actuato
         case packet_spec.ActuatorState.ON:
             turn_on_valve(self, id)
             
-    match id:
-        case 0:
-            self.write_to_log("////////////////////////////")
-            self.write_to_log(f"Fire Valve: {new_state}")
-        case 13:
-            self.write_to_log(f"Quick Disconnect: {new_state}")
-        case 14:
-            self.write_to_log(f"Igniter: {new_state}")
-            self.write_to_log("////////////////////////////")
-        case _:
-            self.write_to_log(f"XV-{id}: {new_state}")
+    if act_states[id] != new_state:
+        act_states[id] = new_state
+        match id:
+            case 0:
+                self.write_to_log(f"Fire Valve set to: {new_state}")
+            case 13:
+                self.write_to_log(f"Quick Disconnect set to: {new_state}")
+            case 14:
+                self.write_to_log(f"Igniter set to: {new_state}")
+            case _:
+                self.write_to_log(f"XV-{id} set to: {new_state}")
 
 def update_continuity_state(self: "MainWindow", new_state: packet_spec.ContinuityState):
     match new_state:
