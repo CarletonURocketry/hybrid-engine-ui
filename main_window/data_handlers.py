@@ -22,19 +22,19 @@ def process_data(self: "MainWindow", header: packet_spec.PacketHeader, message: 
             self.plot_point(header, message)
             if reset_heartbeat: self.reset_heartbeat_timeout()
         case packet_spec.TelemetryPacketSubType.ARMING_STATE:
-            update_arming_state(self, message)
+            update_arming_state(self, message.state)
             if reset_heartbeat: self.reset_heartbeat_timeout()
         case packet_spec.TelemetryPacketSubType.ACT_STATE:
             if message.id == 3 and message.state == packet_spec.ActuatorState.ON:
                 self.annoyProp.show()
             else:
-                update_act_state(self, message)
+                update_act_state(self, message.id, message.state)
             if reset_heartbeat: self.reset_heartbeat_timeout()
         case packet_spec.TelemetryPacketSubType.WARNING:
             # Write warning to logs maybe?
             pass
         case packet_spec.TelemetryPacketSubType.CONTINUITY:
-            update_continuity_state(self, message)
+            update_continuity_state(self, message.state)
             if reset_heartbeat: self.reset_heartbeat_timeout()
         case packet_spec.TelemetryPacketSubType.CONN_STATUS:
             self.update_control_client_display(message.status)
@@ -92,8 +92,8 @@ def plot_point(self: "MainWindow", header: packet_spec.PacketHeader, message: pa
                     plots[thrustId].running_average = self.calculate_new_average(plots[thrustId].running_average, message.thrust)
                     change_new_reading(self, 5, f"{round(plots[thrustId].running_average, 2)} N")
 
-def update_arming_state(self: "MainWindow", message: packet_spec.ArmingStatePacket):
-    match message.state:
+def update_arming_state(self: "MainWindow", new_state: packet_spec.ArmingState):
+    match new_state:
         case packet_spec.ArmingState.ARMED_PAD:
             self.ui.armingStateValueLabel.setText("1 - ARMED PAD")
             self.ui.armingStateValueLabel.setStyleSheet("background-color: rgb(6, 171, 82); color: black;")
@@ -113,7 +113,7 @@ def update_arming_state(self: "MainWindow", message: packet_spec.ArmingStatePack
             self.ui.armingStateValueLabel.setText("N/A")
             self.ui.armingStateValueLabel.setStyleSheet("background-color: rgb(0, 85, 127); color: white;")
             
-    self.write_to_log(f"Arming state updated to {message.state}")
+    self.write_to_log(f"Arming state updated to {new_state}")
 
 def update_pad_server_display(self: "MainWindow", status: packet_spec.IPConnectionStatus):
     match status:
@@ -153,27 +153,27 @@ def update_serial_connection_display(self: "MainWindow", status: packet_spec.Ser
             self.ui.serialConnStatusLabel.setText("Not connected")
             self.ui.serialConnStatusLabel.setStyleSheet("background-color: rgb(0, 85, 127); color: white;")
 
-def update_act_state(self: "MainWindow", message: packet_spec.ActuatorStatePacket):
-    match message.state:
+def update_act_state(self: "MainWindow", id: int, new_state: packet_spec.ActuatorState):
+    match new_state:
         case packet_spec.ActuatorState.OFF:
-            turn_off_valve(self, message.id)
+            turn_off_valve(self, id)
         case packet_spec.ActuatorState.ON:
-            turn_on_valve(self, message.id)
+            turn_on_valve(self, id)
             
-    match message.id:
+    match id:
         case 0:
             self.write_to_log("////////////////////////////")
-            self.write_to_log(f"Fire Valve: {message.state}")
+            self.write_to_log(f"Fire Valve: {new_state}")
         case 13:
-            self.write_to_log(f"Quick Disconnect: {message.state}")
+            self.write_to_log(f"Quick Disconnect: {new_state}")
         case 14:
-            self.write_to_log(f"Igniter: {message.state}")
+            self.write_to_log(f"Igniter: {new_state}")
             self.write_to_log("////////////////////////////")
         case _:
-            self.write_to_log(f"XV-{message.id}: {message.state}")
+            self.write_to_log(f"XV-{id}: {new_state}")
 
-def update_continuity_state(self: "MainWindow", message: packet_spec.ContinuityPacket):
-    match message.state:
+def update_continuity_state(self: "MainWindow", new_state: packet_spec.ContinuityState):
+    match new_state:
         case packet_spec.ContinuityState.OPEN:
             self.ui.continuityValueLabel.setText("NOT CONTINUOUS")
             self.ui.continuityValueLabel.setStyleSheet("background-color: rgb(255, 80, 80); color: black;")

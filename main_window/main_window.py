@@ -541,7 +541,6 @@ class MainWindow(QWidget):
         for marker in [self.ui.engineThrustThresholdList.item(x) for x in range(self.ui.engineThrustThresholdList.count())]:
             self.ui.engineThrustPlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=inf_line_pen))
 
-
     def enable_udp_config(self):
         self.ui.udpConnectButton.setText("Create UDP connection")
         self.ui.udpConnectButton.setEnabled(True)
