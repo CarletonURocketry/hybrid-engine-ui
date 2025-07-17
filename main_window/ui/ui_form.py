@@ -263,6 +263,25 @@ class Ui_Widget(object):
         self.verticalLayout.addLayout(self.plotLayout)
 
         self.tabWidget.addTab(self.telemetryTab, "")
+        self.tab = QWidget()
+        self.tab.setObjectName(u"tab")
+        self.verticalLayout_3 = QVBoxLayout(self.tab)
+        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
+        self.csvAnalysisButton = QPushButton(self.tab)
+        self.csvAnalysisButton.setObjectName(u"csvAnalysisButton")
+
+        self.verticalLayout_3.addWidget(self.csvAnalysisButton)
+
+        self.analysisPlot = PlotWidget(self.tab)
+        self.analysisPlot.setObjectName(u"analysisPlot")
+        self.analysisPlot.setBackgroundBrush(brush)
+        brush2 = QBrush(QColor(255, 0, 0, 255))
+        brush2.setStyle(Qt.NoBrush)
+        self.analysisPlot.setForegroundBrush(brush2)
+
+        self.verticalLayout_3.addWidget(self.analysisPlot)
+
+        self.tabWidget.addTab(self.tab, "")
         self.connectionTab = QWidget()
         self.connectionTab.setObjectName(u"connectionTab")
         self.connectionTab.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
@@ -886,7 +905,7 @@ class Ui_Widget(object):
 
         self.retranslateUi(Widget)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(Widget)
@@ -919,6 +938,8 @@ class Ui_Widget(object):
 #if QT_CONFIG(tooltip)
         self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.telemetryTab), QCoreApplication.translate("Widget", u"Main telemetry view", None))
 #endif // QT_CONFIG(tooltip)
+        self.csvAnalysisButton.setText(QCoreApplication.translate("Widget", u"Open CSV recording", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("Widget", u"Page", None))
         self.multicastConfigLabel.setText(QCoreApplication.translate("Widget", u"Multicast configuration", None))
 #if QT_CONFIG(tooltip)
         self.udpIpAddressLabel.setToolTip(QCoreApplication.translate("Widget", u"Address of multicast group", None))

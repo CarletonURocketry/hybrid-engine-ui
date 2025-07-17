@@ -42,7 +42,7 @@
       <bool>false</bool>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="telemetryTab">
       <property name="autoFillBackground">
@@ -401,6 +401,42 @@
           </widget>
          </item>
         </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
+       <string>Page</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="QPushButton" name="csvAnalysisButton">
+         <property name="text">
+          <string>Open CSV recording</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="PlotWidget" name="analysisPlot">
+         <property name="backgroundBrush">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>240</red>
+            <green>240</green>
+            <blue>240</blue>
+           </color>
+          </brush>
+         </property>
+         <property name="foregroundBrush">
+          <brush brushstyle="NoBrush">
+           <color alpha="255">
+            <red>255</red>
+            <green>0</green>
+            <blue>0</blue>
+           </color>
+          </brush>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -1453,14 +1489,14 @@ New average = Old average * α + New value * (1-α)</string>
  </resources>
  <connections/>
  <buttongroups>
+  <buttongroup name="engineThrustDisplayButtonGroup"/>
   <buttongroup name="pressureDisplayButtonGroup"/>
+  <buttongroup name="temperatureDisplayButtonGroup"/>
+  <buttongroup name="tankMassDisplayButtonGroup"/>
   <buttongroup name="pidWindowButtonGroup">
    <property name="type" stdset="0">
     <string>static_fire</string>
    </property>
   </buttongroup>
-  <buttongroup name="temperatureDisplayButtonGroup"/>
-  <buttongroup name="engineThrustDisplayButtonGroup"/>
-  <buttongroup name="tankMassDisplayButtonGroup"/>
  </buttongroups>
 </ui>

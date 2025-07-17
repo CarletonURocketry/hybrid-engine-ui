@@ -218,7 +218,7 @@ class MainWindow(QWidget):
         update_pad_server_display, update_control_client_display, process_data, decrease_heartbeat, \
         reset_heartbeat_timeout, calculate_new_average, update_arming_state, update_continuity_state, \
         flash_disconnect_label
-    from .recording_and_playback import recording_toggle_button_handler, open_file_button_handler
+    from .recording_and_playback import recording_toggle_button_handler, open_file_button_handler, analyze_csv_handler
     from .logging import save_to_file, write_to_log, display_popup
     from .config import load_config, save_config, add_default_open_valve_handler, pressure_data_display_change_handler, \
         pressure_x_val_change_handler, temperature_data_display_change_handler, temperature_x_val_change_handler, \
@@ -355,6 +355,7 @@ class MainWindow(QWidget):
         # Save config handlers
         self.ui.saveConnConfigButton.clicked.connect(self.save_config)
         self.ui.saveDisplayConfigButton.clicked.connect(self.save_config)
+        self.ui.csvAnalysisButton.clicked.connect(self.analyze_csv_handler)
 
     # Handles when the window is closed, have to make sure to disconnect the TCP socket
     def closeEvent(self, event):
@@ -540,6 +541,15 @@ class MainWindow(QWidget):
                                     self.config["graph_options"]["engine_thrust"]["X"])
         for marker in [self.ui.engineThrustThresholdList.item(x) for x in range(self.ui.engineThrustThresholdList.count())]:
             self.ui.engineThrustPlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=inf_line_pen))
+
+        self.ui.analysisPlot.addLegend(offset=(0,0), colCount=6, labelTextColor="black")
+        self.ui.analysisPlot.setTitle("<span style='font-weight: bold;'></span>", color="black")
+        self.ui.analysisPlot.setLabel("left", "<span style='font-size: 15px; font-weight: bold;'>Pressure (PSI)</span>", color="black")
+        self.ui.analysisPlot.setLabel("bottom", "<span style='font-size: 17px; font-weight: bold;'>Time (s)</span>", color="black")
+        self.ui.analysisPlot.getAxis("left").setPen(black_pen)
+        self.ui.analysisPlot.getAxis("left").setTextPen(black_pen)
+        self.ui.analysisPlot.getAxis("bottom").setPen(black_pen)
+        self.ui.analysisPlot.getAxis("bottom").setTextPen(black_pen)
 
     def enable_udp_config(self):
         self.ui.udpConnectButton.setText("Create UDP connection")

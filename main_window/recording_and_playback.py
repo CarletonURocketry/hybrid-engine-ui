@@ -48,3 +48,9 @@ def open_file_button_handler(self: "MainWindow"):
                 data = file.read()
                 display_previous_data(self, data)
             self.write_to_log("Data loaded")
+
+def analyze_csv_handler(self: "MainWindow"):
+    file_path, _ = QFileDialog.getOpenFileName(self, "Open CSV", "data_csv", "csv file(*.csv);;All files (*)")
+    print(file_path)
+
+    
