@@ -198,8 +198,6 @@ class MainWindow(QWidget):
         self.ui = Ui_Widget()
         self.ui.setupUi(self)
 
-        
-
         # Load config options
         self.config = None
         self.points_used_for_average: float = 0.80
@@ -224,7 +222,7 @@ class MainWindow(QWidget):
 
         self.log_manager = LogManager(self)
         self.timer_controller = TimerController()
-        self.timer_controller.write_to_log_s.connect(self.log_manager.write_to_log)
+        self.timer_controller.log_ready.connect(self.log_manager.write_to_log)
 
         self.popup = QMessageBox()
         self.popup.addButton("Ok", QMessageBox.ButtonRole.AcceptRole)
@@ -278,28 +276,6 @@ class MainWindow(QWidget):
         
         self.udp_controller.parsed_packet_ready.connect(self.data_handler.process_packet)
         self.udp_controller.log_ready.connect(self.log_manager.write_to_log)
-
-
-        # QTimer to help us to filter the data, graph is updated every 25ms
-        # self.data_filter_interval = 25
-        # self.data_filter_timer = QTimer(self)
-        # self.data_filter_timer.timeout.connect(self.filter_data)
-
-        # # Time that the UI will wait to receive pad state heartbeats from pad server
-        # # a timer that ticks every second will decrement heartbeat_timeout by 1
-        # # if it's below 0, a warning should be displayed, preferably on the main section
-        # # of the ui
-        # self.heartbeat_timeout = 10
-        # self.heartbeat_mutex = QMutex()
-        # self.heartbeat_interval = 1000
-        # self.heartbeat_timer = QTimer(self)
-        # self.heartbeat_timer.timeout.connect(self.decrease_heartbeat)
-
-        # # QTimer to flash the connection status label
-        # self.disconnect_status_interval = 500
-        # self.disconnect_count = 0
-        # self.disconnect_status_timer = QTimer(self)
-        # self.disconnect_status_timer.timeout.connect(self.flash_disconnect_label)
 
         # Button handlers
 

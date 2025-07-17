@@ -8,7 +8,7 @@ class TimerController(QObject):
   flash_disconnect_label_s = Signal()
   update_pad_server_display_s = Signal(packet_spec.IPConnectionStatus)
   update_control_client_display_s = Signal(packet_spec.IPConnectionStatus)
-  write_to_log_s = Signal(str)
+  log_ready = Signal(str)
 
   def __init__(self):
    super().__init__()
@@ -62,7 +62,7 @@ class TimerController(QObject):
    if self.heartbeat_timeout <= 0:
       self.update_pad_server_display_s.emit(packet_spec.IPConnectionStatus.DISCONNECTED)
       self.update_control_client_display_s.emit(packet_spec.IPConnectionStatus.DISCONNECTED)
-      self.write_to_log_s.emit(f"Heartbeat not found for {abs(self.heartbeat_timeout) + 1} seconds")
+      self.log_ready.emit(f"Heartbeat not found for {abs(self.heartbeat_timeout) + 1} seconds")
    self.heartbeat_mutex.unlock()
 
   @Slot()
