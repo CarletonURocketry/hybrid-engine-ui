@@ -109,3 +109,16 @@ class DataHandler(QObject):
                 # Change plot id (ids start at 1) and emit for csv writer
                 plot_id = plot_id[:-1] + f"{message.id + 1}"
                 self.telemetry_ready[str, float, float].emit(plot_id, message.time_since_power, reading)
+
+    @Slot()
+    def filter_data(self):
+        for key in self.plots:
+            if self.plots[key].points.size == 0:
+                continue
+            match(self.plots[key].data_display_mode):
+                case PlotDataDisplayMode.POINTS:
+                    self.plots[key].points = self.plots[key].points[-(self.plots[key].x_val - 1):]
+                case PlotDataDisplayMode.SECONDS:
+                    min_time: int = self.plots[key].points[:,0].max() - self.plots[key].x_val
+                    self.plots[key].points = self.plots[key].points[self.plots[key].points[:,0] >= min_time]
+            self.plots[key].data_line.setData(self.plots[key].points)

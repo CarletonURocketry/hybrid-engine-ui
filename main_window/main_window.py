@@ -263,6 +263,8 @@ class MainWindow(QWidget):
         self.data_handler.actuator_state_changed.connect(self.telem_vis_manager.update_actuator_state_label)
         self.data_handler.continuity_state_changed.connect(self.telem_vis_manager.update_continuity_state_label)
         self.data_handler.cc_connection_status_changed.connect(self.telem_vis_manager.update_cc_conn_status_label)
+
+        self.timer_controller.filter_data_s.connect(self.data_handler.filter_data)
         # Connect this to UI handler and timer
         # self.data_handler.connection_status_changed.connect()
         # Add connection for handling logging
