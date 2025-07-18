@@ -168,10 +168,5 @@ class UDPController(QObject):
     def udp_on_disconnected(self):
         self.log_ready.emit("Socket connection was closed")
         self.multicast_group_disconnected.emit()
-        # self.update_control_client_display(packet_spec.IPConnectionStatus.NOT_CONNECTED)
-        # self.update_arming_state(packet_spec.ArmingState.NOT_AVAILABLE)
-        # self.update_continuity_state(packet_spec.ContinuityState.NOT_AVAILABLE)
-        # self.data_csv_writer.flush()
-        # self.state_csv_writer.flush()
         # if self.raw_data_file_out:
         #     self.raw_data_file_out.close()
