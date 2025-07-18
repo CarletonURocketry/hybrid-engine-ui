@@ -23,10 +23,11 @@ class DataHandler(QObject):
     cc_connection_status_changed = Signal(packet_spec.IPConnectionStatus)
     annoy_prop = Signal()
 
-    def __init__(self, plots: dict[str, PlotInfo], average_alpha):
+    def __init__(self, plots: dict[str, PlotInfo], average_alpha: float):
         super().__init__()
         self.plots = plots
         self.average_alpha = average_alpha
+        self.act_states = [packet_spec.ActuatorState.OFF] * 15
         #TODO: Add initial state of valves and only log whenever a change occurs
     
     def calculate_new_average(self, old_average: float, new_point: float):
