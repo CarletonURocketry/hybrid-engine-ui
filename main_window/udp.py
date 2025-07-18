@@ -112,37 +112,6 @@ class UDPController(QObject):
                 # Parse and process the message
                 message = packet_spec.parse_packet_message(header, message_bytes)
                 self.parsed_packet_ready.emit(header, message)
-                # self.process_data(header, message)
-
-                # Write data to csv here
-                #TODO: Move this, could be handler by csv writer slot?
-                # packet_dict = {}
-                # match header.sub_type:
-                #     case packet_spec.TelemetryPacketSubType.TEMPERATURE:
-                #         packet_dict["t" + str(message.id + 1)] = message.temperature
-                #         self.data_csv_writer.add_timed_measurements(message.time_since_power, packet_dict)
-                #     case packet_spec.TelemetryPacketSubType.PRESSURE:
-                #         packet_dict["p" + str(message.id + 1)] = message.pressure
-                #         self.data_csv_writer.add_timed_measurements(message.time_since_power, packet_dict)
-                #     case packet_spec.TelemetryPacketSubType.MASS:
-                #         packet_dict["m" + str(message.id + 1)] = message.mass 
-                #         self.data_csv_writer.add_timed_measurements(message.time_since_power, packet_dict)
-                #     case packet_spec.TelemetryPacketSubType.THRUST:
-                #         packet_dict["th" + str(message.id + 1)] = message.thrust
-                #         self.data_csv_writer.add_timed_measurements(message.time_since_power, packet_dict)
-                #     case packet_spec.TelemetryPacketSubType.ARMING_STATE:
-                #         packet_dict["Arming state"] = message.state.name
-                #         self.state_csv_writer.add_timed_measurements(message.time_since_power, packet_dict)
-                #     case packet_spec.TelemetryPacketSubType.ACT_STATE:
-                #         match message.id:
-                #             case 0: packet_dict["Igniter"] = message.state.name
-                #             case 13: packet_dict["Quick disconnect"] = message.state.name
-                #             case 14: packet_dict["Dump valve"] = message.state.name
-                #             case _: packet_dict[f"XV-{message.id}"] = message.state.name
-                #         self.state_csv_writer.add_timed_measurements(message.time_since_power, packet_dict)
-                #     case packet_spec.TelemetryPacketSubType.CONTINUITY:
-                #         packet_dict["Continuity"] = message.state.name
-                #         self.data_csv_writer.add_timed_measurements(message.time_since_power, packet_dict)
 
                 # #If we want to recording data
                 # if self.ui.recordingToggleButton.isChecked():

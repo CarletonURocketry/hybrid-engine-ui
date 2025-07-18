@@ -3,6 +3,8 @@ import csv
 from pathlib import Path
 from datetime import datetime
 
+from PySide6.QtCore import Slot
+
 # I'm aware that this is a little over-engineered but this avoids any possibility of
 # data loss by swapping buffers and also organizes data nicely into csvs
 class CSVWriter:
@@ -16,7 +18,7 @@ class CSVWriter:
     self.csv_dir: Path = Path(dir)
     self.csv_out: Path = None
 
-  def add_timed_measurements(self, time: int, sensor_readings: dict):
+  def add_timed_measurements(self, time: float, sensor_readings: dict):
     # Only try to flush the buffer when receiving a new timestamp
     if str(time) not in self.activebuffer:
       if len(self.activebuffer) >= self.buffer_size:
@@ -33,6 +35,11 @@ class CSVWriter:
     
     self.activebuffer[str(time)].update(sensor_readings)
 
+  @Slot(str, float, float)
+  def add_timed_measurement(self, id: str, time: float, sensor_reading: float):
+    self.add_timed_measurements(time, dict({id: sensor_reading}))
+
+  @Slot()
   def create_csv_log(self):
     self.csv_out = self.csv_dir / f"{datetime.now().strftime('%Y-%m-%d_%H-%M')}.csv"
     self.csv_dir.mkdir(parents=True, exist_ok=True)

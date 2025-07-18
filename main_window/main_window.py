@@ -257,8 +257,8 @@ class MainWindow(QWidget):
         self.udp_controller = UDPController()
         self.telem_vis_manager = TelemVisManager(self.sensors, self.valves, self.conn_status_labels, self.hybrid_state_labels, self.plot_data)
         self.data_handler = DataHandler(self.plot_data, self.config["sensor_and_valve_options"]["points_used_for_average"])
-        self.data_handler.telemetry_ready.connect(self.telem_vis_manager.update_plot)
-        self.data_handler.telemetry_ready.connect(self.telem_vis_manager.update_sensor_label)
+        self.data_handler.telemetry_ready[str].connect(self.telem_vis_manager.update_plot)
+        self.data_handler.telemetry_ready[str].connect(self.telem_vis_manager.update_sensor_label)
         self.data_handler.arming_state_changed.connect(self.telem_vis_manager.update_arming_state_label)
         self.data_handler.actuator_state_changed.connect(self.telem_vis_manager.update_actuator_state_label)
         self.data_handler.continuity_state_changed.connect(self.telem_vis_manager.update_continuity_state_label)
@@ -273,7 +273,7 @@ class MainWindow(QWidget):
         self.udp_controller.multicast_group_joined.connect(self.timer_controller.start_data_filter_timer)
         self.udp_controller.multicast_group_joined.connect(self.timer_controller.start_heartbeat_timer)
         self.udp_controller.multicast_group_joined.connect(lambda: self.telem_vis_manager.update_ps_conn_status_label(packet_spec.IPConnectionStatus.CONNECTED))
-        
+
         self.udp_controller.parsed_packet_ready.connect(self.data_handler.process_packet)
         self.udp_controller.log_ready.connect(self.log_manager.write_to_log)
 
@@ -295,6 +295,9 @@ class MainWindow(QWidget):
         self.raw_data_file_out = None
         self.data_csv_writer = CSVWriter(["t","p1","p2","p3","p4","p5","p6","t1","t2","t3","t4","m1","th1","status","Continuity"], 100, "data_csv")
         self.state_csv_writer = CSVWriter(["t","Arming state","Igniter","XV-1","XV-2","XV-3","XV-4","XV-5","XV-6","XV-7","XV-8","XV-9","XV-10","XV-11","XV-12","Quick disconnect","Dump valve","Continuity"], 1, "valves_csv")
+        self.udp_controller.multicast_group_joined.connect(self.data_csv_writer.create_csv_log)
+        self.udp_controller.multicast_group_joined.connect(self.state_csv_writer.create_csv_log)
+        self.data_handler.telemetry_ready[str, float, float].connect(self.data_csv_writer.add_timed_measurement)
 
         # Sensor display option handlers
         self.ui.numPointsAverageInput.valueChanged.connect(self.points_for_average_change_handler)
