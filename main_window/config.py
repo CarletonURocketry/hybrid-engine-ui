@@ -19,6 +19,8 @@ black_pen = mkPen("black", width=2)
 
 def load_config(self: "MainWindow", config):
     self.config = json.load(config)
+
+    # SHOULD ALL BE DONE IN UI MANAGER
     self.ui.udpIpAddressInput.setText(self.config["multicast_options"]["address"])
     self.ui.udpPortInput.setText(self.config["multicast_options"]["port"])
     

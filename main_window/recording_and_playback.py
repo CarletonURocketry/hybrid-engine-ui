@@ -6,6 +6,7 @@ Should only be imported by main_window.py
 
 import pathlib
 from typing import TYPE_CHECKING
+import time
 
 from PySide6.QtWidgets import QFileDialog
 from PySide6.QtCore import QDateTime

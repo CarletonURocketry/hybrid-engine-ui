@@ -8,7 +8,7 @@ from pyqtgraph import mkPen, InfiniteLine, QtCore
 import numpy as np
 
 from .ui import Ui_Widget, Ui_PIDWindow
-from .ui_manager import UIManager
+from .telem_vis_manager import TelemVisManager
 from .udp import UDPController
 from .data_handlers import DataHandler
 from .csv_writer import CSVWriter
@@ -255,14 +255,14 @@ class MainWindow(QWidget):
         # self.ui.exporter.clicked.connect(self.save_to_file)
 
         self.udp_controller = UDPController()
-        self.ui_manager = UIManager(self.sensors, self.valves, self.conn_status_labels, self.hybrid_state_labels, self.plot_data)
+        self.telem_vis_manager = TelemVisManager(self.sensors, self.valves, self.conn_status_labels, self.hybrid_state_labels, self.plot_data)
         self.data_handler = DataHandler(self.plot_data, self.config["sensor_and_valve_options"]["points_used_for_average"])
-        self.data_handler.telemetry_ready.connect(self.ui_manager.update_plot)
-        self.data_handler.telemetry_ready.connect(self.ui_manager.update_sensor_label)
-        self.data_handler.arming_state_changed.connect(self.ui_manager.update_arming_state_label)
-        self.data_handler.actuator_state_changed.connect(self.ui_manager.update_actuator_state_label)
-        self.data_handler.continuity_state_changed.connect(self.ui_manager.update_continuity_state_label)
-        self.data_handler.cc_connection_status_changed.connect(self.ui_manager.update_cc_conn_status_label)
+        self.data_handler.telemetry_ready.connect(self.telem_vis_manager.update_plot)
+        self.data_handler.telemetry_ready.connect(self.telem_vis_manager.update_sensor_label)
+        self.data_handler.arming_state_changed.connect(self.telem_vis_manager.update_arming_state_label)
+        self.data_handler.actuator_state_changed.connect(self.telem_vis_manager.update_actuator_state_label)
+        self.data_handler.continuity_state_changed.connect(self.telem_vis_manager.update_continuity_state_label)
+        self.data_handler.cc_connection_status_changed.connect(self.telem_vis_manager.update_cc_conn_status_label)
         # Connect this to UI handler and timer
         # self.data_handler.connection_status_changed.connect()
         # Add connection for handling logging
@@ -272,7 +272,7 @@ class MainWindow(QWidget):
         self.udp_controller.multicast_group_joined.connect(self.timer_controller.reset_heartbeat_timer)
         self.udp_controller.multicast_group_joined.connect(self.timer_controller.start_data_filter_timer)
         self.udp_controller.multicast_group_joined.connect(self.timer_controller.start_heartbeat_timer)
-        self.udp_controller.multicast_group_joined.connect(lambda: self.ui_manager.update_ps_conn_status_label(packet_spec.IPConnectionStatus.CONNECTED))
+        self.udp_controller.multicast_group_joined.connect(lambda: self.telem_vis_manager.update_ps_conn_status_label(packet_spec.IPConnectionStatus.CONNECTED))
         
         self.udp_controller.parsed_packet_ready.connect(self.data_handler.process_packet)
         self.udp_controller.log_ready.connect(self.log_manager.write_to_log)
