@@ -24,7 +24,7 @@ if TYPE_CHECKING:
 
 class UDPController(QObject):
 
-    multicast_group_joined = Signal((), (packet_spec.IPConnectionStatus))
+    multicast_group_joined = Signal()
     multicast_group_disconnected = Signal()
     parsed_packet_ready = Signal(packet_spec.PacketHeader, packet_spec.PacketMessage)
     easter_egg_opened = Signal()
@@ -34,6 +34,8 @@ class UDPController(QObject):
     def __init__(self):
         super().__init__()
         self.padUDPSocket = QUdpSocket(self)
+        # Maybe add a handler for padUDPSocket.stateChanged?
+        # Would alleviate the need for 
         self.padUDPSocket.readyRead.connect(self.udp_receive_socket_data)
         self.padUDPSocket.disconnected.connect(self.udp_on_disconnected)
         self.padUDPSocket.errorOccurred.connect(self.udp_on_error)
@@ -122,32 +124,6 @@ class UDPController(QObject):
             self.padUDPSocket.disconnectFromHost()
             self.padUDPSocket.waitForDisconnected()
     
-# Any data received should be handled here
-# def udp_receive_socket_data(self: "MainWindow"):
-#     while self.padUDPSocket.hasPendingDatagrams():
-#         datagram, host, port = self.padUDPSocket.readDatagram(self.padUDPSocket.pendingDatagramSize())
-#         data = datagram.data()
-        
-#         # Process all packets in the datagram
-#         ptr = 0
-#         data_len = len(data)
-#         while ptr < data_len:
-#             # Extract and parse header
-#             header_bytes = data[ptr:ptr + 2]
-#             ptr += 2
-#             header = packet_spec.parse_packet_header(header_bytes)
-            
-#             # Get message length and extract message bytes
-#             message_bytes_length = packet_spec.packet_message_bytes_length(header)
-#             message_bytes = data[ptr:ptr + message_bytes_length]
-#             ptr += message_bytes_length
-            
-#             # Parse and process the message
-#             message = packet_spec.parse_packet_message(header, message_bytes)
-#             # self.parsed_packet_ready.emit(header, message)
-#             self.process_data(header, message)
-
-#             # Write data to csv here
 #             #TODO: Move this, could be handler by csv writer slot?
 #             packet_dict = {}
 #             match header.sub_type:
@@ -192,12 +168,6 @@ class UDPController(QObject):
     def udp_on_disconnected(self):
         self.log_ready.emit("Socket connection was closed")
         self.multicast_group_disconnected.emit()
-        # self.data_filter_timer.stop()
-        # self.heartbeat_timer.stop()
-        # self.reset_heartbeat_timeout()
-        # self.enable_udp_config()
-        # self.enable_serial_config()
-        # self.update_pad_server_display(packet_spec.IPConnectionStatus.NOT_CONNECTED)
         # self.update_control_client_display(packet_spec.IPConnectionStatus.NOT_CONNECTED)
         # self.update_arming_state(packet_spec.ArmingState.NOT_AVAILABLE)
         # self.update_continuity_state(packet_spec.ContinuityState.NOT_AVAILABLE)

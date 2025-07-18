@@ -266,10 +266,18 @@ class MainWindow(QWidget):
 
         self.udp_controller.multicast_group_joined.connect(lambda: self.disable_udp_config(disable_btn=False))
         self.udp_controller.multicast_group_joined.connect(lambda: self.disable_serial_config(disable_btn=True))
-        self.udp_controller.multicast_group_joined.connect(self.timer_controller.reset_heartbeat_timer)
+        self.udp_controller.multicast_group_joined.connect(self.timer_controller.reset_heartbeat_timeout)
         self.udp_controller.multicast_group_joined.connect(self.timer_controller.start_data_filter_timer)
         self.udp_controller.multicast_group_joined.connect(self.timer_controller.start_heartbeat_timer)
         self.udp_controller.multicast_group_joined.connect(lambda: self.telem_vis_manager.update_ps_conn_status_label(packet_spec.IPConnectionStatus.CONNECTED))
+
+        self.udp_controller.multicast_group_disconnected.connect(lambda: self.enable_udp_config())
+        self.udp_controller.multicast_group_disconnected.connect(lambda: self.enable_serial_config())
+        self.udp_controller.multicast_group_disconnected.connect(self.timer_controller.stop_heartbeat_timer)
+        self.udp_controller.multicast_group_disconnected.connect(self.timer_controller.reset_heartbeat_timeout)
+        self.udp_controller.multicast_group_disconnected.connect(self.timer_controller.stop_data_filter_timer)
+        self.udp_controller.multicast_group_disconnected.connect(lambda: self.telem_vis_manager.update_ps_conn_status_label(packet_spec.IPConnectionStatus.NOT_CONNECTED))
+        
 
         self.udp_controller.parsed_packet_ready.connect(self.data_handler.process_packet)
         self.udp_controller.log_ready.connect(self.log_manager.write_to_log)
@@ -540,6 +548,7 @@ class MainWindow(QWidget):
     # used for when serial connection disabled ability to connect via udp
     # or vice versa
     def disable_udp_config(self, disable_btn: bool):
+        print("here")
         if disable_btn: self.ui.udpConnectButton.setEnabled(False) 
         else: self.ui.udpConnectButton.setText("Close UDP connection")
         self.ui.udpIpAddressInput.setEnabled(False)

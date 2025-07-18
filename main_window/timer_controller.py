@@ -44,9 +44,12 @@ class TimerController(QObject):
   @Slot()
   def start_heartbeat_timer(self):
    self.heartbeat_timer.start(self.heartbeat_interval)
+  @Slot()
+  def stop_heartbeat_timer(self):
+   self.heartbeat_timer.stop()
 
   @Slot()
-  def reset_heartbeat_timer(self):
+  def reset_heartbeat_timeout(self):
    self.heartbeat_mutex.lock()
    self.heartbeat_timeout = 10
 
