@@ -8,6 +8,7 @@ from pyqtgraph import mkPen, InfiniteLine, QtCore
 import numpy as np
 
 from .ui import Ui_Widget, Ui_PIDWindow
+from .ui_manager import UIManager
 from .telem_vis_manager import TelemVisManager
 from .udp import UDPController
 from .data_handlers import DataHandler
@@ -249,11 +250,12 @@ class MainWindow(QWidget):
         # self.ui.exporter.clicked.connect(self.save_to_file)
 
         self.udp_controller = UDPController()
+        self.ui_manager = UIManager(self.ui)
         self.telem_vis_manager = TelemVisManager(self.sensors, self.valves, self.conn_status_labels, self.hybrid_state_labels, self.plot_data)
         self.data_handler = DataHandler(self.plot_data, self.config["sensor_and_valve_options"]["points_used_for_average"])
+        
         self.data_handler.telemetry_ready[str].connect(self.telem_vis_manager.update_plot)
         self.data_handler.telemetry_ready[str].connect(self.telem_vis_manager.update_sensor_label)
-        self.data_handler.telemetry_ready
         self.data_handler.arming_state_changed.connect(self.telem_vis_manager.update_arming_state_label)
         self.data_handler.actuator_state_changed.connect(self.telem_vis_manager.update_actuator_state_label)
         self.data_handler.continuity_state_changed.connect(self.telem_vis_manager.update_continuity_state_label)
@@ -277,6 +279,10 @@ class MainWindow(QWidget):
         self.udp_controller.multicast_group_disconnected.connect(self.timer_controller.reset_heartbeat_timeout)
         self.udp_controller.multicast_group_disconnected.connect(self.timer_controller.stop_data_filter_timer)
         self.udp_controller.multicast_group_disconnected.connect(lambda: self.telem_vis_manager.update_ps_conn_status_label(packet_spec.IPConnectionStatus.NOT_CONNECTED))
+        self.udp_controller.multicast_group_disconnected.connect(lambda: self.telem_vis_manager.update_cc_conn_status_label(packet_spec.IPConnectionStatus.NOT_CONNECTED))
+        self.udp_controller.multicast_group_disconnected.connect(lambda: self.telem_vis_manager.update_arming_state_label(packet_spec.ArmingState.NOT_AVAILABLE))
+        self.udp_controller.multicast_group_disconnected.connect(lambda: self.telem_vis_manager.update_continuity_state_label(packet_spec.ContinuityState.NOT_AVAILABLE))
+
         
 
         self.udp_controller.parsed_packet_ready.connect(self.data_handler.process_packet)
@@ -302,7 +308,11 @@ class MainWindow(QWidget):
         self.state_csv_writer = CSVWriter(["t","Arming state","Igniter","XV-1","XV-2","XV-3","XV-4","XV-5","XV-6","XV-7","XV-8","XV-9","XV-10","XV-11","XV-12","Quick disconnect","Dump valve","Continuity"], 1, "valves_csv")
         self.udp_controller.multicast_group_joined.connect(self.data_csv_writer.create_csv_log)
         self.udp_controller.multicast_group_joined.connect(self.state_csv_writer.create_csv_log)
+        
         self.data_handler.telemetry_ready[str, float, float].connect(self.data_csv_writer.add_timed_measurement)
+
+        self.udp_controller.multicast_group_disconnected.connect(self.data_csv_writer.flush)
+        self.udp_controller.multicast_group_disconnected.connect(self.state_csv_writer.flush)
 
         # Sensor display option handlers
         self.ui.numPointsAverageInput.valueChanged.connect(self.points_for_average_change_handler)

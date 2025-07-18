@@ -47,6 +47,7 @@ class CSVWriter:
         writer = csv.DictWriter(file, fieldnames=self.csv_fieldnames)
         writer.writeheader()
 
+  @Slot()
   def flush(self, _async: bool = True):
     # Start buffer flush thread if buffer gets full
     if self.csv_out:
