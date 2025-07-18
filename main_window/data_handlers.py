@@ -84,23 +84,15 @@ class DataHandler(QObject):
                     case packet_spec.TelemetryPacketSubType.TEMPERATURE:
                         plot_id = "t" + str(message.id)
                         reading = message.temperature
-                        # plot_data[plot_id].points = np.append(plot_data[plot_id].points, np.array([[message.time_since_power, message.temperature]]), axis=0)
-                        # self.telemetry_ready[(int, object)].emit(message.time_since_power, {plot_id, message.temperature})
                     case packet_spec.TelemetryPacketSubType.PRESSURE:
                         plot_id = "p" + str(message.id)
                         reading = message.pressure
-                        # plot_data[plot_id].points = np.append(plot_data[plot_id].points, np.array([[message.time_since_power, message.pressure]]), axis=0)
-                        # self.telemetry_ready[(int, object)].emit(message.time_since_power, {plot_id, message.pressure})
                     case packet_spec.TelemetryPacketSubType.MASS:
                         plot_id = "m" + str(message.id)
                         reading = message.mass
-                        # plot_data[plot_id].points = np.append(plot_data[plot_id].points, np.array([[message.time_since_power, message.mass]]), axis=0)
-                        # self.telemetry_ready[(int, object)].emit(message.time_since_power, {plot_id, message.mass})
                     case packet_spec.TelemetryPacketSubType.THRUST:
                         plot_id = "th" + str(message.id)
                         reading = message.thrust
-                        # plot_data[plot_id].points = np.append(plot_data[plot_id].points, np.array([[message.time_since_power, message.thrust]]), axis=0)
-                        # self.telemetry_ready[(int, object)].emit(message.time_since_power, {plot_id: message.thrust})
                 plot_data[plot_id].points = np.append(plot_data[plot_id].points, np.array([[message.time_since_power, reading]]), axis=0)
                 
                 # Emits signal for TelemVisHandler

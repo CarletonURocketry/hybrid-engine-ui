@@ -5,7 +5,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication
 
-from main_window import MainWindow
+from main_window.main_window import MainWindow
 
 if __name__ == "__main__":
     appid = 'CUInSpace.Hybrid' # arbitrary string

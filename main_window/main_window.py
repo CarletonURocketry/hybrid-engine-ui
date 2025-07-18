@@ -177,14 +177,8 @@ class PIDWindow(QWidget):
 class MainWindow(QWidget):
     # Imports for MainWindow functionality. Helps split large file into
     # smaller modules containing related functionality
-    # from .udp import udp_connection_button_handler, udp_receive_socket_data, \
-    #     udp_on_disconnected, udp_on_error
     from .serial import serial_connection_button_handler, \
         refresh_serial_button_handler, serial_receive_data, serial_on_error
-    # from .data_handlers import plot_point, filter_data, update_serial_connection_display, \
-    #     update_pad_server_display, update_control_client_display, process_data, decrease_heartbeat, \
-    #     reset_heartbeat_timeout, calculate_new_average, update_arming_state, update_continuity_state, \
-    #     flash_disconnect_label
     from .recording_and_playback import recording_toggle_button_handler, open_file_button_handler
     # from .logging import save_to_file, write_to_log, display_popup
     from .config import load_config, save_config, add_default_open_valve_handler, pressure_data_display_change_handler, \
@@ -259,6 +253,7 @@ class MainWindow(QWidget):
         self.data_handler = DataHandler(self.plot_data, self.config["sensor_and_valve_options"]["points_used_for_average"])
         self.data_handler.telemetry_ready[str].connect(self.telem_vis_manager.update_plot)
         self.data_handler.telemetry_ready[str].connect(self.telem_vis_manager.update_sensor_label)
+        self.data_handler.telemetry_ready
         self.data_handler.arming_state_changed.connect(self.telem_vis_manager.update_arming_state_label)
         self.data_handler.actuator_state_changed.connect(self.telem_vis_manager.update_actuator_state_label)
         self.data_handler.continuity_state_changed.connect(self.telem_vis_manager.update_continuity_state_label)
@@ -533,6 +528,8 @@ class MainWindow(QWidget):
         for marker in [self.ui.engineThrustThresholdList.item(x) for x in range(self.ui.engineThrustThresholdList.count())]:
             self.ui.engineThrustPlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=inf_line_pen))
 
+
+    # VVVVV Should go in UIManager class
     def enable_udp_config(self):
         self.ui.udpConnectButton.setText("Create UDP connection")
         self.ui.udpConnectButton.setEnabled(True)

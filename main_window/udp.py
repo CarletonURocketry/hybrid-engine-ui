@@ -41,9 +41,6 @@ class UDPController(QObject):
 
     def udp_connection_button_handler(self, mcast_addr, mcast_port):
         if self.padUDPSocket.state() == QAbstractSocket.SocketState.UnconnectedState:
-            # mcast_addr = self.ui.udpIpAddressInput.text()
-            # mcast_port = self.ui.udpPortInput.text()
-
             if mcast_addr == "funi":
                 self.easter_egg_opened.emit()
                 # self.web_view = QWebEngineView()
@@ -73,17 +70,6 @@ class UDPController(QObject):
             if self.join_multicast_group(mcast_addr, mcast_port):
                 self.log_ready.emit(f"Successfully connected to {mcast_addr}:{mcast_port}")
                 self.multicast_group_joined.emit()
-
-                # self.reset_heartbeat_timeout()
-                # self.data_filter_timer.start(self.data_filter_interval)
-                # self.heartbeat_timer.start(self.heartbeat_interval)
-
-                # self.disable_udp_config(disable_btn=False)
-                # self.disable_serial_config(disable_btn=True)
-                # self.update_pad_server_display(packet_spec.IPConnectionStatus.CONNECTED)
-
-                # self.data_csv_writer.create_csv_log()
-                # self.state_csv_writer.create_csv_log()
             else:
                 self.log_ready.emit(f"Unable to join multicast group at IP address: {mcast_addr}, port: {mcast_port}")
         else:
