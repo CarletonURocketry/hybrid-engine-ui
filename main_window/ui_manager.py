@@ -13,7 +13,7 @@ class UIManager(QObject):
         self.ui = ui
 
     # VVVVV Should go in UIManager class
-    @Slot
+    @Slot()
     def enable_udp_config(self):
         self.ui.udpConnectButton.setText("Create UDP connection")
         self.ui.udpConnectButton.setEnabled(True)
@@ -31,7 +31,7 @@ class UIManager(QObject):
         self.ui.udpIpAddressInput.setEnabled(False)
         self.ui.udpPortInput.setEnabled(False)
 
-    @Slot
+    @Slot()
     def enable_serial_config(self):
         self.ui.serialConnectButton.setText("Connect to serial port")
         self.ui.serialConnectButton.setEnabled(True)
