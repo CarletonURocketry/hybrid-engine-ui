@@ -1,8 +1,14 @@
 """udp.py
 
-Contains all handlers and slot functions that handle UDP socket functionalities
-such as connection, data receive, disconnection and, error. Should only be
-imported by main_window.py
+Contains the implementation of the UDPController class. The UDPController class
+is responsible for managing the UDP connection of the application. As such,
+it has ownership of the QUdpSocket instance used by the application. The UDPController
+class uses the QUdpSocket instance to receive data from the multicast interface
+and will emit a signal after is parses data according to its specification.
+
+Note: It is NOT the responsibity of the data handler class to parse data, as different
+data sources (serial, udp, labjack) have different ways of parsing received data into 
+the data formats that used to populate graphs
 """
 
 import ipaddress
@@ -16,18 +22,18 @@ import packet_spec
 
 class UDPController(QObject):
 
-    multicast_group_joined = Signal()
-    multicast_group_disconnected = Signal()
-    parsed_packet_ready = Signal(packet_spec.PacketHeader, packet_spec.PacketMessage)
-    easter_egg_opened = Signal()
-    easter_egg_closed = Signal()
-    log_ready = Signal(str)
+    # These first two signals can probably be replaced by the QAbstractSocket stateChanged 
+    # signal but for now we're using these
+    multicast_group_joined = Signal() # Emitted whenever a multicast group is joined 
+    multicast_group_disconnected = Signal() # Emitted whenever we leave the multicast group
+    parsed_packet_ready = Signal(packet_spec.PacketHeader, packet_spec.PacketMessage) # Emitted whenever a packet has been received and parsed 
+    easter_egg_opened = Signal() # Emitted when were bored
+    easter_egg_closed = Signal() # Emitted when we have to lock in
+    log_ready = Signal(str) # Emitted when the UDPController class wants to log something
 
     def __init__(self):
         super().__init__()
         self.padUDPSocket = QUdpSocket(self)
-        # Maybe add a handler for padUDPSocket.stateChanged?
-        # Would alleviate the need for
         self.padUDPSocket.readyRead.connect(self.udp_receive_socket_data)
         self.padUDPSocket.disconnected.connect(self.udp_on_disconnected)
         self.padUDPSocket.errorOccurred.connect(self.udp_on_error)

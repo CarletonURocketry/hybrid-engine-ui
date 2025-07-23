@@ -1,4 +1,20 @@
 # This Python file uses the following encoding: utf-8
+
+"""main_window.py
+
+Contains the implementation of the MainWindow class. The MainWindow is responsible
+for mediating all interactions of and among the applications modules. In this sense,
+it's acts as the mediator in the mediator design pattern.
+
+The MainWindow class creates an instance of each module class and coordinates the
+response to signals originating from each module. It's also responsible for setting
+up some UI related things such the initialization of label classes and plots. As such,
+there should be NO business logic in the MainWindow class as that's not it's responsibility.
+Logic for any piece of functionality should be contained within the respective module then
+imported by and organized within the MainWindow class. That means no UI updates, no parsing 
+data, etc.
+"""
+
 from PySide6.QtWidgets import QWidget, QLabel, QMessageBox, QInputDialog
 from PySide6.QtCore import QTimer, Qt, QMutex
 from PySide6.QtNetwork import QUdpSocket, QAbstractSocket
@@ -240,20 +256,20 @@ class MainWindow(QWidget):
         # self.padUDPSocket.disconnected.connect(self.udp_on_disconnected)
         # self.padUDPSocket.errorOccurred.connect(self.udp_on_error)
 
-        # Serial
-        self.serialPort = QSerialPort(self)
-        self.serialTimestamp = 0
-        self.serialPort.readyRead.connect(self.serial_receive_data)
-        self.serialPort.errorOccurred.connect(self.serial_on_error)
-        
         # Export to File button
         # self.ui.exporter.clicked.connect(self.save_to_file)
 
-        self.udp_controller = UDPController()
+        self.udp_controller = UDPController() #UDPController
         self.ui_manager = UIManager(self.ui)
         self.telem_vis_manager = TelemVisManager(self.sensors, self.valves, self.conn_status_labels, self.hybrid_state_labels, self.plot_data)
         self.data_handler = DataHandler(self.plot_data, self.config["sensor_and_valve_options"]["points_used_for_average"])
         
+        # Serial: TODO: MAKE THIS A CLASS
+        self.serialPort = QSerialPort(self)
+        self.serialTimestamp = 0
+        self.serialPort.readyRead.connect(self.serial_receive_data)
+        self.serialPort.errorOccurred.connect(self.serial_on_error)
+
         self.data_handler.telemetry_ready[str].connect(self.telem_vis_manager.update_plot)
         self.data_handler.telemetry_ready[str].connect(self.telem_vis_manager.update_sensor_label)
         self.data_handler.arming_state_changed.connect(self.telem_vis_manager.update_arming_state_label)
