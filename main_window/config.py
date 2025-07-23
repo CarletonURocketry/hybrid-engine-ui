@@ -13,6 +13,8 @@ from pyqtgraph import mkPen, InfiniteLine
 from .plot_info import PlotDataDisplayMode
 
 if TYPE_CHECKING:
+    from PySide6.QtWidgets import QPushButton
+
     from main_window import MainWindow
 
 black_pen = mkPen("black", width=2)
@@ -131,7 +133,7 @@ def add_default_open_valve_handler(self: "MainWindow"):
     except Exception as e:
         self.display_popup(QMessageBox.Icon.Critical, "Action failed", f"Adding default open valve failed\n{str(e)}")
 
-def pressure_data_display_change_handler(self: "MainWindow", button):
+def pressure_data_display_change_handler(self: "MainWindow", button: QPushButton):
     for plot in ["p0", "p1", "p2", "p3", "p4", "p5"]:
         self.plot_data[plot].data_display_mode = PlotDataDisplayMode[button.property("type")]
 
@@ -139,7 +141,7 @@ def pressure_x_val_change_handler(self: "MainWindow", value: int):
     for plot in ["p0", "p1", "p2", "p3", "p4", "p5"]:
         self.plot_data[plot].x_val = value
 
-def temperature_data_display_change_handler(self: "MainWindow", button):
+def temperature_data_display_change_handler(self: "MainWindow", button: QPushButton):
     for plot in ["t0", "t1", "t2", "t3"]:
         self.plot_data[plot].data_display_mode = PlotDataDisplayMode[button.property("type")]
 
@@ -147,7 +149,7 @@ def temperature_x_val_change_handler(self: "MainWindow", value: int):
     for plot in ["t0", "t1", "t2", "t3"]:
         self.plot_data[plot].x_val = value
 
-def tank_mass_data_display_change_handler(self: "MainWindow", button):
+def tank_mass_data_display_change_handler(self: "MainWindow", button: QPushButton):
     for plot in ["m0"]:
         self.plot_data[plot].data_display_mode = PlotDataDisplayMode[button.property("type")]
 
@@ -155,7 +157,7 @@ def tank_mass_x_val_change_handler(self: "MainWindow", value: int):
     for plot in ["m0"]:
         self.plot_data[plot].x_val = value
 
-def engine_thrust_data_display_change_handler(self: "MainWindow", button):
+def engine_thrust_data_display_change_handler(self: "MainWindow", button: QPushButton):
     for plot in ["th0"]:
         self.plot_data[plot].data_display_mode = PlotDataDisplayMode[button.property("type")]
 
@@ -171,6 +173,8 @@ def add_pressure_threshold_handler(self: "MainWindow"):
             self.ui.pressurePlot.addItem(InfiniteLine(float(new_marker), angle=0, pen=black_pen))
             self.ui.pressureThresholdInput.setText("")
         else:
+            to_remove = filter(lambda item: isinstance(item, InfiniteLine) and item.pos().y() == float(self.ui.pressureThresholdList.currentItem().text()), self.ui.pressurePlot.items())
+            self.ui.pressurePlot.removeItem(list(to_remove)[0])
             self.ui.pressureThresholdList.takeItem(self.ui.pressureThresholdList.currentRow())
     except Exception as e:
         self.display_popup(QMessageBox.Icon.Critical, "Action failed", f"Adding pressure threshold marker failed\n{str(e)}")
