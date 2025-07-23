@@ -262,19 +262,16 @@ class MainWindow(QWidget):
         self.data_handler.cc_connection_status_changed.connect(self.telem_vis_manager.update_cc_conn_status_label)
 
         self.timer_controller.filter_data_s.connect(self.data_handler.filter_data)
-        # Connect this to UI handler and timer
-        # self.data_handler.connection_status_changed.connect()
-        # Add connection for handling logging
 
-        self.udp_controller.multicast_group_joined.connect(lambda: self.disable_udp_config(disable_btn=False))
-        self.udp_controller.multicast_group_joined.connect(lambda: self.disable_serial_config(disable_btn=True))
+        self.udp_controller.multicast_group_joined.connect(lambda: self.ui_manager.disable_udp_config(disable_btn=False))
+        self.udp_controller.multicast_group_joined.connect(lambda: self.ui_manager.disable_serial_config(disable_btn=True))
         self.udp_controller.multicast_group_joined.connect(self.timer_controller.reset_heartbeat_timeout)
         self.udp_controller.multicast_group_joined.connect(self.timer_controller.start_data_filter_timer)
         self.udp_controller.multicast_group_joined.connect(self.timer_controller.start_heartbeat_timer)
         self.udp_controller.multicast_group_joined.connect(lambda: self.telem_vis_manager.update_ps_conn_status_label(packet_spec.IPConnectionStatus.CONNECTED))
 
-        self.udp_controller.multicast_group_disconnected.connect(lambda: self.enable_udp_config())
-        self.udp_controller.multicast_group_disconnected.connect(lambda: self.enable_serial_config())
+        self.udp_controller.multicast_group_disconnected.connect(self.ui_manager.enable_udp_config())
+        self.udp_controller.multicast_group_disconnected.connect(self.ui_manager.enable_serial_config())
         self.udp_controller.multicast_group_disconnected.connect(self.timer_controller.stop_heartbeat_timer)
         self.udp_controller.multicast_group_disconnected.connect(self.timer_controller.reset_heartbeat_timeout)
         self.udp_controller.multicast_group_disconnected.connect(self.timer_controller.stop_data_filter_timer)
@@ -282,8 +279,6 @@ class MainWindow(QWidget):
         self.udp_controller.multicast_group_disconnected.connect(lambda: self.telem_vis_manager.update_cc_conn_status_label(packet_spec.IPConnectionStatus.NOT_CONNECTED))
         self.udp_controller.multicast_group_disconnected.connect(lambda: self.telem_vis_manager.update_arming_state_label(packet_spec.ArmingState.NOT_AVAILABLE))
         self.udp_controller.multicast_group_disconnected.connect(lambda: self.telem_vis_manager.update_continuity_state_label(packet_spec.ContinuityState.NOT_AVAILABLE))
-
-        
 
         self.udp_controller.parsed_packet_ready.connect(self.data_handler.process_packet)
         self.udp_controller.log_ready.connect(self.log_manager.write_to_log)
