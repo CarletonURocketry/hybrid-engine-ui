@@ -1,8 +1,10 @@
+
+
+from PySide6.QtCore import QObject, Slot
 from PySide6.QtWidgets import QWidget, QLabel, QMessageBox, QInputDialog
-from PySide6.QtCore import QTimer, Qt, QMutex, QObject, Slot
+from PySide6.QtWebEngineWidgets import QWebEngineView
 
 from .ui import Ui_Widget, Ui_PIDWindow
-
 
 # This class handles all other UI interaction, so
 # we can just pass an instance to the UI
@@ -11,6 +13,9 @@ class UIManager(QObject):
         super().__init__()
 
         self.ui = ui
+
+        self.web_view = QWebEngineView()
+        self.web_view.setUrl("https://www.youtube.com/watch?app=desktop&v=vPDvMVEwKzM")
 
     # VVVVV Should go in UIManager class
     @Slot()
@@ -45,3 +50,14 @@ class UIManager(QObject):
             self.ui.serialConnectButton.setText("Close serial connection")
         self.ui.serialPortDropdown.setEnabled(False)
         self.ui.baudRateDropdown.setEnabled(False)
+
+    @Slot
+    def deploy_easter_egg(self):
+        self.ui.plotLayout.addWidget(self.web_view, 0, 2, 2, 1)
+        self.ui.udpIpAddressInput.clear()
+
+    @Slot
+    def hide_easter_egg(self):
+        self.web_view.deleteLater()
+        self.ui.plotLayout.removeWidget(self.web_view)
+        self.ui.udpIpAddressInput.clear()
