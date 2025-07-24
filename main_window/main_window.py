@@ -1,19 +1,19 @@
 # This Python file uses the following encoding: utf-8
 
-"""main_window.py
+# """main_window.py
 
-Contains the implementation of the MainWindow class. The MainWindow is responsible
-for mediating all interactions of and among the applications modules. In this sense,
-it's acts as the mediator in the mediator design pattern.
+# Contains the implementation of the MainWindow class. The MainWindow is responsible
+# for mediating all interactions of and among the applications modules. In this sense,
+# it's acts as the mediator in the mediator design pattern.
 
-The MainWindow class creates an instance of each module class and coordinates the
-response to signals originating from each module. It's also responsible for setting
-up some UI related things such the initialization of label classes and plots. As such,
-there should be NO business logic in the MainWindow class as that's not it's responsibility.
-Logic for any piece of functionality should be contained within the respective module then
-imported by and organized within the MainWindow class. That means no UI updates, no parsing 
-data, etc.
-"""
+# The MainWindow class creates an instance of each module class and coordinates the
+# response to signals originating from each module. It's also responsible for setting
+# up some UI related things such the initialization of label classes and plots. As such,
+# there should be NO business logic in the MainWindow class as that's not it's responsibility.
+# Logic for any piece of functionality should be contained within the respective module then
+# imported by and organized within the MainWindow class. That means no UI updates, no parsing 
+# data, etc.
+# """
 
 from PySide6.QtWidgets import QWidget, QLabel, QMessageBox, QInputDialog
 from PySide6.QtCore import QTimer, Qt, QMutex
@@ -231,39 +231,26 @@ class MainWindow(QWidget):
         self.pid_window = PIDWindow()
         self.ui.showPIDButton.clicked.connect(self.open_pid_window)
 
-        self.log_manager = LogManager(self)
+        self.udp_controller = UDPController()
+        self.data_handler = DataHandler(self.plot_data, self.config["sensor_and_valve_options"]["points_used_for_average"])
+        self.telem_vis_manager = TelemVisManager(self.sensors, self.valves, self.conn_status_labels, self.hybrid_state_labels, self.plot_data)
+        self.ui_manager = UIManager(self.ui)
+        self.log_manager = LogManager(self.ui.logOutput)
         self.timer_controller = TimerController()
+
+        self.data_csv_writer = CSVWriter(["t","p1","p2","p3","p4","p5","p6","t1","t2","t3","t4","m1","th1","status","Continuity"], 100, "data_csv")
+        self.state_csv_writer = CSVWriter(["t","Arming state","Igniter","XV-1","XV-2","XV-3","XV-4","XV-5","XV-6","XV-7","XV-8","XV-9","XV-10","XV-11","XV-12","Quick disconnect","Dump valve","Continuity"], 1, "valves_csv")
+        
         self.timer_controller.log_ready.connect(self.log_manager.write_to_log)
-
-        self.popup = QMessageBox()
-        self.popup.addButton("Ok", QMessageBox.ButtonRole.AcceptRole)
-
-        self.annoy_prop = QMessageBox()
-        self.annoy_prop.setWindowTitle("We love avionics so much! 💖")
-        self.annoy_prop.setText("Enter tip amount:")
-        self.annoy_prop.addButton("25%", QMessageBox.ButtonRole.AcceptRole)
-        self.annoy_prop.addButton("35%", QMessageBox.ButtonRole.AcceptRole)
-        self.annoy_prop.addButton("50%", QMessageBox.ButtonRole.AcceptRole)
 
         for port in QSerialPortInfo.availablePorts():
             self.ui.serialPortDropdown.addItem(port.portName())
         for rate in QSerialPortInfo.standardBaudRates():
             self.ui.baudRateDropdown.addItem(str(rate))
 
-        # UDP socket
-        # self.padUDPSocket = QUdpSocket(self)
-        # self.padUDPSocket.readyRead.connect(self.udp_receive_socket_data)
-        # self.padUDPSocket.disconnected.connect(self.udp_on_disconnected)
-        # self.padUDPSocket.errorOccurred.connect(self.udp_on_error)
-
         # Export to File button
         # self.ui.exporter.clicked.connect(self.save_to_file)
 
-        self.udp_controller = UDPController() #UDPController
-        self.ui_manager = UIManager(self.ui)
-        self.telem_vis_manager = TelemVisManager(self.sensors, self.valves, self.conn_status_labels, self.hybrid_state_labels, self.plot_data)
-        self.data_handler = DataHandler(self.plot_data, self.config["sensor_and_valve_options"]["points_used_for_average"])
-        
         # Serial: TODO: MAKE THIS A CLASS
         self.serialPort = QSerialPort(self)
         self.serialTimestamp = 0
@@ -315,8 +302,6 @@ class MainWindow(QWidget):
         # Connect toggle button for recording data
         self.ui.recordingToggleButton.toggled.connect(self.recording_toggle_button_handler)
         self.raw_data_file_out = None
-        self.data_csv_writer = CSVWriter(["t","p1","p2","p3","p4","p5","p6","t1","t2","t3","t4","m1","th1","status","Continuity"], 100, "data_csv")
-        self.state_csv_writer = CSVWriter(["t","Arming state","Igniter","XV-1","XV-2","XV-3","XV-4","XV-5","XV-6","XV-7","XV-8","XV-9","XV-10","XV-11","XV-12","Quick disconnect","Dump valve","Continuity"], 1, "valves_csv")
         self.udp_controller.multicast_group_joined.connect(self.data_csv_writer.create_csv_log)
         self.udp_controller.multicast_group_joined.connect(self.state_csv_writer.create_csv_log)
         
@@ -557,3 +542,7 @@ class MainWindow(QWidget):
         for marker in [self.ui.engineThrustThresholdList.item(x) for x in range(self.ui.engineThrustThresholdList.count())]:
             self.ui.engineThrustPlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=inf_line_pen))
 
+    def save_csv_button_handler(self):
+        new_name, _ = QInputDialog.getText(self, "Save CSV file", "Enter name to save CSV file as")
+        self.data_csv_writer.save_and_swap_csv(new_name)
+        self.state_csv_writer.save_and_swap_csv(new_name)

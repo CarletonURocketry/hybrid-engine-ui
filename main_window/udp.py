@@ -44,10 +44,6 @@ class UDPController(QObject):
         if self.padUDPSocket.state() == QAbstractSocket.SocketState.UnconnectedState:
             if mcast_addr == "funi":
                 self.easter_egg_opened.emit()
-                # self.web_view = QWebEngineView()
-                # self.web_view.setUrl("https://www.youtube.com/watch?app=desktop&v=vPDvMVEwKzM")
-                # self.ui.plotLayout.addWidget(self.web_view, 0, 2, 2, 1)
-                # self.ui.udpIpAddressInput.clear()
                 return
             if mcast_addr == "close":
                 self.easter_egg_closed.emit()
