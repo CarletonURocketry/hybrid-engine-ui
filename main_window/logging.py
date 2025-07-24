@@ -54,6 +54,6 @@ class LogManager(QObject):
         self.popup.setText(msg)
         self.popup.show()
 
-    @Slot
+    @Slot()
     def ask_for_tip(self):
-        pass
+        self.annoy_prop.show()

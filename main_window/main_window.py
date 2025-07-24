@@ -1,19 +1,19 @@
 # This Python file uses the following encoding: utf-8
 
-# """main_window.py
+"""main_window.py
 
-# Contains the implementation of the MainWindow class. The MainWindow is responsible
-# for mediating all interactions of and among the applications modules. In this sense,
-# it's acts as the mediator in the mediator design pattern.
+Contains the implementation of the MainWindow class. The MainWindow is responsible
+for mediating all interactions of and among the applications modules. In this sense,
+it's acts as the mediator in the mediator design pattern.
 
-# The MainWindow class creates an instance of each module class and coordinates the
-# response to signals originating from each module. It's also responsible for setting
-# up some UI related things such the initialization of label classes and plots. As such,
-# there should be NO business logic in the MainWindow class as that's not it's responsibility.
-# Logic for any piece of functionality should be contained within the respective module then
-# imported by and organized within the MainWindow class. That means no UI updates, no parsing 
-# data, etc.
-# """
+The MainWindow class creates an instance of each module class and coordinates the
+response to signals originating from each module. It's also responsible for setting
+up some UI related things such the initialization of label classes and plots. As such,
+there should be NO business logic in the MainWindow class as that's not it's responsibility.
+Logic for any piece of functionality should be contained within the respective module then
+imported by and organized within the MainWindow class. That means no UI updates, no parsing 
+data, etc.
+"""
 
 from PySide6.QtWidgets import QWidget, QLabel, QMessageBox, QInputDialog
 from PySide6.QtCore import QTimer, Qt, QMutex
@@ -257,24 +257,24 @@ class MainWindow(QWidget):
         self.serialPort.readyRead.connect(self.serial_receive_data)
         self.serialPort.errorOccurred.connect(self.serial_on_error)
 
-        self.data_handler.telemetry_ready[str].connect(self.telem_vis_manager.update_plot)
-        self.data_handler.telemetry_ready[str].connect(self.telem_vis_manager.update_sensor_label)
-        self.data_handler.arming_state_changed.connect(self.telem_vis_manager.update_arming_state_label)
-        self.data_handler.actuator_state_changed.connect(self.telem_vis_manager.update_actuator_state_label)
-        self.data_handler.continuity_state_changed.connect(self.telem_vis_manager.update_continuity_state_label)
-        self.data_handler.cc_connection_status_changed.connect(self.telem_vis_manager.update_cc_conn_status_label)
-
-        self.timer_controller.filter_data_s.connect(self.data_handler.filter_data)
-
+        # When connecting signals to slots, care should be taken as to what args are passed along
+        # with the signal and whether or not we should pass args for certain signals. For example,
+        # the udp_controller multicast_group_joined signal controls a lot of things across different
+        # modules but only conveys that a multicast group has been joined. As such, there aren't
+        # any arguments that need to be passed along with the signal as it doesn't really fit the signal.
+        # Furthermore, it also makes sense that if this signal calls functions that require an argument,
+        # that a lambda or a partial function be used as the slot
         self.udp_controller.multicast_group_joined.connect(lambda: self.ui_manager.disable_udp_config(disable_btn=False))
         self.udp_controller.multicast_group_joined.connect(lambda: self.ui_manager.disable_serial_config(disable_btn=True))
         self.udp_controller.multicast_group_joined.connect(self.timer_controller.reset_heartbeat_timeout)
         self.udp_controller.multicast_group_joined.connect(self.timer_controller.start_data_filter_timer)
         self.udp_controller.multicast_group_joined.connect(self.timer_controller.start_heartbeat_timer)
         self.udp_controller.multicast_group_joined.connect(lambda: self.telem_vis_manager.update_ps_conn_status_label(packet_spec.IPConnectionStatus.CONNECTED))
-
-        self.udp_controller.multicast_group_disconnected.connect(self.ui_manager.enable_udp_config())
-        self.udp_controller.multicast_group_disconnected.connect(self.ui_manager.enable_serial_config())
+        self.udp_controller.multicast_group_joined.connect(self.data_csv_writer.create_csv_log)
+        self.udp_controller.multicast_group_joined.connect(self.state_csv_writer.create_csv_log)
+        
+        self.udp_controller.multicast_group_disconnected.connect(self.ui_manager.enable_udp_config)
+        self.udp_controller.multicast_group_disconnected.connect(self.ui_manager.enable_serial_config)
         self.udp_controller.multicast_group_disconnected.connect(self.timer_controller.stop_heartbeat_timer)
         self.udp_controller.multicast_group_disconnected.connect(self.timer_controller.reset_heartbeat_timeout)
         self.udp_controller.multicast_group_disconnected.connect(self.timer_controller.stop_data_filter_timer)
@@ -282,9 +282,24 @@ class MainWindow(QWidget):
         self.udp_controller.multicast_group_disconnected.connect(lambda: self.telem_vis_manager.update_cc_conn_status_label(packet_spec.IPConnectionStatus.NOT_CONNECTED))
         self.udp_controller.multicast_group_disconnected.connect(lambda: self.telem_vis_manager.update_arming_state_label(packet_spec.ArmingState.NOT_AVAILABLE))
         self.udp_controller.multicast_group_disconnected.connect(lambda: self.telem_vis_manager.update_continuity_state_label(packet_spec.ContinuityState.NOT_AVAILABLE))
+        self.udp_controller.multicast_group_disconnected.connect(self.data_csv_writer.flush)
+        self.udp_controller.multicast_group_disconnected.connect(self.state_csv_writer.flush)
 
         self.udp_controller.parsed_packet_ready.connect(self.data_handler.process_packet)
+        self.udp_controller.easter_egg_opened.connect(self.ui_manager.deploy_easter_egg)
+        self.udp_controller.easter_egg_closed.connect(self.ui_manager.hide_easter_egg)
         self.udp_controller.log_ready.connect(self.log_manager.write_to_log)
+
+        self.data_handler.telemetry_ready[str].connect(self.telem_vis_manager.update_plot)
+        self.data_handler.telemetry_ready[str].connect(self.telem_vis_manager.update_sensor_label)
+        self.data_handler.telemetry_ready[str, float, float].connect(self.data_csv_writer.add_timed_measurement)
+        self.data_handler.arming_state_changed.connect(self.telem_vis_manager.update_arming_state_label)
+        self.data_handler.actuator_state_changed.connect(self.telem_vis_manager.update_actuator_state_label)
+        self.data_handler.continuity_state_changed.connect(self.telem_vis_manager.update_continuity_state_label)
+        self.data_handler.cc_connection_status_changed.connect(self.telem_vis_manager.update_cc_conn_status_label)
+        self.data_handler.annoy_prop.connect(self.log_manager.annoy_prop)
+
+        self.timer_controller.filter_data_s.connect(self.data_handler.filter_data)
 
         # Button handlers
 
@@ -302,13 +317,6 @@ class MainWindow(QWidget):
         # Connect toggle button for recording data
         self.ui.recordingToggleButton.toggled.connect(self.recording_toggle_button_handler)
         self.raw_data_file_out = None
-        self.udp_controller.multicast_group_joined.connect(self.data_csv_writer.create_csv_log)
-        self.udp_controller.multicast_group_joined.connect(self.state_csv_writer.create_csv_log)
-        
-        self.data_handler.telemetry_ready[str, float, float].connect(self.data_csv_writer.add_timed_measurement)
-
-        self.udp_controller.multicast_group_disconnected.connect(self.data_csv_writer.flush)
-        self.udp_controller.multicast_group_disconnected.connect(self.state_csv_writer.flush)
 
         # Sensor display option handlers
         self.ui.numPointsAverageInput.valueChanged.connect(self.points_for_average_change_handler)

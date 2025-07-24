@@ -51,12 +51,12 @@ class UIManager(QObject):
         self.ui.serialPortDropdown.setEnabled(False)
         self.ui.baudRateDropdown.setEnabled(False)
 
-    @Slot
+    @Slot()
     def deploy_easter_egg(self):
         self.ui.plotLayout.addWidget(self.web_view, 0, 2, 2, 1)
         self.ui.udpIpAddressInput.clear()
 
-    @Slot
+    @Slot()
     def hide_easter_egg(self):
         self.web_view.deleteLater()
         self.ui.plotLayout.removeWidget(self.web_view)
