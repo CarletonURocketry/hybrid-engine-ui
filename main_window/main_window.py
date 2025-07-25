@@ -271,9 +271,9 @@ class MainWindow(QWidget):
         self.udp_controller.multicast_group_disconnected.connect(self.ui_manager.enable_serial_config)
         self.udp_controller.multicast_group_disconnected.connect(self.timer_controller.stop_heartbeat_timer)
         self.udp_controller.multicast_group_disconnected.connect(self.timer_controller.stop_data_filter_timer)
-        self.udp_controller.multicast_group_disconnected.connect(self.timer_controller.stop_ps_disconnect_flash_timer)
+        self.udp_controller.multicast_group_disconnected.connect(self.timer_controller.stop_ps_disconnect_flash_timer) # Stop flashing these because we're disconnected
         self.udp_controller.multicast_group_disconnected.connect(self.timer_controller.stop_cc_disconnect_flash_timer)
-        self.udp_controller.multicast_group_disconnected.connect(lambda: self.telem_vis_manager.update_ps_conn_status_label(packet_spec.IPConnectionStatus.NOT_CONNECTED))
+        self.udp_controller.multicast_group_disconnected.connect(lambda: self.telem_vis_manager.update_ps_conn_status_label(packet_spec.IPConnectionStatus.NOT_CONNECTED)) # Reset everything to default
         self.udp_controller.multicast_group_disconnected.connect(lambda: self.telem_vis_manager.update_cc_conn_status_label(packet_spec.IPConnectionStatus.NOT_CONNECTED))
         self.udp_controller.multicast_group_disconnected.connect(lambda: self.telem_vis_manager.update_arming_state_label(packet_spec.ArmingState.NOT_AVAILABLE))
         self.udp_controller.multicast_group_disconnected.connect(lambda: self.telem_vis_manager.update_continuity_state_label(packet_spec.ContinuityState.NOT_AVAILABLE))
@@ -285,14 +285,14 @@ class MainWindow(QWidget):
         self.udp_controller.easter_egg_closed.connect(self.ui_manager.hide_easter_egg)
         self.udp_controller.log_ready.connect(self.log_manager.write_to_log)
 
-        self.data_handler.telemetry_ready[str].connect(self.telem_vis_manager.update_plot)
+        self.data_handler.telemetry_ready[str].connect(self.telem_vis_manager.update_plot) # For updating ui
         self.data_handler.telemetry_ready[str].connect(self.telem_vis_manager.update_sensor_label)
         self.data_handler.telemetry_ready[str].connect(self.timer_controller.reset_heartbeat_timeout) # Technically, this slot doesn't accept a str arg but its ok
-        self.data_handler.telemetry_ready[str, float, float].connect(self.data_csv_writer.add_timed_measurement)
-        self.data_handler.arming_state_changed.connect(self.telem_vis_manager.update_arming_state_label)
+        self.data_handler.telemetry_ready[str, float, float].connect(self.data_csv_writer.add_timed_measurement) # For logging to csv
+        self.data_handler.arming_state_changed.connect(self.telem_vis_manager.update_arming_state_label) # These signals just change labels
         self.data_handler.actuator_state_changed.connect(self.telem_vis_manager.update_actuator_state_label)
         self.data_handler.continuity_state_changed.connect(self.telem_vis_manager.update_continuity_state_label)
-        self.data_handler.cc_connection_status_changed.connect(self.telem_vis_manager.update_cc_conn_status_label) # This signal just changes the label
+        self.data_handler.cc_connection_status_changed.connect(self.telem_vis_manager.update_cc_conn_status_label)
         self.data_handler.cc_connected.connect(self.timer_controller.stop_cc_disconnect_flash_timer) # These ones either start or stop the flash timer
         self.data_handler.cc_disconnected.connect(self.timer_controller.start_cc_disconnect_flash_timer) # Might be a better way to do this, don't care to do it now
         self.data_handler.annoy_prop.connect(self.log_manager.ask_for_tip)

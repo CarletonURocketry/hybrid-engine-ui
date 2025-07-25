@@ -40,21 +40,25 @@ class TimerController(QObject):
 
    @Slot()
    def start_data_filter_timer(self):
-      self.data_filter_timer.start(self.data_filter_interval)
+      if not self.data_filter_timer.isActive():
+         self.data_filter_timer.start(self.data_filter_interval)
 
    @Slot()
    def stop_data_filter_timer(self):
-      self.data_filter_timer.stop()
+      if self.data_filter_timer.isActive():
+         self.data_filter_timer.stop()
 
    @Slot()
    def start_heartbeat_timer(self):
-      self.reset_heartbeat_timeout()
-      self.heartbeat_timer.start(self.heartbeat_interval)
+      if not self.heartbeat_timer.isActive():
+         self.reset_heartbeat_timeout()
+         self.heartbeat_timer.start(self.heartbeat_interval)
 
    @Slot()
    def stop_heartbeat_timer(self):
-      self.heartbeat_timer.stop()
-      self.reset_heartbeat_timeout()
+      if self.heartbeat_timer.isActive():
+         self.heartbeat_timer.stop()
+         self.reset_heartbeat_timeout()
 
    @Slot()
    def reset_heartbeat_timeout(self):
