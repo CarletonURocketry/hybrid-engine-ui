@@ -6,7 +6,8 @@ import packet_spec
 class TimerController(QObject):
 
    filter_data_s = Signal()
-   flash_disconnect_label_s = Signal()
+   flash_ps_disconnect_label_s = Signal()
+   flash_cc_disconnect_label_s = Signal()
    update_pad_server_display_s = Signal(packet_spec.IPConnectionStatus)
    update_control_client_display_s = Signal(packet_spec.IPConnectionStatus)
    log_ready = Signal(str)
@@ -16,7 +17,7 @@ class TimerController(QObject):
       # QTimer to help us to filter the data, graph is updated every 25ms
       self.data_filter_interval = 25
       self.data_filter_timer = QTimer(self)
-      self.data_filter_timer.timeout.connect(lambda: self.filter_data_s.emit())
+      self.data_filter_timer.timeout.connect(self.filter_data_s.emit)
 
       # Time that the UI will wait to receive pad state heartbeats from pad server
       # a timer that ticks every second will decrement heartbeat_timeout by 1
@@ -28,13 +29,14 @@ class TimerController(QObject):
       self.heartbeat_timer = QTimer(self)
       self.heartbeat_timer.timeout.connect(self.decrease_heartbeat)
 
-      # QTimer to flash the connection status label
+      # QTimer to flash the control client connection status label
       self.disconnect_status_interval = 500
-      self.disconnect_count = 0
-      self.disconnect_status_timer = QTimer(self)
-      self.disconnect_status_timer.timeout.connect(
-         lambda: self.flash_disconnect_label_s.emit()
-      )
+      self.ps_disconnect_status_timer = QTimer(self)
+      self.ps_disconnect_status_timer.timeout.connect(self.flash_ps_disconnect_label_s.emit)
+      
+      # QTimer to flash the control client connection status label
+      self.cc_disconnect_status_timer = QTimer(self)
+      self.cc_disconnect_status_timer.timeout.connect(self.flash_cc_disconnect_label_s.emit)
 
    @Slot()
    def start_data_filter_timer(self):
@@ -46,11 +48,13 @@ class TimerController(QObject):
 
    @Slot()
    def start_heartbeat_timer(self):
+      self.reset_heartbeat_timeout()
       self.heartbeat_timer.start(self.heartbeat_interval)
 
    @Slot()
    def stop_heartbeat_timer(self):
       self.heartbeat_timer.stop()
+      self.reset_heartbeat_timeout()
 
    @Slot()
    def reset_heartbeat_timeout(self):
@@ -60,6 +64,7 @@ class TimerController(QObject):
       # Only update pad_server whenever heartbeat is received
       self.update_pad_server_display_s.emit(packet_spec.IPConnectionStatus.CONNECTED)
       self.heartbeat_mutex.unlock()
+      self.stop_ps_disconnect_flash_timer()
 
    def decrease_heartbeat(self):
       self.heartbeat_mutex.lock()
@@ -73,11 +78,29 @@ class TimerController(QObject):
          self.update_control_client_display_s.emit(
                packet_spec.IPConnectionStatus.DISCONNECTED
          )
+         self.start_ps_disconnect_flash_timer()
+         self.start_cc_disconnect_flash_timer()
          self.log_ready.emit(
                f"Heartbeat not found for {abs(self.heartbeat_timeout) + 1} seconds"
          )
       self.heartbeat_mutex.unlock()
 
-   def start_disconnect_flash_timer(self):
-      self.disconnect_count = 0
-      self.disconnect_status_timer.start(self.disconnect_status_interval)
+   @Slot()
+   def start_ps_disconnect_flash_timer(self):
+      if not self.ps_disconnect_status_timer.isActive():
+         self.ps_disconnect_status_timer.start(self.disconnect_status_interval)
+
+   @Slot()
+   def stop_ps_disconnect_flash_timer(self):
+      if self.ps_disconnect_status_timer.isActive():
+         self.ps_disconnect_status_timer.stop()
+
+   @Slot()
+   def start_cc_disconnect_flash_timer(self):
+      if not self.cc_disconnect_status_timer.isActive():
+         self.cc_disconnect_status_timer.start(self.disconnect_status_interval)
+
+   @Slot()
+   def stop_cc_disconnect_flash_timer(self):
+      if self.cc_disconnect_status_timer.isActive():
+         self.cc_disconnect_status_timer.stop()

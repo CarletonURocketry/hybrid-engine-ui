@@ -266,7 +266,6 @@ class MainWindow(QWidget):
         # that a lambda or a partial function be used as the slot
         self.udp_controller.multicast_group_joined.connect(lambda: self.ui_manager.disable_udp_config(disable_btn=False))
         self.udp_controller.multicast_group_joined.connect(lambda: self.ui_manager.disable_serial_config(disable_btn=True))
-        self.udp_controller.multicast_group_joined.connect(self.timer_controller.reset_heartbeat_timeout)
         self.udp_controller.multicast_group_joined.connect(self.timer_controller.start_data_filter_timer)
         self.udp_controller.multicast_group_joined.connect(self.timer_controller.start_heartbeat_timer)
         self.udp_controller.multicast_group_joined.connect(lambda: self.telem_vis_manager.update_ps_conn_status_label(packet_spec.IPConnectionStatus.CONNECTED))
@@ -276,7 +275,6 @@ class MainWindow(QWidget):
         self.udp_controller.multicast_group_disconnected.connect(self.ui_manager.enable_udp_config)
         self.udp_controller.multicast_group_disconnected.connect(self.ui_manager.enable_serial_config)
         self.udp_controller.multicast_group_disconnected.connect(self.timer_controller.stop_heartbeat_timer)
-        self.udp_controller.multicast_group_disconnected.connect(self.timer_controller.reset_heartbeat_timeout)
         self.udp_controller.multicast_group_disconnected.connect(self.timer_controller.stop_data_filter_timer)
         self.udp_controller.multicast_group_disconnected.connect(lambda: self.telem_vis_manager.update_ps_conn_status_label(packet_spec.IPConnectionStatus.NOT_CONNECTED))
         self.udp_controller.multicast_group_disconnected.connect(lambda: self.telem_vis_manager.update_cc_conn_status_label(packet_spec.IPConnectionStatus.NOT_CONNECTED))
@@ -292,14 +290,22 @@ class MainWindow(QWidget):
 
         self.data_handler.telemetry_ready[str].connect(self.telem_vis_manager.update_plot)
         self.data_handler.telemetry_ready[str].connect(self.telem_vis_manager.update_sensor_label)
+        self.data_handler.telemetry_ready[str].connect(self.timer_controller.reset_heartbeat_timeout) # Technically, this slot doesn't accept a str arg but its ok
         self.data_handler.telemetry_ready[str, float, float].connect(self.data_csv_writer.add_timed_measurement)
         self.data_handler.arming_state_changed.connect(self.telem_vis_manager.update_arming_state_label)
         self.data_handler.actuator_state_changed.connect(self.telem_vis_manager.update_actuator_state_label)
         self.data_handler.continuity_state_changed.connect(self.telem_vis_manager.update_continuity_state_label)
-        self.data_handler.cc_connection_status_changed.connect(self.telem_vis_manager.update_cc_conn_status_label)
-        self.data_handler.annoy_prop.connect(self.log_manager.annoy_prop)
+        self.data_handler.cc_connection_status_changed.connect(self.telem_vis_manager.update_cc_conn_status_label) # This signal just changes the label
+        self.data_handler.cc_connected.connect(self.timer_controller.stop_cc_disconnect_flash_timer) # These ones either start or stop the flash timer
+        self.data_handler.cc_disconnected.connect(self.timer_controller.start_cc_disconnect_flash_timer)
+        self.data_handler.annoy_prop.connect(self.log_manager.ask_for_tip)
 
         self.timer_controller.filter_data_s.connect(self.data_handler.filter_data)
+        self.timer_controller.flash_ps_disconnect_label_s.connect(self.telem_vis_manager.flash_ps_label)
+        self.timer_controller.flash_cc_disconnect_label_s.connect(self.telem_vis_manager.flash_cc_label)
+        self.timer_controller.update_pad_server_display_s.connect(self.telem_vis_manager.update_ps_conn_status_label)
+        self.timer_controller.update_control_client_display_s.connect(self.telem_vis_manager.update_cc_conn_status_label)
+        self.timer_controller.log_ready.connect(self.log_manager.write_to_log)
 
         # Button handlers
 

@@ -3,16 +3,11 @@
 Contains all functions related handling incoming data including plotting
 data points and updating label text. Should only be imported by main_window.py
 """
-from typing import TYPE_CHECKING
-
 import numpy as np
-from PySide6.QtCore import Qt, Signal, QObject, Slot, QTimer, Qt, QMutex
+from PySide6.QtCore import Signal, QObject, Slot
 
 import packet_spec
 from .plot_info import PlotInfo, PlotDataDisplayMode
-
-if TYPE_CHECKING:
-    from main_window import MainWindow
 
 class DataHandler(QObject):
 
@@ -21,7 +16,10 @@ class DataHandler(QObject):
     actuator_state_changed = Signal(int, packet_spec.ActuatorState)
     continuity_state_changed = Signal(packet_spec.ContinuityState)
     cc_connection_status_changed = Signal(packet_spec.IPConnectionStatus)
+    cc_connected = Signal()
+    cc_disconnected = Signal()
     annoy_prop = Signal()
+    log_ready = Signal(str)
 
     def __init__(self, plots: dict[str, PlotInfo], average_alpha: float):
         super().__init__()
@@ -41,34 +39,29 @@ class DataHandler(QObject):
             | packet_spec.TelemetryPacketSubType.MASS \
             | packet_spec.TelemetryPacketSubType.THRUST:
                 self.process_telemetry(header, message)
-                # self.update_label(header, message)
-                # if reset_heartbeat: self.reset_heartbeat_timeout()
-                # Emit signal to reset heartbeat
             case packet_spec.TelemetryPacketSubType.ARMING_STATE:
                 self.arming_state_changed.emit(message.state)
-                # if reset_heartbeat: self.reset_heartbeat_timeout()
-                # Emit signal to reset heartbeat
             case packet_spec.TelemetryPacketSubType.ACT_STATE:
                 # TODO: Maintain a state of what valves are open by default, only emit if different from what we have
                 if message.id == 3 and message.state == packet_spec.ActuatorState.ON:
                     self.annoy_prop.emit()
                 else:
                     self.actuator_state_changed.emit(message.id, message.state)
-                # if reset_heartbeat: self.reset_heartbeat_timeout()
-                # Emit signal to reset heartbeat
+
+                if self.act_states[message.id] != message.state:
+                    self.act_states[message.id] = message.state
+                    # self.log_ready.emit("")
             case packet_spec.TelemetryPacketSubType.WARNING:
                 # Write warning to logs maybe?
                 pass
             case packet_spec.TelemetryPacketSubType.CONTINUITY:
                 self.continuity_state_changed.emit(message.state)
-                # if reset_heartbeat: self.reset_heartbeat_timeout()
             case packet_spec.TelemetryPacketSubType.CONN_STATUS:
                 self.cc_connection_status_changed.emit(message.status)
                 if message.status in [packet_spec.IPConnectionStatus.RECONNECTING, packet_spec.IPConnectionStatus.DISCONNECTED]:
-                    # Start flashing label timer
-                    pass
-                # self.update_control_client_display(message.status)
-                # if reset_heartbeat: self.reset_heartbeat_timeout()
+                    self.cc_disconnected.emit()
+                else:
+                    self.cc_connected.emit()
             case _:
                 pass  
             
