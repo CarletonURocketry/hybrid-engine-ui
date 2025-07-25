@@ -7,6 +7,7 @@ be imported by main_window.py
 import json
 from typing import TYPE_CHECKING
 
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QMessageBox, QPushButton
 from pyqtgraph import mkPen, InfiniteLine
 
@@ -17,7 +18,7 @@ if TYPE_CHECKING:
 
     from main_window import MainWindow
 
-black_pen = mkPen("black", width=2)
+inf_line_pen = mkPen("black", width=2, style=Qt.PenStyle.DashLine)
 
 def load_config(self: "MainWindow", config):
     self.config = json.load(config)
@@ -170,7 +171,7 @@ def add_pressure_threshold_handler(self: "MainWindow"):
         if self.ui.pressureThresholdList.currentRow() == -1:
             new_marker = self.ui.pressureThresholdInput.text()
             self.ui.pressureThresholdList.addItem(str(float(new_marker)))
-            self.ui.pressurePlot.addItem(InfiniteLine(float(new_marker), angle=0, pen=black_pen))
+            self.ui.pressurePlot.addItem(InfiniteLine(float(new_marker), angle=0, pen=inf_line_pen))
             self.ui.pressureThresholdInput.setText("")
         else:
             to_remove = filter(lambda item: isinstance(item, InfiniteLine) and item.pos().y() == float(self.ui.pressureThresholdList.currentItem().text()), self.ui.pressurePlot.items())
@@ -184,7 +185,7 @@ def add_temperature_threshold_handler(self: "MainWindow"):
         if self.ui.temperatureThresholdList.currentRow() == -1:
             new_marker = self.ui.temperatureThresholdInput.text()
             self.ui.temperatureThresholdList.addItem(str(float(new_marker)))
-            self.ui.temperaturePlot.addItem(InfiniteLine(float(new_marker), angle=0, pen=black_pen))
+            self.ui.temperaturePlot.addItem(InfiniteLine(float(new_marker), angle=0, pen=inf_line_pen))
             self.ui.temperatureThresholdInput.setText("")
         else:
             self.ui.temperatureThresholdList.takeItem(self.ui.temperatureThresholdList.currentRow())
@@ -196,7 +197,7 @@ def add_tank_mass_threshold_handler(self: "MainWindow"):
         if self.ui.tankMassThresholdList.currentRow() == -1:
             new_marker = self.ui.tankMassThresholdInput.text()
             self.ui.tankMassThresholdList.addItem(str(float(new_marker)))
-            self.ui.tankMassPlot.addItem(InfiniteLine(float(new_marker), angle=0, pen=black_pen))
+            self.ui.tankMassPlot.addItem(InfiniteLine(float(new_marker), angle=0, pen=inf_line_pen))
             self.ui.tankMassThresholdInput.setText("")
         else:
             self.ui.tankMassThresholdList.takeItem(self.ui.tankMassThresholdList.currentRow())
@@ -208,7 +209,7 @@ def add_engine_thrust_threshold_handler(self: "MainWindow"):
         if self.ui.engineThrustThresholdList.currentRow() == -1:
             new_marker = self.ui.engineThrustThresholdInput.text()
             self.ui.engineThrustThresholdList.addItem(str(float(new_marker)))
-            self.ui.engineThrustPlot.addItem(InfiniteLine(float(new_marker), angle=0, pen=black_pen))
+            self.ui.engineThrustPlot.addItem(InfiniteLine(float(new_marker), angle=0, pen=inf_line_pen))
             self.ui.engineThrustThresholdInput.setText("")
         else:
             self.ui.engineThrustThresholdList.takeItem(self.ui.engineThrustThresholdList.currentRow())
