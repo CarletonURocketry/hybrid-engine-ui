@@ -42,15 +42,20 @@ class DataHandler(QObject):
             case packet_spec.TelemetryPacketSubType.ARMING_STATE:
                 self.arming_state_changed.emit(message.state)
             case packet_spec.TelemetryPacketSubType.ACT_STATE:
-                # TODO: Maintain a state of what valves are open by default, only emit if different from what we have
                 if message.id == 3 and message.state == packet_spec.ActuatorState.ON:
                     self.annoy_prop.emit()
-                else:
-                    self.actuator_state_changed.emit(message.id, message.state)
-
-                if self.act_states[message.id] != message.state:
+                elif self.act_states[message.id] != message.state:
                     self.act_states[message.id] = message.state
-                    # self.log_ready.emit("")
+                    self.actuator_state_changed.emit(message.id, message.state)
+                    match(message.id):
+                        case 0:
+                            self.log_ready.emit(f"Fire Valve set to: {message.state}")
+                        case 13:
+                            self.log_ready.emit(f"Quick Disconnect set to: {message.state}")
+                        case 14:
+                            self.log_ready.emit(f"Igniter set to: {message.state}")
+                        case _:
+                            self.log_ready.emit(f"XV-{message.id} set to: {message.state}")
             case packet_spec.TelemetryPacketSubType.WARNING:
                 # Write warning to logs maybe?
                 pass
