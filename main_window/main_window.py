@@ -16,8 +16,6 @@ data, etc.
 """
 
 from PySide6.QtWidgets import QWidget, QLabel, QMessageBox, QInputDialog
-from PySide6.QtCore import QTimer, Qt, QMutex
-from PySide6.QtNetwork import QUdpSocket, QAbstractSocket
 from PySide6.QtSerialPort import QSerialPort, QSerialPortInfo
 from PySide6.QtGui import QPixmap
 from pyqtgraph import mkPen, InfiniteLine, QtCore
@@ -197,7 +195,6 @@ class MainWindow(QWidget):
     from .serial import serial_connection_button_handler, \
         refresh_serial_button_handler, serial_receive_data, serial_on_error
     from .recording_and_playback import recording_toggle_button_handler, open_file_button_handler
-    # from .logging import save_to_file, write_to_log, display_popup
     from .config import load_config, save_config, add_default_open_valve_handler, pressure_data_display_change_handler, \
         pressure_x_val_change_handler, temperature_data_display_change_handler, temperature_x_val_change_handler, \
         tank_mass_data_display_change_handler, tank_mass_x_val_change_handler, engine_thrust_data_display_change_handler, \
@@ -240,8 +237,6 @@ class MainWindow(QWidget):
 
         self.data_csv_writer = CSVWriter(["t","p1","p2","p3","p4","p5","p6","t1","t2","t3","t4","m1","th1","status","Continuity"], 100, "data_csv")
         self.state_csv_writer = CSVWriter(["t","Arming state","Igniter","XV-1","XV-2","XV-3","XV-4","XV-5","XV-6","XV-7","XV-8","XV-9","XV-10","XV-11","XV-12","Quick disconnect","Dump valve","Continuity"], 1, "valves_csv")
-        
-        self.timer_controller.log_ready.connect(self.log_manager.write_to_log)
 
         for port in QSerialPortInfo.availablePorts():
             self.ui.serialPortDropdown.addItem(port.portName())
@@ -249,7 +244,7 @@ class MainWindow(QWidget):
             self.ui.baudRateDropdown.addItem(str(rate))
 
         # Export to File button
-        # self.ui.exporter.clicked.connect(self.save_to_file)
+        self.ui.exporter.clicked.connect(self.log_manager.save_to_file)
 
         # Serial: TODO: MAKE THIS A CLASS
         self.serialPort = QSerialPort(self)
@@ -299,8 +294,9 @@ class MainWindow(QWidget):
         self.data_handler.continuity_state_changed.connect(self.telem_vis_manager.update_continuity_state_label)
         self.data_handler.cc_connection_status_changed.connect(self.telem_vis_manager.update_cc_conn_status_label) # This signal just changes the label
         self.data_handler.cc_connected.connect(self.timer_controller.stop_cc_disconnect_flash_timer) # These ones either start or stop the flash timer
-        self.data_handler.cc_disconnected.connect(self.timer_controller.start_cc_disconnect_flash_timer)
+        self.data_handler.cc_disconnected.connect(self.timer_controller.start_cc_disconnect_flash_timer) # Might be a better way to do this, don't care to do it now
         self.data_handler.annoy_prop.connect(self.log_manager.ask_for_tip)
+        self.data_handler.log_ready.connect(self.log_manager.write_to_log)
 
         self.timer_controller.filter_data_s.connect(self.data_handler.filter_data)
         self.timer_controller.flash_ps_disconnect_label_s.connect(self.telem_vis_manager.flash_ps_label)
@@ -366,9 +362,7 @@ class MainWindow(QWidget):
     def closeEvent(self, event):
         confirm = QMessageBox.question(self, "Close application", "Are you sure you want to close the application?", QMessageBox.Yes | QMessageBox.No)
         if confirm == QMessageBox.StandardButton.Yes:
-            # if self.padUDPSocket.state() == QAbstractSocket.SocketState.ConnectedState:
-            #     self.padUDPSocket.disconnectFromHost()
-            #     self.padUDPSocket.waitForDisconnected()
+            self.udp_controller.leave_multicast_group()
 
             if self.serialPort.isOpen():
                 self.serialPort.close()
