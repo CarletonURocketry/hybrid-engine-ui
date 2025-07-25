@@ -129,42 +129,10 @@ class UDPController(QObject):
         return bound_to_port and joined_mcast_group
 
     def leave_multicast_group(self):
-        if self.padUDPSocket.state() == QAbstractSocket.SocketState.ConnectedState:
+        if self.padUDPSocket.state() == QAbstractSocket.SocketState.BoundState:
             self.padUDPSocket.disconnectFromHost()
-            self.padUDPSocket.waitForDisconnected()
-
-    #             #TODO: Move this, could be handler by csv writer slot?
-    #             packet_dict = {}
-    #             match header.sub_type:
-    #                 case packet_spec.TelemetryPacketSubType.TEMPERATURE:
-    #                     packet_dict["t" + str(message.id + 1)] = message.temperature
-    #                     self.data_csv_writer.add_timed_measurements(message.time_since_power, packet_dict)
-    #                 case packet_spec.TelemetryPacketSubType.PRESSURE:
-    #                     packet_dict["p" + str(message.id + 1)] = message.pressure
-    #                     self.data_csv_writer.add_timed_measurements(message.time_since_power, packet_dict)
-    #                 case packet_spec.TelemetryPacketSubType.MASS:
-    #                     packet_dict["m" + str(message.id + 1)] = message.mass
-    #                     self.data_csv_writer.add_timed_measurements(message.time_since_power, packet_dict)
-    #                 case packet_spec.TelemetryPacketSubType.THRUST:
-    #                     packet_dict["th" + str(message.id + 1)] = message.thrust
-    #                     self.data_csv_writer.add_timed_measurements(message.time_since_power, packet_dict)
-    #                 case packet_spec.TelemetryPacketSubType.ARMING_STATE:
-    #                     packet_dict["Arming state"] = message.state.name
-    #                     self.state_csv_writer.add_timed_measurements(message.time_since_power, packet_dict)
-    #                 case packet_spec.TelemetryPacketSubType.ACT_STATE:
-    #                     match message.id:
-    #                         case 0: packet_dict["Igniter"] = message.state.name
-    #                         case 13: packet_dict["Quick disconnect"] = message.state.name
-    #                         case 14: packet_dict["Dump valve"] = message.state.name
-    #                         case _: packet_dict[f"XV-{message.id}"] = message.state.name
-    #                     self.state_csv_writer.add_timed_measurements(message.time_since_power, packet_dict)
-    #                 case packet_spec.TelemetryPacketSubType.CONTINUITY:
-    #                     packet_dict["Continuity"] = message.state.name
-    #                     self.data_csv_writer.add_timed_measurements(message.time_since_power, packet_dict)
-
-    #             #If we want to recording data
-    #             if self.ui.recordingToggleButton.isChecked():
-    #                 self.raw_data_file_out.write(datagram)
+        if self.padUDPSocket.state() == QAbstractSocket.SocketState.UnconnectedState or self.padUDPSocket.waitForDisconnected():
+            pass
 
     # Any errors with the socket should be handled here and logged
     def udp_on_error(self):
@@ -181,5 +149,3 @@ class UDPController(QObject):
     def udp_on_disconnected(self):
         self.log_ready.emit("Socket connection was closed")
         self.multicast_group_disconnected.emit()
-        # if self.raw_data_file_out:
-        #     self.raw_data_file_out.close()
