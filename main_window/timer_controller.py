@@ -63,6 +63,8 @@ class TimerController(QObject):
    @Slot()
    def reset_heartbeat_timeout(self):
       self.heartbeat_mutex.lock()
+      if self.heartbeat_timeout <= 0:
+         self.log_ready.emit("Heartbeat found")
       self.heartbeat_timeout = 10
 
       # Only update pad_server whenever heartbeat is received
