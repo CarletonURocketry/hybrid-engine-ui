@@ -1,21 +1,18 @@
-
-
 from PySide6.QtCore import QObject, Slot
-from PySide6.QtWidgets import QWidget, QLabel, QMessageBox, QInputDialog
 from PySide6.QtWebEngineWidgets import QWebEngineView
 
-from .ui import Ui_Widget, Ui_PIDWindow
+from .ui import Ui_Widget
 
 # This class handles all other UI interaction, so
 # we can just pass an instance to the UI
 class UIManager(QObject):
     def __init__(self, ui: Ui_Widget):
         super().__init__()
-
         self.ui = ui
 
+        # TODO: Fix the console warnings this generates, not an issue otherwise
         self.web_view = QWebEngineView()
-        self.web_view.setUrl("https://www.youtube.com/watch?app=desktop&v=vPDvMVEwKzM")
+        # self.web_view.setUrl("https://www.youtube.com/watch?app=desktop&v=vPDvMVEwKzM")
 
     # VVVVV Should go in UIManager class
     @Slot()

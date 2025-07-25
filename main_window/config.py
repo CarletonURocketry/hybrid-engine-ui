@@ -7,7 +7,7 @@ be imported by main_window.py
 import json
 from typing import TYPE_CHECKING
 
-from PySide6.QtWidgets import QMessageBox
+from PySide6.QtWidgets import QMessageBox, QPushButton
 from pyqtgraph import mkPen, InfiniteLine
 
 from .plot_info import PlotDataDisplayMode
