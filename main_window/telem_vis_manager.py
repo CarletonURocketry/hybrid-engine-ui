@@ -36,7 +36,7 @@ class TelemVisManager(QObject):
   @Slot(str)
   def update_sensor_label(self, plot_id: str):
     unit_string = self.unit_strings[plot_id[:-1]]
-    self.sensor_labels[plot_id].update(f"{self.plots[plot_id].running_average} {unit_string}")
+    self.sensor_labels[plot_id].update(f"{round(self.plots[plot_id].running_average, 2)} {unit_string}")
 
   @Slot(packet_spec.IPConnectionStatus)
   def update_ps_conn_status_label(self, new_ps_conn_status: packet_spec.IPConnectionStatus):
