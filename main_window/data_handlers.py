@@ -93,6 +93,7 @@ class DataHandler(QObject):
                         plot_id = "th" + str(message.id)
                         reading = message.thrust
                 plot_data[plot_id].points = np.append(plot_data[plot_id].points, np.array([[message.time_since_power, reading]]), axis=0)
+                plot_data[plot_id].running_average = self.calculate_new_average(plot_data[plot_id].running_average, reading)
                 
                 # Emits signal for TelemVisHandler
                 self.telemetry_ready[str].emit(plot_id)
