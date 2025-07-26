@@ -114,3 +114,7 @@ class DataHandler(QObject):
                     min_time: int = self.plots[key].points[:,0].max() - self.plots[key].x_val
                     self.plots[key].points = self.plots[key].points[self.plots[key].points[:,0] >= min_time]
             self.plots[key].data_line.setData(self.plots[key].points)
+
+    @Slot
+    def on_average_points_changed(self, value: float):
+        self.average_alpha = value

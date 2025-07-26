@@ -31,6 +31,7 @@ from .plot_info import PlotDataDisplayMode, PlotInfo
 from .timer_controller import TimerController
 from .labels import *
 from .logging import LogManager
+from .config import ConfigManager
 
 class PIDWindow(QWidget):
     def __init__(self):
@@ -195,11 +196,11 @@ class MainWindow(QWidget):
     from .serial import serial_connection_button_handler, \
         refresh_serial_button_handler, serial_receive_data, serial_on_error
     from .recording_and_playback import recording_toggle_button_handler, open_file_button_handler
-    from .config import load_config, save_config, add_default_open_valve_handler, pressure_data_display_change_handler, \
-        pressure_x_val_change_handler, temperature_data_display_change_handler, temperature_x_val_change_handler, \
-        tank_mass_data_display_change_handler, tank_mass_x_val_change_handler, engine_thrust_data_display_change_handler, \
-        engine_thrust_x_val_change_handler, add_pressure_threshold_handler,add_temperature_threshold_handler, add_tank_mass_threshold_handler, \
-        add_engine_thrust_threshold_handler, points_for_average_change_handler
+    # from .config import load_config, save_config, add_default_open_valve_handler, pressure_data_display_change_handler, \
+    #     pressure_x_val_change_handler, temperature_data_display_change_handler, temperature_x_val_change_handler, \
+    #     tank_mass_data_display_change_handler, tank_mass_x_val_change_handler, engine_thrust_data_display_change_handler, \
+    #     engine_thrust_x_val_change_handler, add_pressure_threshold_handler,add_temperature_threshold_handler, add_tank_mass_threshold_handler, \
+    #     add_engine_thrust_threshold_handler, points_for_average_change_handler
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -207,15 +208,22 @@ class MainWindow(QWidget):
         self.ui.setupUi(self)
 
         # Load config options
-        self.config = None
-        self.points_used_for_average: float = 0.80
-        try:
-            with open("config.json") as config:
-                self.load_config(config)
-        except FileNotFoundError:
-            pass
+        # self.config = None
+        # self.points_used_for_average: float = 0.80
+        # try:
+        #     with open("config.json") as config:
+        #         self.load_config(config)
+        # except FileNotFoundError:
+        #     pass
             # self.write_to_log("config.json not found")
             # self.display_popup(QMessageBox.Icon.Critical, "Couldn't load config", "config.json not found")
+
+        self.config_manager = ConfigManager()
+        try:
+            self.config_manager.load_config("config.json")
+        except Exception as e:
+            pass
+        
 
         # Init ui labels
         self.init_sensor_reading_label()
@@ -229,7 +237,7 @@ class MainWindow(QWidget):
         self.ui.showPIDButton.clicked.connect(self.open_pid_window)
 
         self.udp_controller = UDPController()
-        self.data_handler = DataHandler(self.plot_data, self.config["sensor_and_valve_options"]["points_used_for_average"])
+        self.data_handler = DataHandler(self.plot_data, self.config_manager.config["sensor_and_valve_options"]["points_used_for_average"])
         self.telem_vis_manager = TelemVisManager(self.sensors, self.valves, self.conn_status_labels, self.hybrid_state_labels, self.plot_data)
         self.ui_manager = UIManager(self.ui)
         self.log_manager = LogManager(self.ui.logOutput)
@@ -259,6 +267,8 @@ class MainWindow(QWidget):
         # any arguments that need to be passed along with the signal as it doesn't really fit the signal.
         # Furthermore, it also makes sense that if this signal calls functions that require an argument,
         # that a lambda or a partial function be used as the slot
+        self.ui_manager.populate_config_settings(self.config_manager.config)
+        
         self.udp_controller.multicast_group_joined.connect(lambda: self.ui_manager.disable_udp_config(disable_btn=False))
         self.udp_controller.multicast_group_joined.connect(lambda: self.ui_manager.disable_serial_config(disable_btn=True))
         self.udp_controller.multicast_group_joined.connect(self.timer_controller.start_data_filter_timer)
@@ -322,29 +332,31 @@ class MainWindow(QWidget):
         self.ui.recordingToggleButton.toggled.connect(self.recording_toggle_button_handler)
         self.raw_data_file_out = None
 
-        # Sensor display option handlers
-        self.ui.numPointsAverageInput.valueChanged.connect(self.points_for_average_change_handler)
-        self.ui.defaultOpenValvesButton.clicked.connect(self.add_default_open_valve_handler)
         self.ui.pidWindowButtonGroup.buttonToggled.connect(self.pid_window.change_diagram)
 
-        # Graph option handlers
-        self.ui.pressureDisplayButtonGroup.buttonClicked.connect(self.pressure_data_display_change_handler)
-        self.ui.pressureXSB.valueChanged.connect(self.pressure_x_val_change_handler)
+        # # Sensor display option handlers
+        self.ui.numPointsAverageInput.valueChanged.connect(self.config_manager.points_for_average_change_handler)
+        self.ui.numPointsAverageInput.valueChanged.connect(self.data_handler.on_average_points_changed)
+        self.ui.defaultOpenValvesButton.clicked.connect(self.add_default_open_valve_handler)
+
+        # # Graph option handlers
+        self.ui.pressureDisplayButtonGroup.buttonClicked.connect(self.config_manager.pressure_data_display_change_handler)
+        # self.ui.pressureXSB.valueChanged.connect(self.pressure_x_val_change_handler)
         
-        self.ui.temperatureDisplayButtonGroup.buttonClicked.connect(self.temperature_data_display_change_handler)
-        self.ui.temperatureXSB.valueChanged.connect(self.temperature_x_val_change_handler)
+        # self.ui.temperatureDisplayButtonGroup.buttonClicked.connect(self.temperature_data_display_change_handler)
+        # self.ui.temperatureXSB.valueChanged.connect(self.temperature_x_val_change_handler)
 
-        self.ui.tankMassDisplayButtonGroup.buttonClicked.connect(self.tank_mass_data_display_change_handler)
-        self.ui.tankMassXSB.valueChanged.connect(self.tank_mass_x_val_change_handler)
+        # self.ui.tankMassDisplayButtonGroup.buttonClicked.connect(self.tank_mass_data_display_change_handler)
+        # self.ui.tankMassXSB.valueChanged.connect(self.tank_mass_x_val_change_handler)
 
-        self.ui.engineThrustDisplayButtonGroup.buttonClicked.connect(self.engine_thrust_data_display_change_handler)
-        self.ui.engineThrustXSB.valueChanged.connect(self.engine_thrust_x_val_change_handler)
+        # self.ui.engineThrustDisplayButtonGroup.buttonClicked.connect(self.engine_thrust_data_display_change_handler)
+        # self.ui.engineThrustXSB.valueChanged.connect(self.engine_thrust_x_val_change_handler)
 
-        # Plot threshold handlers
-        self.ui.pressureThresholdButton.clicked.connect(self.add_pressure_threshold_handler)
-        self.ui.temperatureThresholdButton.clicked.connect(self.add_temperature_threshold_handler)
-        self.ui.tankMassThresholdButton.clicked.connect(self.add_tank_mass_threshold_handler)
-        self.ui.engineThrustThresholdButton.clicked.connect(self.add_engine_thrust_threshold_handler)
+        # # Plot threshold handlers
+        # self.ui.pressureThresholdButton.clicked.connect(self.add_pressure_threshold_handler)
+        # self.ui.temperatureThresholdButton.clicked.connect(self.add_temperature_threshold_handler)
+        # self.ui.tankMassThresholdButton.clicked.connect(self.add_tank_mass_threshold_handler)
+        # self.ui.engineThrustThresholdButton.clicked.connect(self.add_engine_thrust_threshold_handler)
 
         # These make it so that the items in the list are unselected when entering a value
         # helps with the remove value feature
@@ -355,8 +367,8 @@ class MainWindow(QWidget):
         self.ui.engineThrustThresholdInput.focusInEvent = lambda x: self.ui.engineThrustThresholdList.setCurrentRow(-1)
         
         # Save config handlers
-        self.ui.saveConnConfigButton.clicked.connect(self.save_config)
-        self.ui.saveDisplayConfigButton.clicked.connect(self.save_config)
+        # self.ui.saveConnConfigButton.clicked.connect(self.save_config)
+        # self.ui.saveDisplayConfigButton.clicked.connect(self.save_config)
 
     # Handles when the window is closed, have to make sure to disconnect the TCP socket
     def closeEvent(self, event):
@@ -383,7 +395,7 @@ class MainWindow(QWidget):
         self.valves[13] = ValveLabel("Quick Disconnect", "CLOSED", 0, 0, self.ui.valveGrid)
         self.valves[14] =  ValveLabel("XV-3 (dump valve)", "CLOSED", 0, 4, self.ui.valveGrid)
         for i in range(1, 13):
-            initial_state = "OPEN" if i in self.config["sensor_and_valve_options"]["default_open_valves"] else "CLOSED"
+            initial_state = "OPEN" if i in self.config_manager.config["sensor_and_valve_options"]["default_open_valves"] else "CLOSED"
             label = f"XV-{str(i)}"
             if i == 3: label += " (unused)"
             if i == 5: label += " (fire valve)"
@@ -459,35 +471,35 @@ class MainWindow(QWidget):
         self.plot_data["p0"] = PlotInfo(0,
                                     self.p0_points,
                                     self.ui.pressurePlot.plot(self.p0_points, pen=red_pen, name="p1"),
-                                    PlotDataDisplayMode[self.config["graph_options"]["pressure"]["data_display_mode"].upper()],
-                                    self.config["graph_options"]["pressure"]["X"])
+                                    PlotDataDisplayMode[self.config_manager.config["graph_options"]["pressure"]["data_display_mode"].upper()],
+                                    self.config_manager.config["graph_options"]["pressure"]["X"])
         self.plot_data["p1"] = PlotInfo(0,
                                     self.p1_points,
                                     self.ui.pressurePlot.plot(self.p1_points, pen=green_pen, name="p2"),
-                                    PlotDataDisplayMode[self.config["graph_options"]["pressure"]["data_display_mode"].upper()],
-                                    self.config["graph_options"]["pressure"]["X"])
+                                    PlotDataDisplayMode[self.config_manager.config["graph_options"]["pressure"]["data_display_mode"].upper()],
+                                    self.config_manager.config["graph_options"]["pressure"]["X"])
         self.plot_data["p2"] = PlotInfo(0,
                                     self.p2_points,
                                     self.ui.pressurePlot.plot(self.p2_points, pen=blue_pen, name="p3"),
-                                    PlotDataDisplayMode[self.config["graph_options"]["pressure"]["data_display_mode"].upper()],
-                                    self.config["graph_options"]["pressure"]["X"])
+                                    PlotDataDisplayMode[self.config_manager.config["graph_options"]["pressure"]["data_display_mode"].upper()],
+                                    self.config_manager.config["graph_options"]["pressure"]["X"])
         self.plot_data["p3"] = PlotInfo(0,
                                     self.p3_points,
                                     self.ui.pressurePlot.plot(self.p3_points, pen=orange_pen, name="p4"),
-                                    PlotDataDisplayMode[self.config["graph_options"]["pressure"]["data_display_mode"].upper()],
-                                    self.config["graph_options"]["pressure"]["X"])
+                                    PlotDataDisplayMode[self.config_manager.config["graph_options"]["pressure"]["data_display_mode"].upper()],
+                                    self.config_manager.config["graph_options"]["pressure"]["X"])
         self.plot_data["p4"] = PlotInfo(0,
                                     self.p4_points,
                                     self.ui.pressurePlot.plot(self.p4_points, pen=purple_pen, name="p5"),
-                                    PlotDataDisplayMode[self.config["graph_options"]["pressure"]["data_display_mode"].upper()],
-                                    self.config["graph_options"]["pressure"]["X"])
+                                    PlotDataDisplayMode[self.config_manager.config["graph_options"]["pressure"]["data_display_mode"].upper()],
+                                    self.config_manager.config["graph_options"]["pressure"]["X"])
         self.plot_data["p5"] = PlotInfo(0,
                                     self.p5_points,
                                     self.ui.pressurePlot.plot(self.p5_points, pen=brown_pen, name="p6"),
-                                    PlotDataDisplayMode[self.config["graph_options"]["pressure"]["data_display_mode"].upper()],
-                                    self.config["graph_options"]["pressure"]["X"])
-        for marker in [self.ui.pressureThresholdList.item(x) for x in range(self.ui.pressureThresholdList.count())]:
-            self.ui.pressurePlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=inf_line_pen))
+                                    PlotDataDisplayMode[self.config_manager.config["graph_options"]["pressure"]["data_display_mode"].upper()],
+                                    self.config_manager.config["graph_options"]["pressure"]["X"])
+        for marker in self.config_manager.config["graph_options"]["pressure"]["thresholds"]:
+            self.ui.pressurePlot.addItem(InfiniteLine(float(marker), angle=0, pen=inf_line_pen))
 
         self.ui.temperaturePlot.addLegend(offset=(0,0), colCount=4, labelTextColor="black")
         self.ui.temperaturePlot.setTitle("<span style='font-weight: bold;'>Temperature</span>", color="black")
@@ -500,25 +512,25 @@ class MainWindow(QWidget):
         self.plot_data["t0"] = PlotInfo(0,
                                     self.t0_points,
                                     self.ui.temperaturePlot.plot(self.t0_points, pen=red_pen, name="t1"),
-                                    PlotDataDisplayMode[self.config["graph_options"]["temperature"]["data_display_mode"].upper()],
-                                    self.config["graph_options"]["temperature"]["X"])
+                                    PlotDataDisplayMode[self.config_manager.config["graph_options"]["temperature"]["data_display_mode"].upper()],
+                                    self.config_manager.config["graph_options"]["temperature"]["X"])
         self.plot_data["t1"] = PlotInfo(0,
                                     self.t1_points,
                                     self.ui.temperaturePlot.plot(self.t1_points, pen=green_pen, name="t2"),
-                                    PlotDataDisplayMode[self.config["graph_options"]["temperature"]["data_display_mode"].upper()],
-                                    self.config["graph_options"]["temperature"]["X"])
+                                    PlotDataDisplayMode[self.config_manager.config["graph_options"]["temperature"]["data_display_mode"].upper()],
+                                    self.config_manager.config["graph_options"]["temperature"]["X"])
         self.plot_data["t2"] = PlotInfo(0,
                                     self.t2_points,
                                     self.ui.temperaturePlot.plot(self.t2_points, pen=blue_pen, name="t3"),
-                                    PlotDataDisplayMode[self.config["graph_options"]["temperature"]["data_display_mode"].upper()],
-                                    self.config["graph_options"]["temperature"]["X"])
+                                    PlotDataDisplayMode[self.config_manager.config["graph_options"]["temperature"]["data_display_mode"].upper()],
+                                    self.config_manager.config["graph_options"]["temperature"]["X"])
         self.plot_data["t3"] = PlotInfo(0,
                                     self.t3_points,
                                     self.ui.temperaturePlot.plot(self.t3_points, pen=orange_pen, name="t4"),
-                                    PlotDataDisplayMode[self.config["graph_options"]["temperature"]["data_display_mode"].upper()],
-                                    self.config["graph_options"]["temperature"]["X"])
-        for marker in [self.ui.temperatureThresholdList.item(x) for x in range(self.ui.temperatureThresholdList.count())]:
-            self.ui.temperaturePlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=inf_line_pen))
+                                    PlotDataDisplayMode[self.config_manager.config["graph_options"]["temperature"]["data_display_mode"].upper()],
+                                    self.config_manager.config["graph_options"]["temperature"]["X"])
+        for marker in self.config_manager.config["graph_options"]["temperature"]["thresholds"]:
+            self.ui.temperaturePlot.addItem(InfiniteLine(float(marker), angle=0, pen=inf_line_pen))
 
         self.ui.tankMassPlot.addLegend()
         self.ui.tankMassPlot.setTitle("<span style='font-weight: bold;'>Tank Mass</span>", color="black")
@@ -531,10 +543,10 @@ class MainWindow(QWidget):
         self.plot_data["m0"] = PlotInfo(0,
                                     self.tank_mass_points,
                                     self.ui.tankMassPlot.plot(self.tank_mass_points, pen=red_pen),
-                                    PlotDataDisplayMode[self.config["graph_options"]["tank_mass"]["data_display_mode"].upper()],
-                                    self.config["graph_options"]["tank_mass"]["X"])
-        for marker in [self.ui.tankMassThresholdList.item(x) for x in range(self.ui.tankMassThresholdList.count())]:
-            self.ui.tankMassPlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=inf_line_pen))
+                                    PlotDataDisplayMode[self.config_manager.config["graph_options"]["tank_mass"]["data_display_mode"].upper()],
+                                    self.config_manager.config["graph_options"]["tank_mass"]["X"])
+        for marker in self.config_manager.config["graph_options"]["tank_mass"]["thresholds"]:
+            self.ui.tankMassPlot.addItem(InfiniteLine(float(marker), angle=0, pen=inf_line_pen))
 
         self.ui.engineThrustPlot.addLegend()
         self.ui.engineThrustPlot.setTitle("<span style='font-weight: bold;'>Engine Thrust</span>", color="black")
@@ -547,10 +559,10 @@ class MainWindow(QWidget):
         self.plot_data["th0"] = PlotInfo(0,
                                     self.engine_thrust_points,
                                      self.ui.engineThrustPlot.plot(self.engine_thrust_points, pen=red_pen),
-                                     PlotDataDisplayMode[self.config["graph_options"]["engine_thrust"]["data_display_mode"].upper()],
-                                    self.config["graph_options"]["engine_thrust"]["X"])
-        for marker in [self.ui.engineThrustThresholdList.item(x) for x in range(self.ui.engineThrustThresholdList.count())]:
-            self.ui.engineThrustPlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=inf_line_pen))
+                                     PlotDataDisplayMode[self.config_manager.config["graph_options"]["engine_thrust"]["data_display_mode"].upper()],
+                                    self.config_manager.config["graph_options"]["engine_thrust"]["X"])
+        for marker in self.config_manager.config["graph_options"]["engine_thrust"]["thresholds"]:
+            self.ui.engineThrustPlot.addItem(InfiniteLine(float(marker), angle=0, pen=inf_line_pen))
 
     def save_csv_button_handler(self):
         new_name, _ = QInputDialog.getText(self, "Save CSV file", "Enter name to save CSV file as")
