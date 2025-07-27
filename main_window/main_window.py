@@ -16,7 +16,7 @@ data, etc.
 """
 import sys
 
-from PySide6.QtWidgets import QWidget, QLabel, QMessageBox, QInputDialog
+from PySide6.QtWidgets import QWidget, QMessageBox, QInputDialog
 from PySide6.QtSerialPort import QSerialPort, QSerialPortInfo
 from PySide6.QtGui import QPixmap
 from pyqtgraph import mkPen, InfiniteLine, QtCore
@@ -197,7 +197,6 @@ class MainWindow(QWidget):
     from .serial import serial_connection_button_handler, \
         refresh_serial_button_handler, serial_receive_data, serial_on_error
     from .recording_and_playback import recording_toggle_button_handler, open_file_button_handler
-    from .config import add_default_open_valve_handler
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -218,7 +217,7 @@ class MainWindow(QWidget):
 
         # Init ui labels
         self.init_sensor_reading_label()
-        self.init_actuator_valve_label()
+        self.init_actuator_valve_labels()
         self.init_connection_status_labels()
         self.init_hybrid_state_labels()
         self.init_plots()
@@ -302,7 +301,10 @@ class MainWindow(QWidget):
         self.timer_controller.update_control_client_display_s.connect(self.telem_vis_manager.update_cc_conn_status_label)
         self.timer_controller.log_ready.connect(self.log_manager.write_to_log)
 
-        ### Button handlers ###
+        ### Button and associated signal handlers ###
+        # In some cases, it was easier to have some signals connect to a UI manager function
+        # which would then emit it's own signal to be handled elsewhere
+        # Tried to keep the flow of work here clear
 
         # Connection button handlers
         self.ui.udpConnectButton.clicked.connect(lambda: self.udp_controller.udp_connection_button_handler(self.ui.udpIpAddressInput.text(), self.ui.udpPortInput.text()))
@@ -324,7 +326,9 @@ class MainWindow(QWidget):
         # Sensor display option handlers
         self.ui.numPointsAverageInput.valueChanged.connect(self.config_manager.points_for_average_change_handler)
         self.ui.numPointsAverageInput.valueChanged.connect(self.data_handler.on_average_points_changed)
-        self.ui.defaultOpenValvesButton.clicked.connect(self.add_default_open_valve_handler)
+        self.ui.defaultOpenValvesButton.clicked.connect(self.ui_manager.on_default_open_btn_press)
+        # self.ui_manager.default_valves_changed.connect(self.init_actuator_valve_labels)
+        self.ui_manager.default_valves_changed.connect(self.config_manager.default_valve_btn_handler)
 
         # Graph option and display handlers
         # Slots from ConfigManager are for modfiying internal config object, this is used to get saved
@@ -372,7 +376,7 @@ class MainWindow(QWidget):
         self.ui.saveConnConfigButton.clicked.connect(self.config_manager.save_config)
         self.ui.saveDisplayConfigButton.clicked.connect(self.config_manager.save_config)
 
-    def init_actuator_valve_label(self):
+    def init_actuator_valve_labels(self):
         self.valves = {}
         self.valves[0] = ValveLabel("Igniter", "CLOSED", 0, 2, self.ui.valveGrid)
         self.valves[13] = ValveLabel("Quick Disconnect", "CLOSED", 0, 0, self.ui.valveGrid)

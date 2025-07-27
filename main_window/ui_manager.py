@@ -1,4 +1,5 @@
 from PySide6.QtCore import QObject, Slot, Qt, Signal
+from PySide6.QtWidgets import QMessageBox
 from PySide6.QtWebEngineWidgets import QWebEngineView
 
 from pyqtgraph import mkPen, InfiniteLine
@@ -14,6 +15,8 @@ class UIManager(QObject):
     temperature_threshold_changed = Signal(bool, float)
     tank_mass_threshold_changed = Signal(bool, float)
     engine_thrust_threshold_changed = Signal(bool, float)
+    default_valves_changed = Signal(bool, float)
+    popup_ready = Signal(QMessageBox.Icon, str, str)
 
     def __init__(self, ui: Ui_Widget):
         super().__init__()
@@ -179,7 +182,21 @@ class UIManager(QObject):
         except Exception as e:
             pass
             # self.display_popup(QMessageBox.Icon.Critical, "Action failed", f"Adding engine thrust threshold marker failed\n{str(e)}")
-            
+
+    def on_default_open_btn_press(self):
+        try:
+            if self.ui.defaultOpenValvesList.currentRow() == -1:
+                new_valve = self.ui.defaultOpenValvesInput.text()
+                self.ui.defaultOpenValvesList.addItem(new_valve)
+                self.ui.defaultOpenValvesInput.setText("")
+                self.default_valves_changed.emit(True, int(new_valve))
+            else:
+                self.ui.defaultOpenValvesList.takeItem(self.ui.defaultOpenValvesList.currentRow())
+                self.default_valves_changed.emit(False, int(new_valve))
+        except Exception as e:
+            pass
+            # self.display_popup(QMessageBox.Icon.Critical, "Action failed", f"Adding default open valve failed\n{str(e)}")            
+
     @Slot()
     def deploy_easter_egg(self):
         self.ui.plotLayout.addWidget(self.web_view, 0, 2, 2, 1)

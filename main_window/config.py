@@ -7,17 +7,8 @@ be imported by main_window.py
 import json
 from typing import TYPE_CHECKING
 
-from PySide6.QtCore import Qt, QObject, Signal, Slot
+from PySide6.QtCore import QObject, Signal, Slot
 from PySide6.QtWidgets import QMessageBox, QRadioButton
-from pyqtgraph import mkPen, InfiniteLine
-
-from .plot_info import PlotDataDisplayMode
-
-if TYPE_CHECKING:
-    from PySide6.QtWidgets import QRadioButton
-    from main_window import MainWindow
-
-inf_line_pen = mkPen("black", width=2, style=Qt.PenStyle.DashLine)
 
 class ConfigManager(QObject):
     log_ready = Signal(str)
@@ -101,6 +92,13 @@ class ConfigManager(QObject):
         else:
             self.config["graph_options"]["engine_thrust"]["thresholds"].remove(marker)
 
+    @Slot(bool, int)
+    def default_valve_btn_handler(self, added: bool, valve_id: int):
+        if added:
+            self.config["sensor_and_valve_options"]["default_open_valves"].append(int(valve_id))
+        else:
+            self.config["sensor_and_valve_options"]["default_open_valves"].remove(int(valve_id))
+
     @Slot()
     def save_config(self):
         try:
@@ -111,16 +109,3 @@ class ConfigManager(QObject):
         except Exception as e:
             self.log_ready.emit(f"Could not save configuration: {str(e)}")
             self.popup_ready.emit(QMessageBox.Icon.Warning, "Configuration save failed", f"Could not save configuration\n{str(e)}")
-
-def add_default_open_valve_handler(self: "MainWindow"):
-    try:
-        if self.ui.defaultOpenValvesList.currentRow() == -1:
-            new_valve = self.ui.defaultOpenValvesInput.text()
-            self.config["sensor_and_valve_options"]["default_open_valves"].append(int(new_valve))
-            self.ui.defaultOpenValvesList.addItem(str(int(new_valve)))
-            self.ui.defaultOpenValvesInput.setText("")
-            self.init_actuator_valve_label()
-        else:
-            self.ui.defaultOpenValvesList.takeItem(self.ui.defaultOpenValvesList.currentRow())
-    except Exception as e:
-        self.display_popup(QMessageBox.Icon.Critical, "Action failed", f"Adding default open valve failed\n{str(e)}")
