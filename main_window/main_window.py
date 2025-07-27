@@ -196,7 +196,7 @@ class MainWindow(QWidget):
     from .serial import serial_connection_button_handler, \
         refresh_serial_button_handler, serial_receive_data, serial_on_error
     from .recording_and_playback import recording_toggle_button_handler, open_file_button_handler
-    # from .config import load_config, save_config, add_default_open_valve_handler, pressure_data_display_change_handler, \
+    from .config import save_config, add_default_open_valve_handler, add_pressure_threshold_handler, add_temperature_threshold_handler, add_tank_mass_threshold_handler, add_engine_thrust_threshold_handler
     #     pressure_x_val_change_handler, temperature_data_display_change_handler, temperature_x_val_change_handler, \
     #     tank_mass_data_display_change_handler, tank_mass_x_val_change_handler, engine_thrust_data_display_change_handler, \
     #     engine_thrust_x_val_change_handler, add_pressure_threshold_handler,add_temperature_threshold_handler, add_tank_mass_threshold_handler, \
@@ -246,6 +246,8 @@ class MainWindow(QWidget):
         self.data_csv_writer = CSVWriter(["t","p1","p2","p3","p4","p5","p6","t1","t2","t3","t4","m1","th1","status","Continuity"], 100, "data_csv")
         self.state_csv_writer = CSVWriter(["t","Arming state","Igniter","XV-1","XV-2","XV-3","XV-4","XV-5","XV-6","XV-7","XV-8","XV-9","XV-10","XV-11","XV-12","Quick disconnect","Dump valve","Continuity"], 1, "valves_csv")
 
+        self.ui_manager.populate_config_settings(self.config_manager.config)
+        
         for port in QSerialPortInfo.availablePorts():
             self.ui.serialPortDropdown.addItem(port.portName())
         for rate in QSerialPortInfo.standardBaudRates():
@@ -267,8 +269,6 @@ class MainWindow(QWidget):
         # any arguments that need to be passed along with the signal as it doesn't really fit the signal.
         # Furthermore, it also makes sense that if this signal calls functions that require an argument,
         # that a lambda or a partial function be used as the slot
-        self.ui_manager.populate_config_settings(self.config_manager.config)
-        
         self.udp_controller.multicast_group_joined.connect(lambda: self.ui_manager.disable_udp_config(disable_btn=False))
         self.udp_controller.multicast_group_joined.connect(lambda: self.ui_manager.disable_serial_config(disable_btn=True))
         self.udp_controller.multicast_group_joined.connect(self.timer_controller.start_data_filter_timer)
@@ -334,31 +334,39 @@ class MainWindow(QWidget):
 
         self.ui.pidWindowButtonGroup.buttonToggled.connect(self.pid_window.change_diagram)
 
-        # # Sensor display option handlers
+        # Sensor display option handlers
         self.ui.numPointsAverageInput.valueChanged.connect(self.config_manager.points_for_average_change_handler)
         self.ui.numPointsAverageInput.valueChanged.connect(self.data_handler.on_average_points_changed)
-        self.ui.defaultOpenValvesButton.clicked.connect(self.config_manager.add_default_open_valve_handler)
+        self.ui.defaultOpenValvesButton.clicked.connect(self.add_default_open_valve_handler)
 
-        # # Graph option handlers
+        # Graph option handlers
+        # Slots from ConfigManager are for modfiying internal config object, this is used to get saved
+        # Slots for TelemVisManager are for modifying UI 
         self.ui.pressureDisplayButtonGroup.buttonClicked.connect(self.config_manager.pressure_data_display_change_handler)
-        self.ui.pressureDisplayButtonGroup.buttonClicked.connect(self.data_handler.on_pressure_data_display_change)
+        self.ui.pressureDisplayButtonGroup.buttonClicked.connect(self.telem_vis_manager.on_pressure_data_display_change)
         self.ui.pressureXSB.valueChanged.connect(self.config_manager.pressure_x_val_change_handler)
-        self.ui.pressureXSB.valueChanged.connect(self.data_handler.on_pressure_x_val_change)
+        self.ui.pressureXSB.valueChanged.connect(self.telem_vis_manager.on_pressure_x_val_change)
         
-        # self.ui.temperatureDisplayButtonGroup.buttonClicked.connect(self.temperature_data_display_change_handler)
-        # self.ui.temperatureXSB.valueChanged.connect(self.temperature_x_val_change_handler)
+        self.ui.temperatureDisplayButtonGroup.buttonClicked.connect(self.config_manager.temperature_data_display_change_handler)
+        self.ui.temperatureDisplayButtonGroup.buttonClicked.connect(self.telem_vis_manager.on_temperature_data_display_change)
+        self.ui.temperatureXSB.valueChanged.connect(self.config_manager.temperature_x_val_change_handler)
+        self.ui.temperatureXSB.valueChanged.connect(self.telem_vis_manager.on_temperature_x_val_change)
 
-        # self.ui.tankMassDisplayButtonGroup.buttonClicked.connect(self.tank_mass_data_display_change_handler)
-        # self.ui.tankMassXSB.valueChanged.connect(self.tank_mass_x_val_change_handler)
+        self.ui.tankMassDisplayButtonGroup.buttonClicked.connect(self.config_manager.tank_mass_data_display_change_handler)
+        self.ui.tankMassDisplayButtonGroup.buttonClicked.connect(self.telem_vis_manager.on_tank_mass_data_display_change)
+        self.ui.tankMassXSB.valueChanged.connect(self.config_manager.tank_mass_x_val_change_handler)
+        self.ui.tankMassXSB.valueChanged.connect(self.telem_vis_manager.on_tank_mass_x_val_change)
 
-        # self.ui.engineThrustDisplayButtonGroup.buttonClicked.connect(self.engine_thrust_data_display_change_handler)
-        # self.ui.engineThrustXSB.valueChanged.connect(self.engine_thrust_x_val_change_handler)
+        self.ui.engineThrustDisplayButtonGroup.buttonClicked.connect(self.config_manager.engine_thrust_data_display_change_handler)
+        self.ui.engineThrustDisplayButtonGroup.buttonClicked.connect(self.telem_vis_manager.on_engine_thrust_data_display_change)
+        self.ui.engineThrustXSB.valueChanged.connect(self.config_manager.engine_thrust_x_val_change_handler)
+        self.ui.engineThrustXSB.valueChanged.connect(self.telem_vis_manager.on_engine_thrust_x_val_change)
 
         # # Plot threshold handlers
-        # self.ui.pressureThresholdButton.clicked.connect(self.add_pressure_threshold_handler)
-        # self.ui.temperatureThresholdButton.clicked.connect(self.add_temperature_threshold_handler)
-        # self.ui.tankMassThresholdButton.clicked.connect(self.add_tank_mass_threshold_handler)
-        # self.ui.engineThrustThresholdButton.clicked.connect(self.add_engine_thrust_threshold_handler)
+        self.ui.pressureThresholdButton.clicked.connect(self.add_pressure_threshold_handler)
+        self.ui.temperatureThresholdButton.clicked.connect(self.add_temperature_threshold_handler)
+        self.ui.tankMassThresholdButton.clicked.connect(self.add_tank_mass_threshold_handler)
+        self.ui.engineThrustThresholdButton.clicked.connect(self.add_engine_thrust_threshold_handler)
 
         # These make it so that the items in the list are unselected when entering a value
         # helps with the remove value feature

@@ -7,7 +7,7 @@ be imported by main_window.py
 import json
 from typing import TYPE_CHECKING
 
-from PySide6.QtCore import Qt, QObject, Signal
+from PySide6.QtCore import Qt, QObject, Signal, Slot
 from PySide6.QtWidgets import QMessageBox, QRadioButton
 from pyqtgraph import mkPen, InfiniteLine
 
@@ -35,42 +35,42 @@ class ConfigManager(QObject):
         except Exception as e:
             self.popup_ready.emit(f"Couldn't load config: {e}")
             self.log_ready.emit()
-    
+
+    @Slot()    
     def points_for_average_change_handler(self, value: float):
         self.config["sensor_and_valve_options"]["points_used_for_average"] = value
         
+    @Slot()
     def pressure_data_display_change_handler(self, button: QRadioButton):
         self.config["graph_options"]["pressure"]["data_display_mode"] = button.property("type")
 
-    def pressure_x_val_change_handler(self, value: int):
+    @Slot()
+    def pressure_x_val_change_handler(self, value: float):
         self.config["graph_options"]["pressure"]["X"] = value
 
+    @Slot()
     def temperature_data_display_change_handler(self, button: QRadioButton):
         self.config["graph_options"]["temperature"]["data_display_mode"] = button.property("type")
-        for plot in ["t0", "t1", "t2", "t3"]:
-            self.plot_data[plot].data_display_mode = PlotDataDisplayMode[button.property("type")]
 
-    def temperature_x_val_change_handler(self, value: int):
-        for plot in ["t0", "t1", "t2", "t3"]:
-            self.plot_data[plot].x_val = value
+    @Slot()
+    def temperature_x_val_change_handler(self, value: float):
+        self.config["graph_options"]["temperature"]["X"] = value
 
+    @Slot()
     def tank_mass_data_display_change_handler(self, button: QRadioButton):
         self.config["graph_options"]["tank_mass"]["data_display_mode"] = button.property("type")
-        for plot in ["m0"]:
-            self.plot_data[plot].data_display_mode = PlotDataDisplayMode[button.property("type")]
 
-    def tank_mass_x_val_change_handler(self: "MainWindow", value: int):
-        for plot in ["m0"]:
-            self.plot_data[plot].x_val = value
+    @Slot()
+    def tank_mass_x_val_change_handler(self, value: float):
+        self.config["graph_options"]["tank_mass"]["X"] = value
 
+    @Slot()
     def engine_thrust_data_display_change_handler(self, button: QRadioButton):
         self.config["graph_options"]["engine_thrust"]["data_display_mode"] = button.property("type")
-        for plot in ["th0"]:
-            self.plot_data[plot].data_display_mode = PlotDataDisplayMode[button.property("type")]
 
-    def engine_thrust_x_val_change_handler(self: "MainWindow", value: int):
-        for plot in ["th0"]:
-            self.plot_data[plot].x_val = value
+    @Slot()
+    def engine_thrust_x_val_change_handler(self, value: float):
+        self.config["graph_options"]["tank_mass"]["X"] = value
 
     def add_pressure_threshold_handler(self: "MainWindow"):
         try:

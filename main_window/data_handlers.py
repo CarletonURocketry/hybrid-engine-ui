@@ -119,16 +119,6 @@ class DataHandler(QObject):
                     self.plots[key].points = self.plots[key].points[self.plots[key].points[:,0] >= min_time]
             self.plots[key].data_line.setData(self.plots[key].points)
 
-    @Slot
+    @Slot()
     def on_average_points_changed(self, value: float):
         self.average_alpha = value
-
-    @Slot()
-    def on_pressure_data_display_change(self, button: QRadioButton):
-        for plot_id in ["p0", "p1", "p2", "p3", "p4", "p5"]:
-            self.plots[plot_id].data_display_mode = PlotDataDisplayMode[button.property("type")]
-    
-    @Slot()
-    def on_pressure_x_val_change(self, value: float):
-        for plot_id in ["p0", "p1", "p2", "p3", "p4", "p5"]:
-            self.plots[plot_id].x_val = value
