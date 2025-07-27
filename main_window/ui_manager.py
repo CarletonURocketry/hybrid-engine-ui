@@ -11,6 +11,9 @@ inf_line_pen = mkPen("black", width=2, style=Qt.PenStyle.DashLine)
 # we can just pass an instance to the UI
 class UIManager(QObject):
     pressure_threshold_changed = Signal(bool, float)
+    temperature_threshold_changed = Signal(bool, float)
+    tank_mass_threshold_changed = Signal(bool, float)
+    engine_thrust_threshold_changed = Signal(bool, float)
 
     def __init__(self, ui: Ui_Widget):
         super().__init__()
@@ -116,6 +119,66 @@ class UIManager(QObject):
               self.pressure_threshold_changed.emit(False, float(to_remove_num))
       except Exception as e:
           print(str(e))
+
+    @Slot()
+    def on_temperature_threshold_btn_press(self):
+        try:
+            if self.ui.temperatureThresholdList.currentRow() == -1:
+                new_marker = self.ui.temperatureThresholdInput.text()
+                self.ui.temperatureThresholdList.addItem(str(float(new_marker)))
+                self.ui.temperaturePlot.addItem(InfiniteLine(float(new_marker), angle=0, pen=inf_line_pen))
+                self.ui.temperatureThresholdInput.setText("")
+                self.temperature_threshold_changed.emit(True, float(new_marker))
+            else:
+                to_remove = filter(lambda item: isinstance(item, InfiniteLine) and item.pos().y() == float(self.ui.temperatureThresholdList.currentItem().text()), self.ui.temperaturePlot.items())
+                to_remove = list(to_remove)[0]
+                self.ui.temperaturePlot.removeItem(to_remove)
+                self.ui.temperatureThresholdList.takeItem(self.ui.temperatureThresholdList.currentRow())
+                to_remove_num = to_remove.pos().y()
+                self.temperature_threshold_changed.emit(False, float(to_remove_num))
+        except Exception as e:
+            pass
+            # self.display_popup(QMessageBox.Icon.Critical, "Action failed", f"Adding temperature threshold marker failed\n{str(e)}")
+
+    @Slot()
+    def on_tank_mass_threshold_btn_press(self):
+        try:
+            if self.ui.tankMassThresholdList.currentRow() == -1:
+                new_marker = self.ui.tankMassThresholdInput.text()
+                self.ui.tankMassThresholdList.addItem(str(float(new_marker)))
+                self.ui.tankMassPlot.addItem(InfiniteLine(float(new_marker), angle=0, pen=inf_line_pen))
+                self.ui.tankMassThresholdInput.setText("")
+                self.tank_mass_threshold_changed.emit(True, float(new_marker))
+            else:
+                to_remove = filter(lambda item: isinstance(item, InfiniteLine) and item.pos().y() == float(self.ui.tankMassThresholdList.currentItem().text()), self.ui.tankMassPlot.items())
+                to_remove = list(to_remove)[0]
+                self.ui.tankMassPlot.removeItem(to_remove)
+                self.ui.tankMassThresholdList.takeItem(self.ui.tankMassThresholdList.currentRow())
+                to_remove_num = to_remove.pos().y()
+                self.tank_mass_threshold_changed.emit(False, float(to_remove_num))
+        except Exception as e:
+            pass
+            # self.display_popup(QMessageBox.Icon.Critical, "Action failed", f"Adding tank mass threshold marker failed\n{str(e)}")
+
+    @Slot()
+    def on_engine_thrust_threshold_btn_press(self):
+        try:
+            if self.ui.engineThrustThresholdList.currentRow() == -1:
+                new_marker = self.ui.engineThrustThresholdInput.text()
+                self.ui.engineThrustThresholdList.addItem(str(float(new_marker)))
+                self.ui.engineThrustPlot.addItem(InfiniteLine(float(new_marker), angle=0, pen=inf_line_pen))
+                self.ui.engineThrustThresholdInput.setText("")
+                self.engine_thrust_threshold_changed.emit(True, float(new_marker))
+            else:
+                to_remove = filter(lambda item: isinstance(item, InfiniteLine) and item.pos().y() == float(self.ui.engineThrustThresholdList.currentItem().text()), self.ui.engineThrustPlot.items())
+                to_remove = list(to_remove)[0]
+                self.ui.engineThrustPlot.removeItem(to_remove)
+                self.ui.engineThrustThresholdList.takeItem(self.ui.engineThrustThresholdList.currentRow())
+                to_remove_num = to_remove.pos().y()
+                self.engine_thrust_threshold_changed.emit(False, float(to_remove_num))
+        except Exception as e:
+            pass
+            # self.display_popup(QMessageBox.Icon.Critical, "Action failed", f"Adding engine thrust threshold marker failed\n{str(e)}")
             
     @Slot()
     def deploy_easter_egg(self):

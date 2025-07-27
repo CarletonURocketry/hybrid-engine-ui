@@ -78,40 +78,85 @@ class ConfigManager(QObject):
             self.config["graph_options"]["pressure"]["thresholds"].append(marker)
         else:
             self.config["graph_options"]["pressure"]["thresholds"].remove(marker)
+        print(self.config)
+    
+    @Slot(bool, float)
+    def temperature_threshold_btn_handler(self, added: bool, marker: float):
+        if added:
+            self.config["graph_options"]["temperature"]["thresholds"].append(marker)
+        else:
+            self.config["graph_options"]["temperature"]["thresholds"].remove(marker)
+        print(self.config)
+    
+    @Slot(bool, float)
+    def tank_mass_threshold_btn_handler(self, added: bool, marker: float):
+        if added:
+            self.config["graph_options"]["tank_mass"]["thresholds"].append(marker)
+        else:
+            self.config["graph_options"]["tank_mass"]["thresholds"].remove(marker)
+        print(self.config)
+    
+    @Slot(bool, float)
+    def engine_thrust_threshold_btn_handler(self, added: bool, marker: float):
+        if added:
+            self.config["graph_options"]["engine_thrust"]["thresholds"].append(marker)
+        else:
+            self.config["graph_options"]["engine_thrust"]["thresholds"].remove(marker)
+        print(self.config)
 
-    def add_temperature_threshold_handler(self: "MainWindow"):
+    @Slot()
+    def save_config(self):
         try:
-            if self.ui.temperatureThresholdList.currentRow() == -1:
-                new_marker = self.ui.temperatureThresholdInput.text()
-                self.ui.temperatureThresholdList.addItem(str(float(new_marker)))
-                self.ui.temperaturePlot.addItem(InfiniteLine(float(new_marker), angle=0, pen=inf_line_pen))
-                self.ui.temperatureThresholdInput.setText("")
-            else:
-                self.ui.temperatureThresholdList.takeItem(self.ui.temperatureThresholdList.currentRow())
-        except Exception as e:
-            self.display_popup(QMessageBox.Icon.Critical, "Action failed", f"Adding temperature threshold marker failed\n{str(e)}")
+            # new_config = {}
+            # new_config["multicast_options"] = {}
+            # new_config["multicast_options"]["address"] = self.ui.udpIpAddressInput.text()
+            # new_config["multicast_options"]["port"] = self.ui.udpPortInput.text()
 
-    def add_tank_mass_threshold_handler(self: "MainWindow"):
-        try:
-            if self.ui.tankMassThresholdList.currentRow() == -1:
-                new_marker = self.ui.tankMassThresholdInput.text()
-                self.ui.tankMassThresholdList.addItem(str(float(new_marker)))
-                self.ui.tankMassPlot.addItem(InfiniteLine(float(new_marker), angle=0, pen=inf_line_pen))
-                self.ui.tankMassThresholdInput.setText("")
-            else:
-                self.ui.tankMassThresholdList.takeItem(self.ui.tankMassThresholdList.currentRow())
-        except Exception as e:
-            self.display_popup(QMessageBox.Icon.Critical, "Action failed", f"Adding tank mass threshold marker failed\n{str(e)}")
+            # new_config["sensor_and_valve_options"] = {}
+            # new_config["sensor_and_valve_options"]["points_used_for_average"] = self.points_used_for_average
+            # new_config["sensor_and_valve_options"]["default_open_valves"] = [int(self.ui.defaultOpenValvesList.item(x).text()) for x in range(self.ui.defaultOpenValvesList.count())]
+            # if self.ui.pidDiagramColdFlowOption.isChecked():
+            #     new_config["sensor_and_valve_options"]["pid_diagram"] = "cold_flow"
+            # elif self.ui.pidDiagramStaticFireOption.isChecked():
+            #     new_config["sensor_and_valve_options"]["pid_diagram"] = "static_fire"
 
-    def add_engine_thrust_threshold_handler(self: "MainWindow"):
-        try:
-            if self.ui.engineThrustThresholdList.currentRow() == -1:
-                new_marker = self.ui.engineThrustThresholdInput.text()
-                self.ui.engineThrustThresholdList.addItem(str(float(new_marker)))
-                self.ui.engineThrustPlot.addItem(InfiniteLine(float(new_marker), angle=0, pen=inf_line_pen))
-                self.ui.engineThrustThresholdInput.setText("")
-            else:
-                self.ui.engineThrustThresholdList.takeItem(self.ui.engineThrustThresholdList.currentRow())
+            # new_config["graph_options"] = {}
+            # new_config["graph_options"]["pressure"] = {}
+            # if self.ui.pressureLastXPointsRB.isChecked():
+            #     new_config["graph_options"]["pressure"]["data_display_mode"] = "points"
+            # elif self.ui.pressureLastXSecsRB.isChecked():
+            #     new_config["graph_options"]["pressure"]["data_display_mode"] = "seconds"
+            # new_config["graph_options"]["pressure"]["X"] = self.ui.pressureXSB.value()
+            # new_config["graph_options"]["pressure"]["thresholds"] = [float(self.ui.pressureThresholdList.item(x).text()) for x in range(self.ui.pressureThresholdList.count())]
+            
+            # new_config["graph_options"]["temperature"] = {}
+            # if self.ui.temperatureLastXPointsRB.isChecked():
+            #     new_config["graph_options"]["temperature"]["data_display_mode"] = "points"
+            # elif self.ui.temperatureLastXSecsRB.isChecked():
+            #     new_config["graph_options"]["temperature"]["data_display_mode"] = "seconds"
+            # new_config["graph_options"]["temperature"]["X"] = self.ui.temperatureXSB.value()
+            # new_config["graph_options"]["temperature"]["thresholds"] = [float(self.ui.temperatureThresholdList.item(x).text()) for x in range(self.ui.temperatureThresholdList.count())]
+
+            # new_config["graph_options"]["tank_mass"] = {}
+            # if self.ui.tankMassLastXPointsRB.isChecked():
+            #     new_config["graph_options"]["tank_mass"]["data_display_mode"] = "points"
+            # elif self.ui.tankMassLastXSecsRB.isChecked():
+            #     new_config["graph_options"]["tank_mass"]["data_display_mode"] = "seconds"
+            # new_config["graph_options"]["tank_mass"]["X"] = self.ui.tankMassXSB.value()
+            # new_config["graph_options"]["tank_mass"]["thresholds"] = [float(self.ui.tankMassThresholdList.item(x).text()) for x in range(self.ui.tankMassThresholdList.count())]
+            
+            # new_config["graph_options"]["engine_thrust"] = {}
+            # if self.ui.engineThrustLastXPointsRB.isChecked():
+            #     new_config["graph_options"]["engine_thrust"]["data_display_mode"] = "points"
+            # elif self.ui.engineThrustLastXSecsRB.isChecked():
+            #     new_config["graph_options"]["engine_thrust"]["data_display_mode"] = "seconds"
+            # new_config["graph_options"]["engine_thrust"]["X"] = self.ui.engineThrustXSB.value()
+            # new_config["graph_options"]["engine_thrust"]["thresholds"] = [float(self.ui.engineThrustThresholdList.item(x).text()) for x in range(self.ui.engineThrustThresholdList.count())]
+            
+            with open('config.json', 'w') as config_file:
+                json.dump(self.config, config_file, indent=2)
+            self.log_ready.emit("Saved configuration")
+            self.popup_ready.emit(QMessageBox.Icon.Information, "Configuration saved", "Saved configuration")
         except Exception as e:
             self.display_popup(QMessageBox.Icon.Critical, "Action failed", f"Adding engine thrust threshold marker failed\n{str(e)}")
 
