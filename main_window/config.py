@@ -32,7 +32,6 @@ class ConfigManager(QObject):
         try:
             with open(config_path) as config_file:
                 self.config = json.load(config_file)
-                # self.config_loaded.emit(self.config)
         except Exception as e:
             self.popup_ready.emit(f"Couldn't load config: {e}")
             self.log_ready.emit()
@@ -42,14 +41,11 @@ class ConfigManager(QObject):
         
     def pressure_data_display_change_handler(self, button: QRadioButton):
         self.config["graph_options"]["pressure"]["data_display_mode"] = button.property("type")
-        for plot in ["p0", "p1", "p2", "p3", "p4", "p5"]:
-            self.plot_data[plot].data_display_mode = PlotDataDisplayMode[button.property("type")]
 
     def pressure_x_val_change_handler(self, value: int):
-        for plot in ["p0", "p1", "p2", "p3", "p4", "p5"]:
-            self.plot_data[plot].x_val = value
+        self.config["graph_options"]["pressure"]["X"] = value
 
-    def temperature_data_display_change_handler(self: "MainWindow", button: QRadioButton):
+    def temperature_data_display_change_handler(self, button: QRadioButton):
         self.config["graph_options"]["temperature"]["data_display_mode"] = button.property("type")
         for plot in ["t0", "t1", "t2", "t3"]:
             self.plot_data[plot].data_display_mode = PlotDataDisplayMode[button.property("type")]

@@ -3,11 +3,16 @@
 Contains all functions related handling incoming data including plotting
 data points and updating label text. Should only be imported by main_window.py
 """
+from typing import TYPE_CHECKING
+
 import numpy as np
 from PySide6.QtCore import Signal, QObject, Slot
 
 import packet_spec
 from .plot_info import PlotInfo, PlotDataDisplayMode
+
+if TYPE_CHECKING:
+    from PySide6.QtWidgets import QRadioButton
 
 class DataHandler(QObject):
 
@@ -71,7 +76,6 @@ class DataHandler(QObject):
                 pass  
             
     def process_telemetry(self, header: packet_spec.PacketHeader, message: packet_spec.PacketMessage):
-        plot_data = self.plots
         match header.type:
             case packet_spec.PacketType.CONTROL:
                 # Cannot reach since the we only receive telemetry data
@@ -92,8 +96,8 @@ class DataHandler(QObject):
                     case packet_spec.TelemetryPacketSubType.THRUST:
                         plot_id = "th" + str(message.id)
                         reading = message.thrust
-                plot_data[plot_id].points = np.append(plot_data[plot_id].points, np.array([[message.time_since_power, reading]]), axis=0)
-                plot_data[plot_id].running_average = self.calculate_new_average(plot_data[plot_id].running_average, reading)
+                self.plots[plot_id].points = np.append(self.plots[plot_id].points, np.array([[message.time_since_power, reading]]), axis=0)
+                self.plots[plot_id].running_average = self.calculate_new_average(self.plots[plot_id].running_average, reading)
                 
                 # Emits signal for TelemVisHandler
                 self.telemetry_ready[str].emit(plot_id)
@@ -118,3 +122,13 @@ class DataHandler(QObject):
     @Slot
     def on_average_points_changed(self, value: float):
         self.average_alpha = value
+
+    @Slot()
+    def on_pressure_data_display_change(self, button: QRadioButton):
+        for plot_id in ["p0", "p1", "p2", "p3", "p4", "p5"]:
+            self.plots[plot_id].data_display_mode = PlotDataDisplayMode[button.property("type")]
+    
+    @Slot()
+    def on_pressure_x_val_change(self, value: float):
+        for plot_id in ["p0", "p1", "p2", "p3", "p4", "p5"]:
+            self.plots[plot_id].x_val = value

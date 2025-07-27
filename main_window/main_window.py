@@ -337,11 +337,13 @@ class MainWindow(QWidget):
         # # Sensor display option handlers
         self.ui.numPointsAverageInput.valueChanged.connect(self.config_manager.points_for_average_change_handler)
         self.ui.numPointsAverageInput.valueChanged.connect(self.data_handler.on_average_points_changed)
-        self.ui.defaultOpenValvesButton.clicked.connect(self.add_default_open_valve_handler)
+        self.ui.defaultOpenValvesButton.clicked.connect(self.config_manager.add_default_open_valve_handler)
 
         # # Graph option handlers
         self.ui.pressureDisplayButtonGroup.buttonClicked.connect(self.config_manager.pressure_data_display_change_handler)
-        # self.ui.pressureXSB.valueChanged.connect(self.pressure_x_val_change_handler)
+        self.ui.pressureDisplayButtonGroup.buttonClicked.connect(self.data_handler.on_pressure_data_display_change)
+        self.ui.pressureXSB.valueChanged.connect(self.config_manager.pressure_x_val_change_handler)
+        self.ui.pressureXSB.valueChanged.connect(self.data_handler.on_pressure_x_val_change)
         
         # self.ui.temperatureDisplayButtonGroup.buttonClicked.connect(self.temperature_data_display_change_handler)
         # self.ui.temperatureXSB.valueChanged.connect(self.temperature_x_val_change_handler)
