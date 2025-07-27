@@ -315,7 +315,10 @@ class MainWindow(QWidget):
         self.timer_controller.update_control_client_display_s.connect(self.telem_vis_manager.update_cc_conn_status_label)
         self.timer_controller.log_ready.connect(self.log_manager.write_to_log)
 
-        # Button handlers
+        self.config_manager.log_ready.connect(self.log_manager.write_to_log)
+        self.config_manager.popup_ready.connect(self.log_manager.display_popup)
+
+        ### Button handlers ###
 
         # Connection button handlers
         self.ui.udpConnectButton.clicked.connect(lambda: self.udp_controller.udp_connection_button_handler(self.ui.udpIpAddressInput.text(), self.ui.udpPortInput.text()))
@@ -339,7 +342,7 @@ class MainWindow(QWidget):
         self.ui.numPointsAverageInput.valueChanged.connect(self.data_handler.on_average_points_changed)
         self.ui.defaultOpenValvesButton.clicked.connect(self.add_default_open_valve_handler)
 
-        # Graph option handlers
+        # Graph option and display handlers
         # Slots from ConfigManager are for modfiying internal config object, this is used to get saved
         # Slots for TelemVisManager are for modifying UI 
         self.ui.pressureDisplayButtonGroup.buttonClicked.connect(self.config_manager.pressure_data_display_change_handler)
@@ -353,22 +356,22 @@ class MainWindow(QWidget):
         self.ui.temperatureDisplayButtonGroup.buttonClicked.connect(self.telem_vis_manager.on_temperature_data_display_change)
         self.ui.temperatureXSB.valueChanged.connect(self.config_manager.temperature_x_val_change_handler)
         self.ui.temperatureXSB.valueChanged.connect(self.telem_vis_manager.on_temperature_x_val_change)
+        self.ui.temperatureThresholdButton.clicked.connect(self.ui_manager.on_temperature_threshold_btn_press)
+        self.ui_manager.temperature_threshold_changed.connect(self.config_manager.temperature_threshold_btn_handler)
 
         self.ui.tankMassDisplayButtonGroup.buttonClicked.connect(self.config_manager.tank_mass_data_display_change_handler)
         self.ui.tankMassDisplayButtonGroup.buttonClicked.connect(self.telem_vis_manager.on_tank_mass_data_display_change)
         self.ui.tankMassXSB.valueChanged.connect(self.config_manager.tank_mass_x_val_change_handler)
         self.ui.tankMassXSB.valueChanged.connect(self.telem_vis_manager.on_tank_mass_x_val_change)
+        self.ui.tankMassThresholdButton.clicked.connect(self.ui_manager.on_tank_mass_threshold_btn_press)
+        self.ui_manager.tank_mass_threshold_changed.connect(self.config_manager.tank_mass_threshold_btn_handler)
 
         self.ui.engineThrustDisplayButtonGroup.buttonClicked.connect(self.config_manager.engine_thrust_data_display_change_handler)
         self.ui.engineThrustDisplayButtonGroup.buttonClicked.connect(self.telem_vis_manager.on_engine_thrust_data_display_change)
         self.ui.engineThrustXSB.valueChanged.connect(self.config_manager.engine_thrust_x_val_change_handler)
         self.ui.engineThrustXSB.valueChanged.connect(self.telem_vis_manager.on_engine_thrust_x_val_change)
-
-        # # Plot threshold handlers
-        self.ui.pressureThresholdButton.clicked.connect(self.add_pressure_threshold_handler)
-        self.ui.temperatureThresholdButton.clicked.connect(self.add_temperature_threshold_handler)
-        self.ui.tankMassThresholdButton.clicked.connect(self.add_tank_mass_threshold_handler)
-        self.ui.engineThrustThresholdButton.clicked.connect(self.add_engine_thrust_threshold_handler)
+        self.ui.engineThrustThresholdButton.clicked.connect(self.ui_manager.on_engine_thrust_threshold_btn_press)
+        self.ui_manager.engine_thrust_threshold_changed.connect(self.config_manager.engine_thrust_threshold_btn_handler)
 
         # These make it so that the items in the list are unselected when entering a value
         # helps with the remove value feature
@@ -379,8 +382,8 @@ class MainWindow(QWidget):
         self.ui.engineThrustThresholdInput.focusInEvent = lambda x: self.ui.engineThrustThresholdList.setCurrentRow(-1)
         
         # Save config handlers
-        # self.ui.saveConnConfigButton.clicked.connect(self.save_config)
-        # self.ui.saveDisplayConfigButton.clicked.connect(self.save_config)
+        self.ui.saveConnConfigButton.clicked.connect(self.config_manager.save_config)
+        self.ui.saveDisplayConfigButton.clicked.connect(self.config_manager.save_config)
 
     def init_actuator_valve_label(self):
         self.valves = {}
