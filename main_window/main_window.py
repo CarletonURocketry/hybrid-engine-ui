@@ -346,7 +346,9 @@ class MainWindow(QWidget):
         self.ui.pressureDisplayButtonGroup.buttonClicked.connect(self.telem_vis_manager.on_pressure_data_display_change)
         self.ui.pressureXSB.valueChanged.connect(self.config_manager.pressure_x_val_change_handler)
         self.ui.pressureXSB.valueChanged.connect(self.telem_vis_manager.on_pressure_x_val_change)
-        
+        self.ui.pressureThresholdButton.clicked.connect(self.ui_manager.on_pressure_threshold_btn_press)
+        self.ui_manager.pressure_threshold_changed.connect(self.config_manager.pressure_threshold_btn_handler)
+
         self.ui.temperatureDisplayButtonGroup.buttonClicked.connect(self.config_manager.temperature_data_display_change_handler)
         self.ui.temperatureDisplayButtonGroup.buttonClicked.connect(self.telem_vis_manager.on_temperature_data_display_change)
         self.ui.temperatureXSB.valueChanged.connect(self.config_manager.temperature_x_val_change_handler)

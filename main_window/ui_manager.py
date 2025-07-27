@@ -1,11 +1,17 @@
-from PySide6.QtCore import QObject, Slot
+from PySide6.QtCore import QObject, Slot, Qt, Signal
 from PySide6.QtWebEngineWidgets import QWebEngineView
 
+from pyqtgraph import mkPen, InfiniteLine
+
 from .ui import Ui_Widget
+
+inf_line_pen = mkPen("black", width=2, style=Qt.PenStyle.DashLine)
 
 # This class handles all other UI interaction, so
 # we can just pass an instance to the UI
 class UIManager(QObject):
+    pressure_threshold_changed = Signal(bool, float)
+
     def __init__(self, ui: Ui_Widget):
         super().__init__()
         self.ui = ui
@@ -89,6 +95,28 @@ class UIManager(QObject):
         self.ui.engineThrustXSB.setValue(config_options["graph_options"]["engine_thrust"]["X"])
         self.ui.engineThrustThresholdList.addItems([str(marker) for marker in config_options["graph_options"]["engine_thrust"]["thresholds"]])
 
+    # These functions are here because the UIManager already has a reference to the UI
+    # and this function is much easier when just using the UI. Ideally, this should be in
+    # ConfigManager, but alas, there is only so much verbosity I want to put in signals
+    @Slot()
+    def on_pressure_threshold_btn_press(self):
+      try:
+          if self.ui.pressureThresholdList.currentRow() == -1:
+              new_marker = self.ui.pressureThresholdInput.text()
+              self.ui.pressureThresholdList.addItem(str(float(new_marker)))
+              self.ui.pressurePlot.addItem(InfiniteLine(float(new_marker), angle=0, pen=inf_line_pen))
+              self.ui.pressureThresholdInput.setText("")
+              self.pressure_threshold_changed.emit(True, float(new_marker))
+          else:
+              to_remove = filter(lambda item: isinstance(item, InfiniteLine) and item.pos().y() == float(self.ui.pressureThresholdList.currentItem().text()), self.ui.pressurePlot.items())
+              to_remove = list(to_remove)[0]
+              self.ui.pressurePlot.removeItem(to_remove)
+              self.ui.pressureThresholdList.takeItem(self.ui.pressureThresholdList.currentRow())
+              to_remove_num = to_remove.pos().y()
+              self.pressure_threshold_changed.emit(False, float(to_remove_num))
+      except Exception as e:
+          print(str(e))
+            
     @Slot()
     def deploy_easter_egg(self):
         self.ui.plotLayout.addWidget(self.web_view, 0, 2, 2, 1)

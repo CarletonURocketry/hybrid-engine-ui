@@ -72,19 +72,12 @@ class ConfigManager(QObject):
     def engine_thrust_x_val_change_handler(self, value: float):
         self.config["graph_options"]["tank_mass"]["X"] = value
 
-    def add_pressure_threshold_handler(self: "MainWindow"):
-        try:
-            if self.ui.pressureThresholdList.currentRow() == -1:
-                new_marker = self.ui.pressureThresholdInput.text()
-                self.ui.pressureThresholdList.addItem(str(float(new_marker)))
-                self.ui.pressurePlot.addItem(InfiniteLine(float(new_marker), angle=0, pen=inf_line_pen))
-                self.ui.pressureThresholdInput.setText("")
-            else:
-                to_remove = filter(lambda item: isinstance(item, InfiniteLine) and item.pos().y() == float(self.ui.pressureThresholdList.currentItem().text()), self.ui.pressurePlot.items())
-                self.ui.pressurePlot.removeItem(list(to_remove)[0])
-                self.ui.pressureThresholdList.takeItem(self.ui.pressureThresholdList.currentRow())
-        except Exception as e:
-            self.display_popup(QMessageBox.Icon.Critical, "Action failed", f"Adding pressure threshold marker failed\n{str(e)}")
+    @Slot(bool, float)
+    def pressure_threshold_btn_handler(self, added: bool, marker: float):
+        if added:
+            self.config["graph_options"]["pressure"]["thresholds"].append(marker)
+        else:
+            self.config["graph_options"]["pressure"]["thresholds"].remove(marker)
 
     def add_temperature_threshold_handler(self: "MainWindow"):
         try:
