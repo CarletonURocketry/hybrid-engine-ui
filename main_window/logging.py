@@ -52,7 +52,7 @@ class LogManager(QObject):
         self.popup.setIcon(icon)
         self.popup.setWindowTitle(title)
         self.popup.setText(msg)
-        self.popup.show()
+        self.popup.exec()
 
     @Slot()
     def ask_for_tip(self):

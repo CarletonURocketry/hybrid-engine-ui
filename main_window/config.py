@@ -34,7 +34,8 @@ class ConfigManager(QObject):
                 self.config = json.load(config_file)
         except Exception as e:
             self.log_ready.emit(f"Couldn't load config: {e}")
-            self.popup_ready.emit(QMessageBox.Icon.Information, "Couldn't load config", f"Couldn't load config\nError: {str(e)}")
+            self.popup_ready.emit(QMessageBox.Icon.Critical, "Couldn't load config", f"Couldn't load config\nError: {str(e)}")
+            raise e
 
     @Slot()    
     def points_for_average_change_handler(self, value: float):
@@ -78,7 +79,6 @@ class ConfigManager(QObject):
             self.config["graph_options"]["pressure"]["thresholds"].append(marker)
         else:
             self.config["graph_options"]["pressure"]["thresholds"].remove(marker)
-        print(self.config)
     
     @Slot(bool, float)
     def temperature_threshold_btn_handler(self, added: bool, marker: float):
@@ -86,7 +86,6 @@ class ConfigManager(QObject):
             self.config["graph_options"]["temperature"]["thresholds"].append(marker)
         else:
             self.config["graph_options"]["temperature"]["thresholds"].remove(marker)
-        print(self.config)
     
     @Slot(bool, float)
     def tank_mass_threshold_btn_handler(self, added: bool, marker: float):
@@ -94,7 +93,6 @@ class ConfigManager(QObject):
             self.config["graph_options"]["tank_mass"]["thresholds"].append(marker)
         else:
             self.config["graph_options"]["tank_mass"]["thresholds"].remove(marker)
-        print(self.config)
     
     @Slot(bool, float)
     def engine_thrust_threshold_btn_handler(self, added: bool, marker: float):
@@ -102,7 +100,6 @@ class ConfigManager(QObject):
             self.config["graph_options"]["engine_thrust"]["thresholds"].append(marker)
         else:
             self.config["graph_options"]["engine_thrust"]["thresholds"].remove(marker)
-        print(self.config)
 
     @Slot()
     def save_config(self):

@@ -14,6 +14,7 @@ Logic for any piece of functionality should be contained within the respective m
 imported by and organized within the MainWindow class. That means no UI updates, no parsing 
 data, etc.
 """
+import sys
 
 from PySide6.QtWidgets import QWidget, QLabel, QMessageBox, QInputDialog
 from PySide6.QtSerialPort import QSerialPort, QSerialPortInfo
@@ -196,11 +197,7 @@ class MainWindow(QWidget):
     from .serial import serial_connection_button_handler, \
         refresh_serial_button_handler, serial_receive_data, serial_on_error
     from .recording_and_playback import recording_toggle_button_handler, open_file_button_handler
-    from .config import save_config, add_default_open_valve_handler, add_pressure_threshold_handler, add_temperature_threshold_handler, add_tank_mass_threshold_handler, add_engine_thrust_threshold_handler
-    #     pressure_x_val_change_handler, temperature_data_display_change_handler, temperature_x_val_change_handler, \
-    #     tank_mass_data_display_change_handler, tank_mass_x_val_change_handler, engine_thrust_data_display_change_handler, \
-    #     engine_thrust_x_val_change_handler, add_pressure_threshold_handler,add_temperature_threshold_handler, add_tank_mass_threshold_handler, \
-    #     add_engine_thrust_threshold_handler, points_for_average_change_handler
+    from .config import add_default_open_valve_handler
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -208,22 +205,16 @@ class MainWindow(QWidget):
         self.ui.setupUi(self)
 
         # Load config options
-        # self.config = None
-        # self.points_used_for_average: float = 0.80
-        # try:
-        #     with open("config.json") as config:
-        #         self.load_config(config)
-        # except FileNotFoundError:
-        #     pass
-            # self.write_to_log("config.json not found")
-            # self.display_popup(QMessageBox.Icon.Critical, "Couldn't load config", "config.json not found")
-
         self.config_manager = ConfigManager()
+        self.log_manager = LogManager(self.ui.logOutput)
+
+        self.config_manager.log_ready.connect(self.log_manager.write_to_log)
+        self.config_manager.popup_ready.connect(self.log_manager.display_popup)
         try:
             self.config_manager.load_config("config.json")
         except Exception as e:
-            pass
-        
+            self.log_manager.display_popup(QMessageBox.Icon.Critical, "Loading config file failed", f"Couldn't load config file\n{str(e)}\nExiting...")
+            sys.exit(-1)
 
         # Init ui labels
         self.init_sensor_reading_label()
@@ -240,7 +231,6 @@ class MainWindow(QWidget):
         self.data_handler = DataHandler(self.plot_data, self.config_manager.config["sensor_and_valve_options"]["points_used_for_average"])
         self.telem_vis_manager = TelemVisManager(self.sensors, self.valves, self.conn_status_labels, self.hybrid_state_labels, self.plot_data)
         self.ui_manager = UIManager(self.ui)
-        self.log_manager = LogManager(self.ui.logOutput)
         self.timer_controller = TimerController()
 
         self.data_csv_writer = CSVWriter(["t","p1","p2","p3","p4","p5","p6","t1","t2","t3","t4","m1","th1","status","Continuity"], 100, "data_csv")
@@ -252,9 +242,6 @@ class MainWindow(QWidget):
             self.ui.serialPortDropdown.addItem(port.portName())
         for rate in QSerialPortInfo.standardBaudRates():
             self.ui.baudRateDropdown.addItem(str(rate))
-
-        # Export to File button
-        self.ui.exporter.clicked.connect(self.log_manager.save_to_file)
 
         # Serial: TODO: MAKE THIS A CLASS
         self.serialPort = QSerialPort(self)
@@ -314,9 +301,6 @@ class MainWindow(QWidget):
         self.timer_controller.update_pad_server_display_s.connect(self.telem_vis_manager.update_ps_conn_status_label)
         self.timer_controller.update_control_client_display_s.connect(self.telem_vis_manager.update_cc_conn_status_label)
         self.timer_controller.log_ready.connect(self.log_manager.write_to_log)
-
-        self.config_manager.log_ready.connect(self.log_manager.write_to_log)
-        self.config_manager.popup_ready.connect(self.log_manager.display_popup)
 
         ### Button handlers ###
 
@@ -381,6 +365,9 @@ class MainWindow(QWidget):
         self.ui.tankMassThresholdInput.focusInEvent = lambda x: self.ui.tankMassThresholdList.setCurrentRow(-1)
         self.ui.engineThrustThresholdInput.focusInEvent = lambda x: self.ui.engineThrustThresholdList.setCurrentRow(-1)
         
+        # Export to File button
+        self.ui.exporter.clicked.connect(self.log_manager.save_to_file)
+
         # Save config handlers
         self.ui.saveConnConfigButton.clicked.connect(self.config_manager.save_config)
         self.ui.saveDisplayConfigButton.clicked.connect(self.config_manager.save_config)
