@@ -370,25 +370,6 @@ class MainWindow(QWidget):
         # self.ui.saveConnConfigButton.clicked.connect(self.save_config)
         # self.ui.saveDisplayConfigButton.clicked.connect(self.save_config)
 
-    # Handles when the window is closed, have to make sure to disconnect the TCP socket
-    def closeEvent(self, event):
-        confirm = QMessageBox.question(self, "Close application", "Are you sure you want to close the application?", QMessageBox.Yes | QMessageBox.No)
-        if confirm == QMessageBox.StandardButton.Yes:
-            self.udp_controller.leave_multicast_group()
-
-            if self.serialPort.isOpen():
-                self.serialPort.close()
-
-            self.data_csv_writer.flush(_async=False)
-            self.state_csv_writer.flush(_async=False)
-            self.pid_window.close()
-            event.accept()
-        else:
-            event.ignore()
-
-    def open_pid_window(self):
-        self.pid_window.show()
-
     def init_actuator_valve_label(self):
         self.valves = {}
         self.valves[0] = ValveLabel("Igniter", "CLOSED", 0, 2, self.ui.valveGrid)
@@ -568,3 +549,22 @@ class MainWindow(QWidget):
         new_name, _ = QInputDialog.getText(self, "Save CSV file", "Enter name to save CSV file as")
         self.data_csv_writer.save_and_swap_csv(new_name)
         self.state_csv_writer.save_and_swap_csv(new_name)
+    
+    def open_pid_window(self):
+        self.pid_window.show()
+
+    # Handles when the window is closed, have to make sure to disconnect the UDP socket
+    def closeEvent(self, event):
+        confirm = QMessageBox.question(self, "Close application", "Are you sure you want to close the application?", QMessageBox.Yes | QMessageBox.No)
+        if confirm == QMessageBox.StandardButton.Yes:
+            self.udp_controller.leave_multicast_group()
+
+            if self.serialPort.isOpen():
+                self.serialPort.close()
+
+            self.data_csv_writer.flush(_async=False)
+            self.state_csv_writer.flush(_async=False)
+            self.pid_window.close()
+            event.accept()
+        else:
+            event.ignore()
