@@ -1,53 +1,42 @@
 # This Python file uses the following encoding: utf-8
-from PySide6.QtWidgets import QWidget, QLabel, QMessageBox, QInputDialog
-from PySide6.QtCore import QTimer, Qt, QMutex
-from PySide6.QtNetwork import QUdpSocket, QAbstractSocket
+
+"""main_window.py
+
+Contains the implementation of the MainWindow class. The MainWindow is responsible
+for mediating all interactions of and among the applications modules. In this sense,
+it's acts as the mediator in the mediator design pattern.
+
+The MainWindow class creates an instance of each module class and coordinates the
+response to signals originating from each module. It's also responsible for setting
+up some UI related things such the initialization of label classes and plots. As such,
+there should be NO business logic in the MainWindow class as that's not it's responsibility.
+Logic for any piece of functionality should be contained within the respective module then
+imported by and organized within the MainWindow class. That means no UI updates, no parsing 
+data, etc.
+
+As mentionned, the MainWindow class is responsible for connecting signals emitted from both
+the custom class and ui components to their appropriate slot functions. There are also some
+miscellaneous functions that are implemented here because they have nowhere else to go atm 
+"""
+import sys
+
+from PySide6.QtWidgets import QWidget, QMessageBox, QInputDialog
 from PySide6.QtSerialPort import QSerialPort, QSerialPortInfo
 from PySide6.QtGui import QPixmap
 from pyqtgraph import mkPen, InfiniteLine, QtCore
 import numpy as np
 
 from .ui import Ui_Widget, Ui_PIDWindow
+from .ui_manager import UIManager
+from .telem_vis_manager import TelemVisManager
+from .udp import UDPController
+from .data_handlers import DataHandler
 from .csv_writer import CSVWriter
 from .plot_info import PlotDataDisplayMode, PlotInfo
-
-class TelemetryLabel:
-    def __init__(self, name, state, row, column, parentGrid):
-        self.row = row
-        self.column = column
-        self.qName = QLabel(name)
-        self.qState = QLabel(state)
-        parentGrid.addWidget(self.qName, row, column)
-        parentGrid.addWidget(self.qState, row, column + 1)
-        self.qName.setStyleSheet("font-size: 17px")
-        self.qName.setMinimumWidth(150)
-        if self.qState.text() == "OPEN":
-            self.qState.setStyleSheet("background-color: rgb(0, 255, 0); font-weight: bold; font-size: 20px; color: black;")
-        else:
-            self.qState.setStyleSheet("background-color: rgb(255, 80, 80); font-weight: bold; font-size: 20px; color: black;")
-        self.qName.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignVCenter)
-        self.qState.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-    def changeState(self, newState):
-        self.qState.setText(newState)
-        if newState == "OPEN":
-            self.qState.setStyleSheet("background-color: rgb(0, 255, 0); font-weight: bold; font-size: 20px; color: black;")
-        else:
-            self.qState.setStyleSheet("background-color: rgb(255, 80, 80); font-weight: bold; font-size: 20px; color: black;")
-
-class SensorLabel:
-    def __init__(self, name, reading, row, column, parentGrid):
-        self.row = row
-        self.column = column
-        self.qName = QLabel(name)
-        self.qReading = QLabel(reading)
-        parentGrid.addWidget(self.qName, row, column)
-        parentGrid.addWidget(self.qReading, row, column + 1)
-        self.qName.setStyleSheet("font-size: 17px")
-        self.qReading.setStyleSheet("font-size: 17px; font-weight: bold")
-
-    def changeReading(self, newReading):
-        self.qReading.setText(newReading)
+from .timer_controller import TimerController
+from .labels import *
+from .logging import LogManager
+from .config import ConfigManager
 
 class PIDWindow(QWidget):
     def __init__(self):
@@ -183,8 +172,17 @@ class PIDWindow(QWidget):
                 },
             },
         }
+        self.unit_strings = {"t": "°C", "p": "psi", "m": "kg", "th": "N"}
         for i in range(5):
             self.value_labels[f"p{i}"] = getattr(self.ui, f"p{i+1}ValLabel")
+
+
+    def update_value_label(self, id: str, time: float, reading: float):
+        # This will need to be modified if we ever display more than 10 of any sensor lol
+        id = f"{id[:-1]}{int(id[-1])-1}" # Because this uses same signal as csv writer, have to shift ids down 1
+        if id in self.value_labels:
+            unit_string = unit_string = self.unit_strings[id[:-1]]
+            self.value_labels[id].setText(f"{round(reading, 2)} {unit_string}")
 
     def change_diagram(self, button, toggled):
         if not toggled: return
@@ -206,25 +204,11 @@ class PIDWindow(QWidget):
             )           
             getattr(self.ui, f"p{i+1}ValLabel").setStyleSheet(f"color: rgb(0, 0, 0);\nfont: 700 {self.window_config["cold_flow"]["val_label_font"]}pt 'Segoe UI';")
 
-
 class MainWindow(QWidget):
-    # Imports for MainWindow functionality. Helps split large file into
-    # smaller modules containing related functionality
-    from .udp import udp_connection_button_handler, udp_receive_socket_data, \
-        udp_on_disconnected, udp_on_error
-    from .serial import serial_connection_button_handler, \
-        refresh_serial_button_handler, serial_receive_data, serial_on_error
-    from .data_handlers import plot_point, filter_data, update_serial_connection_display, \
-        update_pad_server_display, update_control_client_display, process_data, decrease_heartbeat, \
-        reset_heartbeat_timeout, calculate_new_average, update_arming_state, update_continuity_state, \
-        flash_disconnect_label
-    from .recording_and_playback import recording_toggle_button_handler, open_file_button_handler
-    from .logging import save_to_file, write_to_log, display_popup
-    from .config import load_config, save_config, add_default_open_valve_handler, pressure_data_display_change_handler, \
-        pressure_x_val_change_handler, temperature_data_display_change_handler, temperature_x_val_change_handler, \
-        tank_mass_data_display_change_handler, tank_mass_x_val_change_handler, engine_thrust_data_display_change_handler, \
-        engine_thrust_x_val_change_handler, add_pressure_threshold_handler,add_temperature_threshold_handler, add_tank_mass_threshold_handler, \
-        add_engine_thrust_threshold_handler, points_for_average_change_handler
+    #TODO: These should be moved into their own modules like all of the other classes
+    # from .serial import serial_connection_button_handler, \
+    #     refresh_serial_button_handler, serial_receive_data, serial_on_error
+    # from .recording_and_playback import recording_toggle_button_handler, open_file_button_handler
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -232,117 +216,170 @@ class MainWindow(QWidget):
         self.ui.setupUi(self)
 
         # Load config options
-        self.config = None
-        self.points_used_for_average: float = 0.80
-        try:
-            with open("config.json") as config:
-                self.load_config(config)
-        except FileNotFoundError:
-            self.write_to_log("config.json not found")
-            self.display_popup(QMessageBox.Icon.Critical, "Couldn't load config", "config.json not found")
+        self.config_manager = ConfigManager()
+        self.log_manager = LogManager(self.ui.logOutput)
 
-        # Init valve and sensor labels and plots
-        self.init_actuator_valve_label()
+        self.config_manager.log_ready.connect(self.log_manager.write_to_log)
+        self.config_manager.popup_ready.connect(self.log_manager.display_popup)
+        try:
+            self.config_manager.load_config("config.json")
+        except Exception as e:
+            self.log_manager.display_popup(QMessageBox.Icon.Critical, "Loading config file failed", f"Couldn't load config file\n{str(e)}\nExiting...")
+            sys.exit(-1)
+
+        # Init ui labels
         self.init_sensor_reading_label()
+        self.init_actuator_valve_labels()
+        self.init_connection_status_labels()
+        self.init_hybrid_state_labels()
         self.init_plots()
 
         # Show P&ID Diagram handler
         self.pid_window = PIDWindow()
         self.ui.showPIDButton.clicked.connect(self.open_pid_window)
 
-        self.popup = QMessageBox()
-        self.popup.addButton("Ok", QMessageBox.ButtonRole.AcceptRole)
+        self.udp_controller = UDPController()
+        self.data_handler = DataHandler(self.plot_data, self.config_manager.config["sensor_and_valve_options"]["points_used_for_average"])
+        self.telem_vis_manager = TelemVisManager(self.sensors, self.valves, self.conn_status_labels, self.hybrid_state_labels, self.plot_data)
+        self.ui_manager = UIManager(self.ui)
+        self.timer_controller = TimerController()
 
-        self.annoyProp = QMessageBox()
-        self.annoyProp.setWindowTitle("We love avionics so much! 💖")
-        self.annoyProp.setText("Enter tip amount:")
-        self.annoyProp.addButton("25%", QMessageBox.ButtonRole.AcceptRole)
-        self.annoyProp.addButton("35%", QMessageBox.ButtonRole.AcceptRole)
-        self.annoyProp.addButton("50%", QMessageBox.ButtonRole.AcceptRole)
+        self.data_csv_writer = CSVWriter(["t","p1","p2","p3","p4","p5","p6","t1","t2","t3","t4","m1","th1","status","Continuity"], 100, "data_csv")
+        self.state_csv_writer = CSVWriter(["t","Igniter","XV-1","XV-2","XV-3","XV-4","XV-5","XV-6","XV-7","XV-8","XV-9","XV-10","XV-11","XV-12","Quick disconnect","Dump valve","Arming state","Continuity"], 0, "valves_csv")
 
+        self.ui_manager.populate_config_settings(self.config_manager.config)
+        
         for port in QSerialPortInfo.availablePorts():
             self.ui.serialPortDropdown.addItem(port.portName())
         for rate in QSerialPortInfo.standardBaudRates():
             self.ui.baudRateDropdown.addItem(str(rate))
 
-        # UDP socket
-        self.padUDPSocket = QUdpSocket(self)
-        self.padUDPSocket.readyRead.connect(self.udp_receive_socket_data)
-        self.padUDPSocket.disconnected.connect(self.udp_on_disconnected)
-        self.padUDPSocket.errorOccurred.connect(self.udp_on_error)
+        # Serial: TODO: MAKE THIS A CLASS
+        # self.serialPort = QSerialPort(self)
+        # self.serialTimestamp = 0
+        # self.serialPort.readyRead.connect(self.serial_receive_data)
+        # self.serialPort.errorOccurred.connect(self.serial_on_error)
 
-        # Serial
-        self.serialPort = QSerialPort(self)
-        self.serialTimestamp = 0
-        self.serialPort.readyRead.connect(self.serial_receive_data)
-        self.serialPort.errorOccurred.connect(self.serial_on_error)
+        # When connecting signals to slots, care should be taken as to what args are passed along
+        # with the signal and whether or not we should pass args for certain signals. For example,
+        # the udp_controller multicast_group_joined signal controls a lot of things across different
+        # modules but only conveys that a multicast group has been joined. As such, there aren't
+        # any arguments that need to be passed along with the signal as it doesn't really fit the signal.
+        # Furthermore, it also makes sense that if this signal calls functions that require an argument,
+        # that a lambda or a partial function be used as the slot
+        self.udp_controller.multicast_group_joined.connect(lambda: self.ui_manager.disable_udp_config(disable_btn=False))
+        self.udp_controller.multicast_group_joined.connect(lambda: self.ui_manager.disable_serial_config(disable_btn=True))
+        self.udp_controller.multicast_group_joined.connect(self.timer_controller.start_data_filter_timer)
+        self.udp_controller.multicast_group_joined.connect(self.timer_controller.start_heartbeat_timer)
+        self.udp_controller.multicast_group_joined.connect(lambda: self.telem_vis_manager.update_ps_conn_status_label(packet_spec.IPConnectionStatus.CONNECTED))
+        self.udp_controller.multicast_group_joined.connect(self.data_csv_writer.create_csv_log)
+        self.udp_controller.multicast_group_joined.connect(self.state_csv_writer.create_csv_log)
         
-        # Export to File button
-        self.ui.exporter.clicked.connect(self.save_to_file)
+        # When a multicast group is left, we pretty much just want to reset the UI to it's default state
+        # that means stopping all timers, setting all labels back to NOT_CONNECTED or NOT_AVAILABLE
+        # and flushing any leftover CSV buffers
+        self.udp_controller.multicast_group_disconnected.connect(self.ui_manager.enable_udp_config)
+        self.udp_controller.multicast_group_disconnected.connect(self.ui_manager.enable_serial_config)
+        self.udp_controller.multicast_group_disconnected.connect(self.timer_controller.stop_heartbeat_timer)
+        self.udp_controller.multicast_group_disconnected.connect(self.timer_controller.stop_data_filter_timer)
+        self.udp_controller.multicast_group_disconnected.connect(self.timer_controller.stop_ps_disconnect_flash_timer) # Stop flashing these because we're disconnected
+        self.udp_controller.multicast_group_disconnected.connect(self.timer_controller.stop_cc_disconnect_flash_timer)
+        self.udp_controller.multicast_group_disconnected.connect(lambda: self.telem_vis_manager.update_ps_conn_status_label(packet_spec.IPConnectionStatus.NOT_CONNECTED)) # Reset everything to default
+        self.udp_controller.multicast_group_disconnected.connect(lambda: self.telem_vis_manager.update_cc_conn_status_label(packet_spec.IPConnectionStatus.NOT_CONNECTED))
+        self.udp_controller.multicast_group_disconnected.connect(lambda: self.telem_vis_manager.update_arming_state_label(packet_spec.ArmingState.NOT_AVAILABLE))
+        self.udp_controller.multicast_group_disconnected.connect(lambda: self.telem_vis_manager.update_continuity_state_label(packet_spec.ContinuityState.NOT_AVAILABLE))
+        self.udp_controller.multicast_group_disconnected.connect(self.data_handler.reset_state)
+        self.udp_controller.multicast_group_disconnected.connect(self.data_csv_writer.flush)
+        self.udp_controller.multicast_group_disconnected.connect(self.state_csv_writer.flush)
 
-        # QTimer to help us to filter the data, graph is updated every 25ms
-        self.data_filter_interval = 25
-        self.data_filter_timer = QTimer(self)
-        self.data_filter_timer.timeout.connect(self.filter_data)
+        self.udp_controller.parsed_packet_ready.connect(self.data_handler.process_packet)
+        self.udp_controller.easter_egg_opened.connect(self.ui_manager.deploy_easter_egg)
+        self.udp_controller.easter_egg_closed.connect(self.ui_manager.hide_easter_egg)
+        self.udp_controller.log_ready.connect(self.log_manager.write_to_log)
 
-        # Time that the UI will wait to receive pad state heartbeats from pad server
-        # a timer that ticks every second will decrement heartbeat_timeout by 1
-        # if it's below 0, a warning should be displayed, preferably on the main section
-        # of the ui
-        self.heartbeat_timeout = 10
-        self.heartbeat_mutex = QMutex()
-        self.heartbeat_interval = 1000
-        self.heartbeat_timer = QTimer(self)
-        self.heartbeat_timer.timeout.connect(self.decrease_heartbeat)
+        self.data_handler.telemetry_ready[str].connect(self.telem_vis_manager.update_plot) # For updating ui
+        self.data_handler.telemetry_ready[str].connect(self.telem_vis_manager.update_sensor_label)
+        self.data_handler.telemetry_ready[str].connect(self.timer_controller.reset_heartbeat_timeout) # Technically, this slot doesn't accept a str arg but its ok
+        self.data_handler.telemetry_ready[str, float, float].connect(self.data_csv_writer.add_timed_measurement) # For logging to csv
+        self.data_handler.telemetry_ready[str, float, float].connect(self.pid_window.update_value_label)
+        
+        self.data_handler.arming_state_changed.connect(self.telem_vis_manager.update_arming_state_label) # These signals just change labels
+        self.data_handler.actuator_state_changed.connect(self.telem_vis_manager.update_actuator_state_label)
+        self.data_handler.continuity_state_changed.connect(self.telem_vis_manager.update_continuity_state_label)
+        self.data_handler.system_state_changed.connect(self.log_state) # Catch all signal for state changes that I didn't want to have 3 functions for
 
-        # QTimer to flash the connection status label
-        self.disconnect_status_interval = 500
-        self.disconnect_count = 0
-        self.disconnect_status_timer = QTimer(self)
-        self.disconnect_status_timer.timeout.connect(self.flash_disconnect_label)
+        self.data_handler.cc_connection_status_changed.connect(self.telem_vis_manager.update_cc_conn_status_label)
+        self.data_handler.cc_connected.connect(self.timer_controller.stop_cc_disconnect_flash_timer) # These ones either start or stop the flash timer
+        self.data_handler.cc_disconnected.connect(self.timer_controller.start_cc_disconnect_flash_timer) # Might be a better way to do this, don't care to do it now
+        self.data_handler.annoy_prop.connect(self.log_manager.ask_for_tip)
+        self.data_handler.log_ready.connect(self.log_manager.write_to_log)
 
-        # Button handlers
+        self.timer_controller.filter_data_s.connect(self.data_handler.filter_data)
+        self.timer_controller.flash_ps_disconnect_label_s.connect(self.telem_vis_manager.flash_ps_label)
+        self.timer_controller.flash_cc_disconnect_label_s.connect(self.telem_vis_manager.flash_cc_label)
+        self.timer_controller.update_pad_server_display_s.connect(self.telem_vis_manager.update_ps_conn_status_label)
+        self.timer_controller.update_control_client_display_s.connect(self.telem_vis_manager.update_cc_conn_status_label)
+        self.timer_controller.log_ready.connect(self.log_manager.write_to_log)
+
+        ### Button and associated signal handlers ###
+        # In some cases, it was easier to have some signals connect to a UI manager function
+        # which would then emit it's own signal to be handled elsewhere
+        # Tried to keep the flow of work here clear
 
         # Connection button handlers
-        self.ui.udpConnectButton.clicked.connect(self.udp_connection_button_handler)
-        self.ui.serialConnectButton.clicked.connect(self.serial_connection_button_handler)
-        self.ui.serialRefreshButton.clicked.connect(self.refresh_serial_button_handler)
+        self.ui.udpConnectButton.clicked.connect(lambda: self.udp_controller.udp_connection_button_handler(self.ui.udpIpAddressInput.text(), self.ui.udpPortInput.text()))
+        # self.ui.serialConnectButton.clicked.connect(self.serial_connection_button_handler)
+        # self.ui.serialRefreshButton.clicked.connect(self.refresh_serial_button_handler)
 
         # Save CSV button handler
         self.ui.saveCsvButton.clicked.connect(self.save_csv_button_handler)
 
-        # Open raw data file button handler
-        self.ui.openFileButton.clicked.connect(self.open_file_button_handler)
-
-        # Connect toggle button for recording data
-        self.ui.recordingToggleButton.toggled.connect(self.recording_toggle_button_handler)
+        # Handlers for recording and replaying data
         self.raw_data_file_out = None
-        self.data_csv_writer = CSVWriter(["t","p1","p2","p3","p4","p5","p6","t1","t2","t3","t4","m1","th1","status","Continuity"], 100, "data_csv")
-        self.state_csv_writer = CSVWriter(["t","Arming state","Igniter","XV-1","XV-2","XV-3","XV-4","XV-5","XV-6","XV-7","XV-8","XV-9","XV-10","XV-11","XV-12","Quick disconnect","Dump valve","Continuity"], 1, "valves_csv")
+        # self.ui.openFileButton.clicked.connect(self.open_file_button_handler)
+        # self.ui.recordingToggleButton.toggled.connect(self.recording_toggle_button_handler)
+
+        # Switching PID in PID window
+        self.ui.pidWindowButtonGroup.buttonToggled.connect(self.pid_window.change_diagram)
+        self.ui.pidWindowButtonGroup.buttonToggled.connect(self.config_manager.default_pid_diagram_change_handler)
 
         # Sensor display option handlers
-        self.ui.numPointsAverageInput.valueChanged.connect(self.points_for_average_change_handler)
-        self.ui.defaultOpenValvesButton.clicked.connect(self.add_default_open_valve_handler)
-        self.ui.pidWindowButtonGroup.buttonToggled.connect(self.pid_window.change_diagram)
+        self.ui.numPointsAverageInput.valueChanged.connect(self.config_manager.points_for_average_change_handler)
+        self.ui.numPointsAverageInput.valueChanged.connect(self.data_handler.on_average_points_changed)
+        self.ui.defaultOpenValvesButton.clicked.connect(self.ui_manager.on_default_open_btn_press)
+        # self.ui_manager.default_valves_changed.connect(self.init_actuator_valve_labels)
+        self.ui_manager.default_valves_changed.connect(self.config_manager.default_valve_btn_handler)
 
-        # Graph option handlers
-        self.ui.pressureDisplayButtonGroup.buttonClicked.connect(self.pressure_data_display_change_handler)
-        self.ui.pressureXSB.valueChanged.connect(self.pressure_x_val_change_handler)
-        
-        self.ui.temperatureDisplayButtonGroup.buttonClicked.connect(self.temperature_data_display_change_handler)
-        self.ui.temperatureXSB.valueChanged.connect(self.temperature_x_val_change_handler)
+        # Graph option and display handlers
+        # Slots from ConfigManager are for modfiying internal config object, this is used to get saved
+        # Slots for TelemVisManager are for modifying UI 
+        self.ui.pressureDisplayButtonGroup.buttonClicked.connect(self.config_manager.pressure_data_display_change_handler)
+        self.ui.pressureDisplayButtonGroup.buttonClicked.connect(self.telem_vis_manager.on_pressure_data_display_change)
+        self.ui.pressureXSB.valueChanged.connect(self.config_manager.pressure_x_val_change_handler)
+        self.ui.pressureXSB.valueChanged.connect(self.telem_vis_manager.on_pressure_x_val_change)
+        self.ui.pressureThresholdButton.clicked.connect(self.ui_manager.on_pressure_threshold_btn_press)
+        self.ui_manager.pressure_threshold_changed.connect(self.config_manager.pressure_threshold_btn_handler)
 
-        self.ui.tankMassDisplayButtonGroup.buttonClicked.connect(self.tank_mass_data_display_change_handler)
-        self.ui.tankMassXSB.valueChanged.connect(self.tank_mass_x_val_change_handler)
+        self.ui.temperatureDisplayButtonGroup.buttonClicked.connect(self.config_manager.temperature_data_display_change_handler)
+        self.ui.temperatureDisplayButtonGroup.buttonClicked.connect(self.telem_vis_manager.on_temperature_data_display_change)
+        self.ui.temperatureXSB.valueChanged.connect(self.config_manager.temperature_x_val_change_handler)
+        self.ui.temperatureXSB.valueChanged.connect(self.telem_vis_manager.on_temperature_x_val_change)
+        self.ui.temperatureThresholdButton.clicked.connect(self.ui_manager.on_temperature_threshold_btn_press)
+        self.ui_manager.temperature_threshold_changed.connect(self.config_manager.temperature_threshold_btn_handler)
 
-        self.ui.engineThrustDisplayButtonGroup.buttonClicked.connect(self.engine_thrust_data_display_change_handler)
-        self.ui.engineThrustXSB.valueChanged.connect(self.engine_thrust_x_val_change_handler)
+        self.ui.tankMassDisplayButtonGroup.buttonClicked.connect(self.config_manager.tank_mass_data_display_change_handler)
+        self.ui.tankMassDisplayButtonGroup.buttonClicked.connect(self.telem_vis_manager.on_tank_mass_data_display_change)
+        self.ui.tankMassXSB.valueChanged.connect(self.config_manager.tank_mass_x_val_change_handler)
+        self.ui.tankMassXSB.valueChanged.connect(self.telem_vis_manager.on_tank_mass_x_val_change)
+        self.ui.tankMassThresholdButton.clicked.connect(self.ui_manager.on_tank_mass_threshold_btn_press)
+        self.ui_manager.tank_mass_threshold_changed.connect(self.config_manager.tank_mass_threshold_btn_handler)
 
-        # Plot threshold handlers
-        self.ui.pressureThresholdButton.clicked.connect(self.add_pressure_threshold_handler)
-        self.ui.temperatureThresholdButton.clicked.connect(self.add_temperature_threshold_handler)
-        self.ui.tankMassThresholdButton.clicked.connect(self.add_tank_mass_threshold_handler)
-        self.ui.engineThrustThresholdButton.clicked.connect(self.add_engine_thrust_threshold_handler)
+        self.ui.engineThrustDisplayButtonGroup.buttonClicked.connect(self.config_manager.engine_thrust_data_display_change_handler)
+        self.ui.engineThrustDisplayButtonGroup.buttonClicked.connect(self.telem_vis_manager.on_engine_thrust_data_display_change)
+        self.ui.engineThrustXSB.valueChanged.connect(self.config_manager.engine_thrust_x_val_change_handler)
+        self.ui.engineThrustXSB.valueChanged.connect(self.telem_vis_manager.on_engine_thrust_x_val_change)
+        self.ui.engineThrustThresholdButton.clicked.connect(self.ui_manager.on_engine_thrust_threshold_btn_press)
+        self.ui_manager.engine_thrust_threshold_changed.connect(self.config_manager.engine_thrust_threshold_btn_handler)
 
         # These make it so that the items in the list are unselected when entering a value
         # helps with the remove value feature
@@ -352,61 +389,54 @@ class MainWindow(QWidget):
         self.ui.tankMassThresholdInput.focusInEvent = lambda x: self.ui.tankMassThresholdList.setCurrentRow(-1)
         self.ui.engineThrustThresholdInput.focusInEvent = lambda x: self.ui.engineThrustThresholdList.setCurrentRow(-1)
         
+        # Export to File button
+        self.ui.exporter.clicked.connect(self.log_manager.save_to_file)
+
         # Save config handlers
-        self.ui.saveConnConfigButton.clicked.connect(self.save_config)
-        self.ui.saveDisplayConfigButton.clicked.connect(self.save_config)
+        self.ui.saveConnConfigButton.clicked.connect(self.config_manager.save_config)
+        self.ui.saveDisplayConfigButton.clicked.connect(self.config_manager.save_config)
 
-    # Handles when the window is closed, have to make sure to disconnect the TCP socket
-    def closeEvent(self, event):
-        confirm = QMessageBox.question(self, "Close application", "Are you sure you want to close the application?", QMessageBox.Yes | QMessageBox.No)
-        if confirm == QMessageBox.StandardButton.Yes:
-            if self.padUDPSocket.state() == QAbstractSocket.SocketState.ConnectedState:
-                self.padUDPSocket.disconnectFromHost()
-                self.padUDPSocket.waitForDisconnected()
-
-            if self.serialPort.isOpen():
-                self.serialPort.close()
-
-            self.data_csv_writer.flush(_async=False)
-            self.state_csv_writer.flush(_async=False)
-            self.pid_window.close()
-            event.accept()
-        else:
-            event.ignore()
-
-    def open_pid_window(self):
-        self.pid_window.show()
-
-    def init_actuator_valve_label(self):
-        self.valves = {}
-        self.valves[0] = TelemetryLabel("Igniter", "CLOSED", 0, 2, self.ui.valveGrid)
-        self.valves[13] = TelemetryLabel("Quick Disconnect", "CLOSED", 0, 0, self.ui.valveGrid)
-        self.valves[14] =  TelemetryLabel("XV-3 (dump valve)", "CLOSED", 0, 4, self.ui.valveGrid)
+    def init_actuator_valve_labels(self):
+        self.valves: dict[int, ValveLabel] = {}
+        self.valves[0] = ValveLabel("Igniter", "CLOSED", 0, 2, self.ui.valveGrid)
+        self.valves[13] = ValveLabel("Quick Disconnect", "CLOSED", 0, 0, self.ui.valveGrid)
+        self.valves[14] =  ValveLabel("XV-3 (dump valve)", "CLOSED", 0, 4, self.ui.valveGrid)
         for i in range(1, 13):
-            initial_state = "OPEN" if i in self.config["sensor_and_valve_options"]["default_open_valves"] else "CLOSED"
+            initial_state = "OPEN" if i in self.config_manager.config["sensor_and_valve_options"]["default_open_valves"] else "CLOSED"
             label = f"XV-{str(i)}"
             if i == 3: label += " (unused)"
             if i == 5: label += " (fire valve)"
             #There will be three label at each row, therefore divide by three, add 1 to skip the first row of valves
             #Row timed 2 because there will be two label for state and for the name
-            self.valves[i] = TelemetryLabel(label, initial_state, ((i - 1)// 3) + 1 , ((i - 1) % 3) * 2, self.ui.valveGrid)
+            self.valves[i] = ValveLabel(label, initial_state, ((i - 1)// 3) + 1 , ((i - 1) % 3) * 2, self.ui.valveGrid)
 
     def init_sensor_reading_label(self):
         self.sensors = {}
         # Temperature sensor labels
         for i in range(4):
-            self.sensors[i] = SensorLabel("T" + str(i + 1), "0" + " °C", i, 0, self.ui.sensorLayout)
+            self.sensors[f"t{i}"] = SensorLabel("T" + str(i + 1), "0" + " °C", i, 0, self.ui.sensorLayout)
         
         # Tank mass & Engine thrust labels
-        self.sensors[4] = SensorLabel("Tank Mass", "0" + " kg", 4, 0, self.ui.sensorLayout)
-        self.sensors[5] = SensorLabel("Engine Thrust", "0" + " N", 5, 0, self.ui.sensorLayout)
+        self.sensors["m0"] = SensorLabel("Tank Mass", "0" + " kg", 4, 0, self.ui.sensorLayout)
+        self.sensors["th0"] = SensorLabel("Engine Thrust", "0" + " N", 5, 0, self.ui.sensorLayout)
         
         # Pressure labels
-        for i in range (6, 12):
-            self.sensors[i] = SensorLabel("P" + str(i-5), "0" + " psi", i-6, 2, self.ui.sensorLayout)
+        for i in range (6):
+            self.sensors[f"p{i}"] = SensorLabel("P" + str(i+1), "0" + " psi", i, 2, self.ui.sensorLayout)
+
+    def init_connection_status_labels(self):
+        self.conn_status_labels = {}
+        self.conn_status_labels["pad_server"] = ConnectionStatusLabel(self.ui.udpConnStatusLabel)
+        self.conn_status_labels["control_client"] = ConnectionStatusLabel(self.ui.ccConnStatusLabel)
+        self.conn_status_labels["serial"] = ConnectionStatusLabel(self.ui.serialConnStatusLabel)
+
+    def init_hybrid_state_labels(self):
+        self.hybrid_state_labels = {}
+        self.hybrid_state_labels["arming_state"] = ArmingStateLabel(self.ui.armingStateValueLabel)
+        self.hybrid_state_labels["continuity_state"] = ContinuityStateLabel(self.ui.continuityValueLabel)
 
     def init_plots(self):
-         # Graphing pens
+        # Graphing pens
         red_pen = mkPen("#d52728", width=4)
         green_pen = mkPen("#2ba02d", width=4)
         blue_pen = mkPen("#1f78b4", width=4)
@@ -416,10 +446,10 @@ class MainWindow(QWidget):
         black_pen = mkPen("black", width=4)
         inf_line_pen = mkPen("black", width=2, style=QtCore.Qt.PenStyle.DashLine)
 
-        # Plot data
-        self.plots: dict[str, PlotInfo] = {}
+        # Plot data dict
+        self.plot_data: dict[str, PlotInfo] = {}
 
-        # Numpy arrays for plots
+        # Numpy arrays for storing telemetry that gets shown on graphs
         self.p0_points = np.empty((0,2))
         self.p1_points = np.empty((0,2))
         self.p2_points = np.empty((0,2))
@@ -445,38 +475,38 @@ class MainWindow(QWidget):
         self.ui.pressurePlot.getAxis("left").setTextPen(black_pen)
         self.ui.pressurePlot.getAxis("bottom").setPen(black_pen)
         self.ui.pressurePlot.getAxis("bottom").setTextPen(black_pen)
-        self.plots["p0"] = PlotInfo(0,
+        self.plot_data["p0"] = PlotInfo(0,
                                     self.p0_points,
                                     self.ui.pressurePlot.plot(self.p0_points, pen=red_pen, name="p1"),
-                                    PlotDataDisplayMode[self.config["graph_options"]["pressure"]["data_display_mode"].upper()],
-                                    self.config["graph_options"]["pressure"]["X"])
-        self.plots["p1"] = PlotInfo(0,
+                                    PlotDataDisplayMode[self.config_manager.config["graph_options"]["pressure"]["data_display_mode"]],
+                                    self.config_manager.config["graph_options"]["pressure"]["X"])
+        self.plot_data["p1"] = PlotInfo(0,
                                     self.p1_points,
                                     self.ui.pressurePlot.plot(self.p1_points, pen=green_pen, name="p2"),
-                                    PlotDataDisplayMode[self.config["graph_options"]["pressure"]["data_display_mode"].upper()],
-                                    self.config["graph_options"]["pressure"]["X"])
-        self.plots["p2"] = PlotInfo(0,
+                                    PlotDataDisplayMode[self.config_manager.config["graph_options"]["pressure"]["data_display_mode"]],
+                                    self.config_manager.config["graph_options"]["pressure"]["X"])
+        self.plot_data["p2"] = PlotInfo(0,
                                     self.p2_points,
                                     self.ui.pressurePlot.plot(self.p2_points, pen=blue_pen, name="p3"),
-                                    PlotDataDisplayMode[self.config["graph_options"]["pressure"]["data_display_mode"].upper()],
-                                    self.config["graph_options"]["pressure"]["X"])
-        self.plots["p3"] = PlotInfo(0,
+                                    PlotDataDisplayMode[self.config_manager.config["graph_options"]["pressure"]["data_display_mode"]],
+                                    self.config_manager.config["graph_options"]["pressure"]["X"])
+        self.plot_data["p3"] = PlotInfo(0,
                                     self.p3_points,
                                     self.ui.pressurePlot.plot(self.p3_points, pen=orange_pen, name="p4"),
-                                    PlotDataDisplayMode[self.config["graph_options"]["pressure"]["data_display_mode"].upper()],
-                                    self.config["graph_options"]["pressure"]["X"])
-        self.plots["p4"] = PlotInfo(0,
+                                    PlotDataDisplayMode[self.config_manager.config["graph_options"]["pressure"]["data_display_mode"]],
+                                    self.config_manager.config["graph_options"]["pressure"]["X"])
+        self.plot_data["p4"] = PlotInfo(0,
                                     self.p4_points,
                                     self.ui.pressurePlot.plot(self.p4_points, pen=purple_pen, name="p5"),
-                                    PlotDataDisplayMode[self.config["graph_options"]["pressure"]["data_display_mode"].upper()],
-                                    self.config["graph_options"]["pressure"]["X"])
-        self.plots["p5"] = PlotInfo(0,
+                                    PlotDataDisplayMode[self.config_manager.config["graph_options"]["pressure"]["data_display_mode"]],
+                                    self.config_manager.config["graph_options"]["pressure"]["X"])
+        self.plot_data["p5"] = PlotInfo(0,
                                     self.p5_points,
                                     self.ui.pressurePlot.plot(self.p5_points, pen=brown_pen, name="p6"),
-                                    PlotDataDisplayMode[self.config["graph_options"]["pressure"]["data_display_mode"].upper()],
-                                    self.config["graph_options"]["pressure"]["X"])
-        for marker in [self.ui.pressureThresholdList.item(x) for x in range(self.ui.pressureThresholdList.count())]:
-            self.ui.pressurePlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=inf_line_pen))
+                                    PlotDataDisplayMode[self.config_manager.config["graph_options"]["pressure"]["data_display_mode"]],
+                                    self.config_manager.config["graph_options"]["pressure"]["X"])
+        for marker in self.config_manager.config["graph_options"]["pressure"]["thresholds"]:
+            self.ui.pressurePlot.addItem(InfiniteLine(float(marker), angle=0, pen=inf_line_pen))
 
         self.ui.temperaturePlot.addLegend(offset=(0,0), colCount=4, labelTextColor="black")
         self.ui.temperaturePlot.setTitle("<span style='font-weight: bold;'>Temperature</span>", color="black")
@@ -486,28 +516,28 @@ class MainWindow(QWidget):
         self.ui.temperaturePlot.getAxis("left").setTextPen(black_pen)
         self.ui.temperaturePlot.getAxis("bottom").setPen(black_pen)
         self.ui.temperaturePlot.getAxis("bottom").setTextPen(black_pen)
-        self.plots["t0"] = PlotInfo(0,
+        self.plot_data["t0"] = PlotInfo(0,
                                     self.t0_points,
                                     self.ui.temperaturePlot.plot(self.t0_points, pen=red_pen, name="t1"),
-                                    PlotDataDisplayMode[self.config["graph_options"]["temperature"]["data_display_mode"].upper()],
-                                    self.config["graph_options"]["temperature"]["X"])
-        self.plots["t1"] = PlotInfo(0,
+                                    PlotDataDisplayMode[self.config_manager.config["graph_options"]["temperature"]["data_display_mode"]],
+                                    self.config_manager.config["graph_options"]["temperature"]["X"])
+        self.plot_data["t1"] = PlotInfo(0,
                                     self.t1_points,
                                     self.ui.temperaturePlot.plot(self.t1_points, pen=green_pen, name="t2"),
-                                    PlotDataDisplayMode[self.config["graph_options"]["temperature"]["data_display_mode"].upper()],
-                                    self.config["graph_options"]["temperature"]["X"])
-        self.plots["t2"] = PlotInfo(0,
+                                    PlotDataDisplayMode[self.config_manager.config["graph_options"]["temperature"]["data_display_mode"]],
+                                    self.config_manager.config["graph_options"]["temperature"]["X"])
+        self.plot_data["t2"] = PlotInfo(0,
                                     self.t2_points,
                                     self.ui.temperaturePlot.plot(self.t2_points, pen=blue_pen, name="t3"),
-                                    PlotDataDisplayMode[self.config["graph_options"]["temperature"]["data_display_mode"].upper()],
-                                    self.config["graph_options"]["temperature"]["X"])
-        self.plots["t3"] = PlotInfo(0,
+                                    PlotDataDisplayMode[self.config_manager.config["graph_options"]["temperature"]["data_display_mode"]],
+                                    self.config_manager.config["graph_options"]["temperature"]["X"])
+        self.plot_data["t3"] = PlotInfo(0,
                                     self.t3_points,
                                     self.ui.temperaturePlot.plot(self.t3_points, pen=orange_pen, name="t4"),
-                                    PlotDataDisplayMode[self.config["graph_options"]["temperature"]["data_display_mode"].upper()],
-                                    self.config["graph_options"]["temperature"]["X"])
-        for marker in [self.ui.temperatureThresholdList.item(x) for x in range(self.ui.temperatureThresholdList.count())]:
-            self.ui.temperaturePlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=inf_line_pen))
+                                    PlotDataDisplayMode[self.config_manager.config["graph_options"]["temperature"]["data_display_mode"]],
+                                    self.config_manager.config["graph_options"]["temperature"]["X"])
+        for marker in self.config_manager.config["graph_options"]["temperature"]["thresholds"]:
+            self.ui.temperaturePlot.addItem(InfiniteLine(float(marker), angle=0, pen=inf_line_pen))
 
         self.ui.tankMassPlot.addLegend()
         self.ui.tankMassPlot.setTitle("<span style='font-weight: bold;'>Tank Mass</span>", color="black")
@@ -517,13 +547,13 @@ class MainWindow(QWidget):
         self.ui.tankMassPlot.getAxis("left").setTextPen(black_pen)
         self.ui.tankMassPlot.getAxis("bottom").setPen(black_pen)
         self.ui.tankMassPlot.getAxis("bottom").setTextPen(black_pen)
-        self.plots["m0"] = PlotInfo(0,
+        self.plot_data["m0"] = PlotInfo(0,
                                     self.tank_mass_points,
                                     self.ui.tankMassPlot.plot(self.tank_mass_points, pen=red_pen),
-                                    PlotDataDisplayMode[self.config["graph_options"]["tank_mass"]["data_display_mode"].upper()],
-                                    self.config["graph_options"]["tank_mass"]["X"])
-        for marker in [self.ui.tankMassThresholdList.item(x) for x in range(self.ui.tankMassThresholdList.count())]:
-            self.ui.tankMassPlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=inf_line_pen))
+                                    PlotDataDisplayMode[self.config_manager.config["graph_options"]["tank_mass"]["data_display_mode"]],
+                                    self.config_manager.config["graph_options"]["tank_mass"]["X"])
+        for marker in self.config_manager.config["graph_options"]["tank_mass"]["thresholds"]:
+            self.ui.tankMassPlot.addItem(InfiniteLine(float(marker), angle=0, pen=inf_line_pen))
 
         self.ui.engineThrustPlot.addLegend()
         self.ui.engineThrustPlot.setTitle("<span style='font-weight: bold;'>Engine Thrust</span>", color="black")
@@ -533,42 +563,53 @@ class MainWindow(QWidget):
         self.ui.engineThrustPlot.getAxis("left").setTextPen(black_pen)
         self.ui.engineThrustPlot.getAxis("bottom").setPen(black_pen)
         self.ui.engineThrustPlot.getAxis("bottom").setTextPen(black_pen)
-        self.plots["th0"] = PlotInfo(0,
+        self.plot_data["th0"] = PlotInfo(0,
                                     self.engine_thrust_points,
                                      self.ui.engineThrustPlot.plot(self.engine_thrust_points, pen=red_pen),
-                                     PlotDataDisplayMode[self.config["graph_options"]["engine_thrust"]["data_display_mode"].upper()],
-                                    self.config["graph_options"]["engine_thrust"]["X"])
-        for marker in [self.ui.engineThrustThresholdList.item(x) for x in range(self.ui.engineThrustThresholdList.count())]:
-            self.ui.engineThrustPlot.addItem(InfiniteLine(float(marker.text()), angle=0, pen=inf_line_pen))
+                                     PlotDataDisplayMode[self.config_manager.config["graph_options"]["engine_thrust"]["data_display_mode"]],
+                                    self.config_manager.config["graph_options"]["engine_thrust"]["X"])
+        for marker in self.config_manager.config["graph_options"]["engine_thrust"]["thresholds"]:
+            self.ui.engineThrustPlot.addItem(InfiniteLine(float(marker), angle=0, pen=inf_line_pen))
 
-    def enable_udp_config(self):
-        self.ui.udpConnectButton.setText("Create UDP connection")
-        self.ui.udpConnectButton.setEnabled(True)
-        self.ui.udpIpAddressInput.setEnabled(True)
-        self.ui.udpPortInput.setEnabled(True)
-
-    # If disable_btn is true, button gets disabled but text does not changed
-    # used for when serial connection disabled ability to connect via udp
-    # or vice versa
-    def disable_udp_config(self, disable_btn: bool):
-        if disable_btn: self.ui.udpConnectButton.setEnabled(False) 
-        else: self.ui.udpConnectButton.setText("Close UDP connection")
-        self.ui.udpIpAddressInput.setEnabled(False)
-        self.ui.udpPortInput.setEnabled(False)
-
-    def enable_serial_config(self):
-        self.ui.serialConnectButton.setText("Connect to serial port")
-        self.ui.serialConnectButton.setEnabled(True)
-        self.ui.serialPortDropdown.setEnabled(True)
-        self.ui.baudRateDropdown.setEnabled(True)
-
-    def disable_serial_config(self, disable_btn: bool):
-        if disable_btn: self.ui.serialConnectButton.setEnabled(False)
-        else: self.ui.serialConnectButton.setText("Close serial connection")
-        self.ui.serialPortDropdown.setEnabled(False)
-        self.ui.baudRateDropdown.setEnabled(False)
+    ### Misc functions that were easier to implement here
 
     def save_csv_button_handler(self):
         new_name, _ = QInputDialog.getText(self, "Save CSV file", "Enter name to save CSV file as")
         self.data_csv_writer.save_and_swap_csv(new_name)
         self.state_csv_writer.save_and_swap_csv(new_name)
+    
+    # Logs state to CSV whenever state gets changed
+    def log_state(self, time_since_power: float, state: object):
+        if "Arming state" not in state: state["Arming state"] = self.data_handler.arming_state.name
+        for valve in self.valves:
+            match valve:
+                case 0: 
+                    state["Igniter"] = self.valves[valve].qState.text()
+                case 13:
+                    state["Quick disconnect"] = self.valves[valve].qState.text()
+                case 14:
+                    state["Dump valve"] = self.valves[valve].qState.text()
+                case _:
+                    state[f"XV-{valve}"] = self.valves[valve].qState.text() 
+        if "Continuity" not in state: state["Continuity"] = self.data_handler.continuity_state.name
+        self.state_csv_writer.add_timed_measurements(time_since_power, state)
+        self.state_csv_writer.flush()
+
+    def open_pid_window(self):
+        self.pid_window.show()
+
+    def closeEvent(self, event):
+        confirm = QMessageBox.question(self, "Close application", "Are you sure you want to close the application?", QMessageBox.Yes | QMessageBox.No)
+        if confirm == QMessageBox.StandardButton.Yes:
+            self.udp_controller.leave_multicast_group()
+
+            # if self.serialPort.isOpen():
+            #     self.serialPort.close()
+
+            self.data_csv_writer.flush(_async=False)
+            self.state_csv_writer.flush(_async=False)
+            self.pid_window.close()
+            event.accept()
+        else:
+            event.ignore()
+            

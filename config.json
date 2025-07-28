@@ -12,7 +12,7 @@
   },
   "graph_options": {
     "pressure": {
-      "data_display_mode": "seconds",
+      "data_display_mode": "SECONDS",
       "X": 10,
       "thresholds": [
         830.0,
@@ -20,21 +20,21 @@
       ]
     },
     "temperature": {
-      "data_display_mode": "seconds",
+      "data_display_mode": "SECONDS",
       "X": 10,
       "thresholds": [
         20.0
       ]
     },
     "tank_mass": {
-      "data_display_mode": "seconds",
+      "data_display_mode": "SECONDS",
       "X": 10,
       "thresholds": [
         3.5
       ]
     },
     "engine_thrust": {
-      "data_display_mode": "seconds",
+      "data_display_mode": "SECONDS",
       "X": 10,
       "thresholds": []
     }

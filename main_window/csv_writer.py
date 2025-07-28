@@ -1,7 +1,27 @@
+"""csv_writer.py
+
+Contains the implementation of the CSVWriter class. The CSVWriter class is a custom
+file writing object that combines the functionality of the Python BufferedWriter and
+CSV writer classes. The CSVWriter maintains two buffers that organize received data
+by a timestamp . In this way, in can buffer data that's not received in order.
+
+Each buffer is a dictionary whose keys are timestamps and whose values are also
+dictionaries containing values correlated to some identifier (i.e sensor value to sensor
+id). The buffer size that is passed in dictates how many timestamps are stored before the
+buffer is automatically flushed by the CSVWriter.
+
+Flushing a buffer is done in a way such that data received while flushing a single buffer
+is not lost. This is done in the CSVWriter by using two buffers and swapping the pointer
+to the active buffer. When one buffer gets full, the pointer to the active buffer is swapped
+and a separate thread is spawned that flushes the buffer to file storage. In this way no data is lost.
+"""
+
 import threading
 import csv
 from pathlib import Path
 from datetime import datetime
+
+from PySide6.QtCore import Slot
 
 # I'm aware that this is a little over-engineered but this avoids any possibility of
 # data loss by swapping buffers and also organizes data nicely into csvs
@@ -16,7 +36,7 @@ class CSVWriter:
     self.csv_dir: Path = Path(dir)
     self.csv_out: Path = None
 
-  def add_timed_measurements(self, time: int, sensor_readings: dict):
+  def add_timed_measurements(self, time: float, sensor_readings: dict):
     # Only try to flush the buffer when receiving a new timestamp
     if str(time) not in self.activebuffer:
       if len(self.activebuffer) >= self.buffer_size:
@@ -33,6 +53,11 @@ class CSVWriter:
     
     self.activebuffer[str(time)].update(sensor_readings)
 
+  @Slot(str, float, float)
+  def add_timed_measurement(self, id: str, time: float, sensor_reading: float):
+    self.add_timed_measurements(time, dict({id: sensor_reading}))
+
+  @Slot()
   def create_csv_log(self):
     self.csv_out = self.csv_dir / f"{datetime.now().strftime('%Y-%m-%d_%H-%M')}.csv"
     self.csv_dir.mkdir(parents=True, exist_ok=True)
@@ -40,6 +65,7 @@ class CSVWriter:
         writer = csv.DictWriter(file, fieldnames=self.csv_fieldnames)
         writer.writeheader()
 
+  @Slot()
   def flush(self, _async: bool = True):
     # Start buffer flush thread if buffer gets full
     if self.csv_out:
