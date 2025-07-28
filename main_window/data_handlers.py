@@ -112,13 +112,14 @@ class DataHandler(QObject):
                         reading = message.thrust
                 self.plots[plot_id].points = np.append(self.plots[plot_id].points, np.array([[message.time_since_power, reading]]), axis=0)
                 self.plots[plot_id].running_average = self.calculate_new_average(self.plots[plot_id].running_average, reading)
-                
+                temp = round(self.plots[plot_id].running_average, 2)
+
                 # Emits signal for TelemVisHandler
                 self.telemetry_ready[str].emit(plot_id)
 
                 # Change plot id (ids start at 1) and emit for csv writer
                 plot_id = plot_id[:-1] + f"{message.id + 1}"
-                self.telemetry_ready[str, float, float].emit(plot_id, message.time_since_power, reading)
+                self.telemetry_ready[str, float, float].emit(plot_id, message.time_since_power, temp)
 
     @Slot()
     def filter_data(self):

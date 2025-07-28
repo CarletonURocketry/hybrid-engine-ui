@@ -168,8 +168,17 @@ class PIDWindow(QWidget):
                 },
             },
         }
+        self.unit_strings = {"t": "°C", "p": "psi", "m": "kg", "th": "N"}
         for i in range(5):
             self.value_labels[f"p{i}"] = getattr(self.ui, f"p{i+1}ValLabel")
+
+
+    def update_value_label(self, id: str, time: float, reading: float):
+        # This will need to be modified if we ever display more than 10 of any sensor lol
+        id = f"{id[:-1]}{int(id[-1])-1}" # Because this uses same signal as csv writer, have to shift ids down 1
+        if id in self.value_labels:
+            unit_string = unit_string = self.unit_strings[id[:-1]]
+            self.value_labels[id].setText(f"{round(reading, 2)} {unit_string}")
 
     def change_diagram(self, button, toggled):
         if not toggled: return
@@ -288,6 +297,7 @@ class MainWindow(QWidget):
         self.data_handler.telemetry_ready[str].connect(self.telem_vis_manager.update_sensor_label)
         self.data_handler.telemetry_ready[str].connect(self.timer_controller.reset_heartbeat_timeout) # Technically, this slot doesn't accept a str arg but its ok
         self.data_handler.telemetry_ready[str, float, float].connect(self.data_csv_writer.add_timed_measurement) # For logging to csv
+        self.data_handler.telemetry_ready[str, float, float].connect(self.pid_window.update_value_label)
         
         self.data_handler.arming_state_changed.connect(self.telem_vis_manager.update_arming_state_label) # These signals just change labels
         self.data_handler.actuator_state_changed.connect(self.telem_vis_manager.update_actuator_state_label)
