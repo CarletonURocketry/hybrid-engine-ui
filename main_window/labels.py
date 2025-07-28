@@ -1,3 +1,12 @@
+"""labels.py
+
+Contains implementations for wrapper classes for all labels on the
+main telemetry dashboard that get updated frequently. Each of these
+Classes are subclasses of DynamicLabel, all this means is that they all
+must implement an update method, which usually consists of changing text and 
+background color
+"""
+
 from abc import ABC, abstractmethod
 
 from PySide6.QtWidgets import QLabel, QLayout

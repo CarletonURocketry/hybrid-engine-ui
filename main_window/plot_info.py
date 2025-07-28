@@ -1,6 +1,6 @@
 """plot_info.py
 
-Contains implementations for plot related datatype
+Contains implementations for plot related dataclasses and datatypes
 """
 
 from dataclasses import dataclass

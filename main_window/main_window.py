@@ -13,6 +13,10 @@ there should be NO business logic in the MainWindow class as that's not it's res
 Logic for any piece of functionality should be contained within the respective module then
 imported by and organized within the MainWindow class. That means no UI updates, no parsing 
 data, etc.
+
+As mentionned, the MainWindow class is responsible for connecting signals emitted from both
+the custom class and ui components to their appropriate slot functions. There are also some
+miscellaneous functions that are implemented here because they have nowhere else to go atm 
 """
 import sys
 
