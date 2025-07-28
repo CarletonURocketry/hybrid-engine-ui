@@ -1,11 +1,18 @@
 """config.py
 
-Contains functions that handle loading and saving of configs. Should only
-be imported by main_window.py
+Contains the implementation of the ConfigManager class. The ConfigManager
+class maintains the config of the application during runtime. When the application
+first loads, the load_config method is called which loads the config into memory.
+The options from this config are then used when instantiating the rest of the application.
+
+Throughout the runtime of the application, any changes to the config, like the amount
+of points to display on a plot, are saved by the ConfigManager instance into its in-memory
+config dict. Only when the save_config slot is called is the in-memory config dict written
+to the config.json file. The ConfigManager does not directly modify the UI in any way,
+all signals emitted by config UI components are handled here.
 """
 
 import json
-from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QObject, Signal, Slot
 from PySide6.QtWidgets import QMessageBox, QRadioButton

@@ -1,7 +1,17 @@
-from typing import TYPE_CHECKING
+"""telem_vis_manager.py
 
-from PySide6.QtWidgets import QWidget, QLabel, QMessageBox, QInputDialog, QRadioButton
-from PySide6.QtCore import QTimer, Qt, QMutex, QObject, Slot
+Contains the implementation of the TelemVisManager class. The TelemVisManager
+class is responsible for updating components of the UI that display telemetry.
+This includes the plots and the sensor, valve status and connection status labels.
+
+All of the functions in the class are slots, meaning that they are only really called
+when a signal gets emitted, typically from the DataHandler class. Each of these functions
+are either calling the update method of a DynamicLabel (primarily done separately for coloring)
+or modifying a plot or sensor option that changes how data is displayed.
+"""
+
+from PySide6.QtWidgets import QRadioButton
+from PySide6.QtCore import QObject, Slot
 
 from .labels import *
 from .plot_info import PlotInfo, PlotDataDisplayMode

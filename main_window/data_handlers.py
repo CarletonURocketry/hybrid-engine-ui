@@ -1,18 +1,20 @@
 """data_handlers.py
 
-Contains all functions related handling incoming data including plotting
-data points and updating label text. Should only be imported by main_window.py
-"""
-from typing import TYPE_CHECKING
+Contains the implementation of the DataHandler class. The data handler class is
+primarily responsible for processing PARSED packets as specified in the packet_spec.py
+file. Processing parsed packets refers to performing any sort of processing on the packet
+information, such as calculating a running average or filtering based on plot config, then
+emitting the appropriate signal for updating the UI.
 
+Note that the DataHandler class is NOT responsible for updating UI, this is the responsibility
+of the TelemVisManager and UIManager classes. As such, everytime that the UI needs to
+be updated, the appropriate signal is emitted from this class.
+"""
 import numpy as np
 from PySide6.QtCore import Signal, QObject, Slot
 
 import packet_spec
 from .plot_info import PlotInfo, PlotDataDisplayMode
-
-if TYPE_CHECKING:
-    from PySide6.QtWidgets import QRadioButton
 
 class DataHandler(QObject):
 

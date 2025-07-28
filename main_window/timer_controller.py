@@ -1,7 +1,17 @@
-from PySide6.QtCore import Qt, Signal, QObject, Slot, QTimer, Qt, QMutex
+"""timer_controller.py
+
+
+Contains the implementation of the TimerController class. The TimerController
+class does it exactly what it sounds like, controls the timers. It instantiates an instance
+of all the timers required for this application and contains the slots that either start or
+stop these timers. It also contains the implementation of some of the simpler timeout functions.
+In the cases where a timeout function would cause the UI to update, a signal is emitted
+and is handled by the appropriate class(es).
+"""
+
+from PySide6.QtCore import Signal, QObject, Slot, QTimer, QMutex
 
 import packet_spec
-
 
 class TimerController(QObject):
 
