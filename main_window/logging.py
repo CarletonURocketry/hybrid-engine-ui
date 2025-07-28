@@ -1,19 +1,16 @@
 """logging.py
 
-Contains all functions related to logging such as appending to the logOutput component
-and saving logs
+Contains the implementation of the LogManager class. The LogManager class
+just handles logging. This can be in the form of writing to the log in the
+Log tab or by spawning a popup. This is not to be confused with writing to a csv
+or dump file as those are separate.
 """
 
 import pathlib
-import csv
-from typing import TYPE_CHECKING
 
 from PySide6.QtCore import QObject, Slot
 from PySide6.QtWidgets import QMessageBox, QTextBrowser
 from PySide6.QtCore import QDateTime
-
-if TYPE_CHECKING:
-    from PySide6.QtWidgets import QMessageBox, QTextBrowser
 
 class LogManager(QObject):
 

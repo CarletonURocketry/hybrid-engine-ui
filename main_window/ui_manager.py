@@ -1,3 +1,14 @@
+"""ui_manager.py
+
+Contains the implementation of the UIManager class. The UIManager class
+is responsible for all other UI updates that are not handled by the TelemVisManager
+class. Things like populating the config tab after it gets loaded, enabling
+and disabling buttons, etc. The functionality for adding/removing threshold
+lines is also implemented here because that in particular requires several UI components.
+
+The UIManager class is given an instance of the UI object to make things easier
+"""
+
 from PySide6.QtCore import QObject, Slot, Qt, Signal
 from PySide6.QtWidgets import QMessageBox
 from PySide6.QtWebEngineWidgets import QWebEngineView
@@ -8,8 +19,6 @@ from .ui import Ui_Widget
 
 inf_line_pen = mkPen("black", width=2, style=Qt.PenStyle.DashLine)
 
-# This class handles all other UI interaction, so
-# we can just pass an instance to the UI
 class UIManager(QObject):
     pressure_threshold_changed = Signal(bool, float)
     temperature_threshold_changed = Signal(bool, float)

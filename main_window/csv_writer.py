@@ -1,3 +1,21 @@
+"""csv_writer.py
+
+Contains the implementation of the CSVWriter class. The CSVWriter class is a custom
+file writing object that combines the functionality of the Python BufferedWriter and
+CSV writer classes. The CSVWriter maintains two buffers that organize received data
+by a timestamp . In this way, in can buffer data that's not received in order.
+
+Each buffer is a dictionary whose keys are timestamps and whose values are also
+dictionaries containing values correlated to some identifier (i.e sensor value to sensor
+id). The buffer size that is passed in dictates how many timestamps are stored before the
+buffer is automatically flushed by the CSVWriter.
+
+Flushing a buffer is done in a way such that data received while flushing a single buffer
+is not lost. This is done in the CSVWriter by using two buffers and swapping the pointer
+to the active buffer. When one buffer gets full, the pointer to the active buffer is swapped
+and a separate thread is spawned that flushes the buffer to file storage. In this way no data is lost.
+"""
+
 import threading
 import csv
 from pathlib import Path

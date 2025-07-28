@@ -263,6 +263,9 @@ class MainWindow(QWidget):
         self.udp_controller.multicast_group_joined.connect(self.data_csv_writer.create_csv_log)
         self.udp_controller.multicast_group_joined.connect(self.state_csv_writer.create_csv_log)
         
+        # When a multicast group is left, we pretty much just want to reset the UI to it's default state
+        # that means stopping all timers, setting all labels back to NOT_CONNECTED or NOT_AVAILABLE
+        # and flushing any leftover CSV buffers
         self.udp_controller.multicast_group_disconnected.connect(self.ui_manager.enable_udp_config)
         self.udp_controller.multicast_group_disconnected.connect(self.ui_manager.enable_serial_config)
         self.udp_controller.multicast_group_disconnected.connect(self.timer_controller.stop_heartbeat_timer)
@@ -559,7 +562,6 @@ class MainWindow(QWidget):
     def open_pid_window(self):
         self.pid_window.show()
 
-    # Handles when the window is closed, have to make sure to disconnect the UDP socket
     def closeEvent(self, event):
         confirm = QMessageBox.question(self, "Close application", "Are you sure you want to close the application?", QMessageBox.Yes | QMessageBox.No)
         if confirm == QMessageBox.StandardButton.Yes:

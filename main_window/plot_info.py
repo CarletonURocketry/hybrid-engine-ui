@@ -1,3 +1,8 @@
+"""plot_info.py
+
+Contains implementations for plot related datatype
+"""
+
 from dataclasses import dataclass
 from enum import Enum
 

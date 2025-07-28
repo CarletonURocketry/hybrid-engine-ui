@@ -1,10 +1,9 @@
 from abc import ABC, abstractmethod
 
 from PySide6.QtWidgets import QLabel, QLayout
-from PySide6.QtCore import Qt, QObject
+from PySide6.QtCore import Qt
 
 import packet_spec
-
 
 class DynamicLabel(ABC):
     # Acts as a wrapper class for QLabel components that gives them
