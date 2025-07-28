@@ -275,6 +275,7 @@ class MainWindow(QWidget):
         self.udp_controller.multicast_group_disconnected.connect(lambda: self.telem_vis_manager.update_cc_conn_status_label(packet_spec.IPConnectionStatus.NOT_CONNECTED))
         self.udp_controller.multicast_group_disconnected.connect(lambda: self.telem_vis_manager.update_arming_state_label(packet_spec.ArmingState.NOT_AVAILABLE))
         self.udp_controller.multicast_group_disconnected.connect(lambda: self.telem_vis_manager.update_continuity_state_label(packet_spec.ContinuityState.NOT_AVAILABLE))
+        self.udp_controller.multicast_group_disconnected.connect(self.data_handler.reset_state)
         self.udp_controller.multicast_group_disconnected.connect(self.data_csv_writer.flush)
         self.udp_controller.multicast_group_disconnected.connect(self.state_csv_writer.flush)
 

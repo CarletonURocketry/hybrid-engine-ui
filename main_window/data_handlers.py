@@ -136,3 +136,9 @@ class DataHandler(QObject):
     @Slot()
     def on_average_points_changed(self, value: float):
         self.average_alpha = value
+
+    @Slot()
+    def reset_state(self):
+        self.arming_state = packet_spec.ArmingState.NOT_AVAILABLE
+        self.act_states = [packet_spec.ActuatorState.OFF] * 15
+        self.continuity_state = packet_spec.ContinuityState.NOT_AVAILABLE
