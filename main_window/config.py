@@ -38,6 +38,10 @@ class ConfigManager(QObject):
     @Slot()    
     def points_for_average_change_handler(self, value: float):
         self.config["sensor_and_valve_options"]["points_used_for_average"] = value
+
+    @Slot()
+    def default_pid_diagram_change_handler(self, button: QRadioButton):
+        self.config["sensor_and_valve_options"]["pid_diagram"] = button.property("type")
         
     @Slot()
     def pressure_data_display_change_handler(self, button: QRadioButton):

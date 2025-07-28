@@ -82,30 +82,30 @@ class UIManager(QObject):
         elif config_options["sensor_and_valve_options"]["pid_diagram"] == "static_fire":
             self.ui.pidDiagramStaticFireOption.setChecked(True)
 
-        if config_options["graph_options"]["pressure"]["data_display_mode"] == "points":
+        if config_options["graph_options"]["pressure"]["data_display_mode"] == "POINTS":
             self.ui.pressureLastXPointsRB.setChecked(True)
-        elif config_options["graph_options"]["pressure"]["data_display_mode"] == "seconds":
+        elif config_options["graph_options"]["pressure"]["data_display_mode"] == "SECONDS":
             self.ui.pressureLastXSecsRB.setChecked(True)
         self.ui.pressureXSB.setValue(config_options["graph_options"]["pressure"]["X"])
         self.ui.pressureThresholdList.addItems([str(marker) for marker in config_options["graph_options"]["pressure"]["thresholds"]])
         
-        if config_options["graph_options"]["temperature"]["data_display_mode"] == "points":
+        if config_options["graph_options"]["temperature"]["data_display_mode"] == "POINTS":
             self.ui.temperatureLastXPointsRB.setChecked(True)
-        elif config_options["graph_options"]["temperature"]["data_display_mode"] == "seconds":
+        elif config_options["graph_options"]["temperature"]["data_display_mode"] == "SECONDS":
             self.ui.temperatureLastXSecsRB.setChecked(True)
         self.ui.temperatureXSB.setValue(config_options["graph_options"]["temperature"]["X"])
         self.ui.temperatureThresholdList.addItems([str(marker) for marker in config_options["graph_options"]["temperature"]["thresholds"]])
         
-        if config_options["graph_options"]["tank_mass"]["data_display_mode"] == "points":
+        if config_options["graph_options"]["tank_mass"]["data_display_mode"] == "POINTS":
             self.ui.tankMassLastXPointsRB.setChecked(True)
-        elif config_options["graph_options"]["tank_mass"]["data_display_mode"] == "seconds":
+        elif config_options["graph_options"]["tank_mass"]["data_display_mode"] == "SECONDS":
             self.ui.tankMassLastXSecsRB.setChecked(True)
         self.ui.tankMassXSB.setValue(config_options["graph_options"]["tank_mass"]["X"])
         self.ui.tankMassThresholdList.addItems([str(marker) for marker in config_options["graph_options"]["tank_mass"]["thresholds"]])
         
-        if config_options["graph_options"]["engine_thrust"]["data_display_mode"] == "points":
+        if config_options["graph_options"]["engine_thrust"]["data_display_mode"] == "POINTS":
             self.ui.engineThrustLastXPointsRB.setChecked(True)
-        elif config_options["graph_options"]["engine_thrust"]["data_display_mode"] == "seconds":
+        elif config_options["graph_options"]["engine_thrust"]["data_display_mode"] == "SECONDS":
             self.ui.engineThrustLastXSecsRB.setChecked(True)
         self.ui.engineThrustXSB.setValue(config_options["graph_options"]["engine_thrust"]["X"])
         self.ui.engineThrustThresholdList.addItems([str(marker) for marker in config_options["graph_options"]["engine_thrust"]["thresholds"]])
