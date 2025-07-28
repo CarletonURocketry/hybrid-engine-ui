@@ -192,8 +192,7 @@ class PIDWindow(QWidget):
             getattr(self.ui, f"p{i+1}ValLabel").setStyleSheet(f"color: rgb(0, 0, 0);\nfont: 700 {self.window_config["cold_flow"]["val_label_font"]}pt 'Segoe UI';")
 
 class MainWindow(QWidget):
-    # Imports for MainWindow functionality. Helps split large file into
-    # smaller modules containing related functionality
+    #TODO: These should be moved into their own modules like all of the other classes
     from .serial import serial_connection_button_handler, \
         refresh_serial_button_handler, serial_receive_data, serial_on_error
     from .recording_and_playback import recording_toggle_button_handler, open_file_button_handler
@@ -233,7 +232,7 @@ class MainWindow(QWidget):
         self.timer_controller = TimerController()
 
         self.data_csv_writer = CSVWriter(["t","p1","p2","p3","p4","p5","p6","t1","t2","t3","t4","m1","th1","status","Continuity"], 100, "data_csv")
-        self.state_csv_writer = CSVWriter(["t","Arming state","Igniter","XV-1","XV-2","XV-3","XV-4","XV-5","XV-6","XV-7","XV-8","XV-9","XV-10","XV-11","XV-12","Quick disconnect","Dump valve","Continuity"], 1, "valves_csv")
+        self.state_csv_writer = CSVWriter(["t","Igniter","XV-1","XV-2","XV-3","XV-4","XV-5","XV-6","XV-7","XV-8","XV-9","XV-10","XV-11","XV-12","Quick disconnect","Dump valve","Arming state","Continuity"], 0, "valves_csv")
 
         self.ui_manager.populate_config_settings(self.config_manager.config)
         
@@ -288,9 +287,12 @@ class MainWindow(QWidget):
         self.data_handler.telemetry_ready[str].connect(self.telem_vis_manager.update_sensor_label)
         self.data_handler.telemetry_ready[str].connect(self.timer_controller.reset_heartbeat_timeout) # Technically, this slot doesn't accept a str arg but its ok
         self.data_handler.telemetry_ready[str, float, float].connect(self.data_csv_writer.add_timed_measurement) # For logging to csv
+        
         self.data_handler.arming_state_changed.connect(self.telem_vis_manager.update_arming_state_label) # These signals just change labels
         self.data_handler.actuator_state_changed.connect(self.telem_vis_manager.update_actuator_state_label)
         self.data_handler.continuity_state_changed.connect(self.telem_vis_manager.update_continuity_state_label)
+        self.data_handler.system_state_changed.connect(self.log_state) # Catch all signal for state changes that I didn't want to have 3 functions for
+
         self.data_handler.cc_connection_status_changed.connect(self.telem_vis_manager.update_cc_conn_status_label)
         self.data_handler.cc_connected.connect(self.timer_controller.stop_cc_disconnect_flash_timer) # These ones either start or stop the flash timer
         self.data_handler.cc_disconnected.connect(self.timer_controller.start_cc_disconnect_flash_timer) # Might be a better way to do this, don't care to do it now
@@ -317,13 +319,12 @@ class MainWindow(QWidget):
         # Save CSV button handler
         self.ui.saveCsvButton.clicked.connect(self.save_csv_button_handler)
 
-        # Open raw data file button handler
-        self.ui.openFileButton.clicked.connect(self.open_file_button_handler)
-
-        # Connect toggle button for recording data
-        self.ui.recordingToggleButton.toggled.connect(self.recording_toggle_button_handler)
+        # Handlers for recording and replaying data
         self.raw_data_file_out = None
+        self.ui.openFileButton.clicked.connect(self.open_file_button_handler)
+        self.ui.recordingToggleButton.toggled.connect(self.recording_toggle_button_handler)
 
+        # Switching PID in PID window
         self.ui.pidWindowButtonGroup.buttonToggled.connect(self.pid_window.change_diagram)
 
         # Sensor display option handlers
@@ -380,7 +381,7 @@ class MainWindow(QWidget):
         self.ui.saveDisplayConfigButton.clicked.connect(self.config_manager.save_config)
 
     def init_actuator_valve_labels(self):
-        self.valves = {}
+        self.valves: dict[int, ValveLabel] = {}
         self.valves[0] = ValveLabel("Igniter", "CLOSED", 0, 2, self.ui.valveGrid)
         self.valves[13] = ValveLabel("Quick Disconnect", "CLOSED", 0, 0, self.ui.valveGrid)
         self.valves[14] =  ValveLabel("XV-3 (dump valve)", "CLOSED", 0, 4, self.ui.valveGrid)
@@ -554,11 +555,30 @@ class MainWindow(QWidget):
         for marker in self.config_manager.config["graph_options"]["engine_thrust"]["thresholds"]:
             self.ui.engineThrustPlot.addItem(InfiniteLine(float(marker), angle=0, pen=inf_line_pen))
 
+    ### Misc functions that were easier to implement here
+
     def save_csv_button_handler(self):
         new_name, _ = QInputDialog.getText(self, "Save CSV file", "Enter name to save CSV file as")
         self.data_csv_writer.save_and_swap_csv(new_name)
         self.state_csv_writer.save_and_swap_csv(new_name)
     
+    # Logs state to CSV whenever state gets changed
+    def log_state(self, time_since_power: float, state: object):
+        if "Arming state" not in state: state["Arming state"] = self.data_handler.arming_state.name
+        for valve in self.valves:
+            match valve:
+                case 0: 
+                    state["Igniter"] = self.valves[valve].qState.text()
+                case 13:
+                    state["Quick disconnect"] = self.valves[valve].qState.text()
+                case 14:
+                    state["Dump valve"] = self.valves[valve].qState.text()
+                case _:
+                    state[f"XV-{valve}"] = self.valves[valve].qState.text() 
+        if "Continuity" not in state: state["Continuity"] = self.data_handler.continuity_state.name
+        self.state_csv_writer.add_timed_measurements(time_since_power, state)
+        self.state_csv_writer.flush()
+
     def open_pid_window(self):
         self.pid_window.show()
 

@@ -18,10 +18,11 @@ from .plot_info import PlotInfo, PlotDataDisplayMode
 
 class DataHandler(QObject):
 
-    telemetry_ready = Signal((str,), (str, float, float))
-    arming_state_changed = Signal(packet_spec.ArmingState)
+    telemetry_ready = Signal((str,), (str, float, float,))
+    arming_state_changed = Signal(packet_spec.ArmingState) # Specific signals for updating UI
     actuator_state_changed = Signal(int, packet_spec.ActuatorState)
     continuity_state_changed = Signal(packet_spec.ContinuityState)
+    system_state_changed = Signal(float, object) # Catch-all signal for writing to csv
     cc_connection_status_changed = Signal(packet_spec.IPConnectionStatus)
     cc_connected = Signal()
     cc_disconnected = Signal()
@@ -32,8 +33,9 @@ class DataHandler(QObject):
         super().__init__()
         self.plots = plots
         self.average_alpha = average_alpha
+        self.arming_state = packet_spec.ArmingState.NOT_AVAILABLE
         self.act_states = [packet_spec.ActuatorState.OFF] * 15
-        #TODO: Add initial state of valves and only log whenever a change occurs
+        self.continuity_state = packet_spec.ContinuityState.NOT_AVAILABLE
     
     def calculate_new_average(self, old_average: float, new_point: float):
         return (old_average * self.average_alpha) + (new_point * (1 - self.average_alpha))
@@ -47,7 +49,10 @@ class DataHandler(QObject):
             | packet_spec.TelemetryPacketSubType.THRUST:
                 self.process_telemetry(header, message)
             case packet_spec.TelemetryPacketSubType.ARMING_STATE:
-                self.arming_state_changed.emit(message.state)
+                if message.state != self.arming_state:
+                    self.arming_state = message.state
+                    self.arming_state_changed.emit(message.state)
+                    self.system_state_changed.emit(message.time_since_power, {"Arming state": message.state})
             case packet_spec.TelemetryPacketSubType.ACT_STATE:
                 if message.id == 3 and message.state == packet_spec.ActuatorState.ON:
                     self.annoy_prop.emit()
@@ -56,18 +61,25 @@ class DataHandler(QObject):
                     self.actuator_state_changed.emit(message.id, message.state)
                     match(message.id):
                         case 0:
-                            self.log_ready.emit(f"Fire Valve set to: {message.state}")
+                            self.log_ready.emit(f"Igniter set to: {message.state}")
+                            self.system_state_changed.emit(message.time_since_power, {"Igniter": message.state})
                         case 13:
                             self.log_ready.emit(f"Quick Disconnect set to: {message.state}")
+                            self.system_state_changed.emit(message.time_since_power, {"Quick disconnect": message.state})
                         case 14:
-                            self.log_ready.emit(f"Igniter set to: {message.state}")
+                            self.log_ready.emit(f"Dump valve set to: {message.state}")
+                            self.system_state_changed.emit(message.time_since_power, {"Dump valve": message.state})
                         case _:
                             self.log_ready.emit(f"XV-{message.id} set to: {message.state}")
+                            self.system_state_changed.emit(message.time_since_power, {f"XV-{message.id}": message.state})
             case packet_spec.TelemetryPacketSubType.WARNING:
                 # Write warning to logs maybe?
                 pass
             case packet_spec.TelemetryPacketSubType.CONTINUITY:
-                self.continuity_state_changed.emit(message.state)
+                if message.state != self.continuity_state:
+                    self.continuity_state = message.state
+                    self.continuity_state_changed.emit(message.state)
+                    self.system_state_changed.emit(message.time_since_power, {"Continuity": message.state})
             case packet_spec.TelemetryPacketSubType.CONN_STATUS:
                 self.cc_connection_status_changed.emit(message.status)
                 if message.status in [packet_spec.IPConnectionStatus.RECONNECTING, packet_spec.IPConnectionStatus.DISCONNECTED]:

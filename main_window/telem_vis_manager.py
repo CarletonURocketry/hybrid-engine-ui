@@ -16,6 +16,7 @@ from PySide6.QtCore import QObject, Slot
 from .labels import *
 from .plot_info import PlotInfo, PlotDataDisplayMode
 
+
 # This class handles all updating of telemetry components
 # i.e any component whose display changes due to newly received
 # information, or a change in connection status is handled here
@@ -71,9 +72,9 @@ class TelemVisManager(QObject):
     def update_arming_state_label(self, new_arming_state: packet_spec.ArmingState):
         self.hybrid_state_labels["arming_state"].update(new_arming_state)
 
-    @Slot(packet_spec.ActuatorState)
+    @Slot(int, packet_spec.ActuatorState)
     def update_actuator_state_label(
-        self, actuator_id, new_actuator_state: packet_spec.ActuatorState
+        self, actuator_id: int, new_actuator_state: packet_spec.ActuatorState
     ):
         self.valve_state_labels[actuator_id].update(new_actuator_state)
 
@@ -118,17 +119,21 @@ class TelemVisManager(QObject):
     @Slot()
     def on_tank_mass_data_display_change(self, button: QRadioButton):
         for plot_id in ["m0"]:
-            self.plots[plot_id].data_display_mode = PlotDataDisplayMode[button.property("type")]
+            self.plots[plot_id].data_display_mode = PlotDataDisplayMode[
+                button.property("type")
+            ]
 
     @Slot()
     def on_tank_mass_x_val_change(self, value: float):
         for plot_id in ["m0"]:
             self.plots[plot_id].x_val = value
-    
+
     @Slot()
     def on_engine_thrust_data_display_change(self, button: QRadioButton):
         for plot_id in ["th0"]:
-            self.plots[plot_id].data_display_mode = PlotDataDisplayMode[button.property("type")]
+            self.plots[plot_id].data_display_mode = PlotDataDisplayMode[
+                button.property("type")
+            ]
 
     @Slot()
     def on_engine_thrust_x_val_change(self, value: float):
