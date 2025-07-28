@@ -202,9 +202,9 @@ class PIDWindow(QWidget):
 
 class MainWindow(QWidget):
     #TODO: These should be moved into their own modules like all of the other classes
-    from .serial import serial_connection_button_handler, \
-        refresh_serial_button_handler, serial_receive_data, serial_on_error
-    from .recording_and_playback import recording_toggle_button_handler, open_file_button_handler
+    # from .serial import serial_connection_button_handler, \
+    #     refresh_serial_button_handler, serial_receive_data, serial_on_error
+    # from .recording_and_playback import recording_toggle_button_handler, open_file_button_handler
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -251,10 +251,10 @@ class MainWindow(QWidget):
             self.ui.baudRateDropdown.addItem(str(rate))
 
         # Serial: TODO: MAKE THIS A CLASS
-        self.serialPort = QSerialPort(self)
-        self.serialTimestamp = 0
-        self.serialPort.readyRead.connect(self.serial_receive_data)
-        self.serialPort.errorOccurred.connect(self.serial_on_error)
+        # self.serialPort = QSerialPort(self)
+        # self.serialTimestamp = 0
+        # self.serialPort.readyRead.connect(self.serial_receive_data)
+        # self.serialPort.errorOccurred.connect(self.serial_on_error)
 
         # When connecting signals to slots, care should be taken as to what args are passed along
         # with the signal and whether or not we should pass args for certain signals. For example,
@@ -324,16 +324,16 @@ class MainWindow(QWidget):
 
         # Connection button handlers
         self.ui.udpConnectButton.clicked.connect(lambda: self.udp_controller.udp_connection_button_handler(self.ui.udpIpAddressInput.text(), self.ui.udpPortInput.text()))
-        self.ui.serialConnectButton.clicked.connect(self.serial_connection_button_handler)
-        self.ui.serialRefreshButton.clicked.connect(self.refresh_serial_button_handler)
+        # self.ui.serialConnectButton.clicked.connect(self.serial_connection_button_handler)
+        # self.ui.serialRefreshButton.clicked.connect(self.refresh_serial_button_handler)
 
         # Save CSV button handler
         self.ui.saveCsvButton.clicked.connect(self.save_csv_button_handler)
 
         # Handlers for recording and replaying data
         self.raw_data_file_out = None
-        self.ui.openFileButton.clicked.connect(self.open_file_button_handler)
-        self.ui.recordingToggleButton.toggled.connect(self.recording_toggle_button_handler)
+        # self.ui.openFileButton.clicked.connect(self.open_file_button_handler)
+        # self.ui.recordingToggleButton.toggled.connect(self.recording_toggle_button_handler)
 
         # Switching PID in PID window
         self.ui.pidWindowButtonGroup.buttonToggled.connect(self.pid_window.change_diagram)
@@ -599,8 +599,8 @@ class MainWindow(QWidget):
         if confirm == QMessageBox.StandardButton.Yes:
             self.udp_controller.leave_multicast_group()
 
-            if self.serialPort.isOpen():
-                self.serialPort.close()
+            # if self.serialPort.isOpen():
+            #     self.serialPort.close()
 
             self.data_csv_writer.flush(_async=False)
             self.state_csv_writer.flush(_async=False)
