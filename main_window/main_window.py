@@ -608,3 +608,4 @@ class MainWindow(QWidget):
             event.accept()
         else:
             event.ignore()
+            
