@@ -331,8 +331,6 @@ class MainWindow(QWidget):
         # self.ui.serialConnectButton.clicked.connect(self.serial_connection_button_handler)
         # self.ui.serialRefreshButton.clicked.connect(self.refresh_serial_button_handler)
 
-        # Save CSV button handler
-        self.ui.saveCsvButton.clicked.connect(self.save_csv_button_handler)
 
         # Handlers for recording and replaying data
         self.raw_data_file_out = None
@@ -342,6 +340,12 @@ class MainWindow(QWidget):
         # Switching PID in PID window
         self.ui.pidWindowButtonGroup.buttonToggled.connect(self.pid_window.change_diagram)
         self.ui.pidWindowButtonGroup.buttonToggled.connect(self.config_manager.default_pid_diagram_change_handler)
+        
+        # Save CSV button handler
+        self.ui.saveCsvButton.clicked.connect(self.save_csv_button_handler)
+
+        # Reset plots button
+        self.ui.resetPlotsButton.clicked.connect(self.telem_vis_manager.reset_plots)
 
         # Sensor display option handlers
         self.ui.numPointsAverageInput.valueChanged.connect(self.config_manager.points_for_average_change_handler)
@@ -450,18 +454,18 @@ class MainWindow(QWidget):
         self.plot_data: dict[str, PlotInfo] = {}
 
         # Numpy arrays for storing telemetry that gets shown on graphs
-        self.p0_points = np.empty((0,2))
-        self.p1_points = np.empty((0,2))
-        self.p2_points = np.empty((0,2))
-        self.p3_points = np.empty((0,2))
-        self.p4_points = np.empty((0,2))
-        self.p5_points = np.empty((0,2))
-        self.t0_points = np.empty((0,2))
-        self.t1_points = np.empty((0,2))
-        self.t2_points = np.empty((0,2))
-        self.t3_points = np.empty((0,2))
-        self.tank_mass_points = np.empty((0,2))
-        self.engine_thrust_points = np.empty((0,2))
+        p0_points = np.empty((0,2))
+        p1_points = np.empty((0,2))
+        p2_points = np.empty((0,2))
+        p3_points = np.empty((0,2))
+        p4_points = np.empty((0,2))
+        p5_points = np.empty((0,2))
+        t0_points = np.empty((0,2))
+        t1_points = np.empty((0,2))
+        t2_points = np.empty((0,2))
+        t3_points = np.empty((0,2))
+        tank_mass_points = np.empty((0,2))
+        engine_thrust_points = np.empty((0,2))
 
         # Set labels and create plot data for each graph
         # each entry in plots contains a PlotInfo dataclass consisting of points and data_line
@@ -476,33 +480,33 @@ class MainWindow(QWidget):
         self.ui.pressurePlot.getAxis("bottom").setPen(black_pen)
         self.ui.pressurePlot.getAxis("bottom").setTextPen(black_pen)
         self.plot_data["p0"] = PlotInfo(0,
-                                    self.p0_points,
-                                    self.ui.pressurePlot.plot(self.p0_points, pen=red_pen, name="p1"),
+                                    p0_points,
+                                    self.ui.pressurePlot.plot(p0_points, pen=red_pen, name="p1"),
                                     PlotDataDisplayMode[self.config_manager.config["graph_options"]["pressure"]["data_display_mode"]],
                                     self.config_manager.config["graph_options"]["pressure"]["X"])
         self.plot_data["p1"] = PlotInfo(0,
-                                    self.p1_points,
-                                    self.ui.pressurePlot.plot(self.p1_points, pen=green_pen, name="p2"),
+                                    p1_points,
+                                    self.ui.pressurePlot.plot(p1_points, pen=green_pen, name="p2"),
                                     PlotDataDisplayMode[self.config_manager.config["graph_options"]["pressure"]["data_display_mode"]],
                                     self.config_manager.config["graph_options"]["pressure"]["X"])
         self.plot_data["p2"] = PlotInfo(0,
-                                    self.p2_points,
-                                    self.ui.pressurePlot.plot(self.p2_points, pen=blue_pen, name="p3"),
+                                    p2_points,
+                                    self.ui.pressurePlot.plot(p2_points, pen=blue_pen, name="p3"),
                                     PlotDataDisplayMode[self.config_manager.config["graph_options"]["pressure"]["data_display_mode"]],
                                     self.config_manager.config["graph_options"]["pressure"]["X"])
         self.plot_data["p3"] = PlotInfo(0,
-                                    self.p3_points,
-                                    self.ui.pressurePlot.plot(self.p3_points, pen=orange_pen, name="p4"),
+                                    p3_points,
+                                    self.ui.pressurePlot.plot(p3_points, pen=orange_pen, name="p4"),
                                     PlotDataDisplayMode[self.config_manager.config["graph_options"]["pressure"]["data_display_mode"]],
                                     self.config_manager.config["graph_options"]["pressure"]["X"])
         self.plot_data["p4"] = PlotInfo(0,
-                                    self.p4_points,
-                                    self.ui.pressurePlot.plot(self.p4_points, pen=purple_pen, name="p5"),
+                                    p4_points,
+                                    self.ui.pressurePlot.plot(p4_points, pen=purple_pen, name="p5"),
                                     PlotDataDisplayMode[self.config_manager.config["graph_options"]["pressure"]["data_display_mode"]],
                                     self.config_manager.config["graph_options"]["pressure"]["X"])
         self.plot_data["p5"] = PlotInfo(0,
-                                    self.p5_points,
-                                    self.ui.pressurePlot.plot(self.p5_points, pen=brown_pen, name="p6"),
+                                    p5_points,
+                                    self.ui.pressurePlot.plot(p5_points, pen=brown_pen, name="p6"),
                                     PlotDataDisplayMode[self.config_manager.config["graph_options"]["pressure"]["data_display_mode"]],
                                     self.config_manager.config["graph_options"]["pressure"]["X"])
         for marker in self.config_manager.config["graph_options"]["pressure"]["thresholds"]:
@@ -517,23 +521,23 @@ class MainWindow(QWidget):
         self.ui.temperaturePlot.getAxis("bottom").setPen(black_pen)
         self.ui.temperaturePlot.getAxis("bottom").setTextPen(black_pen)
         self.plot_data["t0"] = PlotInfo(0,
-                                    self.t0_points,
-                                    self.ui.temperaturePlot.plot(self.t0_points, pen=red_pen, name="t1"),
+                                    t0_points,
+                                    self.ui.temperaturePlot.plot(t0_points, pen=red_pen, name="t1"),
                                     PlotDataDisplayMode[self.config_manager.config["graph_options"]["temperature"]["data_display_mode"]],
                                     self.config_manager.config["graph_options"]["temperature"]["X"])
         self.plot_data["t1"] = PlotInfo(0,
-                                    self.t1_points,
-                                    self.ui.temperaturePlot.plot(self.t1_points, pen=green_pen, name="t2"),
+                                    t1_points,
+                                    self.ui.temperaturePlot.plot(t1_points, pen=green_pen, name="t2"),
                                     PlotDataDisplayMode[self.config_manager.config["graph_options"]["temperature"]["data_display_mode"]],
                                     self.config_manager.config["graph_options"]["temperature"]["X"])
         self.plot_data["t2"] = PlotInfo(0,
-                                    self.t2_points,
-                                    self.ui.temperaturePlot.plot(self.t2_points, pen=blue_pen, name="t3"),
+                                    t2_points,
+                                    self.ui.temperaturePlot.plot(t2_points, pen=blue_pen, name="t3"),
                                     PlotDataDisplayMode[self.config_manager.config["graph_options"]["temperature"]["data_display_mode"]],
                                     self.config_manager.config["graph_options"]["temperature"]["X"])
         self.plot_data["t3"] = PlotInfo(0,
-                                    self.t3_points,
-                                    self.ui.temperaturePlot.plot(self.t3_points, pen=orange_pen, name="t4"),
+                                    t3_points,
+                                    self.ui.temperaturePlot.plot(t3_points, pen=orange_pen, name="t4"),
                                     PlotDataDisplayMode[self.config_manager.config["graph_options"]["temperature"]["data_display_mode"]],
                                     self.config_manager.config["graph_options"]["temperature"]["X"])
         for marker in self.config_manager.config["graph_options"]["temperature"]["thresholds"]:
@@ -548,8 +552,8 @@ class MainWindow(QWidget):
         self.ui.tankMassPlot.getAxis("bottom").setPen(black_pen)
         self.ui.tankMassPlot.getAxis("bottom").setTextPen(black_pen)
         self.plot_data["m0"] = PlotInfo(0,
-                                    self.tank_mass_points,
-                                    self.ui.tankMassPlot.plot(self.tank_mass_points, pen=red_pen),
+                                    tank_mass_points,
+                                    self.ui.tankMassPlot.plot(tank_mass_points, pen=red_pen),
                                     PlotDataDisplayMode[self.config_manager.config["graph_options"]["tank_mass"]["data_display_mode"]],
                                     self.config_manager.config["graph_options"]["tank_mass"]["X"])
         for marker in self.config_manager.config["graph_options"]["tank_mass"]["thresholds"]:
@@ -564,9 +568,9 @@ class MainWindow(QWidget):
         self.ui.engineThrustPlot.getAxis("bottom").setPen(black_pen)
         self.ui.engineThrustPlot.getAxis("bottom").setTextPen(black_pen)
         self.plot_data["th0"] = PlotInfo(0,
-                                    self.engine_thrust_points,
-                                     self.ui.engineThrustPlot.plot(self.engine_thrust_points, pen=red_pen),
-                                     PlotDataDisplayMode[self.config_manager.config["graph_options"]["engine_thrust"]["data_display_mode"]],
+                                    engine_thrust_points,
+                                    self.ui.engineThrustPlot.plot(engine_thrust_points, pen=red_pen),
+                                    PlotDataDisplayMode[self.config_manager.config["graph_options"]["engine_thrust"]["data_display_mode"]],
                                     self.config_manager.config["graph_options"]["engine_thrust"]["X"])
         for marker in self.config_manager.config["graph_options"]["engine_thrust"]["thresholds"]:
             self.ui.engineThrustPlot.addItem(InfiniteLine(float(marker), angle=0, pen=inf_line_pen))
