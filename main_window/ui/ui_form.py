@@ -15,11 +15,11 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QButtonGroup, QComboBox, QDoubleSpinBox,
-    QFormLayout, QGridLayout, QHBoxLayout, QLabel,
-    QLineEdit, QListWidget, QListWidgetItem, QPushButton,
-    QRadioButton, QSizePolicy, QSpinBox, QTabWidget,
-    QTextBrowser, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QButtonGroup, QDoubleSpinBox, QFormLayout,
+    QGridLayout, QHBoxLayout, QLabel, QLineEdit,
+    QListWidget, QListWidgetItem, QPushButton, QRadioButton,
+    QSizePolicy, QSpinBox, QTabWidget, QTextBrowser,
+    QVBoxLayout, QWidget)
 
 from pyqtgraph import PlotWidget
 from . import rc_resources
@@ -83,11 +83,6 @@ class Ui_Widget(object):
 
         self.mainLayout.addWidget(self.openFileButton)
 
-        self.recordingToggleButton = QRadioButton(self.telemetryTab)
-        self.recordingToggleButton.setObjectName(u"recordingToggleButton")
-
-        self.mainLayout.addWidget(self.recordingToggleButton)
-
 
         self.controlLayout.addLayout(self.mainLayout)
 
@@ -144,25 +139,6 @@ class Ui_Widget(object):
 
 
         self.horizontalLayout_6.addLayout(self.horizontalLayout_3)
-
-        self.serialConnLabelsLayout = QHBoxLayout()
-        self.serialConnLabelsLayout.setObjectName(u"serialConnLabelsLayout")
-        self.serialConnLabel = QLabel(self.telemetryTab)
-        self.serialConnLabel.setObjectName(u"serialConnLabel")
-        self.serialConnLabel.setFont(font)
-
-        self.serialConnLabelsLayout.addWidget(self.serialConnLabel)
-
-        self.serialConnStatusLabel = QLabel(self.telemetryTab)
-        self.serialConnStatusLabel.setObjectName(u"serialConnStatusLabel")
-        self.serialConnStatusLabel.setFont(font1)
-        self.serialConnStatusLabel.setStyleSheet(u"background-color: rgb(0, 85, 127); color: white;")
-        self.serialConnStatusLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        self.serialConnLabelsLayout.addWidget(self.serialConnStatusLabel)
-
-
-        self.horizontalLayout_6.addLayout(self.serialConnLabelsLayout)
 
 
         self.connectionAndStateLayout.addLayout(self.horizontalLayout_6)
@@ -340,70 +316,10 @@ class Ui_Widget(object):
 
         self.formLayout.setLayout(0, QFormLayout.SpanningRole, self.connectionLayout)
 
-        self.serialLayout = QVBoxLayout()
-        self.serialLayout.setSpacing(10)
-        self.serialLayout.setObjectName(u"serialLayout")
-        self.serialConfigLabel = QLabel(self.connectionTab)
-        self.serialConfigLabel.setObjectName(u"serialConfigLabel")
-        self.serialConfigLabel.setFont(font2)
-        self.serialConfigLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        self.serialLayout.addWidget(self.serialConfigLabel)
-
-        self.serialPortSelectLayout = QHBoxLayout()
-        self.serialPortSelectLayout.setObjectName(u"serialPortSelectLayout")
-        self.serialPortLabel = QLabel(self.connectionTab)
-        self.serialPortLabel.setObjectName(u"serialPortLabel")
-
-        self.serialPortSelectLayout.addWidget(self.serialPortLabel)
-
-        self.serialPortDropdown = QComboBox(self.connectionTab)
-        self.serialPortDropdown.setObjectName(u"serialPortDropdown")
-
-        self.serialPortSelectLayout.addWidget(self.serialPortDropdown)
-
-
-        self.serialLayout.addLayout(self.serialPortSelectLayout)
-
-        self.serialBaudRateLayout = QHBoxLayout()
-        self.serialBaudRateLayout.setObjectName(u"serialBaudRateLayout")
-        self.baudRateLabel = QLabel(self.connectionTab)
-        self.baudRateLabel.setObjectName(u"baudRateLabel")
-
-        self.serialBaudRateLayout.addWidget(self.baudRateLabel)
-
-        self.baudRateDropdown = QComboBox(self.connectionTab)
-        self.baudRateDropdown.setObjectName(u"baudRateDropdown")
-
-        self.serialBaudRateLayout.addWidget(self.baudRateDropdown)
-
-
-        self.serialLayout.addLayout(self.serialBaudRateLayout)
-
-        self.serialConnectLayout = QHBoxLayout()
-        self.serialConnectLayout.setObjectName(u"serialConnectLayout")
-        self.serialConnectButton = QPushButton(self.connectionTab)
-        self.serialConnectButton.setObjectName(u"serialConnectButton")
-        self.serialConnectButton.setStyleSheet(u"")
-
-        self.serialConnectLayout.addWidget(self.serialConnectButton)
-
-        self.serialRefreshButton = QPushButton(self.connectionTab)
-        self.serialRefreshButton.setObjectName(u"serialRefreshButton")
-
-        self.serialConnectLayout.addWidget(self.serialRefreshButton)
-
-        self.serialConnectLayout.setStretch(0, 100)
-
-        self.serialLayout.addLayout(self.serialConnectLayout)
-
-
-        self.formLayout.setLayout(1, QFormLayout.SpanningRole, self.serialLayout)
-
         self.saveConnConfigButton = QPushButton(self.connectionTab)
         self.saveConnConfigButton.setObjectName(u"saveConnConfigButton")
 
-        self.formLayout.setWidget(4, QFormLayout.SpanningRole, self.saveConnConfigButton)
+        self.formLayout.setWidget(3, QFormLayout.SpanningRole, self.saveConnConfigButton)
 
         self.tabWidget.addTab(self.connectionTab, "")
         self.displayOptionsTab = QWidget()
@@ -907,16 +823,10 @@ class Ui_Widget(object):
         self.saveCsvButton.setText(QCoreApplication.translate("Widget", u"Save current CSV data", None))
         self.resetPlotsButton.setText(QCoreApplication.translate("Widget", u"Reset plots", None))
         self.openFileButton.setText(QCoreApplication.translate("Widget", u"Open raw data file", None))
-        self.recordingToggleButton.setText(QCoreApplication.translate("Widget", u"Recording raw data", None))
         self.udpConnLabel.setText(QCoreApplication.translate("Widget", u"Pad server:", None))
         self.udpConnStatusLabel.setText(QCoreApplication.translate("Widget", u"Not connected", None))
         self.ccConnLabel.setText(QCoreApplication.translate("Widget", u"Control client:", None))
         self.ccConnStatusLabel.setText(QCoreApplication.translate("Widget", u"Not connected", None))
-#if QT_CONFIG(tooltip)
-        self.serialConnLabel.setToolTip(QCoreApplication.translate("Widget", u"Deprecated", None))
-#endif // QT_CONFIG(tooltip)
-        self.serialConnLabel.setText(QCoreApplication.translate("Widget", u"Serial:", None))
-        self.serialConnStatusLabel.setText(QCoreApplication.translate("Widget", u"Not connected", None))
         self.armingStateLabel.setText(QCoreApplication.translate("Widget", u"Arming state:", None))
         self.armingStateValueLabel.setText(QCoreApplication.translate("Widget", u"N/A", None))
         self.continuityLabel.setText(QCoreApplication.translate("Widget", u"Continuity State:", None))
@@ -935,21 +845,10 @@ class Ui_Widget(object):
 #endif // QT_CONFIG(tooltip)
         self.udpPortLabel.setText(QCoreApplication.translate("Widget", u"MCast port*: ", None))
         self.udpConnectButton.setText(QCoreApplication.translate("Widget", u"Join multicast group", None))
-        self.serialConfigLabel.setText(QCoreApplication.translate("Widget", u"Serial configuration", None))
-#if QT_CONFIG(tooltip)
-        self.serialPortLabel.setToolTip(QCoreApplication.translate("Widget", u"Serial device identifier", None))
-#endif // QT_CONFIG(tooltip)
-        self.serialPortLabel.setText(QCoreApplication.translate("Widget", u"Serial port:", None))
-#if QT_CONFIG(tooltip)
-        self.baudRateLabel.setToolTip(QCoreApplication.translate("Widget", u"Baud rate of serial device", None))
-#endif // QT_CONFIG(tooltip)
-        self.baudRateLabel.setText(QCoreApplication.translate("Widget", u"Baud rate:", None))
-        self.serialConnectButton.setText(QCoreApplication.translate("Widget", u"Connect to serial port", None))
-        self.serialRefreshButton.setText(QCoreApplication.translate("Widget", u"Refresh", None))
         self.saveConnConfigButton.setText(QCoreApplication.translate("Widget", u"Save default connection configuration", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.connectionTab), QCoreApplication.translate("Widget", u"Connection", None))
 #if QT_CONFIG(tooltip)
-        self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.connectionTab), QCoreApplication.translate("Widget", u"Setup multicat or serial connection", None))
+        self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.connectionTab), QCoreApplication.translate("Widget", u"Setup multicat connection", None))
 #endif // QT_CONFIG(tooltip)
         self.sensorDisplayOptionsLabel.setText(QCoreApplication.translate("Widget", u"Sensors & valves display options", None))
 #if QT_CONFIG(tooltip)
