@@ -15,7 +15,7 @@ from PySide6.QtWebEngineWidgets import QWebEngineView
 
 from pyqtgraph import mkPen, InfiniteLine
 
-from .ui import Ui_Widget
+from ..ui import Ui_Widget
 
 inf_line_pen = mkPen("black", width=2, style=Qt.PenStyle.DashLine)
 

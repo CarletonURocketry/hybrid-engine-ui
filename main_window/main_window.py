@@ -26,18 +26,20 @@ from pyqtgraph import mkPen, InfiniteLine, QtCore
 import numpy as np
 
 from .ui import Ui_Widget, Ui_PIDWindow
-from .utils import packet_spec
-from .ui_manager import UIManager
-from .telem_vis_manager import TelemVisManager
-from .udp import UDPController
-from .data_handlers import DataHandler
-from .csv_writer import CSVWriter
+from .utils import CSVWriter
+from .modules import (
+    ConfigManager,
+    DataHandler,
+    LogManager,
+    PlaybackManager,
+    TelemVisManager,
+    TimerController,
+    UDPController,
+    UIManager,
+)
+# from .csv_writer import 
 from .plot_info import PlotDataDisplayMode, PlotInfo
-from .timer_controller import TimerController
 from .labels import *
-from .logging import LogManager
-from .config import ConfigManager
-from .recording_and_playback import PlaybackManager
 
 class PIDWindow(QWidget):
     def __init__(self):

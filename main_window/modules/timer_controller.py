@@ -11,7 +11,7 @@ and is handled by the appropriate class(es).
 
 from PySide6.QtCore import Signal, QObject, Slot, QTimer, QMutex
 
-from .utils import packet_spec
+from ..utils import packet_spec
 
 class TimerController(QObject):
 
