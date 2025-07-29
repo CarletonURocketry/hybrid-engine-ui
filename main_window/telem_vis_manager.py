@@ -63,12 +63,6 @@ class TelemVisManager(QObject):
     ):
         self.conn_status_labels["control_client"].update(new_cc_conn_status)
 
-    @Slot(packet_spec.IPConnectionStatus)
-    def update_serial_conn_status_label(
-        self, new_cc_conn_status: packet_spec.IPConnectionStatus
-    ):
-        self.conn_status_labels["serial"].update(new_cc_conn_status)
-
     @Slot(packet_spec.ArmingState)
     def update_arming_state_label(self, new_arming_state: packet_spec.ArmingState):
         self.hybrid_state_labels["arming_state"].update(new_arming_state)

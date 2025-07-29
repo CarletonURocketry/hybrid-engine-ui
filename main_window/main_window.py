@@ -21,7 +21,6 @@ miscellaneous functions that are implemented here because they have nowhere else
 import sys
 
 from PySide6.QtWidgets import QWidget, QMessageBox, QInputDialog
-from PySide6.QtSerialPort import QSerialPort, QSerialPortInfo
 from PySide6.QtGui import QPixmap
 from pyqtgraph import mkPen, InfiniteLine, QtCore
 import numpy as np
@@ -206,10 +205,6 @@ class PIDWindow(QWidget):
             getattr(self.ui, f"p{i+1}ValLabel").setStyleSheet(f"color: rgb(0, 0, 0);\nfont: 700 {self.window_config["cold_flow"]["val_label_font"]}pt 'Segoe UI';")
 
 class MainWindow(QWidget):
-    #TODO: These should be moved into their own modules like all of the other classes
-    # from .serial import serial_connection_button_handler, \
-    #     refresh_serial_button_handler, serial_receive_data, serial_on_error
-    # from .recording_and_playback import recording_toggle_button_handler, open_file_button_handler
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -250,17 +245,6 @@ class MainWindow(QWidget):
         self.state_csv_writer = CSVWriter(["t","Igniter","XV-1","XV-2","XV-3","XV-4","XV-5","XV-6","XV-7","XV-8","XV-9","XV-10","XV-11","XV-12","Quick disconnect","Dump valve","Arming state","Continuity"], 0, "valves_csv")
 
         self.ui_manager.populate_config_settings(self.config_manager.config)
-        
-        for port in QSerialPortInfo.availablePorts():
-            self.ui.serialPortDropdown.addItem(port.portName())
-        for rate in QSerialPortInfo.standardBaudRates():
-            self.ui.baudRateDropdown.addItem(str(rate))
-
-        # Serial: TODO: MAKE THIS A CLASS
-        # self.serialPort = QSerialPort(self)
-        # self.serialTimestamp = 0
-        # self.serialPort.readyRead.connect(self.serial_receive_data)
-        # self.serialPort.errorOccurred.connect(self.serial_on_error)
 
         # When connecting signals to slots, care should be taken as to what args are passed along
         # with the signal and whether or not we should pass args for certain signals. For example,
@@ -270,7 +254,6 @@ class MainWindow(QWidget):
         # Furthermore, it also makes sense that if this signal calls functions that require an argument,
         # that a lambda or a partial function be used as the slot
         self.udp_controller.multicast_group_joined.connect(lambda: self.ui_manager.disable_udp_config(disable_btn=False))
-        self.udp_controller.multicast_group_joined.connect(lambda: self.ui_manager.disable_serial_config(disable_btn=True))
         self.udp_controller.multicast_group_joined.connect(self.timer_controller.start_data_filter_timer)
         self.udp_controller.multicast_group_joined.connect(self.timer_controller.start_heartbeat_timer)
         self.udp_controller.multicast_group_joined.connect(lambda: self.telem_vis_manager.update_ps_conn_status_label(packet_spec.IPConnectionStatus.CONNECTED))
@@ -282,7 +265,6 @@ class MainWindow(QWidget):
         # that means stopping all timers, setting all labels back to NOT_CONNECTED or NOT_AVAILABLE
         # and flushing any leftover CSV buffers
         self.udp_controller.multicast_group_disconnected.connect(self.ui_manager.enable_udp_config)
-        self.udp_controller.multicast_group_disconnected.connect(self.ui_manager.enable_serial_config)
         self.udp_controller.multicast_group_disconnected.connect(self.timer_controller.stop_heartbeat_timer)
         self.udp_controller.multicast_group_disconnected.connect(self.timer_controller.stop_data_filter_timer)
         self.udp_controller.multicast_group_disconnected.connect(self.timer_controller.stop_ps_disconnect_flash_timer) # Stop flashing these because we're disconnected
@@ -340,9 +322,6 @@ class MainWindow(QWidget):
 
         # Connection button handlers
         self.ui.udpConnectButton.clicked.connect(lambda: self.udp_controller.udp_connection_button_handler(self.ui.udpIpAddressInput.text(), self.ui.udpPortInput.text()))
-        # self.ui.serialConnectButton.clicked.connect(self.serial_connection_button_handler)
-        # self.ui.serialRefreshButton.clicked.connect(self.refresh_serial_button_handler)
-
 
         # Handlers for recording and replaying data
         self.raw_data_file_out = None
@@ -444,7 +423,6 @@ class MainWindow(QWidget):
         self.conn_status_labels = {}
         self.conn_status_labels["pad_server"] = ConnectionStatusLabel(self.ui.udpConnStatusLabel)
         self.conn_status_labels["control_client"] = ConnectionStatusLabel(self.ui.ccConnStatusLabel)
-        self.conn_status_labels["serial"] = ConnectionStatusLabel(self.ui.serialConnStatusLabel)
 
     def init_hybrid_state_labels(self):
         self.hybrid_state_labels = {}
@@ -618,9 +596,6 @@ class MainWindow(QWidget):
         confirm = QMessageBox.question(self, "Close application", "Are you sure you want to close the application?", QMessageBox.Yes | QMessageBox.No)
         if confirm == QMessageBox.StandardButton.Yes:
             self.udp_controller.leave_multicast_group()
-
-            # if self.serialPort.isOpen():
-            #     self.serialPort.close()
 
             self.data_csv_writer.flush(_async=False)
             self.state_csv_writer.flush(_async=False)
