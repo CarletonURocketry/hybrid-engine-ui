@@ -54,22 +54,6 @@ class UIManager(QObject):
         self.ui.udpIpAddressInput.setEnabled(False)
         self.ui.udpPortInput.setEnabled(False)
 
-    @Slot()
-    def enable_serial_config(self):
-        self.ui.serialConnectButton.setText("Connect to serial port")
-        self.ui.serialConnectButton.setEnabled(True)
-        self.ui.serialPortDropdown.setEnabled(True)
-        self.ui.baudRateDropdown.setEnabled(True)
-
-    @Slot()
-    def disable_serial_config(self, disable_btn: bool):
-        if disable_btn:
-            self.ui.serialConnectButton.setEnabled(False)
-        else:
-            self.ui.serialConnectButton.setText("Close serial connection")
-        self.ui.serialPortDropdown.setEnabled(False)
-        self.ui.baudRateDropdown.setEnabled(False)
-
     @Slot(dict)
     def populate_config_settings(self, config_options: dict):
         self.ui.udpIpAddressInput.setText(config_options["multicast_options"]["address"])

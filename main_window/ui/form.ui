@@ -58,7 +58,7 @@
        <item>
         <layout class="QHBoxLayout" name="controlLayout" stretch="2,1,0">
          <item>
-          <layout class="QVBoxLayout" name="mainLayout" stretch="0,0,0,0,0,0">
+          <layout class="QVBoxLayout" name="mainLayout" stretch="0,0,0,0,0">
            <item>
             <widget class="QLabel" name="logoLabel">
              <property name="sizePolicy">
@@ -118,13 +118,6 @@
             <widget class="QPushButton" name="openFileButton">
              <property name="text">
               <string>Open raw data file</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QRadioButton" name="recordingToggleButton">
-             <property name="text">
-              <string>Recording raw data</string>
              </property>
             </widget>
            </item>
@@ -190,44 +183,6 @@
                  </item>
                  <item>
                   <widget class="QLabel" name="ccConnStatusLabel">
-                   <property name="font">
-                    <font>
-                     <pointsize>15</pointsize>
-                     <fontweight>DemiBold</fontweight>
-                    </font>
-                   </property>
-                   <property name="styleSheet">
-                    <string notr="true">background-color: rgb(0, 85, 127); color: white;</string>
-                   </property>
-                   <property name="text">
-                    <string>Not connected</string>
-                   </property>
-                   <property name="alignment">
-                    <set>Qt::AlignmentFlag::AlignCenter</set>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item>
-                <layout class="QHBoxLayout" name="serialConnLabelsLayout">
-                 <item>
-                  <widget class="QLabel" name="serialConnLabel">
-                   <property name="font">
-                    <font>
-                     <pointsize>14</pointsize>
-                    </font>
-                   </property>
-                   <property name="toolTip">
-                    <string>Deprecated</string>
-                   </property>
-                   <property name="text">
-                    <string>Serial:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLabel" name="serialConnStatusLabel">
                    <property name="font">
                     <font>
                      <pointsize>15</pointsize>
@@ -422,7 +377,7 @@
        <string>Connection</string>
       </attribute>
       <attribute name="toolTip">
-       <string>Setup multicat or serial connection</string>
+       <string>Setup multicat connection</string>
       </attribute>
       <layout class="QFormLayout" name="formLayout">
        <property name="rowWrapPolicy">
@@ -539,85 +494,7 @@
          </item>
         </layout>
        </item>
-       <item row="1" column="0" colspan="2">
-        <layout class="QVBoxLayout" name="serialLayout">
-         <property name="spacing">
-          <number>10</number>
-         </property>
-         <item>
-          <widget class="QLabel" name="serialConfigLabel">
-           <property name="font">
-            <font>
-             <pointsize>10</pointsize>
-             <bold>true</bold>
-            </font>
-           </property>
-           <property name="text">
-            <string>Serial configuration</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="serialPortSelectLayout">
-           <item>
-            <widget class="QLabel" name="serialPortLabel">
-             <property name="toolTip">
-              <string>Serial device identifier</string>
-             </property>
-             <property name="text">
-              <string>Serial port:</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QComboBox" name="serialPortDropdown"/>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="serialBaudRateLayout">
-           <item>
-            <widget class="QLabel" name="baudRateLabel">
-             <property name="toolTip">
-              <string>Baud rate of serial device</string>
-             </property>
-             <property name="text">
-              <string>Baud rate:</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QComboBox" name="baudRateDropdown"/>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="serialConnectLayout" stretch="100,0">
-           <item>
-            <widget class="QPushButton" name="serialConnectButton">
-             <property name="styleSheet">
-              <string notr="true"/>
-             </property>
-             <property name="text">
-              <string>Connect to serial port</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="serialRefreshButton">
-             <property name="text">
-              <string>Refresh</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-        </layout>
-       </item>
-       <item row="4" column="0" colspan="2">
+       <item row="3" column="0" colspan="2">
         <widget class="QPushButton" name="saveConnConfigButton">
          <property name="text">
           <string>Save default connection configuration</string>
@@ -1460,14 +1337,14 @@ New average = Old average * α + New value * (1-α)</string>
  </resources>
  <connections/>
  <buttongroups>
-  <buttongroup name="engineThrustDisplayButtonGroup"/>
-  <buttongroup name="pressureDisplayButtonGroup"/>
-  <buttongroup name="temperatureDisplayButtonGroup"/>
-  <buttongroup name="tankMassDisplayButtonGroup"/>
   <buttongroup name="pidWindowButtonGroup">
    <property name="type" stdset="0">
     <string>static_fire</string>
    </property>
   </buttongroup>
+  <buttongroup name="engineThrustDisplayButtonGroup"/>
+  <buttongroup name="temperatureDisplayButtonGroup"/>
+  <buttongroup name="pressureDisplayButtonGroup"/>
+  <buttongroup name="tankMassDisplayButtonGroup"/>
  </buttongroups>
 </ui>

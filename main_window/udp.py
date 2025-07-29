@@ -7,7 +7,7 @@ class uses the QUdpSocket instance to receive data from the multicast interface
 and will emit a signal after is parses data according to its specification.
 
 Note: It is NOT the responsibity of the data handler class to parse data, as different
-data sources (serial, udp, labjack) have different ways of parsing received data into 
+data sources (udp, labjack, etc.) have different ways of parsing received data into 
 the data formats that used to populate graphs
 """
 
