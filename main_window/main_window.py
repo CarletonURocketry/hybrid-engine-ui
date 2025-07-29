@@ -323,7 +323,15 @@ class MainWindow(QWidget):
         self.timer_controller.flash_cc_disconnect_label_s.connect(self.telem_vis_manager.flash_cc_label)
         self.timer_controller.update_pad_server_display_s.connect(self.telem_vis_manager.update_ps_conn_status_label)
         self.timer_controller.update_control_client_display_s.connect(self.telem_vis_manager.update_cc_conn_status_label)
+        self.timer_controller.playback_packet.connect(self.playback_manager.playback_packet)
         self.timer_controller.log_ready.connect(self.log_manager.write_to_log)
+
+        self.playback_manager.parsed_packet_ready.connect(self.data_handler.process_packet)
+        self.playback_manager.playback_started.connect(self.timer_controller.start_playback_timer)
+        self.playback_manager.playback_started.connect(self.timer_controller.start_data_filter_timer)
+        self.playback_manager.playback_ended.connect(self.timer_controller.stop_playback_timer)
+        self.playback_manager.playback_ended.connect(self.timer_controller.stop_data_filter_timer)
+        self.playback_manager.log_ready.connect(self.log_manager.write_to_log)
 
         ### Button and associated signal handlers ###
         # In some cases, it was easier to have some signals connect to a UI manager function
@@ -340,7 +348,7 @@ class MainWindow(QWidget):
 
         # Handlers for recording and replaying data
         self.raw_data_file_out = None
-        # self.ui.openFileButton.clicked.connect(self.open_file_button_handler)
+        self.ui.openFileButton.clicked.connect(self.playback_manager.open_file_button_handler)
         # self.ui.recordingToggleButton.toggled.connect(self.recording_toggle_button_handler)
 
         # Switching PID in PID window

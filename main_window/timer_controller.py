@@ -20,6 +20,7 @@ class TimerController(QObject):
    flash_cc_disconnect_label_s = Signal()
    update_pad_server_display_s = Signal(packet_spec.IPConnectionStatus)
    update_control_client_display_s = Signal(packet_spec.IPConnectionStatus)
+   playback_packet = Signal()
    log_ready = Signal(str)
 
    def __init__(self):
@@ -47,6 +48,10 @@ class TimerController(QObject):
       # QTimer to flash the control client connection status label
       self.cc_disconnect_status_timer = QTimer(self)
       self.cc_disconnect_status_timer.timeout.connect(self.flash_cc_disconnect_label_s.emit)
+
+      self.playback_interval = 50
+      self.playback_timer = QTimer(self)
+      self.playback_timer.timeout.connect(self.playback_packet.emit)
 
    @Slot()
    def start_data_filter_timer(self):
@@ -120,3 +125,13 @@ class TimerController(QObject):
    def stop_cc_disconnect_flash_timer(self):
       if self.cc_disconnect_status_timer.isActive():
          self.cc_disconnect_status_timer.stop()
+
+   @Slot()
+   def start_playback_timer(self):
+      if not self.playback_timer.isActive():
+         self.playback_timer.start(0.1)
+
+   @Slot()
+   def stop_playback_timer(self):
+      if self.playback_timer.isActive():
+         self.playback_timer.stop()
