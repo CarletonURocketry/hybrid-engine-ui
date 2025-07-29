@@ -1,7 +1,20 @@
 """recording_and_playback.py
 
-Contains all functions related to recording of incoming data and playback.
-Should only be imported by main_window.py
+Contains the implementation of the PlaybackManager class. The
+PlaybackManager class is responsible for recording and playing back
+raw data data is received over UDP.
+
+When data is received by the UDPManager class, it is emitted by a signal
+to the PlaybackManager class which uses a BufferedWriter object to batch
+writes to the file system. This creates a .dump file containing the raw
+packets that were received
+
+To playback these packets, the file is loaded into a QDataStream object
+and parsed the same way it is in the UDPManager class. In fact, the same
+parsing functions are called and the same datahandler signals are emitted
+
+Note that replaying files will be significantly slower than observing packets
+received over UDP, but any optimization of this is not a priority.
 """
 
 import pathlib
@@ -12,8 +25,9 @@ from PySide6.QtCore import QDateTime, QObject, Slot, Signal, QFile, QDataStream,
 
 import packet_spec
 
+
 class PlaybackManager(QObject):
-    
+
     log_ready = Signal(str)
     playback_started = Signal()
     playback_ended = Signal()
@@ -38,15 +52,18 @@ class PlaybackManager(QObject):
     def on_data_received(self, data: bytes):
         self.buffered_writer.write(data)
 
-
     @Slot()
     def open_file_button_handler(self):
         # Use a dummy QWidget as parent since this class is not a QWidget
-        from PySide6.QtWidgets import QWidget
         dummy_widget = QWidget()
-        dummy_widget.setWindowFlag(dummy_widget.windowFlags())  # No-op, just to avoid warnings
+        dummy_widget.setWindowFlag(
+            dummy_widget.windowFlags()
+        )  # No-op, just to avoid warnings
         file_path, _ = QFileDialog.getOpenFileName(
-            dummy_widget, "Open Previous File", "recordings", "Dump file(*.dump);;All files (*)"
+            dummy_widget,
+            "Open Previous File",
+            "recordings",
+            "Dump file(*.dump);;All files (*)",
         )
 
         # If a file is selected, read its contents
