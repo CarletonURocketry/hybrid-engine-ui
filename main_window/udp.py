@@ -26,6 +26,7 @@ class UDPController(QObject):
     # signal but for now we're using these
     multicast_group_joined = Signal() # Emitted whenever a multicast group is joined 
     multicast_group_disconnected = Signal() # Emitted whenever we leave the multicast group
+    data_received = Signal(bytes)
     parsed_packet_ready = Signal(packet_spec.PacketHeader, packet_spec.PacketMessage) # Emitted whenever a packet has been received and parsed 
     easter_egg_opened = Signal() # Emitted when were bored
     easter_egg_closed = Signal() # Emitted when we have to lock in
@@ -83,6 +84,7 @@ class UDPController(QObject):
                 self.padUDPSocket.pendingDatagramSize()
             )
             data = datagram.data()
+            self.data_received.emit(data)
 
             # Process all packets in the datagram
             ptr = 0
@@ -101,10 +103,6 @@ class UDPController(QObject):
                 # Parse and process the message
                 message = packet_spec.parse_packet_message(header, message_bytes)
                 self.parsed_packet_ready.emit(header, message)
-
-                # #If we want to recording data
-                # if self.ui.recordingToggleButton.isChecked():
-                #     self.raw_data_file_out.write(datagram)
 
     def join_multicast_group(self, mcast_addr: str, mcast_port: str):
         multicast_group = QHostAddress(mcast_addr)

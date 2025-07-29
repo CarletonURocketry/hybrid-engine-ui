@@ -37,6 +37,7 @@ from .timer_controller import TimerController
 from .labels import *
 from .logging import LogManager
 from .config import ConfigManager
+from .recording_and_playback import PlaybackManager
 
 class PIDWindow(QWidget):
     def __init__(self):
@@ -243,6 +244,7 @@ class MainWindow(QWidget):
         self.telem_vis_manager = TelemVisManager(self.sensors, self.valves, self.conn_status_labels, self.hybrid_state_labels, self.plot_data)
         self.ui_manager = UIManager(self.ui)
         self.timer_controller = TimerController()
+        self.playback_manager = PlaybackManager()
 
         self.data_csv_writer = CSVWriter(["t","p1","p2","p3","p4","p5","p6","t1","t2","t3","t4","m1","th1","status","Continuity"], 100, "data_csv")
         self.state_csv_writer = CSVWriter(["t","Igniter","XV-1","XV-2","XV-3","XV-4","XV-5","XV-6","XV-7","XV-8","XV-9","XV-10","XV-11","XV-12","Quick disconnect","Dump valve","Arming state","Continuity"], 0, "valves_csv")
@@ -272,6 +274,7 @@ class MainWindow(QWidget):
         self.udp_controller.multicast_group_joined.connect(self.timer_controller.start_data_filter_timer)
         self.udp_controller.multicast_group_joined.connect(self.timer_controller.start_heartbeat_timer)
         self.udp_controller.multicast_group_joined.connect(lambda: self.telem_vis_manager.update_ps_conn_status_label(packet_spec.IPConnectionStatus.CONNECTED))
+        self.udp_controller.multicast_group_joined.connect(self.playback_manager.create_recording_file)
         self.udp_controller.multicast_group_joined.connect(self.data_csv_writer.create_csv_log)
         self.udp_controller.multicast_group_joined.connect(self.state_csv_writer.create_csv_log)
         
@@ -292,6 +295,7 @@ class MainWindow(QWidget):
         self.udp_controller.multicast_group_disconnected.connect(self.data_csv_writer.flush)
         self.udp_controller.multicast_group_disconnected.connect(self.state_csv_writer.flush)
 
+        self.udp_controller.data_received.connect(self.playback_manager.on_data_received)
         self.udp_controller.parsed_packet_ready.connect(self.data_handler.process_packet)
         self.udp_controller.easter_egg_opened.connect(self.ui_manager.deploy_easter_egg)
         self.udp_controller.easter_egg_closed.connect(self.ui_manager.hide_easter_egg)
@@ -319,7 +323,15 @@ class MainWindow(QWidget):
         self.timer_controller.flash_cc_disconnect_label_s.connect(self.telem_vis_manager.flash_cc_label)
         self.timer_controller.update_pad_server_display_s.connect(self.telem_vis_manager.update_ps_conn_status_label)
         self.timer_controller.update_control_client_display_s.connect(self.telem_vis_manager.update_cc_conn_status_label)
+        self.timer_controller.playback_packet.connect(self.playback_manager.playback_packet)
         self.timer_controller.log_ready.connect(self.log_manager.write_to_log)
+
+        self.playback_manager.parsed_packet_ready.connect(self.data_handler.process_packet)
+        self.playback_manager.playback_started.connect(self.timer_controller.start_playback_timer)
+        self.playback_manager.playback_started.connect(self.timer_controller.start_data_filter_timer)
+        self.playback_manager.playback_ended.connect(self.timer_controller.stop_playback_timer)
+        self.playback_manager.playback_ended.connect(self.timer_controller.stop_data_filter_timer)
+        self.playback_manager.log_ready.connect(self.log_manager.write_to_log)
 
         ### Button and associated signal handlers ###
         # In some cases, it was easier to have some signals connect to a UI manager function
@@ -334,7 +346,7 @@ class MainWindow(QWidget):
 
         # Handlers for recording and replaying data
         self.raw_data_file_out = None
-        # self.ui.openFileButton.clicked.connect(self.open_file_button_handler)
+        self.ui.openFileButton.clicked.connect(self.playback_manager.open_file_button_handler)
         # self.ui.recordingToggleButton.toggled.connect(self.recording_toggle_button_handler)
 
         # Switching PID in PID window

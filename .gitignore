@@ -90,7 +90,7 @@ venv
 .venv
 
 # Sensor recordings and log outputs
-/recording/*
+/recordings/*
 /logs/*
 /data_csv/*
 /valves_csv/*
