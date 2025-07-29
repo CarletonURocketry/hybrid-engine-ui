@@ -5,46 +5,72 @@ Should only be imported by main_window.py
 """
 
 import pathlib
-from typing import TYPE_CHECKING
+from io import BufferedWriter
 
 from PySide6.QtWidgets import QFileDialog
-from PySide6.QtCore import QDateTime
+from PySide6.QtCore import QDateTime, QObject, Slot, Signal
 
 import packet_spec
 
-if TYPE_CHECKING:
-    from main_window import MainWindow
+class PlaybackManager(QObject):
+    
+    log_ready = Signal(str)
+    playback_started = Signal()
+    playback_ended = Signal()
+    parsed_packet_ready = Signal(packet_spec.PacketHeader, packet_spec.PacketMessage)
 
-def recording_toggle_button_handler(self: "MainWindow"):
-    pathlib.Path('recording').mkdir(parents=True, exist_ok=True)
-    if self.ui.recordingToggleButton.isChecked() == True:
-        file_name = './recording/'
+    def __init__(self):
+        self.playback_ptr = 0
+        self.buffered_writer = None
+        self.data_buffer = None
+        super().__init__()
+
+    @Slot()
+    def create_recording_file(self):
+        pathlib.Path("recordings").mkdir(parents=True, exist_ok=True)
+        file_name = "./recordings/"
         file_name += QDateTime.currentDateTime().toString("yyyy-MM-dd_HH-mm")
-        file_name += '.dump'
-        self.raw_data_file_out = open(file_name, "a+b")
-    else:
-        self.raw_data_file_out.close()
+        file_name += ".dump"
+        self.buffered_writer = BufferedWriter(open(file_name, "wb+", -1))
 
-def display_previous_data(self: "MainWindow", data):
-        ptr = 0
-        data_len = len(data)
-        while(ptr < data_len):
-            header = data[ptr:ptr + 2]
-            ptr += 2
-            data_header = packet_spec.parse_packet_header(header)
-            message_bytes_length = packet_spec.packet_message_bytes_length(data_header)
-            message = data[ptr:ptr + message_bytes_length]
-            data_message = packet_spec.parse_packet_message(data_header, message)
-            ptr += message_bytes_length
-            self.plot_point(data_header, data_message)
+    @Slot(bytes)
+    def on_data_received(self, data: bytes):
+        self.buffered_writer.write(data)
 
-def open_file_button_handler(self: "MainWindow"):
-        file_path, _ = QFileDialog.getOpenFileName(self, "Open Previous File", "recording", "Dump file(*.dump);;All files (*)")
+
+    @Slot()
+    def open_file_button_handler(self):
+        # Use a dummy QWidget as parent since this class is not a QWidget
+        from PySide6.QtWidgets import QWidget
+        dummy_widget = QWidget()
+        dummy_widget.setWindowFlag(dummy_widget.windowFlags())  # No-op, just to avoid warnings
+        file_path, _ = QFileDialog.getOpenFileName(
+            dummy_widget, "Open Previous File", "recordings", "Dump file(*.dump);;All files (*)"
+        )
 
         # If a file is selected, read its contents
+        # Note: this DOES NOT create a new CSV file as the playback_started
+        # signal doesn't create one
         if file_path:
-            self.write_to_log(f"Reading data from {file_path}")
-            with open(file_path, 'rb') as file:
-                data = file.read()
-                display_previous_data(self, data)
-            self.write_to_log("Data loaded")
+            self.log_ready.emit(f"Reading data from {file_path}")
+            with open(file_path, "rb") as file:
+                self.playback_ptr = 0
+                self.data_buffer = file.read()
+                self.playback_started.emit()
+            self.log_ready.emit("Data loaded")
+
+    @Slot()
+    def playback_packet(self):
+        data_len = len(self.data_buffer)
+        if self.playback_ptr < data_len:
+            header = self.data_buffer[self.playback_ptr : self.playback_ptr + 2]
+            self.playback_ptr += 2
+            data_header = packet_spec.parse_packet_header(header)
+            message_bytes_length = packet_spec.packet_message_bytes_length(data_header)
+            message = self.data_buffer[self.playback_ptr : self.playback_ptr + message_bytes_length]
+            data_message = packet_spec.parse_packet_message(data_header, message)
+            self.playback_ptr += message_bytes_length
+            self.parsed_packet_ready.emit(data_header, data_message)
+        else:
+            self.playback_ended.emit()
+
