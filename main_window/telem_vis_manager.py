@@ -12,6 +12,7 @@ or modifying a plot or sensor option that changes how data is displayed.
 
 from PySide6.QtWidgets import QRadioButton
 from PySide6.QtCore import QObject, Slot
+import numpy as np
 
 from .labels import *
 from .plot_info import PlotInfo, PlotDataDisplayMode
@@ -91,6 +92,12 @@ class TelemVisManager(QObject):
     @Slot()
     def flash_cc_label(self):
         self.conn_status_labels["control_client"].flash()
+
+    @Slot()
+    def reset_plots(self):
+        for plot_id in self.plots:
+            self.plots[plot_id].points = np.empty((0,2))
+            self.plots[plot_id].data_line.setData(self.plots[plot_id].points)
 
     @Slot()
     def on_pressure_data_display_change(self, button: QRadioButton):

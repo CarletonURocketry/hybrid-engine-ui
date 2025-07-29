@@ -73,6 +73,11 @@ class Ui_Widget(object):
 
         self.mainLayout.addWidget(self.saveCsvButton)
 
+        self.resetPlotsButton = QPushButton(self.telemetryTab)
+        self.resetPlotsButton.setObjectName(u"resetPlotsButton")
+
+        self.mainLayout.addWidget(self.resetPlotsButton)
+
         self.openFileButton = QPushButton(self.telemetryTab)
         self.openFileButton.setObjectName(u"openFileButton")
 
@@ -900,6 +905,7 @@ class Ui_Widget(object):
         self.logoLabel.setText("")
         self.showPIDButton.setText(QCoreApplication.translate("Widget", u"Open PID window", None))
         self.saveCsvButton.setText(QCoreApplication.translate("Widget", u"Save current CSV data", None))
+        self.resetPlotsButton.setText(QCoreApplication.translate("Widget", u"Reset plots", None))
         self.openFileButton.setText(QCoreApplication.translate("Widget", u"Open raw data file", None))
         self.recordingToggleButton.setText(QCoreApplication.translate("Widget", u"Recording raw data", None))
         self.udpConnLabel.setText(QCoreApplication.translate("Widget", u"Pad server:", None))

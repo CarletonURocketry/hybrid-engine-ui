@@ -331,8 +331,6 @@ class MainWindow(QWidget):
         # self.ui.serialConnectButton.clicked.connect(self.serial_connection_button_handler)
         # self.ui.serialRefreshButton.clicked.connect(self.refresh_serial_button_handler)
 
-        # Save CSV button handler
-        self.ui.saveCsvButton.clicked.connect(self.save_csv_button_handler)
 
         # Handlers for recording and replaying data
         self.raw_data_file_out = None
@@ -342,6 +340,12 @@ class MainWindow(QWidget):
         # Switching PID in PID window
         self.ui.pidWindowButtonGroup.buttonToggled.connect(self.pid_window.change_diagram)
         self.ui.pidWindowButtonGroup.buttonToggled.connect(self.config_manager.default_pid_diagram_change_handler)
+        
+        # Save CSV button handler
+        self.ui.saveCsvButton.clicked.connect(self.save_csv_button_handler)
+
+        # Reset plots button
+        self.ui.resetPlotsButton.clicked.connect(self.telem_vis_manager.reset_plots)
 
         # Sensor display option handlers
         self.ui.numPointsAverageInput.valueChanged.connect(self.config_manager.points_for_average_change_handler)
