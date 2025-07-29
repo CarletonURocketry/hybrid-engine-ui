@@ -17,7 +17,7 @@ from PySide6.QtNetwork import QAbstractSocket, QHostAddress, QNetworkInterface
 from PySide6.QtCore import QObject, Signal, Slot
 from PySide6.QtNetwork import QUdpSocket, QAbstractSocket
 
-import packet_spec
+from .utils import packet_spec
 
 
 class UDPController(QObject):

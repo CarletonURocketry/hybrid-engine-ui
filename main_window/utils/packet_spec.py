@@ -10,7 +10,7 @@ from abc import ABC
 from enum import Enum
 import struct
 
-from data_conversions import *
+from .data_conversions import *
 
 
 class PacketType(Enum):

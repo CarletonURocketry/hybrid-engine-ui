@@ -13,7 +13,7 @@ be updated, the appropriate signal is emitted from this class.
 import numpy as np
 from PySide6.QtCore import Signal, QObject, Slot
 
-import packet_spec
+from .utils import packet_spec
 from .plot_info import PlotInfo, PlotDataDisplayMode
 
 class DataHandler(QObject):

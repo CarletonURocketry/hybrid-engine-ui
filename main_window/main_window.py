@@ -26,6 +26,7 @@ from pyqtgraph import mkPen, InfiniteLine, QtCore
 import numpy as np
 
 from .ui import Ui_Widget, Ui_PIDWindow
+from .utils import packet_spec
 from .ui_manager import UIManager
 from .telem_vis_manager import TelemVisManager
 from .udp import UDPController

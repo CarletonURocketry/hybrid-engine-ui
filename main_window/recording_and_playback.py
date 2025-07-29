@@ -23,7 +23,7 @@ from io import BufferedWriter
 from PySide6.QtWidgets import QWidget, QFileDialog
 from PySide6.QtCore import QDateTime, QObject, Slot, Signal, QFile, QDataStream, QIODevice
 
-import packet_spec
+from .utils import packet_spec
 
 
 class PlaybackManager(QObject):
