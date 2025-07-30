@@ -26,7 +26,7 @@ from pyqtgraph import mkPen, InfiniteLine, QtCore
 import numpy as np
 
 from .ui import Ui_Widget, Ui_PIDWindow
-from .utils import CSVWriter
+from .utils import CSVWriter, packet_spec
 from .modules import (
     ConfigManager,
     DataHandler,
@@ -38,8 +38,8 @@ from .modules import (
     UIManager,
 )
 # from .csv_writer import 
-from .plot_info import PlotDataDisplayMode, PlotInfo
-from .labels import *
+from .components.plot_info import PlotDataDisplayMode, PlotInfo
+from .components.labels import *
 
 class PIDWindow(QWidget):
     def __init__(self):

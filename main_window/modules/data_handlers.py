@@ -14,7 +14,7 @@ import numpy as np
 from PySide6.QtCore import Signal, QObject, Slot
 
 from ..utils import packet_spec
-from ..plot_info import PlotInfo, PlotDataDisplayMode
+from ..components import PlotInfo, PlotDataDisplayMode
 
 class DataHandler(QObject):
 

@@ -14,8 +14,8 @@ from PySide6.QtWidgets import QRadioButton
 from PySide6.QtCore import QObject, Slot
 import numpy as np
 
-from ..labels import *
-from ..plot_info import PlotInfo, PlotDataDisplayMode
+from ..components.labels import *
+from ..components.plot_info import PlotInfo, PlotDataDisplayMode
 
 
 # This class handles all updating of telemetry components
