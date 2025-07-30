@@ -114,13 +114,14 @@ class UIManager(QObject):
               to_remove_num = to_remove.pos().y()
               self.pressure_threshold_changed.emit(False, float(to_remove_num))
       except Exception as e:
-          print(str(e))
+          self.popup_ready.emit(QMessageBox.Icon.Critical, "Action failed", f"Adding temperature threshold marker failed\n{str(e)}")
 
     @Slot()
     def on_temperature_threshold_btn_press(self):
         try:
             if self.ui.temperatureThresholdList.currentRow() == -1:
                 new_marker = self.ui.temperatureThresholdInput.text()
+                new_marker = float(new_marker)
                 self.ui.temperatureThresholdList.addItem(str(float(new_marker)))
                 self.ui.temperaturePlot.addItem(InfiniteLine(float(new_marker), angle=0, pen=inf_line_pen))
                 self.ui.temperatureThresholdInput.setText("")
@@ -133,14 +134,14 @@ class UIManager(QObject):
                 to_remove_num = to_remove.pos().y()
                 self.temperature_threshold_changed.emit(False, float(to_remove_num))
         except Exception as e:
-            pass
-            # self.display_popup(QMessageBox.Icon.Critical, "Action failed", f"Adding temperature threshold marker failed\n{str(e)}")
+            self.popup_ready.emit(QMessageBox.Icon.Critical, "Action failed", f"Adding temperature threshold marker failed\n{str(e)}")
 
     @Slot()
     def on_tank_mass_threshold_btn_press(self):
         try:
             if self.ui.tankMassThresholdList.currentRow() == -1:
                 new_marker = self.ui.tankMassThresholdInput.text()
+                new_marker = float(new_marker)
                 self.ui.tankMassThresholdList.addItem(str(float(new_marker)))
                 self.ui.tankMassPlot.addItem(InfiniteLine(float(new_marker), angle=0, pen=inf_line_pen))
                 self.ui.tankMassThresholdInput.setText("")
@@ -153,14 +154,14 @@ class UIManager(QObject):
                 to_remove_num = to_remove.pos().y()
                 self.tank_mass_threshold_changed.emit(False, float(to_remove_num))
         except Exception as e:
-            pass
-            # self.display_popup(QMessageBox.Icon.Critical, "Action failed", f"Adding tank mass threshold marker failed\n{str(e)}")
+            self.popup_ready.emit(QMessageBox.Icon.Critical, "Action failed", f"Adding temperature threshold marker failed\n{str(e)}")
 
     @Slot()
     def on_engine_thrust_threshold_btn_press(self):
         try:
             if self.ui.engineThrustThresholdList.currentRow() == -1:
                 new_marker = self.ui.engineThrustThresholdInput.text()
+                new_marker = float(new_marker)
                 self.ui.engineThrustThresholdList.addItem(str(float(new_marker)))
                 self.ui.engineThrustPlot.addItem(InfiniteLine(float(new_marker), angle=0, pen=inf_line_pen))
                 self.ui.engineThrustThresholdInput.setText("")
@@ -173,8 +174,7 @@ class UIManager(QObject):
                 to_remove_num = to_remove.pos().y()
                 self.engine_thrust_threshold_changed.emit(False, float(to_remove_num))
         except Exception as e:
-            pass
-            # self.display_popup(QMessageBox.Icon.Critical, "Action failed", f"Adding engine thrust threshold marker failed\n{str(e)}")
+            self.popup_ready.emit(QMessageBox.Icon.Critical, "Action failed", f"Adding temperature threshold marker failed\n{str(e)}")
 
     def on_default_open_btn_press(self):
         try:
@@ -190,8 +190,7 @@ class UIManager(QObject):
                 self.default_valves_changed[bool, int].emit(False, int(valve))
             self.default_valves_changed.emit()
         except Exception as e:
-            self.popup_ready.emit(QMessageBox.Icon.Critical, "Action failed", f"Adding/removing default open valve failed\n{str(e)}")            
-            pass
+            self.popup_ready.emit(QMessageBox.Icon.Critical, "Action failed", f"Adding/removing default open valve failed\n{str(e)}")
 
     @Slot()
     def deploy_easter_egg(self):
