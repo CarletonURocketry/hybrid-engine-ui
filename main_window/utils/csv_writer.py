@@ -75,9 +75,13 @@ class CSVWriter:
       else:
         self.__flush_dict_buffer(self.activebufferind)
 
-  def save_and_swap_csv(self, new_name: str = None):
-    if new_name: 
+  @Slot()
+  def rename_cur_file(self, new_name: str = None):
+    if self.csv_out and new_name:
       self.csv_out = self.csv_out.rename(f"{self.csv_dir}/{new_name}.csv")
+
+  def save_and_swap_csv(self, new_name: str = None):
+    self.rename_cur_file(new_name)
     
     if self.activebufferind == 1:        
       self.activebuffer = self.dictbuffer2

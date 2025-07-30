@@ -335,6 +335,9 @@ class MainWindow(QWidget):
         self.ui.pidWindowButtonGroup.buttonToggled.connect(self.pid_window.change_diagram)
         self.ui.pidWindowButtonGroup.buttonToggled.connect(self.config_manager.default_pid_diagram_change_handler)
         
+        # Rename CSV button handler
+        self.ui.renameCurCsvButton.clicked.connect(self.rename_cur_csv_button_handler)
+
         # Save CSV button handler
         self.ui.saveCsvButton.clicked.connect(self.save_csv_button_handler)
 
@@ -569,6 +572,11 @@ class MainWindow(QWidget):
             self.ui.engineThrustPlot.addItem(InfiniteLine(float(marker), angle=0, pen=inf_line_pen))
 
     ### Misc functions that were easier to implement here
+
+    def rename_cur_csv_button_handler(self):
+        new_name, _ = QInputDialog.getText(self, "Save CSV file", "Enter name to save CSV file as")
+        self.data_csv_writer.rename_cur_file(new_name)
+        self.state_csv_writer.rename_cur_file(new_name)
 
     def save_csv_button_handler(self):
         new_name, _ = QInputDialog.getText(self, "Save CSV file", "Enter name to save CSV file as")
