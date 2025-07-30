@@ -318,6 +318,8 @@ class MainWindow(QWidget):
         self.playback_manager.playback_ended.connect(self.timer_controller.stop_data_filter_timer)
         self.playback_manager.log_ready.connect(self.log_manager.write_to_log)
 
+        self.ui_manager.popup_ready.connect(self.log_manager.display_popup)
+
         ### Button and associated signal handlers ###
         # In some cases, it was easier to have some signals connect to a UI manager function
         # which would then emit it's own signal to be handled elsewhere
@@ -348,8 +350,8 @@ class MainWindow(QWidget):
         self.ui.numPointsAverageInput.valueChanged.connect(self.config_manager.points_for_average_change_handler)
         self.ui.numPointsAverageInput.valueChanged.connect(self.data_handler.on_average_points_changed)
         self.ui.defaultOpenValvesButton.clicked.connect(self.ui_manager.on_default_open_btn_press)
-        # self.ui_manager.default_valves_changed.connect(self.init_actuator_valve_labels)
-        self.ui_manager.default_valves_changed.connect(self.config_manager.default_valve_btn_handler)
+        self.ui_manager.default_valves_changed[bool, int].connect(self.config_manager.default_valve_btn_handler)
+        self.ui_manager.default_valves_changed.connect(self.init_actuator_valve_labels)
 
         # Graph option and display handlers
         # Slots from ConfigManager are for modfiying internal config object, this is used to get saved
@@ -396,8 +398,10 @@ class MainWindow(QWidget):
         # Save config handlers
         self.ui.saveConnConfigButton.clicked.connect(self.config_manager.save_config)
         self.ui.saveDisplayConfigButton.clicked.connect(self.config_manager.save_config)
-
+    
     def init_actuator_valve_labels(self):
+        while self.ui.valveGrid.itemAt(0):
+            self.ui.valveGrid.removeItem(self.ui.valveGrid.itemAt(0))
         self.valves: dict[int, ValveLabel] = {}
         self.valves[0] = ValveLabel("Igniter", "CLOSED", 0, 2, self.ui.valveGrid)
         self.valves[13] = ValveLabel("Quick Disconnect", "CLOSED", 0, 0, self.ui.valveGrid)

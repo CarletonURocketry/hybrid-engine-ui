@@ -24,7 +24,7 @@ class UIManager(QObject):
     temperature_threshold_changed = Signal(bool, float)
     tank_mass_threshold_changed = Signal(bool, float)
     engine_thrust_threshold_changed = Signal(bool, float)
-    default_valves_changed = Signal(bool, float)
+    default_valves_changed = Signal((), (bool, int,))
     popup_ready = Signal(QMessageBox.Icon, str, str)
 
     def __init__(self, ui: Ui_Widget):
@@ -180,15 +180,18 @@ class UIManager(QObject):
         try:
             if self.ui.defaultOpenValvesList.currentRow() == -1:
                 new_valve = self.ui.defaultOpenValvesInput.text()
+                new_valve = int(new_valve)
                 self.ui.defaultOpenValvesList.addItem(new_valve)
                 self.ui.defaultOpenValvesInput.setText("")
-                self.default_valves_changed.emit(True, int(new_valve))
+                self.default_valves_changed[bool, int].emit(True, int(new_valve))
             else:
+                valve = self.ui.defaultOpenValvesList.currentItem().text()
                 self.ui.defaultOpenValvesList.takeItem(self.ui.defaultOpenValvesList.currentRow())
-                self.default_valves_changed.emit(False, int(new_valve))
+                self.default_valves_changed[bool, int].emit(False, int(valve))
+            self.default_valves_changed.emit()
         except Exception as e:
+            self.popup_ready.emit(QMessageBox.Icon.Critical, "Action failed", f"Adding/removing default open valve failed\n{str(e)}")            
             pass
-            # self.display_popup(QMessageBox.Icon.Critical, "Action failed", f"Adding default open valve failed\n{str(e)}")            
 
     @Slot()
     def deploy_easter_egg(self):
