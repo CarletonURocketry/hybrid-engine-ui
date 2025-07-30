@@ -26,17 +26,20 @@ from pyqtgraph import mkPen, InfiniteLine, QtCore
 import numpy as np
 
 from .ui import Ui_Widget, Ui_PIDWindow
-from .ui_manager import UIManager
-from .telem_vis_manager import TelemVisManager
-from .udp import UDPController
-from .data_handlers import DataHandler
-from .csv_writer import CSVWriter
-from .plot_info import PlotDataDisplayMode, PlotInfo
-from .timer_controller import TimerController
-from .labels import *
-from .logging import LogManager
-from .config import ConfigManager
-from .recording_and_playback import PlaybackManager
+from .utils import CSVWriter, packet_spec
+from .modules import (
+    ConfigManager,
+    DataHandler,
+    LogManager,
+    PlaybackManager,
+    TelemVisManager,
+    TimerController,
+    UDPController,
+    UIManager,
+)
+# from .csv_writer import 
+from .components.plot_info import PlotDataDisplayMode, PlotInfo
+from .components.labels import *
 
 class PIDWindow(QWidget):
     def __init__(self):
@@ -315,6 +318,8 @@ class MainWindow(QWidget):
         self.playback_manager.playback_ended.connect(self.timer_controller.stop_data_filter_timer)
         self.playback_manager.log_ready.connect(self.log_manager.write_to_log)
 
+        self.ui_manager.popup_ready.connect(self.log_manager.display_popup)
+
         ### Button and associated signal handlers ###
         # In some cases, it was easier to have some signals connect to a UI manager function
         # which would then emit it's own signal to be handled elsewhere
@@ -332,6 +337,9 @@ class MainWindow(QWidget):
         self.ui.pidWindowButtonGroup.buttonToggled.connect(self.pid_window.change_diagram)
         self.ui.pidWindowButtonGroup.buttonToggled.connect(self.config_manager.default_pid_diagram_change_handler)
         
+        # Rename CSV button handler
+        self.ui.renameCurCsvButton.clicked.connect(self.rename_cur_csv_button_handler)
+
         # Save CSV button handler
         self.ui.saveCsvButton.clicked.connect(self.save_csv_button_handler)
 
@@ -342,8 +350,8 @@ class MainWindow(QWidget):
         self.ui.numPointsAverageInput.valueChanged.connect(self.config_manager.points_for_average_change_handler)
         self.ui.numPointsAverageInput.valueChanged.connect(self.data_handler.on_average_points_changed)
         self.ui.defaultOpenValvesButton.clicked.connect(self.ui_manager.on_default_open_btn_press)
-        # self.ui_manager.default_valves_changed.connect(self.init_actuator_valve_labels)
-        self.ui_manager.default_valves_changed.connect(self.config_manager.default_valve_btn_handler)
+        self.ui_manager.default_valves_changed[bool, int].connect(self.config_manager.default_valve_btn_handler)
+        self.ui_manager.default_valves_changed.connect(self.init_actuator_valve_labels)
 
         # Graph option and display handlers
         # Slots from ConfigManager are for modfiying internal config object, this is used to get saved
@@ -390,8 +398,10 @@ class MainWindow(QWidget):
         # Save config handlers
         self.ui.saveConnConfigButton.clicked.connect(self.config_manager.save_config)
         self.ui.saveDisplayConfigButton.clicked.connect(self.config_manager.save_config)
-
+    
     def init_actuator_valve_labels(self):
+        while self.ui.valveGrid.itemAt(0):
+            self.ui.valveGrid.removeItem(self.ui.valveGrid.itemAt(0))
         self.valves: dict[int, ValveLabel] = {}
         self.valves[0] = ValveLabel("Igniter", "CLOSED", 0, 2, self.ui.valveGrid)
         self.valves[13] = ValveLabel("Quick Disconnect", "CLOSED", 0, 0, self.ui.valveGrid)
@@ -566,6 +576,11 @@ class MainWindow(QWidget):
             self.ui.engineThrustPlot.addItem(InfiniteLine(float(marker), angle=0, pen=inf_line_pen))
 
     ### Misc functions that were easier to implement here
+
+    def rename_cur_csv_button_handler(self):
+        new_name, _ = QInputDialog.getText(self, "Save CSV file", "Enter name to save CSV file as")
+        self.data_csv_writer.rename_cur_file(new_name)
+        self.state_csv_writer.rename_cur_file(new_name)
 
     def save_csv_button_handler(self):
         new_name, _ = QInputDialog.getText(self, "Save CSV file", "Enter name to save CSV file as")

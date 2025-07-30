@@ -48,25 +48,32 @@ class Ui_Widget(object):
         self.controlLayout.setObjectName(u"controlLayout")
         self.mainLayout = QVBoxLayout()
         self.mainLayout.setObjectName(u"mainLayout")
+        self.logoLabelLayout = QHBoxLayout()
+        self.logoLabelLayout.setObjectName(u"logoLabelLayout")
         self.logoLabel = QLabel(self.telemetryTab)
         self.logoLabel.setObjectName(u"logoLabel")
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        sizePolicy.setHorizontalStretch(1)
+        sizePolicy.setHorizontalStretch(5)
         sizePolicy.setVerticalStretch(1)
         sizePolicy.setHeightForWidth(self.logoLabel.sizePolicy().hasHeightForWidth())
         self.logoLabel.setSizePolicy(sizePolicy)
         self.logoLabel.setMinimumSize(QSize(150, 106))
-        self.logoLabel.setMaximumSize(QSize(127, 90))
+        self.logoLabel.setMaximumSize(QSize(175, 124))
+        self.logoLabel.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
+        self.logoLabel.setStyleSheet(u"margin-bottom: -2px;")
         self.logoLabel.setPixmap(QPixmap(u":/images/logos/logo_avionics_pro_transparent.png"))
         self.logoLabel.setScaledContents(True)
         self.logoLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.mainLayout.addWidget(self.logoLabel)
+        self.logoLabelLayout.addWidget(self.logoLabel)
 
-        self.showPIDButton = QPushButton(self.telemetryTab)
-        self.showPIDButton.setObjectName(u"showPIDButton")
 
-        self.mainLayout.addWidget(self.showPIDButton)
+        self.mainLayout.addLayout(self.logoLabelLayout)
+
+        self.renameCurCsvButton = QPushButton(self.telemetryTab)
+        self.renameCurCsvButton.setObjectName(u"renameCurCsvButton")
+
+        self.mainLayout.addWidget(self.renameCurCsvButton)
 
         self.saveCsvButton = QPushButton(self.telemetryTab)
         self.saveCsvButton.setObjectName(u"saveCsvButton")
@@ -78,10 +85,20 @@ class Ui_Widget(object):
 
         self.mainLayout.addWidget(self.resetPlotsButton)
 
+        self.openButtonsLayout = QHBoxLayout()
+        self.openButtonsLayout.setObjectName(u"openButtonsLayout")
+        self.showPIDButton = QPushButton(self.telemetryTab)
+        self.showPIDButton.setObjectName(u"showPIDButton")
+
+        self.openButtonsLayout.addWidget(self.showPIDButton)
+
         self.openFileButton = QPushButton(self.telemetryTab)
         self.openFileButton.setObjectName(u"openFileButton")
 
-        self.mainLayout.addWidget(self.openFileButton)
+        self.openButtonsLayout.addWidget(self.openFileButton)
+
+
+        self.mainLayout.addLayout(self.openButtonsLayout)
 
 
         self.controlLayout.addLayout(self.mainLayout)
@@ -197,7 +214,6 @@ class Ui_Widget(object):
 
         self.controlLayout.addLayout(self.statesLayout)
 
-        self.controlLayout.setStretch(0, 2)
         self.controlLayout.setStretch(1, 1)
 
         self.verticalLayout.addLayout(self.controlLayout)
@@ -205,6 +221,20 @@ class Ui_Widget(object):
         self.plotLayout = QGridLayout()
         self.plotLayout.setSpacing(20)
         self.plotLayout.setObjectName(u"plotLayout")
+        self.engineThrustPlot = PlotWidget(self.telemetryTab)
+        self.engineThrustPlot.setObjectName(u"engineThrustPlot")
+        brush = QBrush(QColor(240, 240, 240, 255))
+        brush.setStyle(Qt.SolidPattern)
+        self.engineThrustPlot.setBackgroundBrush(brush)
+
+        self.plotLayout.addWidget(self.engineThrustPlot, 1, 1, 1, 1)
+
+        self.tankMassPlot = PlotWidget(self.telemetryTab)
+        self.tankMassPlot.setObjectName(u"tankMassPlot")
+        self.tankMassPlot.setBackgroundBrush(brush)
+
+        self.plotLayout.addWidget(self.tankMassPlot, 1, 0, 1, 1)
+
         self.pressurePlot = PlotWidget(self.telemetryTab)
         self.pressurePlot.setObjectName(u"pressurePlot")
         sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
@@ -213,8 +243,6 @@ class Ui_Widget(object):
         sizePolicy1.setHeightForWidth(self.pressurePlot.sizePolicy().hasHeightForWidth())
         self.pressurePlot.setSizePolicy(sizePolicy1)
         self.pressurePlot.setAutoFillBackground(False)
-        brush = QBrush(QColor(240, 240, 240, 255))
-        brush.setStyle(Qt.SolidPattern)
         self.pressurePlot.setBackgroundBrush(brush)
 
         self.plotLayout.addWidget(self.pressurePlot, 0, 0, 1, 1)
@@ -227,18 +255,6 @@ class Ui_Widget(object):
         self.temperaturePlot.setForegroundBrush(brush1)
 
         self.plotLayout.addWidget(self.temperaturePlot, 0, 1, 1, 1)
-
-        self.engineThrustPlot = PlotWidget(self.telemetryTab)
-        self.engineThrustPlot.setObjectName(u"engineThrustPlot")
-        self.engineThrustPlot.setBackgroundBrush(brush)
-
-        self.plotLayout.addWidget(self.engineThrustPlot, 1, 1, 1, 1)
-
-        self.tankMassPlot = PlotWidget(self.telemetryTab)
-        self.tankMassPlot.setObjectName(u"tankMassPlot")
-        self.tankMassPlot.setBackgroundBrush(brush)
-
-        self.plotLayout.addWidget(self.tankMassPlot, 1, 0, 1, 1)
 
 
         self.verticalLayout.addLayout(self.plotLayout)
@@ -819,9 +835,10 @@ class Ui_Widget(object):
         Widget.setToolTip("")
 #endif // QT_CONFIG(tooltip)
         self.logoLabel.setText("")
-        self.showPIDButton.setText(QCoreApplication.translate("Widget", u"Open PID window", None))
-        self.saveCsvButton.setText(QCoreApplication.translate("Widget", u"Save current CSV data", None))
+        self.renameCurCsvButton.setText(QCoreApplication.translate("Widget", u"Rename current CSV file", None))
+        self.saveCsvButton.setText(QCoreApplication.translate("Widget", u"Start new CSV file", None))
         self.resetPlotsButton.setText(QCoreApplication.translate("Widget", u"Reset plots", None))
+        self.showPIDButton.setText(QCoreApplication.translate("Widget", u"Open PID window", None))
         self.openFileButton.setText(QCoreApplication.translate("Widget", u"Open raw data file", None))
         self.udpConnLabel.setText(QCoreApplication.translate("Widget", u"Pad server:", None))
         self.udpConnStatusLabel.setText(QCoreApplication.translate("Widget", u"Not connected", None))
