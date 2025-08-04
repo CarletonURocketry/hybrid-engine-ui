@@ -42,7 +42,7 @@
       <bool>false</bool>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="telemetryTab">
       <property name="autoFillBackground">
@@ -1315,6 +1315,114 @@ New average = Old average * α + New value * (1-α)</string>
         <widget class="QPushButton" name="saveDisplayConfigButton">
          <property name="text">
           <string>Save default display configuration</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="analysisTab">
+      <attribute name="title">
+       <string>Analysis</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="2" column="1">
+        <widget class="PlotWidget" name="temperatureAnalysisPlot">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="backgroundBrush">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>240</red>
+            <green>240</green>
+            <blue>240</blue>
+           </color>
+          </brush>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="PlotWidget" name="tankMassAnalysisPlot">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="backgroundBrush">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>240</red>
+            <green>240</green>
+            <blue>240</blue>
+           </color>
+          </brush>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="PlotWidget" name="engineThrustAnalysisPlot">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="backgroundBrush">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>240</red>
+            <green>240</green>
+            <blue>240</blue>
+           </color>
+          </brush>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="PlotWidget" name="pressureAnalysisPlot">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="backgroundBrush">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>240</red>
+            <green>240</green>
+            <blue>240</blue>
+           </color>
+          </brush>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QPushButton" name="loadDataCsvButton">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Open data CSV file</string>
          </property>
         </widget>
        </item>
