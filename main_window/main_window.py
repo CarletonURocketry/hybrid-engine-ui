@@ -242,7 +242,7 @@ class MainWindow(QWidget):
         self.telem_vis_manager = TelemVisManager(self.sensors, self.valves, self.conn_status_labels, self.hybrid_state_labels, self.plot_data)
         self.ui_manager = UIManager(self.ui)
         self.timer_controller = TimerController()
-        self.playback_manager = PlaybackManager()
+        self.playback_manager = PlaybackManager(self.config_manager.config["sensor_and_valve_options"]["replay_speed"])
 
         self.data_csv_writer = CSVWriter(["t","p1","p2","p3","p4","p5","p6","t1","t2","t3","t4","m1","th1","status","Continuity"], 100, "data_csv")
         self.state_csv_writer = CSVWriter(["t","Igniter","XV-1","XV-2","XV-3","XV-4","XV-5","XV-6","XV-7","XV-8","XV-9","XV-10","XV-11","XV-12","Quick disconnect","Dump valve","Arming state","Continuity"], 0, "valves_csv")
@@ -352,6 +352,9 @@ class MainWindow(QWidget):
         self.ui.defaultOpenValvesButton.clicked.connect(self.ui_manager.on_default_open_btn_press)
         self.ui_manager.default_valves_changed[bool, int].connect(self.config_manager.default_valve_btn_handler)
         self.ui_manager.default_valves_changed.connect(self.init_actuator_valve_labels)
+
+        self.ui.replaySpeedInput.valueChanged.connect(self.config_manager.replay_speed_change_handler)
+        self.ui.replaySpeedInput.valueChanged.connect(self.playback_manager.set_replay_speed)
 
         # Graph option and display handlers
         # Slots from ConfigManager are for modfiying internal config object, this is used to get saved

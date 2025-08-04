@@ -40,6 +40,10 @@ class ConfigManager(QObject):
         self.config["sensor_and_valve_options"]["points_used_for_average"] = value
 
     @Slot()
+    def replay_speed_change_handler(self, value: int):
+        self.config["sensor_and_valve_options"]["replay_speed"] = value
+
+    @Slot()
     def default_pid_diagram_change_handler(self, button: QRadioButton):
         self.config["sensor_and_valve_options"]["pid_diagram"] = button.property("type")
         

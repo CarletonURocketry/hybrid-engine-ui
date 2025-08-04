@@ -609,6 +609,30 @@ New average = Old average * α + New value * (1-α)</string>
           </layout>
          </item>
          <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <item>
+            <widget class="QLabel" name="replaySpeedLabel">
+             <property name="text">
+              <string>Replay speed</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSpinBox" name="replaySpeedInput">
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>999</number>
+             </property>
+             <property name="value">
+              <number>10</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
           <layout class="QHBoxLayout" name="pidDiagramOptionLayout">
            <item>
             <widget class="QLabel" name="pidDiagramOptionLabel">
@@ -1358,14 +1382,14 @@ New average = Old average * α + New value * (1-α)</string>
  </resources>
  <connections/>
  <buttongroups>
-  <buttongroup name="tankMassDisplayButtonGroup"/>
-  <buttongroup name="temperatureDisplayButtonGroup"/>
+  <buttongroup name="engineThrustDisplayButtonGroup"/>
   <buttongroup name="pidWindowButtonGroup">
    <property name="type" stdset="0">
     <string>static_fire</string>
    </property>
   </buttongroup>
-  <buttongroup name="engineThrustDisplayButtonGroup"/>
+  <buttongroup name="tankMassDisplayButtonGroup"/>
   <buttongroup name="pressureDisplayButtonGroup"/>
+  <buttongroup name="temperatureDisplayButtonGroup"/>
  </buttongroups>
 </ui>
