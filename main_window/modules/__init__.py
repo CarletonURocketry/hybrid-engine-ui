@@ -1,3 +1,4 @@
+from .analysis import DataAnalyser
 from .config import ConfigManager
 from .data_handlers import DataHandler
 from .logging import LogManager
