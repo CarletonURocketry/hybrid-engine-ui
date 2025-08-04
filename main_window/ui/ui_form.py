@@ -402,6 +402,8 @@ class Ui_Widget(object):
 
         self.pidDiagramOptionLayout.addWidget(self.pidDiagramOptionLabel)
 
+        self.horizontalLayout_4 = QHBoxLayout()
+        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
         self.pidDiagramColdFlowOption = QRadioButton(self.displayOptionsTab)
         self.pidWindowButtonGroup = QButtonGroup(Widget)
         self.pidWindowButtonGroup.setObjectName(u"pidWindowButtonGroup")
@@ -409,13 +411,16 @@ class Ui_Widget(object):
         self.pidDiagramColdFlowOption.setObjectName(u"pidDiagramColdFlowOption")
         self.pidDiagramColdFlowOption.setChecked(True)
 
-        self.pidDiagramOptionLayout.addWidget(self.pidDiagramColdFlowOption)
+        self.horizontalLayout_4.addWidget(self.pidDiagramColdFlowOption)
 
         self.pidDiagramStaticFireOption = QRadioButton(self.displayOptionsTab)
         self.pidWindowButtonGroup.addButton(self.pidDiagramStaticFireOption)
         self.pidDiagramStaticFireOption.setObjectName(u"pidDiagramStaticFireOption")
 
-        self.pidDiagramOptionLayout.addWidget(self.pidDiagramStaticFireOption)
+        self.horizontalLayout_4.addWidget(self.pidDiagramStaticFireOption)
+
+
+        self.pidDiagramOptionLayout.addLayout(self.horizontalLayout_4)
 
 
         self.sensorDisplayOptionsLayout.addLayout(self.pidDiagramOptionLayout)
@@ -459,8 +464,8 @@ class Ui_Widget(object):
 
         self.graphOptionsLayout.addWidget(self.graphOptionsLabel)
 
-        self.graphOptionsLayout_2 = QGridLayout()
-        self.graphOptionsLayout_2.setObjectName(u"graphOptionsLayout_2")
+        self.graphOptionsGrid = QGridLayout()
+        self.graphOptionsGrid.setObjectName(u"graphOptionsGrid")
         self.tankMassThresholdLayout = QVBoxLayout()
         self.tankMassThresholdLayout.setSpacing(4)
         self.tankMassThresholdLayout.setObjectName(u"tankMassThresholdLayout")
@@ -546,23 +551,23 @@ class Ui_Widget(object):
         self.tankMassThresholdLayout.addWidget(self.tankMassThresholdButton)
 
 
-        self.graphOptionsLayout_2.addLayout(self.tankMassThresholdLayout, 1, 0, 1, 1)
+        self.graphOptionsGrid.addLayout(self.tankMassThresholdLayout, 1, 0, 1, 1)
 
-        self.engineThrustThreshold = QVBoxLayout()
-        self.engineThrustThreshold.setSpacing(4)
-        self.engineThrustThreshold.setObjectName(u"engineThrustThreshold")
+        self.engineThrustGraphOptionsLayout = QVBoxLayout()
+        self.engineThrustGraphOptionsLayout.setSpacing(4)
+        self.engineThrustGraphOptionsLayout.setObjectName(u"engineThrustGraphOptionsLayout")
         self.engineThrustThresholdLabel = QLabel(self.displayOptionsTab)
         self.engineThrustThresholdLabel.setObjectName(u"engineThrustThresholdLabel")
         self.engineThrustThresholdLabel.setFont(font3)
         self.engineThrustThresholdLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.engineThrustThreshold.addWidget(self.engineThrustThresholdLabel)
+        self.engineThrustGraphOptionsLayout.addWidget(self.engineThrustThresholdLabel)
 
         self.engineThrustDataDisplayLabel = QLabel(self.displayOptionsTab)
         self.engineThrustDataDisplayLabel.setObjectName(u"engineThrustDataDisplayLabel")
         self.engineThrustDataDisplayLabel.setFont(font4)
 
-        self.engineThrustThreshold.addWidget(self.engineThrustDataDisplayLabel)
+        self.engineThrustGraphOptionsLayout.addWidget(self.engineThrustDataDisplayLabel)
 
         self.engineThrustDataDisplayLayout = QHBoxLayout()
         self.engineThrustDataDisplayLayout.setObjectName(u"engineThrustDataDisplayLayout")
@@ -599,7 +604,7 @@ class Ui_Widget(object):
         self.engineThrustDataDisplayLayout.addWidget(self.engineThrustXSB)
 
 
-        self.engineThrustThreshold.addLayout(self.engineThrustDataDisplayLayout)
+        self.engineThrustGraphOptionsLayout.addLayout(self.engineThrustDataDisplayLayout)
 
         self.engineThrustThresholdList = QListWidget(self.displayOptionsTab)
         self.engineThrustThresholdList.setObjectName(u"engineThrustThresholdList")
@@ -607,24 +612,24 @@ class Ui_Widget(object):
         self.engineThrustThresholdList.setSizePolicy(sizePolicy3)
         self.engineThrustThresholdList.setMaximumSize(QSize(16777215, 75))
 
-        self.engineThrustThreshold.addWidget(self.engineThrustThresholdList)
+        self.engineThrustGraphOptionsLayout.addWidget(self.engineThrustThresholdList)
 
         self.engineThrustThresholdInput = QLineEdit(self.displayOptionsTab)
         self.engineThrustThresholdInput.setObjectName(u"engineThrustThresholdInput")
         sizePolicy3.setHeightForWidth(self.engineThrustThresholdInput.sizePolicy().hasHeightForWidth())
         self.engineThrustThresholdInput.setSizePolicy(sizePolicy3)
 
-        self.engineThrustThreshold.addWidget(self.engineThrustThresholdInput)
+        self.engineThrustGraphOptionsLayout.addWidget(self.engineThrustThresholdInput)
 
         self.engineThrustThresholdButton = QPushButton(self.displayOptionsTab)
         self.engineThrustThresholdButton.setObjectName(u"engineThrustThresholdButton")
         sizePolicy3.setHeightForWidth(self.engineThrustThresholdButton.sizePolicy().hasHeightForWidth())
         self.engineThrustThresholdButton.setSizePolicy(sizePolicy3)
 
-        self.engineThrustThreshold.addWidget(self.engineThrustThresholdButton)
+        self.engineThrustGraphOptionsLayout.addWidget(self.engineThrustThresholdButton)
 
 
-        self.graphOptionsLayout_2.addLayout(self.engineThrustThreshold, 1, 1, 1, 1)
+        self.graphOptionsGrid.addLayout(self.engineThrustGraphOptionsLayout, 1, 1, 1, 1)
 
         self.temperatureGraphOptionsLayout = QVBoxLayout()
         self.temperatureGraphOptionsLayout.setSpacing(4)
@@ -703,7 +708,7 @@ class Ui_Widget(object):
         self.temperatureGraphOptionsLayout.addWidget(self.temperatureThresholdButton)
 
 
-        self.graphOptionsLayout_2.addLayout(self.temperatureGraphOptionsLayout, 0, 1, 1, 1)
+        self.graphOptionsGrid.addLayout(self.temperatureGraphOptionsLayout, 0, 1, 1, 1)
 
         self.pressureGraphOptionsLayout = QVBoxLayout()
         self.pressureGraphOptionsLayout.setSpacing(4)
@@ -791,10 +796,10 @@ class Ui_Widget(object):
         self.pressureGraphOptionsLayout.addWidget(self.pressureThresholdButton)
 
 
-        self.graphOptionsLayout_2.addLayout(self.pressureGraphOptionsLayout, 0, 0, 1, 1)
+        self.graphOptionsGrid.addLayout(self.pressureGraphOptionsLayout, 0, 0, 1, 1)
 
 
-        self.graphOptionsLayout.addLayout(self.graphOptionsLayout_2)
+        self.graphOptionsLayout.addLayout(self.graphOptionsGrid)
 
 
         self.formLayout_2.setLayout(1, QFormLayout.SpanningRole, self.graphOptionsLayout)
@@ -841,7 +846,7 @@ class Ui_Widget(object):
 
         self.retranslateUi(Widget)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(2)
 
 
         QMetaObject.connectSlotsByName(Widget)

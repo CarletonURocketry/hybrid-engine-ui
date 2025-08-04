@@ -42,7 +42,7 @@
       <bool>false</bool>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="telemetryTab">
       <property name="autoFillBackground">
@@ -642,33 +642,37 @@ New average = Old average * α + New value * (1-α)</string>
             </widget>
            </item>
            <item>
-            <widget class="QRadioButton" name="pidDiagramColdFlowOption">
-             <property name="text">
-              <string>Cold flow</string>
-             </property>
-             <property name="checked">
-              <bool>true</bool>
-             </property>
-             <property name="type" stdset="0">
-              <string>cold_flow</string>
-             </property>
-             <attribute name="buttonGroup">
-              <string notr="true">pidWindowButtonGroup</string>
-             </attribute>
-            </widget>
-           </item>
-           <item>
-            <widget class="QRadioButton" name="pidDiagramStaticFireOption">
-             <property name="text">
-              <string>Static fire</string>
-             </property>
-             <property name="type" stdset="0">
-              <string>static_fire</string>
-             </property>
-             <attribute name="buttonGroup">
-              <string notr="true">pidWindowButtonGroup</string>
-             </attribute>
-            </widget>
+            <layout class="QHBoxLayout" name="horizontalLayout_4">
+             <item>
+              <widget class="QRadioButton" name="pidDiagramColdFlowOption">
+               <property name="text">
+                <string>Cold flow</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+               <property name="type" stdset="0">
+                <string>cold_flow</string>
+               </property>
+               <attribute name="buttonGroup">
+                <string notr="true">pidWindowButtonGroup</string>
+               </attribute>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="pidDiagramStaticFireOption">
+               <property name="text">
+                <string>Static fire</string>
+               </property>
+               <property name="type" stdset="0">
+                <string>static_fire</string>
+               </property>
+               <attribute name="buttonGroup">
+                <string notr="true">pidWindowButtonGroup</string>
+               </attribute>
+              </widget>
+             </item>
+            </layout>
            </item>
           </layout>
          </item>
@@ -723,7 +727,7 @@ New average = Old average * α + New value * (1-α)</string>
           </widget>
          </item>
          <item>
-          <layout class="QGridLayout" name="graphOptionsLayout_2">
+          <layout class="QGridLayout" name="graphOptionsGrid">
            <item row="1" column="0">
             <layout class="QVBoxLayout" name="tankMassThresholdLayout">
              <property name="spacing">
@@ -867,7 +871,7 @@ New average = Old average * α + New value * (1-α)</string>
             </layout>
            </item>
            <item row="1" column="1">
-            <layout class="QVBoxLayout" name="engineThrustThreshold">
+            <layout class="QVBoxLayout" name="engineThrustGraphOptionsLayout">
              <property name="spacing">
               <number>4</number>
              </property>
@@ -1382,14 +1386,14 @@ New average = Old average * α + New value * (1-α)</string>
  </resources>
  <connections/>
  <buttongroups>
-  <buttongroup name="engineThrustDisplayButtonGroup"/>
   <buttongroup name="pidWindowButtonGroup">
    <property name="type" stdset="0">
     <string>static_fire</string>
    </property>
   </buttongroup>
-  <buttongroup name="tankMassDisplayButtonGroup"/>
-  <buttongroup name="pressureDisplayButtonGroup"/>
   <buttongroup name="temperatureDisplayButtonGroup"/>
+  <buttongroup name="tankMassDisplayButtonGroup"/>
+  <buttongroup name="engineThrustDisplayButtonGroup"/>
+  <buttongroup name="pressureDisplayButtonGroup"/>
  </buttongroups>
 </ui>
