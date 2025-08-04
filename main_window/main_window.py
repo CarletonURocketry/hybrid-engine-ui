@@ -353,6 +353,8 @@ class MainWindow(QWidget):
         self.ui_manager.default_valves_changed[bool, int].connect(self.config_manager.default_valve_btn_handler)
         self.ui_manager.default_valves_changed.connect(self.init_actuator_valve_labels)
 
+        self.ui.replaySpeedInput.valueChanged.connect(self.playback_manager.set_replay_speed)
+
         # Graph option and display handlers
         # Slots from ConfigManager are for modfiying internal config object, this is used to get saved
         # Slots for TelemVisManager are for modifying UI 

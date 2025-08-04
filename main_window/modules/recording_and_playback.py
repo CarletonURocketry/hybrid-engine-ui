@@ -24,6 +24,7 @@ from PySide6.QtWidgets import QWidget, QFileDialog
 from PySide6.QtCore import QDateTime, QObject, Slot, Signal, QFile, QDataStream, QIODevice
 
 from ..utils import packet_spec
+import socket
 
 
 class PlaybackManager(QObject):
@@ -34,10 +35,11 @@ class PlaybackManager(QObject):
     parsed_packet_ready = Signal(packet_spec.PacketHeader, packet_spec.PacketMessage)
 
     def __init__(self):
-        self.playback_ptr = 0
         self.buffered_writer = None
         self.data_buffer: QFile = None
         self.stream: QDataStream = None
+        self.replay_speed = 10
+        self.replay_active = False
         super().__init__()
 
     @Slot()
@@ -50,7 +52,7 @@ class PlaybackManager(QObject):
 
     @Slot(bytes)
     def on_data_received(self, data: bytes):
-        self.buffered_writer.write(data)
+        if self.replay_active: self.buffered_writer.write(data)
 
     @Slot()
     def open_file_button_handler(self):
@@ -74,17 +76,38 @@ class PlaybackManager(QObject):
             self.data_buffer = QFile(file_path)
             self.data_buffer.open(QIODevice.OpenModeFlag.ReadOnly)
             self.stream = QDataStream(self.data_buffer)
+            self.replay_active = True
             self.playback_started.emit()
 
     @Slot()
     def playback_packet(self):
         if self.stream.atEnd():
+            self.replay_active = False
             self.playback_ended.emit()
         else:
-            header = self.stream.readRawData(2)
-            data_header = packet_spec.parse_packet_header(header)
-            message_bytes_length = packet_spec.packet_message_bytes_length(data_header)
-            message = self.stream.readRawData(message_bytes_length)
-            data_message = packet_spec.parse_packet_message(data_header, message)
-            self.playback_ptr += message_bytes_length
-            self.parsed_packet_ready.emit(data_header, data_message)
+            udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            packets_sent = 0
+            while packets_sent < self.replay_speed and not self.stream.atEnd():
+                header = self.stream.readRawData(2)
+                if len(header) < 2:
+                    break
+
+                data_header = packet_spec.parse_packet_header(header)
+                message_bytes_length = packet_spec.packet_message_bytes_length(data_header)
+                message = self.stream.readRawData(message_bytes_length)
+                if len(message) < message_bytes_length:
+                    break
+
+                full_packet = header + message
+                udp_socket.sendto(full_packet, ("239.100.110.210", 50002))
+                packets_sent += 1
+
+            udp_socket.close()
+
+            if self.stream.atEnd():
+                self.replay_active = False
+                self.playback_ended.emit()
+
+    @Slot()
+    def set_replay_speed(self, value: int):
+        self.replay_speed = value

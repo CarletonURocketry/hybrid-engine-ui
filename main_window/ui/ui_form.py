@@ -377,6 +377,24 @@ class Ui_Widget(object):
 
         self.sensorDisplayOptionsLayout.addLayout(self.numPointsAverageLayout)
 
+        self.horizontalLayout_2 = QHBoxLayout()
+        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.replaySpeedLabel = QLabel(self.displayOptionsTab)
+        self.replaySpeedLabel.setObjectName(u"replaySpeedLabel")
+
+        self.horizontalLayout_2.addWidget(self.replaySpeedLabel)
+
+        self.replaySpeedInput = QSpinBox(self.displayOptionsTab)
+        self.replaySpeedInput.setObjectName(u"replaySpeedInput")
+        self.replaySpeedInput.setMinimum(1)
+        self.replaySpeedInput.setMaximum(999)
+        self.replaySpeedInput.setValue(10)
+
+        self.horizontalLayout_2.addWidget(self.replaySpeedInput)
+
+
+        self.sensorDisplayOptionsLayout.addLayout(self.horizontalLayout_2)
+
         self.pidDiagramOptionLayout = QHBoxLayout()
         self.pidDiagramOptionLayout.setObjectName(u"pidDiagramOptionLayout")
         self.pidDiagramOptionLabel = QLabel(self.displayOptionsTab)
@@ -823,7 +841,7 @@ class Ui_Widget(object):
 
         self.retranslateUi(Widget)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(2)
 
 
         QMetaObject.connectSlotsByName(Widget)
@@ -876,6 +894,7 @@ class Ui_Widget(object):
         self.numPointsAverageInput.setToolTip(QCoreApplication.translate("Widget", u"Formula for calculating average:\n"
 "New average = Old average * \u03b1 + New value * (1-\u03b1)", None))
 #endif // QT_CONFIG(tooltip)
+        self.replaySpeedLabel.setText(QCoreApplication.translate("Widget", u"Replay speed", None))
         self.pidDiagramOptionLabel.setText(QCoreApplication.translate("Widget", u"PID diagram:", None))
         self.pidWindowButtonGroup.setProperty(u"type", QCoreApplication.translate("Widget", u"static_fire", None))
         self.pidDiagramColdFlowOption.setText(QCoreApplication.translate("Widget", u"Cold flow", None))
