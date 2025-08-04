@@ -34,16 +34,17 @@ class PlaybackManager(QObject):
     playback_ended = Signal()
     parsed_packet_ready = Signal(packet_spec.PacketHeader, packet_spec.PacketMessage)
 
-    def __init__(self):
+    def __init__(self, default_replay_speed: int):
         self.buffered_writer = None
         self.data_buffer: QFile = None
         self.stream: QDataStream = None
-        self.replay_speed = 10
+        self.replay_speed = default_replay_speed
         self.replay_active = False
         super().__init__()
 
     @Slot()
     def create_recording_file(self):
+        if self.replay_active: return
         pathlib.Path("recordings").mkdir(parents=True, exist_ok=True)
         file_name = "./recordings/"
         file_name += QDateTime.currentDateTime().toString("yyyy-MM-dd_HH-mm")
@@ -52,7 +53,7 @@ class PlaybackManager(QObject):
 
     @Slot(bytes)
     def on_data_received(self, data: bytes):
-        if self.replay_active: self.buffered_writer.write(data)
+        if not self.replay_active: self.buffered_writer.write(data)
 
     @Slot()
     def open_file_button_handler(self):
