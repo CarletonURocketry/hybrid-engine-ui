@@ -60,6 +60,7 @@ class UIManager(QObject):
         self.ui.udpPortInput.setText(config_options["multicast_options"]["port"])
         
         self.ui.numPointsAverageInput.setValue(float(config_options["sensor_and_valve_options"]["points_used_for_average"]))
+        self.ui.replaySpeedInput.setValue(int(config_options["sensor_and_valve_options"]["replay_speed"]))
         self.ui.defaultOpenValvesList.addItems([str(valve) for valve in config_options["sensor_and_valve_options"]["default_open_valves"]])
         if config_options["sensor_and_valve_options"]["pid_diagram"] == "cold_flow":
             self.ui.pidDiagramColdFlowOption.setChecked(True)

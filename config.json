@@ -5,6 +5,7 @@
   },
   "sensor_and_valve_options": {
     "points_used_for_average": 0.8,
+    "replay_speed": 15,
     "default_open_valves": [
       4
     ],
