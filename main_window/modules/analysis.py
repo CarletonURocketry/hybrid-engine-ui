@@ -1,5 +1,9 @@
 """analysis.py
 
+Contains the implementation of the DataAnalyser class. The DataAnalyser
+class is responsible for handling functionality for the Analysis tab
+on the UI. This effectively means storing the state for it and having
+the code for loading data from the CSV file onto the graphs
 """
 
 from csv import DictReader
