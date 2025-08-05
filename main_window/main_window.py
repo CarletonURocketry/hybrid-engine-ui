@@ -28,6 +28,7 @@ import numpy as np
 from .ui import Ui_Widget, Ui_PIDWindow
 from .utils import CSVWriter, packet_spec
 from .modules import (
+    DataAnalyser,
     ConfigManager,
     DataHandler,
     LogManager,
@@ -243,6 +244,7 @@ class MainWindow(QWidget):
         self.ui_manager = UIManager(self.ui)
         self.timer_controller = TimerController()
         self.playback_manager = PlaybackManager(self.config_manager.config["sensor_and_valve_options"]["replay_speed"])
+        self.data_analyser = DataAnalyser(self.analysis_plots, self.ui.csvNameValueLabel, self.ui.csvTimeValueLabel)
 
         self.data_csv_writer = CSVWriter(["t","p1","p2","p3","p4","p5","p6","t1","t2","t3","t4","m1","th1","status","Continuity"], 100, "data_csv")
         self.state_csv_writer = CSVWriter(["t","Igniter","XV-1","XV-2","XV-3","XV-4","XV-5","XV-6","XV-7","XV-8","XV-9","XV-10","XV-11","XV-12","Quick disconnect","Dump valve","Arming state","Continuity"], 0, "valves_csv")
@@ -401,6 +403,12 @@ class MainWindow(QWidget):
         # Save config handlers
         self.ui.saveConnConfigButton.clicked.connect(self.config_manager.save_config)
         self.ui.saveDisplayConfigButton.clicked.connect(self.config_manager.save_config)
+
+        self.ui.loadDataCsvButton.clicked.connect(self.data_analyser.load_file)
+        self.ui.expandPressureAnalysisPlotButton.clicked.connect(self.ui_manager.on_expand_pressure_plot_btn_press)
+        self.ui.expandTemperatureAnalysisPlotButton.clicked.connect(self.ui_manager.on_expand_temperature_plot_btn_press)
+        self.ui.expandTankMassAnalysisPlotButton.clicked.connect(self.ui_manager.on_expand_tank_mass_plot_btn_press)
+        self.ui.expandEngineThrustAnalysisPlotButton.clicked.connect(self.ui_manager.on_expand_engine_thrust_plot_btn_press)
     
     def init_actuator_valve_labels(self):
         while self.ui.valveGrid.itemAt(0):
@@ -455,128 +463,181 @@ class MainWindow(QWidget):
 
         # Plot data dict
         self.plot_data: dict[str, PlotInfo] = {}
-
-        # Numpy arrays for storing telemetry that gets shown on graphs
-        p0_points = np.empty((0,2))
-        p1_points = np.empty((0,2))
-        p2_points = np.empty((0,2))
-        p3_points = np.empty((0,2))
-        p4_points = np.empty((0,2))
-        p5_points = np.empty((0,2))
-        t0_points = np.empty((0,2))
-        t1_points = np.empty((0,2))
-        t2_points = np.empty((0,2))
-        t3_points = np.empty((0,2))
-        tank_mass_points = np.empty((0,2))
-        engine_thrust_points = np.empty((0,2))
+        self.analysis_plots: dict[str, PlotInfo] = {}
 
         # Set labels and create plot data for each graph
         # each entry in plots contains a PlotInfo dataclass consisting of points and data_line
         # points refers to the np array containing the data
         # data_line refers to the PlotDataItem object used to show data on the plots
-        self.ui.pressurePlot.addLegend(offset=(0,0), colCount=6, labelTextColor="black")
-        self.ui.pressurePlot.setTitle("<span style='font-weight: bold;'>Pressure</span>", color="black")
-        self.ui.pressurePlot.setLabel("left", "<span style='font-size: 15px; font-weight: bold;'>Pressure (PSI)</span>", color="black")
-        self.ui.pressurePlot.setLabel("bottom", "<span style='font-size: 17px; font-weight: bold;'>Time (s)</span>", color="black")
-        self.ui.pressurePlot.getAxis("left").setPen(black_pen)
-        self.ui.pressurePlot.getAxis("left").setTextPen(black_pen)
-        self.ui.pressurePlot.getAxis("bottom").setPen(black_pen)
-        self.ui.pressurePlot.getAxis("bottom").setTextPen(black_pen)
+        for pressurePlot in [self.ui.pressurePlot, self.ui.pressureAnalysisPlot]:
+            pressurePlot.addLegend(offset=(0,0), colCount=6, labelTextColor="black")
+            pressurePlot.setTitle("<span style='font-weight: bold;'>Pressure</span>", color="black")
+            pressurePlot.setLabel("left", "<span style='font-size: 15px; font-weight: bold;'>Pressure (PSI)</span>", color="black")
+            pressurePlot.setLabel("bottom", "<span style='font-size: 17px; font-weight: bold;'>Time (s)</span>", color="black")
+            pressurePlot.getAxis("left").setPen(black_pen)
+            pressurePlot.getAxis("left").setTextPen(black_pen)
+            pressurePlot.getAxis("bottom").setPen(black_pen)
+            pressurePlot.getAxis("bottom").setTextPen(black_pen)
+            for marker in self.config_manager.config["graph_options"]["pressure"]["thresholds"]:
+                pressurePlot.addItem(InfiniteLine(float(marker), angle=0, pen=inf_line_pen))
         self.plot_data["p0"] = PlotInfo(0,
-                                    p0_points,
-                                    self.ui.pressurePlot.plot(p0_points, pen=red_pen, name="p1"),
+                                    np.empty((0,2)),
+                                    self.ui.pressurePlot.plot(np.empty((0,2)), pen=red_pen, name="p1"),
                                     PlotDataDisplayMode[self.config_manager.config["graph_options"]["pressure"]["data_display_mode"]],
                                     self.config_manager.config["graph_options"]["pressure"]["X"])
         self.plot_data["p1"] = PlotInfo(0,
-                                    p1_points,
-                                    self.ui.pressurePlot.plot(p1_points, pen=green_pen, name="p2"),
+                                    np.empty((0,2)),
+                                    self.ui.pressurePlot.plot(np.empty((0,2)), pen=green_pen, name="p2"),
                                     PlotDataDisplayMode[self.config_manager.config["graph_options"]["pressure"]["data_display_mode"]],
                                     self.config_manager.config["graph_options"]["pressure"]["X"])
         self.plot_data["p2"] = PlotInfo(0,
-                                    p2_points,
-                                    self.ui.pressurePlot.plot(p2_points, pen=blue_pen, name="p3"),
+                                    np.empty((0,2)),
+                                    self.ui.pressurePlot.plot(np.empty((0,2)), pen=blue_pen, name="p3"),
                                     PlotDataDisplayMode[self.config_manager.config["graph_options"]["pressure"]["data_display_mode"]],
                                     self.config_manager.config["graph_options"]["pressure"]["X"])
         self.plot_data["p3"] = PlotInfo(0,
-                                    p3_points,
-                                    self.ui.pressurePlot.plot(p3_points, pen=orange_pen, name="p4"),
+                                    np.empty((0,2)),
+                                    self.ui.pressurePlot.plot(np.empty((0,2)), pen=orange_pen, name="p4"),
                                     PlotDataDisplayMode[self.config_manager.config["graph_options"]["pressure"]["data_display_mode"]],
                                     self.config_manager.config["graph_options"]["pressure"]["X"])
         self.plot_data["p4"] = PlotInfo(0,
-                                    p4_points,
-                                    self.ui.pressurePlot.plot(p4_points, pen=purple_pen, name="p5"),
+                                    np.empty((0,2)),
+                                    self.ui.pressurePlot.plot(np.empty((0,2)), pen=purple_pen, name="p5"),
                                     PlotDataDisplayMode[self.config_manager.config["graph_options"]["pressure"]["data_display_mode"]],
                                     self.config_manager.config["graph_options"]["pressure"]["X"])
         self.plot_data["p5"] = PlotInfo(0,
-                                    p5_points,
-                                    self.ui.pressurePlot.plot(p5_points, pen=brown_pen, name="p6"),
+                                    np.empty((0,2)),
+                                    self.ui.pressurePlot.plot(np.empty((0,2)), pen=brown_pen, name="p6"),
                                     PlotDataDisplayMode[self.config_manager.config["graph_options"]["pressure"]["data_display_mode"]],
                                     self.config_manager.config["graph_options"]["pressure"]["X"])
-        for marker in self.config_manager.config["graph_options"]["pressure"]["thresholds"]:
-            self.ui.pressurePlot.addItem(InfiniteLine(float(marker), angle=0, pen=inf_line_pen))
+        self.analysis_plots["p0"] = PlotInfo(0,
+                                    np.empty((0,2)),
+                                    self.ui.pressureAnalysisPlot.plot(np.empty((0,2)), pen=red_pen, name="p1"),
+                                    PlotDataDisplayMode[self.config_manager.config["graph_options"]["pressure"]["data_display_mode"]],
+                                    self.config_manager.config["graph_options"]["pressure"]["X"])
+        self.analysis_plots["p1"] = PlotInfo(0,
+                                    np.empty((0,2)),
+                                    self.ui.pressureAnalysisPlot.plot(np.empty((0,2)), pen=green_pen, name="p2"),
+                                    PlotDataDisplayMode[self.config_manager.config["graph_options"]["pressure"]["data_display_mode"]],
+                                    self.config_manager.config["graph_options"]["pressure"]["X"])
+        self.analysis_plots["p2"] = PlotInfo(0,
+                                    np.empty((0,2)),
+                                    self.ui.pressureAnalysisPlot.plot(np.empty((0,2)), pen=blue_pen, name="p3"),
+                                    PlotDataDisplayMode[self.config_manager.config["graph_options"]["pressure"]["data_display_mode"]],
+                                    self.config_manager.config["graph_options"]["pressure"]["X"])
+        self.analysis_plots["p3"] = PlotInfo(0,
+                                    np.empty((0,2)),
+                                    self.ui.pressureAnalysisPlot.plot(np.empty((0,2)), pen=orange_pen, name="p4"),
+                                    PlotDataDisplayMode[self.config_manager.config["graph_options"]["pressure"]["data_display_mode"]],
+                                    self.config_manager.config["graph_options"]["pressure"]["X"])
+        self.analysis_plots["p4"] = PlotInfo(0,
+                                    np.empty((0,2)),
+                                    self.ui.pressureAnalysisPlot.plot(np.empty((0,2)), pen=purple_pen, name="p5"),
+                                    PlotDataDisplayMode[self.config_manager.config["graph_options"]["pressure"]["data_display_mode"]],
+                                    self.config_manager.config["graph_options"]["pressure"]["X"])
+        self.analysis_plots["p5"] = PlotInfo(0,
+                                    np.empty((0,2)),
+                                    self.ui.pressureAnalysisPlot.plot(np.empty((0,2)), pen=brown_pen, name="p6"),
+                                    PlotDataDisplayMode[self.config_manager.config["graph_options"]["pressure"]["data_display_mode"]],
+                                    self.config_manager.config["graph_options"]["pressure"]["X"])
+            
 
-        self.ui.temperaturePlot.addLegend(offset=(0,0), colCount=4, labelTextColor="black")
-        self.ui.temperaturePlot.setTitle("<span style='font-weight: bold;'>Temperature</span>", color="black")
-        self.ui.temperaturePlot.setLabel("left", "<span style='font-size: 15px; font-weight: bold;'>Temperature (°C)</span>", color="black")
-        self.ui.temperaturePlot.setLabel("bottom", "<span style='font-size: 17px; font-weight: bold;'>Time (s)</span>", color="black")
-        self.ui.temperaturePlot.getAxis("left").setPen(black_pen)
-        self.ui.temperaturePlot.getAxis("left").setTextPen(black_pen)
-        self.ui.temperaturePlot.getAxis("bottom").setPen(black_pen)
-        self.ui.temperaturePlot.getAxis("bottom").setTextPen(black_pen)
+        for temperaturePlot in [self.ui.temperaturePlot, self.ui.temperatureAnalysisPlot]:
+            temperaturePlot.addLegend(offset=(0,0), colCount=4, labelTextColor="black")
+            temperaturePlot.setTitle("<span style='font-weight: bold;'>Temperature</span>", color="black")
+            temperaturePlot.setLabel("left", "<span style='font-size: 15px; font-weight: bold;'>Temperature (°C)</span>", color="black")
+            temperaturePlot.setLabel("bottom", "<span style='font-size: 17px; font-weight: bold;'>Time (s)</span>", color="black")
+            temperaturePlot.getAxis("left").setPen(black_pen)
+            temperaturePlot.getAxis("left").setTextPen(black_pen)
+            temperaturePlot.getAxis("bottom").setPen(black_pen)
+            temperaturePlot.getAxis("bottom").setTextPen(black_pen)
+            for marker in self.config_manager.config["graph_options"]["temperature"]["thresholds"]:
+                temperaturePlot.addItem(InfiniteLine(float(marker), angle=0, pen=inf_line_pen))
         self.plot_data["t0"] = PlotInfo(0,
-                                    t0_points,
-                                    self.ui.temperaturePlot.plot(t0_points, pen=red_pen, name="t1"),
+                                    np.empty((0,2)),
+                                    self.ui.temperaturePlot.plot(np.empty((0,2)), pen=red_pen, name="t1"),
                                     PlotDataDisplayMode[self.config_manager.config["graph_options"]["temperature"]["data_display_mode"]],
                                     self.config_manager.config["graph_options"]["temperature"]["X"])
         self.plot_data["t1"] = PlotInfo(0,
-                                    t1_points,
-                                    self.ui.temperaturePlot.plot(t1_points, pen=green_pen, name="t2"),
+                                    np.empty((0,2)),
+                                    self.ui.temperaturePlot.plot(np.empty((0,2)), pen=green_pen, name="t2"),
                                     PlotDataDisplayMode[self.config_manager.config["graph_options"]["temperature"]["data_display_mode"]],
                                     self.config_manager.config["graph_options"]["temperature"]["X"])
         self.plot_data["t2"] = PlotInfo(0,
-                                    t2_points,
-                                    self.ui.temperaturePlot.plot(t2_points, pen=blue_pen, name="t3"),
+                                    np.empty((0,2)),
+                                    self.ui.temperaturePlot.plot(np.empty((0,2)), pen=blue_pen, name="t3"),
                                     PlotDataDisplayMode[self.config_manager.config["graph_options"]["temperature"]["data_display_mode"]],
                                     self.config_manager.config["graph_options"]["temperature"]["X"])
         self.plot_data["t3"] = PlotInfo(0,
-                                    t3_points,
-                                    self.ui.temperaturePlot.plot(t3_points, pen=orange_pen, name="t4"),
+                                    np.empty((0,2)),
+                                    self.ui.temperaturePlot.plot(np.empty((0,2)), pen=orange_pen, name="t4"),
                                     PlotDataDisplayMode[self.config_manager.config["graph_options"]["temperature"]["data_display_mode"]],
                                     self.config_manager.config["graph_options"]["temperature"]["X"])
-        for marker in self.config_manager.config["graph_options"]["temperature"]["thresholds"]:
-            self.ui.temperaturePlot.addItem(InfiniteLine(float(marker), angle=0, pen=inf_line_pen))
+        self.analysis_plots["t0"] = PlotInfo(0,
+                                    np.empty((0,2)),
+                                    self.ui.temperatureAnalysisPlot.plot(np.empty((0,2)), pen=red_pen, name="t1"),
+                                    PlotDataDisplayMode[self.config_manager.config["graph_options"]["temperature"]["data_display_mode"]],
+                                    self.config_manager.config["graph_options"]["temperature"]["X"])
+        self.analysis_plots["t1"] = PlotInfo(0,
+                                    np.empty((0,2)),
+                                    self.ui.temperatureAnalysisPlot.plot(np.empty((0,2)), pen=green_pen, name="t2"),
+                                    PlotDataDisplayMode[self.config_manager.config["graph_options"]["temperature"]["data_display_mode"]],
+                                    self.config_manager.config["graph_options"]["temperature"]["X"])
+        self.analysis_plots["t2"] = PlotInfo(0,
+                                    np.empty((0,2)),
+                                    self.ui.temperatureAnalysisPlot.plot(np.empty((0,2)), pen=blue_pen, name="t3"),
+                                    PlotDataDisplayMode[self.config_manager.config["graph_options"]["temperature"]["data_display_mode"]],
+                                    self.config_manager.config["graph_options"]["temperature"]["X"])
+        self.analysis_plots["t3"] = PlotInfo(0,
+                                    np.empty((0,2)),
+                                    self.ui.temperatureAnalysisPlot.plot(np.empty((0,2)), pen=orange_pen, name="t4"),
+                                    PlotDataDisplayMode[self.config_manager.config["graph_options"]["temperature"]["data_display_mode"]],
+                                    self.config_manager.config["graph_options"]["temperature"]["X"])
 
-        self.ui.tankMassPlot.addLegend()
-        self.ui.tankMassPlot.setTitle("<span style='font-weight: bold;'>Tank Mass</span>", color="black")
-        self.ui.tankMassPlot.setLabel("left", "<span style='font-size: 15px; font-weight: bold;'>Mass (kg)</span>", color="black")
-        self.ui.tankMassPlot.setLabel("bottom", "<span style='font-size: 17px; font-weight: bold;'>Time (s)</span>", color="black")
-        self.ui.tankMassPlot.getAxis("left").setPen(black_pen)
-        self.ui.tankMassPlot.getAxis("left").setTextPen(black_pen)
-        self.ui.tankMassPlot.getAxis("bottom").setPen(black_pen)
-        self.ui.tankMassPlot.getAxis("bottom").setTextPen(black_pen)
+        for tankMassPlot in [self.ui.tankMassPlot, self.ui.tankMassAnalysisPlot]:
+            tankMassPlot.addLegend()
+            tankMassPlot.setTitle("<span style='font-weight: bold;'>Tank Mass</span>", color="black")
+            tankMassPlot.setLabel("left", "<span style='font-size: 15px; font-weight: bold;'>Mass (kg)</span>", color="black")
+            tankMassPlot.setLabel("bottom", "<span style='font-size: 17px; font-weight: bold;'>Time (s)</span>", color="black")
+            tankMassPlot.getAxis("left").setPen(black_pen)
+            tankMassPlot.getAxis("left").setTextPen(black_pen)
+            tankMassPlot.getAxis("bottom").setPen(black_pen)
+            tankMassPlot.getAxis("bottom").setTextPen(black_pen)
+            for marker in self.config_manager.config["graph_options"]["tank_mass"]["thresholds"]:
+                tankMassPlot.addItem(InfiniteLine(float(marker), angle=0, pen=inf_line_pen))
         self.plot_data["m0"] = PlotInfo(0,
-                                    tank_mass_points,
-                                    self.ui.tankMassPlot.plot(tank_mass_points, pen=red_pen),
+                                    np.empty((0,2)),
+                                    self.ui.tankMassPlot.plot(np.empty((0,2)), pen=red_pen),
                                     PlotDataDisplayMode[self.config_manager.config["graph_options"]["tank_mass"]["data_display_mode"]],
                                     self.config_manager.config["graph_options"]["tank_mass"]["X"])
-        for marker in self.config_manager.config["graph_options"]["tank_mass"]["thresholds"]:
-            self.ui.tankMassPlot.addItem(InfiniteLine(float(marker), angle=0, pen=inf_line_pen))
+        self.analysis_plots["m0"] = PlotInfo(0,
+                                    np.empty((0,2)),
+                                    self.ui.tankMassAnalysisPlot.plot(np.empty((0,2)), pen=red_pen),
+                                    PlotDataDisplayMode[self.config_manager.config["graph_options"]["tank_mass"]["data_display_mode"]],
+                                    self.config_manager.config["graph_options"]["tank_mass"]["X"])
+            
 
-        self.ui.engineThrustPlot.addLegend()
-        self.ui.engineThrustPlot.setTitle("<span style='font-weight: bold;'>Engine Thrust</span>", color="black")
-        self.ui.engineThrustPlot.setLabel("left", "<span style='font-size: 15px; font-weight: bold;'>Thrust (N)</span>", color="black")
-        self.ui.engineThrustPlot.setLabel("bottom", "<span style='font-size: 17px; font-weight: bold;'>Time (s)</span>", color="black")
-        self.ui.engineThrustPlot.getAxis("left").setPen(black_pen)
-        self.ui.engineThrustPlot.getAxis("left").setTextPen(black_pen)
-        self.ui.engineThrustPlot.getAxis("bottom").setPen(black_pen)
-        self.ui.engineThrustPlot.getAxis("bottom").setTextPen(black_pen)
+        for engineThrustPlot in [self.ui.engineThrustPlot, self.ui.engineThrustAnalysisPlot]:
+            engineThrustPlot.addLegend()
+            engineThrustPlot.setTitle("<span style='font-weight: bold;'>Engine Thrust</span>", color="black")
+            engineThrustPlot.setLabel("left", "<span style='font-size: 15px; font-weight: bold;'>Thrust (N)</span>", color="black")
+            engineThrustPlot.setLabel("bottom", "<span style='font-size: 17px; font-weight: bold;'>Time (s)</span>", color="black")
+            engineThrustPlot.getAxis("left").setPen(black_pen)
+            engineThrustPlot.getAxis("left").setTextPen(black_pen)
+            engineThrustPlot.getAxis("bottom").setPen(black_pen)
+            engineThrustPlot.getAxis("bottom").setTextPen(black_pen)
+            for marker in self.config_manager.config["graph_options"]["engine_thrust"]["thresholds"]:
+                engineThrustPlot.addItem(InfiniteLine(float(marker), angle=0, pen=inf_line_pen))
         self.plot_data["th0"] = PlotInfo(0,
-                                    engine_thrust_points,
-                                    self.ui.engineThrustPlot.plot(engine_thrust_points, pen=red_pen),
+                                    np.empty((0,2)),
+                                    self.ui.engineThrustPlot.plot(np.empty((0,2)), pen=red_pen),
                                     PlotDataDisplayMode[self.config_manager.config["graph_options"]["engine_thrust"]["data_display_mode"]],
                                     self.config_manager.config["graph_options"]["engine_thrust"]["X"])
-        for marker in self.config_manager.config["graph_options"]["engine_thrust"]["thresholds"]:
-            self.ui.engineThrustPlot.addItem(InfiniteLine(float(marker), angle=0, pen=inf_line_pen))
+        self.analysis_plots["th0"] = PlotInfo(0,
+                                    np.empty((0,2)),
+                                    self.ui.engineThrustAnalysisPlot.plot(np.empty((0,2)), pen=red_pen),
+                                    PlotDataDisplayMode[self.config_manager.config["graph_options"]["engine_thrust"]["data_display_mode"]],
+                                    self.config_manager.config["graph_options"]["engine_thrust"]["X"])       
 
     ### Misc functions that were easier to implement here
 

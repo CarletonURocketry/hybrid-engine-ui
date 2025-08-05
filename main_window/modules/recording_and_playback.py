@@ -64,7 +64,7 @@ class PlaybackManager(QObject):
         )  # No-op, just to avoid warnings
         file_path, _ = QFileDialog.getOpenFileName(
             dummy_widget,
-            "Open Previous File",
+            "Open dump file",
             "recordings",
             "Dump file(*.dump);;All files (*)",
         )

@@ -80,7 +80,7 @@ class UDPController(QObject):
     # Any data received should be handled here
     def udp_receive_socket_data(self):
         while self.padUDPSocket.hasPendingDatagrams():
-            datagram, host, port = self.padUDPSocket.readDatagram(
+            datagram, _, _ = self.padUDPSocket.readDatagram(
                 self.padUDPSocket.pendingDatagramSize()
             )
             data = datagram.data()

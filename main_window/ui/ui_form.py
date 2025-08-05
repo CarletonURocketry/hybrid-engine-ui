@@ -402,6 +402,8 @@ class Ui_Widget(object):
 
         self.pidDiagramOptionLayout.addWidget(self.pidDiagramOptionLabel)
 
+        self.horizontalLayout_4 = QHBoxLayout()
+        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
         self.pidDiagramColdFlowOption = QRadioButton(self.displayOptionsTab)
         self.pidWindowButtonGroup = QButtonGroup(Widget)
         self.pidWindowButtonGroup.setObjectName(u"pidWindowButtonGroup")
@@ -409,13 +411,16 @@ class Ui_Widget(object):
         self.pidDiagramColdFlowOption.setObjectName(u"pidDiagramColdFlowOption")
         self.pidDiagramColdFlowOption.setChecked(True)
 
-        self.pidDiagramOptionLayout.addWidget(self.pidDiagramColdFlowOption)
+        self.horizontalLayout_4.addWidget(self.pidDiagramColdFlowOption)
 
         self.pidDiagramStaticFireOption = QRadioButton(self.displayOptionsTab)
         self.pidWindowButtonGroup.addButton(self.pidDiagramStaticFireOption)
         self.pidDiagramStaticFireOption.setObjectName(u"pidDiagramStaticFireOption")
 
-        self.pidDiagramOptionLayout.addWidget(self.pidDiagramStaticFireOption)
+        self.horizontalLayout_4.addWidget(self.pidDiagramStaticFireOption)
+
+
+        self.pidDiagramOptionLayout.addLayout(self.horizontalLayout_4)
 
 
         self.sensorDisplayOptionsLayout.addLayout(self.pidDiagramOptionLayout)
@@ -459,8 +464,8 @@ class Ui_Widget(object):
 
         self.graphOptionsLayout.addWidget(self.graphOptionsLabel)
 
-        self.graphOptionsLayout_2 = QGridLayout()
-        self.graphOptionsLayout_2.setObjectName(u"graphOptionsLayout_2")
+        self.graphOptionsGrid = QGridLayout()
+        self.graphOptionsGrid.setObjectName(u"graphOptionsGrid")
         self.tankMassThresholdLayout = QVBoxLayout()
         self.tankMassThresholdLayout.setSpacing(4)
         self.tankMassThresholdLayout.setObjectName(u"tankMassThresholdLayout")
@@ -546,23 +551,23 @@ class Ui_Widget(object):
         self.tankMassThresholdLayout.addWidget(self.tankMassThresholdButton)
 
 
-        self.graphOptionsLayout_2.addLayout(self.tankMassThresholdLayout, 1, 0, 1, 1)
+        self.graphOptionsGrid.addLayout(self.tankMassThresholdLayout, 1, 0, 1, 1)
 
-        self.engineThrustThreshold = QVBoxLayout()
-        self.engineThrustThreshold.setSpacing(4)
-        self.engineThrustThreshold.setObjectName(u"engineThrustThreshold")
+        self.engineThrustGraphOptionsLayout = QVBoxLayout()
+        self.engineThrustGraphOptionsLayout.setSpacing(4)
+        self.engineThrustGraphOptionsLayout.setObjectName(u"engineThrustGraphOptionsLayout")
         self.engineThrustThresholdLabel = QLabel(self.displayOptionsTab)
         self.engineThrustThresholdLabel.setObjectName(u"engineThrustThresholdLabel")
         self.engineThrustThresholdLabel.setFont(font3)
         self.engineThrustThresholdLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.engineThrustThreshold.addWidget(self.engineThrustThresholdLabel)
+        self.engineThrustGraphOptionsLayout.addWidget(self.engineThrustThresholdLabel)
 
         self.engineThrustDataDisplayLabel = QLabel(self.displayOptionsTab)
         self.engineThrustDataDisplayLabel.setObjectName(u"engineThrustDataDisplayLabel")
         self.engineThrustDataDisplayLabel.setFont(font4)
 
-        self.engineThrustThreshold.addWidget(self.engineThrustDataDisplayLabel)
+        self.engineThrustGraphOptionsLayout.addWidget(self.engineThrustDataDisplayLabel)
 
         self.engineThrustDataDisplayLayout = QHBoxLayout()
         self.engineThrustDataDisplayLayout.setObjectName(u"engineThrustDataDisplayLayout")
@@ -599,7 +604,7 @@ class Ui_Widget(object):
         self.engineThrustDataDisplayLayout.addWidget(self.engineThrustXSB)
 
 
-        self.engineThrustThreshold.addLayout(self.engineThrustDataDisplayLayout)
+        self.engineThrustGraphOptionsLayout.addLayout(self.engineThrustDataDisplayLayout)
 
         self.engineThrustThresholdList = QListWidget(self.displayOptionsTab)
         self.engineThrustThresholdList.setObjectName(u"engineThrustThresholdList")
@@ -607,24 +612,24 @@ class Ui_Widget(object):
         self.engineThrustThresholdList.setSizePolicy(sizePolicy3)
         self.engineThrustThresholdList.setMaximumSize(QSize(16777215, 75))
 
-        self.engineThrustThreshold.addWidget(self.engineThrustThresholdList)
+        self.engineThrustGraphOptionsLayout.addWidget(self.engineThrustThresholdList)
 
         self.engineThrustThresholdInput = QLineEdit(self.displayOptionsTab)
         self.engineThrustThresholdInput.setObjectName(u"engineThrustThresholdInput")
         sizePolicy3.setHeightForWidth(self.engineThrustThresholdInput.sizePolicy().hasHeightForWidth())
         self.engineThrustThresholdInput.setSizePolicy(sizePolicy3)
 
-        self.engineThrustThreshold.addWidget(self.engineThrustThresholdInput)
+        self.engineThrustGraphOptionsLayout.addWidget(self.engineThrustThresholdInput)
 
         self.engineThrustThresholdButton = QPushButton(self.displayOptionsTab)
         self.engineThrustThresholdButton.setObjectName(u"engineThrustThresholdButton")
         sizePolicy3.setHeightForWidth(self.engineThrustThresholdButton.sizePolicy().hasHeightForWidth())
         self.engineThrustThresholdButton.setSizePolicy(sizePolicy3)
 
-        self.engineThrustThreshold.addWidget(self.engineThrustThresholdButton)
+        self.engineThrustGraphOptionsLayout.addWidget(self.engineThrustThresholdButton)
 
 
-        self.graphOptionsLayout_2.addLayout(self.engineThrustThreshold, 1, 1, 1, 1)
+        self.graphOptionsGrid.addLayout(self.engineThrustGraphOptionsLayout, 1, 1, 1, 1)
 
         self.temperatureGraphOptionsLayout = QVBoxLayout()
         self.temperatureGraphOptionsLayout.setSpacing(4)
@@ -703,7 +708,7 @@ class Ui_Widget(object):
         self.temperatureGraphOptionsLayout.addWidget(self.temperatureThresholdButton)
 
 
-        self.graphOptionsLayout_2.addLayout(self.temperatureGraphOptionsLayout, 0, 1, 1, 1)
+        self.graphOptionsGrid.addLayout(self.temperatureGraphOptionsLayout, 0, 1, 1, 1)
 
         self.pressureGraphOptionsLayout = QVBoxLayout()
         self.pressureGraphOptionsLayout.setSpacing(4)
@@ -791,10 +796,10 @@ class Ui_Widget(object):
         self.pressureGraphOptionsLayout.addWidget(self.pressureThresholdButton)
 
 
-        self.graphOptionsLayout_2.addLayout(self.pressureGraphOptionsLayout, 0, 0, 1, 1)
+        self.graphOptionsGrid.addLayout(self.pressureGraphOptionsLayout, 0, 0, 1, 1)
 
 
-        self.graphOptionsLayout.addLayout(self.graphOptionsLayout_2)
+        self.graphOptionsLayout.addLayout(self.graphOptionsGrid)
 
 
         self.formLayout_2.setLayout(1, QFormLayout.SpanningRole, self.graphOptionsLayout)
@@ -805,6 +810,118 @@ class Ui_Widget(object):
         self.formLayout_2.setWidget(2, QFormLayout.FieldRole, self.saveDisplayConfigButton)
 
         self.tabWidget.addTab(self.displayOptionsTab, "")
+        self.analysisTab = QWidget()
+        self.analysisTab.setObjectName(u"analysisTab")
+        self.gridLayout = QGridLayout(self.analysisTab)
+        self.gridLayout.setObjectName(u"gridLayout")
+        self.expandTemperatureAnalysisPlotButton = QPushButton(self.analysisTab)
+        self.expandTemperatureAnalysisPlotButton.setObjectName(u"expandTemperatureAnalysisPlotButton")
+        self.expandTemperatureAnalysisPlotButton.setCheckable(True)
+
+        self.gridLayout.addWidget(self.expandTemperatureAnalysisPlotButton, 3, 1, 1, 1)
+
+        self.loadDataCsvButton = QPushButton(self.analysisTab)
+        self.loadDataCsvButton.setObjectName(u"loadDataCsvButton")
+        sizePolicy5 = QSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Fixed)
+        sizePolicy5.setHorizontalStretch(0)
+        sizePolicy5.setVerticalStretch(0)
+        sizePolicy5.setHeightForWidth(self.loadDataCsvButton.sizePolicy().hasHeightForWidth())
+        self.loadDataCsvButton.setSizePolicy(sizePolicy5)
+
+        self.gridLayout.addWidget(self.loadDataCsvButton, 1, 0, 1, 1)
+
+        self.temperatureAnalysisPlot = PlotWidget(self.analysisTab)
+        self.temperatureAnalysisPlot.setObjectName(u"temperatureAnalysisPlot")
+        sizePolicy1.setHeightForWidth(self.temperatureAnalysisPlot.sizePolicy().hasHeightForWidth())
+        self.temperatureAnalysisPlot.setSizePolicy(sizePolicy1)
+        self.temperatureAnalysisPlot.setAutoFillBackground(False)
+        self.temperatureAnalysisPlot.setBackgroundBrush(brush)
+
+        self.gridLayout.addWidget(self.temperatureAnalysisPlot, 2, 1, 1, 1)
+
+        self.expandPressureAnalysisPlotButton = QPushButton(self.analysisTab)
+        self.expandPressureAnalysisPlotButton.setObjectName(u"expandPressureAnalysisPlotButton")
+        self.expandPressureAnalysisPlotButton.setAutoFillBackground(False)
+        self.expandPressureAnalysisPlotButton.setCheckable(True)
+        self.expandPressureAnalysisPlotButton.setChecked(False)
+
+        self.gridLayout.addWidget(self.expandPressureAnalysisPlotButton, 3, 0, 1, 1)
+
+        self.tankMassAnalysisPlot = PlotWidget(self.analysisTab)
+        self.tankMassAnalysisPlot.setObjectName(u"tankMassAnalysisPlot")
+        sizePolicy1.setHeightForWidth(self.tankMassAnalysisPlot.sizePolicy().hasHeightForWidth())
+        self.tankMassAnalysisPlot.setSizePolicy(sizePolicy1)
+        self.tankMassAnalysisPlot.setAutoFillBackground(False)
+        self.tankMassAnalysisPlot.setBackgroundBrush(brush)
+
+        self.gridLayout.addWidget(self.tankMassAnalysisPlot, 4, 0, 1, 1)
+
+        self.engineThrustAnalysisPlot = PlotWidget(self.analysisTab)
+        self.engineThrustAnalysisPlot.setObjectName(u"engineThrustAnalysisPlot")
+        sizePolicy1.setHeightForWidth(self.engineThrustAnalysisPlot.sizePolicy().hasHeightForWidth())
+        self.engineThrustAnalysisPlot.setSizePolicy(sizePolicy1)
+        self.engineThrustAnalysisPlot.setAutoFillBackground(False)
+        self.engineThrustAnalysisPlot.setBackgroundBrush(brush)
+
+        self.gridLayout.addWidget(self.engineThrustAnalysisPlot, 4, 1, 1, 1)
+
+        self.pressureAnalysisPlot = PlotWidget(self.analysisTab)
+        self.pressureAnalysisPlot.setObjectName(u"pressureAnalysisPlot")
+        sizePolicy1.setHeightForWidth(self.pressureAnalysisPlot.sizePolicy().hasHeightForWidth())
+        self.pressureAnalysisPlot.setSizePolicy(sizePolicy1)
+        self.pressureAnalysisPlot.setAutoFillBackground(False)
+        self.pressureAnalysisPlot.setBackgroundBrush(brush)
+
+        self.gridLayout.addWidget(self.pressureAnalysisPlot, 2, 0, 1, 1)
+
+        self.expandTankMassAnalysisPlotButton = QPushButton(self.analysisTab)
+        self.expandTankMassAnalysisPlotButton.setObjectName(u"expandTankMassAnalysisPlotButton")
+        self.expandTankMassAnalysisPlotButton.setCheckable(True)
+
+        self.gridLayout.addWidget(self.expandTankMassAnalysisPlotButton, 5, 0, 1, 1)
+
+        self.expandEngineThrustAnalysisPlotButton = QPushButton(self.analysisTab)
+        self.expandEngineThrustAnalysisPlotButton.setObjectName(u"expandEngineThrustAnalysisPlotButton")
+        self.expandEngineThrustAnalysisPlotButton.setCheckable(True)
+
+        self.gridLayout.addWidget(self.expandEngineThrustAnalysisPlotButton, 5, 1, 1, 1)
+
+        self.horizontalLayout_7 = QHBoxLayout()
+        self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
+        self.csvNameLabel = QLabel(self.analysisTab)
+        self.csvNameLabel.setObjectName(u"csvNameLabel")
+        sizePolicy6 = QSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Preferred)
+        sizePolicy6.setHorizontalStretch(0)
+        sizePolicy6.setVerticalStretch(0)
+        sizePolicy6.setHeightForWidth(self.csvNameLabel.sizePolicy().hasHeightForWidth())
+        self.csvNameLabel.setSizePolicy(sizePolicy6)
+        self.csvNameLabel.setFont(font3)
+        self.csvNameLabel.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
+
+        self.horizontalLayout_7.addWidget(self.csvNameLabel)
+
+        self.csvNameValueLabel = QLabel(self.analysisTab)
+        self.csvNameValueLabel.setObjectName(u"csvNameValueLabel")
+
+        self.horizontalLayout_7.addWidget(self.csvNameValueLabel)
+
+        self.csvTimeLabel = QLabel(self.analysisTab)
+        self.csvTimeLabel.setObjectName(u"csvTimeLabel")
+        sizePolicy6.setHeightForWidth(self.csvTimeLabel.sizePolicy().hasHeightForWidth())
+        self.csvTimeLabel.setSizePolicy(sizePolicy6)
+        self.csvTimeLabel.setFont(font3)
+
+        self.horizontalLayout_7.addWidget(self.csvTimeLabel)
+
+        self.csvTimeValueLabel = QLabel(self.analysisTab)
+        self.csvTimeValueLabel.setObjectName(u"csvTimeValueLabel")
+
+        self.horizontalLayout_7.addWidget(self.csvTimeValueLabel)
+
+
+        self.gridLayout.addLayout(self.horizontalLayout_7, 1, 1, 1, 1)
+
+        self.tabWidget.addTab(self.analysisTab, "")
         self.logTab = QWidget()
         self.logTab.setObjectName(u"logTab")
         self.logTab.setAutoFillBackground(True)
@@ -841,7 +958,7 @@ class Ui_Widget(object):
 
         self.retranslateUi(Widget)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(3)
 
 
         QMetaObject.connectSlotsByName(Widget)
@@ -942,6 +1059,16 @@ class Ui_Widget(object):
 #if QT_CONFIG(tooltip)
         self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.displayOptionsTab), QCoreApplication.translate("Widget", u"Configure display and system options", None))
 #endif // QT_CONFIG(tooltip)
+        self.expandTemperatureAnalysisPlotButton.setText(QCoreApplication.translate("Widget", u"Expand graph", None))
+        self.loadDataCsvButton.setText(QCoreApplication.translate("Widget", u"Open data CSV file", None))
+        self.expandPressureAnalysisPlotButton.setText(QCoreApplication.translate("Widget", u"Expand graph", None))
+        self.expandTankMassAnalysisPlotButton.setText(QCoreApplication.translate("Widget", u"Expand graph", None))
+        self.expandEngineThrustAnalysisPlotButton.setText(QCoreApplication.translate("Widget", u"Expand graph", None))
+        self.csvNameLabel.setText(QCoreApplication.translate("Widget", u"CSV name:", None))
+        self.csvNameValueLabel.setText(QCoreApplication.translate("Widget", u"N/A", None))
+        self.csvTimeLabel.setText(QCoreApplication.translate("Widget", u"CSV time length:", None))
+        self.csvTimeValueLabel.setText(QCoreApplication.translate("Widget", u"N/A", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.analysisTab), QCoreApplication.translate("Widget", u"Analysis", None))
         self.exporter.setText(QCoreApplication.translate("Widget", u"Export to File", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.logTab), QCoreApplication.translate("Widget", u"Log", None))
 #if QT_CONFIG(tooltip)
