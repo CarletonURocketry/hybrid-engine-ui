@@ -886,6 +886,41 @@ class Ui_Widget(object):
 
         self.gridLayout.addWidget(self.expandEngineThrustAnalysisPlotButton, 5, 1, 1, 1)
 
+        self.horizontalLayout_7 = QHBoxLayout()
+        self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
+        self.csvNameLabel = QLabel(self.analysisTab)
+        self.csvNameLabel.setObjectName(u"csvNameLabel")
+        sizePolicy6 = QSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Preferred)
+        sizePolicy6.setHorizontalStretch(0)
+        sizePolicy6.setVerticalStretch(0)
+        sizePolicy6.setHeightForWidth(self.csvNameLabel.sizePolicy().hasHeightForWidth())
+        self.csvNameLabel.setSizePolicy(sizePolicy6)
+        self.csvNameLabel.setFont(font3)
+        self.csvNameLabel.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
+
+        self.horizontalLayout_7.addWidget(self.csvNameLabel)
+
+        self.csvNameValueLabel = QLabel(self.analysisTab)
+        self.csvNameValueLabel.setObjectName(u"csvNameValueLabel")
+
+        self.horizontalLayout_7.addWidget(self.csvNameValueLabel)
+
+        self.csvTimeLabel = QLabel(self.analysisTab)
+        self.csvTimeLabel.setObjectName(u"csvTimeLabel")
+        sizePolicy6.setHeightForWidth(self.csvTimeLabel.sizePolicy().hasHeightForWidth())
+        self.csvTimeLabel.setSizePolicy(sizePolicy6)
+        self.csvTimeLabel.setFont(font3)
+
+        self.horizontalLayout_7.addWidget(self.csvTimeLabel)
+
+        self.csvTimeValueLabel = QLabel(self.analysisTab)
+        self.csvTimeValueLabel.setObjectName(u"csvTimeValueLabel")
+
+        self.horizontalLayout_7.addWidget(self.csvTimeValueLabel)
+
+
+        self.gridLayout.addLayout(self.horizontalLayout_7, 1, 1, 1, 1)
+
         self.tabWidget.addTab(self.analysisTab, "")
         self.logTab = QWidget()
         self.logTab.setObjectName(u"logTab")
@@ -1029,6 +1064,10 @@ class Ui_Widget(object):
         self.expandPressureAnalysisPlotButton.setText(QCoreApplication.translate("Widget", u"Expand graph", None))
         self.expandTankMassAnalysisPlotButton.setText(QCoreApplication.translate("Widget", u"Expand graph", None))
         self.expandEngineThrustAnalysisPlotButton.setText(QCoreApplication.translate("Widget", u"Expand graph", None))
+        self.csvNameLabel.setText(QCoreApplication.translate("Widget", u"CSV name:", None))
+        self.csvNameValueLabel.setText(QCoreApplication.translate("Widget", u"N/A", None))
+        self.csvTimeLabel.setText(QCoreApplication.translate("Widget", u"CSV time length:", None))
+        self.csvTimeValueLabel.setText(QCoreApplication.translate("Widget", u"N/A", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.analysisTab), QCoreApplication.translate("Widget", u"Analysis", None))
         self.exporter.setText(QCoreApplication.translate("Widget", u"Export to File", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.logTab), QCoreApplication.translate("Widget", u"Log", None))
