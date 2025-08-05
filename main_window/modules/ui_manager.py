@@ -10,7 +10,7 @@ The UIManager class is given an instance of the UI object to make things easier
 """
 
 from PySide6.QtCore import QObject, Slot, Qt, Signal
-from PySide6.QtWidgets import QMessageBox
+from PySide6.QtWidgets import QMessageBox, QPushButton
 from PySide6.QtWebEngineWidgets import QWebEngineView
 
 from pyqtgraph import mkPen, InfiniteLine
@@ -192,6 +192,76 @@ class UIManager(QObject):
             self.default_valves_changed.emit()
         except Exception as e:
             self.popup_ready.emit(QMessageBox.Icon.Critical, "Action failed", f"Adding/removing default open valve failed\n{str(e)}")
+
+    @Slot()
+    def on_expand_pressure_plot_btn_press(self, expanding: bool):
+        if expanding:
+            self.clear_analysis_tab()
+            self.ui.analysisTab.layout().addWidget(self.ui.pressureAnalysisPlot, 0, 0)
+            self.ui.analysisTab.layout().addWidget(self.ui.expandPressureAnalysisPlotButton, 1, 0)
+        else:
+            self.reset_analysis_tab()
+    
+    @Slot()
+    def on_expand_temperature_plot_btn_press(self, expanding: bool):
+        if expanding:
+            self.clear_analysis_tab()
+            self.ui.analysisTab.layout().addWidget(self.ui.temperatureAnalysisPlot, 0, 0)
+            self.ui.analysisTab.layout().addWidget(self.ui.expandTemperatureAnalysisPlotButton, 1, 0)
+        else:
+            self.reset_analysis_tab()
+    
+    @Slot()
+    def on_expand_tank_mass_plot_btn_press(self, expanding: bool):
+        if expanding:
+            self.clear_analysis_tab()
+            self.ui.analysisTab.layout().addWidget(self.ui.tankMassAnalysisPlot, 0, 0)
+            self.ui.analysisTab.layout().addWidget(self.ui.expandTankMassAnalysisPlotButton, 1, 0)
+        else:
+            self.reset_analysis_tab()
+    
+    @Slot()
+    def on_expand_engine_thrust_plot_btn_press(self, expanding: bool):
+        if expanding:
+            self.clear_analysis_tab()
+            self.ui.analysisTab.layout().addWidget(self.ui.engineThrustAnalysisPlot, 0, 0)
+            self.ui.analysisTab.layout().addWidget(self.ui.expandEngineThrustAnalysisPlotButton, 1, 0)
+        else:
+            self.reset_analysis_tab()
+
+    def clear_analysis_tab(self):
+        while self.ui.analysisTab.layout().itemAt(0):
+            item = self.ui.analysisTab.layout().takeAt(0)
+            widget = item.widget()
+            if widget is not None:
+                widget.setParent(None)
+        self.ui.analysisTab.layout().setColumnStretch(0, 0)
+        self.ui.analysisTab.layout().setColumnStretch(1, 0)
+        self.ui.analysisTab.layout().setRowStretch(1, 0)
+        self.ui.analysisTab.layout().setRowStretch(2, 0)
+        self.ui.analysisTab.layout().setRowStretch(3, 0)
+
+    def reset_analysis_tab(self):
+        while self.ui.analysisTab.layout().itemAt(0):
+            item = self.ui.analysisTab.layout().takeAt(0)
+            widget = item.widget()
+            if widget is not None:
+                widget.setParent(None)
+        self.ui.analysisTab.layout().addWidget(self.ui.loadDataCsvButton, 0, 0,)
+        self.ui.analysisTab.layout().addWidget(self.ui.pressureAnalysisPlot, 1, 0)
+        self.ui.analysisTab.layout().addWidget(self.ui.temperatureAnalysisPlot, 1, 1)
+        self.ui.analysisTab.layout().addWidget(self.ui.expandPressureAnalysisPlotButton, 2, 0,)
+        self.ui.analysisTab.layout().addWidget(self.ui.expandTemperatureAnalysisPlotButton, 2, 1)
+        self.ui.analysisTab.layout().addWidget(self.ui.tankMassAnalysisPlot, 3, 0,)
+        self.ui.analysisTab.layout().addWidget(self.ui.engineThrustAnalysisPlot, 3, 1)
+        self.ui.analysisTab.layout().addWidget(self.ui.expandTankMassAnalysisPlotButton, 4, 0,)
+        self.ui.analysisTab.layout().addWidget(self.ui.expandEngineThrustAnalysisPlotButton, 4, 1)
+        self.ui.analysisTab.layout().setColumnStretch(0, 1)
+        self.ui.analysisTab.layout().setColumnStretch(1, 1)
+        self.ui.analysisTab.layout().setRowStretch(1, 1)
+        self.ui.analysisTab.layout().setRowStretch(2, 1)
+        self.ui.analysisTab.layout().setRowStretch(3, 1)
+
 
     @Slot()
     def deploy_easter_egg(self):

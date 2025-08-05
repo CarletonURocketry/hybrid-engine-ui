@@ -814,41 +814,11 @@ class Ui_Widget(object):
         self.analysisTab.setObjectName(u"analysisTab")
         self.gridLayout = QGridLayout(self.analysisTab)
         self.gridLayout.setObjectName(u"gridLayout")
-        self.temperatureAnalysisPlot = PlotWidget(self.analysisTab)
-        self.temperatureAnalysisPlot.setObjectName(u"temperatureAnalysisPlot")
-        sizePolicy1.setHeightForWidth(self.temperatureAnalysisPlot.sizePolicy().hasHeightForWidth())
-        self.temperatureAnalysisPlot.setSizePolicy(sizePolicy1)
-        self.temperatureAnalysisPlot.setAutoFillBackground(False)
-        self.temperatureAnalysisPlot.setBackgroundBrush(brush)
+        self.expandTemperatureAnalysisPlotButton = QPushButton(self.analysisTab)
+        self.expandTemperatureAnalysisPlotButton.setObjectName(u"expandTemperatureAnalysisPlotButton")
+        self.expandTemperatureAnalysisPlotButton.setCheckable(True)
 
-        self.gridLayout.addWidget(self.temperatureAnalysisPlot, 2, 1, 1, 1)
-
-        self.tankMassAnalysisPlot = PlotWidget(self.analysisTab)
-        self.tankMassAnalysisPlot.setObjectName(u"tankMassAnalysisPlot")
-        sizePolicy1.setHeightForWidth(self.tankMassAnalysisPlot.sizePolicy().hasHeightForWidth())
-        self.tankMassAnalysisPlot.setSizePolicy(sizePolicy1)
-        self.tankMassAnalysisPlot.setAutoFillBackground(False)
-        self.tankMassAnalysisPlot.setBackgroundBrush(brush)
-
-        self.gridLayout.addWidget(self.tankMassAnalysisPlot, 3, 0, 1, 1)
-
-        self.engineThrustAnalysisPlot = PlotWidget(self.analysisTab)
-        self.engineThrustAnalysisPlot.setObjectName(u"engineThrustAnalysisPlot")
-        sizePolicy1.setHeightForWidth(self.engineThrustAnalysisPlot.sizePolicy().hasHeightForWidth())
-        self.engineThrustAnalysisPlot.setSizePolicy(sizePolicy1)
-        self.engineThrustAnalysisPlot.setAutoFillBackground(False)
-        self.engineThrustAnalysisPlot.setBackgroundBrush(brush)
-
-        self.gridLayout.addWidget(self.engineThrustAnalysisPlot, 3, 1, 1, 1)
-
-        self.pressureAnalysisPlot = PlotWidget(self.analysisTab)
-        self.pressureAnalysisPlot.setObjectName(u"pressureAnalysisPlot")
-        sizePolicy1.setHeightForWidth(self.pressureAnalysisPlot.sizePolicy().hasHeightForWidth())
-        self.pressureAnalysisPlot.setSizePolicy(sizePolicy1)
-        self.pressureAnalysisPlot.setAutoFillBackground(False)
-        self.pressureAnalysisPlot.setBackgroundBrush(brush)
-
-        self.gridLayout.addWidget(self.pressureAnalysisPlot, 2, 0, 1, 1)
+        self.gridLayout.addWidget(self.expandTemperatureAnalysisPlotButton, 3, 1, 1, 1)
 
         self.loadDataCsvButton = QPushButton(self.analysisTab)
         self.loadDataCsvButton.setObjectName(u"loadDataCsvButton")
@@ -859,6 +829,62 @@ class Ui_Widget(object):
         self.loadDataCsvButton.setSizePolicy(sizePolicy5)
 
         self.gridLayout.addWidget(self.loadDataCsvButton, 1, 0, 1, 1)
+
+        self.temperatureAnalysisPlot = PlotWidget(self.analysisTab)
+        self.temperatureAnalysisPlot.setObjectName(u"temperatureAnalysisPlot")
+        sizePolicy1.setHeightForWidth(self.temperatureAnalysisPlot.sizePolicy().hasHeightForWidth())
+        self.temperatureAnalysisPlot.setSizePolicy(sizePolicy1)
+        self.temperatureAnalysisPlot.setAutoFillBackground(False)
+        self.temperatureAnalysisPlot.setBackgroundBrush(brush)
+
+        self.gridLayout.addWidget(self.temperatureAnalysisPlot, 2, 1, 1, 1)
+
+        self.expandPressureAnalysisPlotButton = QPushButton(self.analysisTab)
+        self.expandPressureAnalysisPlotButton.setObjectName(u"expandPressureAnalysisPlotButton")
+        self.expandPressureAnalysisPlotButton.setAutoFillBackground(False)
+        self.expandPressureAnalysisPlotButton.setCheckable(True)
+        self.expandPressureAnalysisPlotButton.setChecked(False)
+
+        self.gridLayout.addWidget(self.expandPressureAnalysisPlotButton, 3, 0, 1, 1)
+
+        self.tankMassAnalysisPlot = PlotWidget(self.analysisTab)
+        self.tankMassAnalysisPlot.setObjectName(u"tankMassAnalysisPlot")
+        sizePolicy1.setHeightForWidth(self.tankMassAnalysisPlot.sizePolicy().hasHeightForWidth())
+        self.tankMassAnalysisPlot.setSizePolicy(sizePolicy1)
+        self.tankMassAnalysisPlot.setAutoFillBackground(False)
+        self.tankMassAnalysisPlot.setBackgroundBrush(brush)
+
+        self.gridLayout.addWidget(self.tankMassAnalysisPlot, 4, 0, 1, 1)
+
+        self.engineThrustAnalysisPlot = PlotWidget(self.analysisTab)
+        self.engineThrustAnalysisPlot.setObjectName(u"engineThrustAnalysisPlot")
+        sizePolicy1.setHeightForWidth(self.engineThrustAnalysisPlot.sizePolicy().hasHeightForWidth())
+        self.engineThrustAnalysisPlot.setSizePolicy(sizePolicy1)
+        self.engineThrustAnalysisPlot.setAutoFillBackground(False)
+        self.engineThrustAnalysisPlot.setBackgroundBrush(brush)
+
+        self.gridLayout.addWidget(self.engineThrustAnalysisPlot, 4, 1, 1, 1)
+
+        self.pressureAnalysisPlot = PlotWidget(self.analysisTab)
+        self.pressureAnalysisPlot.setObjectName(u"pressureAnalysisPlot")
+        sizePolicy1.setHeightForWidth(self.pressureAnalysisPlot.sizePolicy().hasHeightForWidth())
+        self.pressureAnalysisPlot.setSizePolicy(sizePolicy1)
+        self.pressureAnalysisPlot.setAutoFillBackground(False)
+        self.pressureAnalysisPlot.setBackgroundBrush(brush)
+
+        self.gridLayout.addWidget(self.pressureAnalysisPlot, 2, 0, 1, 1)
+
+        self.expandTankMassAnalysisPlotButton = QPushButton(self.analysisTab)
+        self.expandTankMassAnalysisPlotButton.setObjectName(u"expandTankMassAnalysisPlotButton")
+        self.expandTankMassAnalysisPlotButton.setCheckable(True)
+
+        self.gridLayout.addWidget(self.expandTankMassAnalysisPlotButton, 5, 0, 1, 1)
+
+        self.expandEngineThrustAnalysisPlotButton = QPushButton(self.analysisTab)
+        self.expandEngineThrustAnalysisPlotButton.setObjectName(u"expandEngineThrustAnalysisPlotButton")
+        self.expandEngineThrustAnalysisPlotButton.setCheckable(True)
+
+        self.gridLayout.addWidget(self.expandEngineThrustAnalysisPlotButton, 5, 1, 1, 1)
 
         self.tabWidget.addTab(self.analysisTab, "")
         self.logTab = QWidget()
@@ -897,7 +923,7 @@ class Ui_Widget(object):
 
         self.retranslateUi(Widget)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(3)
 
 
         QMetaObject.connectSlotsByName(Widget)
@@ -998,7 +1024,11 @@ class Ui_Widget(object):
 #if QT_CONFIG(tooltip)
         self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.displayOptionsTab), QCoreApplication.translate("Widget", u"Configure display and system options", None))
 #endif // QT_CONFIG(tooltip)
+        self.expandTemperatureAnalysisPlotButton.setText(QCoreApplication.translate("Widget", u"Expand graph", None))
         self.loadDataCsvButton.setText(QCoreApplication.translate("Widget", u"Open data CSV file", None))
+        self.expandPressureAnalysisPlotButton.setText(QCoreApplication.translate("Widget", u"Expand graph", None))
+        self.expandTankMassAnalysisPlotButton.setText(QCoreApplication.translate("Widget", u"Expand graph", None))
+        self.expandEngineThrustAnalysisPlotButton.setText(QCoreApplication.translate("Widget", u"Expand graph", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.analysisTab), QCoreApplication.translate("Widget", u"Analysis", None))
         self.exporter.setText(QCoreApplication.translate("Widget", u"Export to File", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.logTab), QCoreApplication.translate("Widget", u"Log", None))

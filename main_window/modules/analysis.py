@@ -8,7 +8,7 @@ from PySide6.QtWidgets import QWidget, QFileDialog
 from PySide6.QtCore import QObject, Slot
 import numpy as np
 
-from ..components.plot_info import PlotInfo, PlotDataDisplayMode
+from ..components.plot_info import PlotInfo
 
 class DataAnalyser(QObject):
 

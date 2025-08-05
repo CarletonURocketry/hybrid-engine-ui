@@ -405,6 +405,10 @@ class MainWindow(QWidget):
         self.ui.saveDisplayConfigButton.clicked.connect(self.config_manager.save_config)
 
         self.ui.loadDataCsvButton.clicked.connect(self.data_analyser.load_file)
+        self.ui.expandPressureAnalysisPlotButton.clicked.connect(self.ui_manager.on_expand_pressure_plot_btn_press)
+        self.ui.expandTemperatureAnalysisPlotButton.clicked.connect(self.ui_manager.on_expand_temperature_plot_btn_press)
+        self.ui.expandTankMassAnalysisPlotButton.clicked.connect(self.ui_manager.on_expand_tank_mass_plot_btn_press)
+        self.ui.expandEngineThrustAnalysisPlotButton.clicked.connect(self.ui_manager.on_expand_engine_thrust_plot_btn_press)
     
     def init_actuator_valve_labels(self):
         while self.ui.valveGrid.itemAt(0):
