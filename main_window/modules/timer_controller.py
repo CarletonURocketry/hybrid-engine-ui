@@ -91,16 +91,12 @@ class TimerController(QObject):
       self.heartbeat_mutex.lock()
       self.heartbeat_timeout -= 1
 
-      # If the heartbeat timer runs out, consider that both the pad server and control client are disconnected
+      # If the heartbeat timer runs out, consider that the pad server is disconnected
       if self.heartbeat_timeout <= 0:
          self.update_pad_server_display_s.emit(
                packet_spec.IPConnectionStatus.DISCONNECTED
          )
-         self.update_control_client_display_s.emit(
-               packet_spec.IPConnectionStatus.DISCONNECTED
-         )
          self.start_ps_disconnect_flash_timer()
-         self.start_cc_disconnect_flash_timer()
          self.log_ready.emit(
                f"Heartbeat not found for {abs(self.heartbeat_timeout) + 1} seconds"
          )
