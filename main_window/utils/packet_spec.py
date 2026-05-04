@@ -184,16 +184,16 @@ def packet_message_bytes_length(header: PacketHeader) -> int:
                     | TelemetryPacketSubType.MASS
                     | TelemetryPacketSubType.THRUST
                 ):
-                    return 9
+                    return 13
                 case TelemetryPacketSubType.ACT_STATE:
-                    return 6
+                    return 10
                 case (
                     TelemetryPacketSubType.ARMING_STATE
                     | TelemetryPacketSubType.WARNING
                     | TelemetryPacketSubType.CONTINUITY
                     | TelemetryPacketSubType.CONN_STATUS
                 ):
-                    return 5
+                    return 9
 
 
 def parse_packet_message(header: PacketHeader, message_bytes: bytes) -> PacketMessage:
@@ -226,7 +226,7 @@ def parse_packet_message(header: PacketHeader, message_bytes: bytes) -> PacketMe
                     temperature: int
                     id: int
                     time: int
-                    time, temperature, id = struct.unpack("<IiB", message_bytes)
+                    time, temperature, id = struct.unpack("<QiB", message_bytes)
                     return TemperaturePacket(
                         temperature=millis_to_units(temperature),
                         id=id,
@@ -236,7 +236,7 @@ def parse_packet_message(header: PacketHeader, message_bytes: bytes) -> PacketMe
                     pressure: int
                     id: int
                     time: int
-                    time, pressure, id = struct.unpack("<IiB", message_bytes)
+                    time, pressure, id = struct.unpack("<QiB", message_bytes)
                     return PressurePacket(
                         pressure=millis_to_units(pressure),
                         id=id,
@@ -246,7 +246,7 @@ def parse_packet_message(header: PacketHeader, message_bytes: bytes) -> PacketMe
                     time: int
                     mass: int
                     id: int
-                    time, mass, id = struct.unpack("<IiB", message_bytes)
+                    time, mass, id = struct.unpack("<QiB", message_bytes)
                     return MassPacket(
                         mass=millis_to_units(mass),
                         id=id,
@@ -256,14 +256,14 @@ def parse_packet_message(header: PacketHeader, message_bytes: bytes) -> PacketMe
                     time: int
                     thrust: int
                     id: int
-                    time, thrust, id = struct.unpack("<IIB", message_bytes)
+                    time, thrust, id = struct.unpack("<QIB", message_bytes)
                     return ThrustPacket(
                         thrust=thrust, id=id, time_since_power=millis_to_units(time)
                     )
                 case TelemetryPacketSubType.ARMING_STATE:
                     time: int
                     state: int
-                    time, state = struct.unpack("<IB", message_bytes)
+                    time, state = struct.unpack("<QB", message_bytes)
                     return ArmingStatePacket(
                         state=ArmingState(state), time_since_power=millis_to_units(time)
                     )
@@ -271,7 +271,7 @@ def parse_packet_message(header: PacketHeader, message_bytes: bytes) -> PacketMe
                     time: int
                     state: int
                     id: int
-                    time, id, state = struct.unpack("<IBB", message_bytes)
+                    time, id, state = struct.unpack("<QBB", message_bytes)
                     return ActuatorStatePacket(
                         time_since_power=millis_to_units(time),
                         id=id,
@@ -280,14 +280,14 @@ def parse_packet_message(header: PacketHeader, message_bytes: bytes) -> PacketMe
                 case TelemetryPacketSubType.WARNING:
                     time: int
                     type: int
-                    time, type = struct.unpack("<IB", message_bytes)
+                    time, type = struct.unpack("<QB", message_bytes)
                     return WarningPacket(
                         type=Warning(type), time_since_power=millis_to_units(time)
                     )
                 case TelemetryPacketSubType.CONTINUITY:
                     time: int
                     state: int
-                    time, state = struct.unpack("<IB", message_bytes)
+                    time, state = struct.unpack("<QB", message_bytes)
                     return ContinuityPacket(
                         time_since_power=millis_to_units(time),
                         state=ContinuityState(state),
@@ -295,7 +295,7 @@ def parse_packet_message(header: PacketHeader, message_bytes: bytes) -> PacketMe
                 case TelemetryPacketSubType.CONN_STATUS:
                     time: int
                     status: int
-                    time, status = struct.unpack("<IB", message_bytes)
+                    time, status = struct.unpack("<QB", message_bytes)
                     return ConnectionStatusPacket(
                         time_since_power=millis_to_units(time),
                         status=IPConnectionStatus(status),
